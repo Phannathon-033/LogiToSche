@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.tsbuildinfo
+*.log
+
+Web/node_modules/
+Web/dist/
+Web/backend/.venv/
+Web/backend/.paddlex/
+Web/backend/__pycache__/
+Web/backend-api*.log
+Web/frontend-vite*.log
