@@ -491,3 +491,56 @@ runSlmExtraction(ocrResult, documentTypeHint)
 - ตั้ง backend ให้ใช้ NVIDIA GPU `gpu:0`
 - เพิ่ม DLL path สำหรับ CUDA package ที่ติดตั้งผ่าน pip บน Windows
 - สร้างเอกสาร integration notes สำหรับบันทึก setup และงานที่ต้องทำต่อ
+
+### 2026-08-03: Qwen SLM + CUDA
+
+- เพิ่ม SLM backend ด้วย `Qwen/Qwen2.5-1.5B-Instruct`
+- เพิ่ม endpoint:
+
+```text
+POST /api/slm/extract
+```
+
+- ติดตั้ง runtime สำหรับ SLM:
+
+```text
+torch==2.6.0+cu126
+transformers==5.14.1
+accelerate==1.14.0
+safetensors==0.8.0
+```
+
+- ตั้ง Qwen ให้ใช้ CUDA:
+
+```text
+device=cuda:0
+```
+
+- Frontend เรียก flow ใหม่:
+
+```text
+Upload file
+  -> PaddleOCR GPU
+  -> OCR Result
+  -> Qwen SLM CUDA
+  -> JSON Schema Output
+  -> Confidence
+  -> Manual Review
+  -> Extracted Fields Table
+```
+
+- Backend health ล่าสุดควรแสดง:
+
+```json
+{"status":"ready","engine":"PaddleOCR","languages":"th,en","device":"gpu:0","cuda":"true","slm":"Qwen/Qwen2.5-1.5B-Instruct"}
+```
+
+- ทดสอบ `/api/slm/extract` ผ่านแล้วด้วยข้อความ OCR สั้น และได้ JSON response จาก Qwen จริง
+
+ข้อควรระวัง:
+
+- เครื่องนี้มี VRAM 4GB จึงต้อง release PaddleOCR engine ก่อนโหลด Qwen SLM
+- Qwen model โหลดแบบ lazy load ตอนเรียก `/api/slm/extract` ครั้งแรก
+- ครั้งแรกจะดาวน์โหลด model จาก Hugging Face และใช้เวลานาน
+- บน Windows ใน venv เดียวกันต้อง import `torch` ก่อน `paddle` เพื่อเลี่ยง CUDA DLL conflict
+- ถ้าเอกสารจริงยาวมากหรือ VRAM ไม่พอ ควรแยก OCR backend และ SLM backend เป็นคนละ process/service
