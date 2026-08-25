@@ -1,52 +1,59 @@
-import { Bell, Box, ChevronDown, CircleHelp, Search } from "lucide-react";
+import { Bell, CircleHelp, LogOut } from "lucide-react";
+import type { UserSession } from "./LoginPage";
+import { Logo } from "./Logo";
 
-export function AppHeader() {
+interface AppHeaderProps {
+  user?: UserSession | null;
+  onLogout?: () => void;
+}
+
+export function AppHeader({ user, onLogout }: AppHeaderProps) {
+  const initial = user?.name ? user.name.charAt(0) : "ส";
+  const name = user?.name || "สมชาย วงศ์สวัสดิ์";
+  const role = user?.role || "ผู้ดูแลระบบ";
+
   return (
-    <header className="sticky top-0 z-30 h-[72px] bg-navy text-white shadow-sm">
+    <header className="sticky top-0 z-30 h-[72px] bg-slate-950 border-b border-cyan-500/20 text-white shadow-md">
       <div className="flex h-full items-center gap-4 px-4 lg:px-6">
-        <div className="flex min-w-[178px] items-center gap-3">
-          <span className="grid h-11 w-11 place-items-center rounded-xl border border-white/55 bg-white/10">
-            <Box className="h-7 w-7" aria-hidden="true" />
-          </span>
-          <div className="leading-tight">
-            <p className="text-2xl font-extrabold tracking-normal">LogiAI</p>
-            <p className="text-sm font-semibold text-white/85">Docs to JSON</p>
-          </div>
-        </div>
+        <Logo theme="light" size="md" />
 
-        <div className="hidden h-11 w-px bg-white/30 lg:block" />
+        <div className="hidden h-11 w-px bg-slate-800 lg:block" />
 
         <div className="min-w-0 flex-1">
-          <h1 className="truncate text-lg font-extrabold leading-6 sm:text-2xl">ระบบแปลงเอกสารโลจิสติกส์เป็น JSON Schema</h1>
-          <p className="hidden truncate text-sm font-medium text-white/85 sm:block">OCR + SLM เพื่ออ่าน เข้าใจ และแปลงเอกสารเป็น JSON Schema</p>
+          <h1 className="truncate text-lg font-black leading-6 sm:text-2xl text-white tracking-tight">ระบบแปลงเอกสารโลจิสติกส์เป็น JSON Schema</h1>
+          <p className="hidden truncate text-xs font-semibold text-cyan-400/90 sm:block">PaddleOCR + Qwen SLM Architecture (GPU Accelerated)</p>
         </div>
 
-        <label className="hidden h-11 w-[360px] max-w-[28vw] items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-3 xl:flex">
-          <Search className="h-5 w-5 text-white/90" aria-hidden="true" />
-          <span className="sr-only">ค้นหาเอกสาร งาน หรือฟิลด์</span>
-          <input className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-white/75 focus:outline-none" placeholder="ค้นหาเอกสาร, งาน, หรือฟิลด์..." />
-          <kbd className="rounded border border-white/25 bg-white/10 px-2 py-1 text-xs text-white/85">Ctrl + K</kbd>
-        </label>
-
         <div className="ml-auto flex items-center gap-2">
-          <button type="button" className="relative rounded-full p-2 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" aria-label="การแจ้งเตือน">
-            <Bell className="h-5 w-5" aria-hidden="true" />
-            <span className="absolute right-0 top-0 grid h-5 w-5 place-items-center rounded-full bg-error text-xs font-bold">5</span>
+          <button type="button" className="relative rounded-xl p-2 hover:bg-slate-800/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400" aria-label="การแจ้งเตือน">
+            <Bell className="h-5 w-5 text-slate-300 hover:text-cyan-400 transition-colors" aria-hidden="true" />
+            <span className="absolute right-1 top-1 grid h-4 w-4 place-items-center rounded-full bg-cyan-500 text-[10px] font-black text-slate-950">5</span>
           </button>
-          <button type="button" className="rounded-full p-2 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" aria-label="ช่วยเหลือ">
-            <CircleHelp className="h-6 w-6" aria-hidden="true" />
+          <button type="button" className="rounded-xl p-2 hover:bg-slate-800/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400" aria-label="ช่วยเหลือ">
+            <CircleHelp className="h-5 w-5 text-slate-300 hover:text-cyan-400 transition-colors" aria-hidden="true" />
           </button>
-          <button type="button" className="hidden items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white md:flex" aria-label="เมนูผู้ใช้">
-            <span className="relative grid h-10 w-10 place-items-center rounded-full bg-white text-navy">
-              <span className="text-sm font-bold">ส</span>
-              <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-navy bg-success" />
+          
+          <div className="hidden items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/80 px-3 py-1.5 md:flex">
+            <span className="relative grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 text-white font-bold shadow-sm">
+              <span className="text-sm font-bold">{initial}</span>
+              <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-slate-950 bg-emerald-400" />
             </span>
             <span className="hidden text-left leading-tight xl:block">
-              <span className="block text-sm font-bold">สมชาย วงศ์สวัสดิ์</span>
-              <span className="block text-xs text-white/80">ผู้ดูแลระบบ</span>
+              <span className="block text-xs font-bold text-slate-100 truncate max-w-[140px]">{name}</span>
+              <span className="block text-[11px] text-cyan-400 font-semibold truncate max-w-[140px]">{role}</span>
             </span>
-            <ChevronDown className="h-4 w-4" aria-hidden="true" />
-          </button>
+            {onLogout && (
+              <button
+                type="button"
+                onClick={onLogout}
+                className="ml-1 flex items-center gap-1.5 rounded-lg border border-slate-700/60 bg-slate-800/60 px-2.5 py-1 text-xs font-semibold text-slate-300 hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400 transition-all"
+                title="ออกจากระบบ"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                <span className="hidden xl:inline">ออกจากระบบ</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </header>

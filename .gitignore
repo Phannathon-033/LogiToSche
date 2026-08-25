@@ -10,3 +10,10 @@ Web/backend/.paddlex/
 Web/backend/__pycache__/
 Web/backend-api*.log
 Web/frontend-vite*.log
+
+archive/
+*.tif
+*.pdf
+*.doc
+*.docx
+__pycache__/

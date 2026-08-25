@@ -6,10 +6,12 @@ import { DocumentPreview } from "./components/DocumentPreview";
 import { DocumentUploader } from "./components/DocumentUploader";
 import { ExtractedFieldsTable } from "./components/ExtractedFieldsTable";
 import { JSONOutputPanel } from "./components/JSONOutputPanel";
+import { LoginPage, type UserSession } from "./components/LoginPage";
 import { ManualReviewCard } from "./components/ManualReviewCard";
 import { ManualReviewModal } from "./components/ManualReviewModal";
 import { OCRResultPanel } from "./components/OCRResultPanel";
 import { RecentJobsTable } from "./components/RecentJobsTable";
+import { RegisterPage } from "./components/RegisterPage";
 import { Toast } from "./components/Toast";
 import { WorkflowStepper } from "./components/WorkflowStepper";
 import { initialJson, initialSteps, ocrText } from "./data/mockData";
@@ -21,6 +23,16 @@ import type { ConfidenceScore, DocumentJob, DocumentType, ExtractedField, JsonSc
 type WorkspaceTab = "extraction" | "analysis" | "all";
 
 export function App() {
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
+  const [userSession, setUserSession] = useState<UserSession | null>(() => {
+    try {
+      const saved = localStorage.getItem("logiai_user");
+      return saved ? (JSON.parse(saved) as UserSession) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [steps, setSteps] = useState(initialSteps);
   const [fileName, setFileName] = useState("");
   const [fileSize, setFileSize] = useState("");
@@ -40,6 +52,30 @@ export function App() {
   const [reviewingItem, setReviewingItem] = useState<ReviewItem | null>(null);
   const [slmReady, setSlmReady] = useState(false);
   const [toast, setToast] = useState("");
+
+  function handleLogin(session: UserSession) {
+    setUserSession(session);
+    try {
+      localStorage.setItem("logiai_user", JSON.stringify(session));
+    } catch {
+      // ignore storage errors
+    }
+    showToast(`ยินดีต้อนรับคุณ ${session.name}`);
+  }
+
+  function handleRegister(session: UserSession) {
+    handleLogin(session);
+    showToast(`ลงทะเบียนสำเร็จ! ยินดีต้อนรับคุณ ${session.name}`);
+  }
+
+  function handleLogout() {
+    setUserSession(null);
+    try {
+      localStorage.removeItem("logiai_user");
+    } catch {
+      // ignore storage errors
+    }
+  }
 
   const hasDocument = fileName.length > 0;
 
@@ -188,18 +224,35 @@ export function App() {
     showToast(`ยืนยันค่า ${item.field} แล้ว`);
   }
 
+  if (!userSession) {
+    if (authMode === "register") {
+      return (
+        <RegisterPage
+          onRegister={handleRegister}
+          onSwitchToLogin={() => setAuthMode("login")}
+        />
+      );
+    }
+    return (
+      <LoginPage
+        onLogin={handleLogin}
+        onSwitchToRegister={() => setAuthMode("register")}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-page text-ink antialiased">
-      <AppHeader />
+      <AppHeader user={userSession} onLogout={handleLogout} />
       <main className="px-4 py-6 sm:px-6 lg:px-8">
         <div className="mx-auto flex w-full max-w-[1720px] flex-col gap-7">
           <section className="rounded-2xl border border-line bg-white p-6 shadow-panel lg:p-8">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <div className="flex flex-wrap items-center gap-2.5">
-                  <span className="rounded-md bg-blue-100 px-2.5 py-1 text-xs font-black uppercase text-primary">LogiAI Docs to JSON</span>
-                  <span className="rounded-md border border-green-200 bg-green-50 px-2.5 py-1 text-xs font-bold text-success">PaddleOCR GPU</span>
-                  <span className="rounded-md border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-800">Qwen2.5-1.5B CUDA</span>
+                  <span className="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-xs font-black uppercase text-cyan-600">LogiAI Docs to JSON</span>
+                  <span className="rounded-lg border border-emerald-500/30 bg-emerald-50/80 px-2.5 py-1 text-xs font-bold text-emerald-700">PaddleOCR GPU Accelerated</span>
+                  <span className="rounded-lg border border-blue-500/30 bg-blue-50/80 px-2.5 py-1 text-xs font-bold text-blue-700">Qwen2.5-1.5B CUDA</span>
                 </div>
                 <h1 className="mt-2 text-2xl font-black tracking-normal text-navy lg:text-3xl">ระบบแปลงเอกสารโลจิสติกส์เป็น JSON Schema</h1>
                 <p className="mt-1 max-w-4xl text-sm leading-6 text-slate-600">
