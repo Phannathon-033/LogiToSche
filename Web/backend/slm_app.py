@@ -96,7 +96,7 @@ def slm_extract(payload: SlmExtractRequest) -> dict[str, Any]:
         with torch.inference_mode():
             generated_ids = model.generate(
                 **inputs,
-                max_new_tokens=1000,
+                max_new_tokens=400,
                 do_sample=False,
                 repetition_penalty=1.05,
             )
