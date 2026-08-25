@@ -21,6 +21,18 @@ export interface JsonSchemaOutput {
   other: Record<string, unknown>;
 }
 
+export const CORE_FIELDS_DEF = [
+  { key: "party_name", label: "party_name (ชื่อคู่ค้า / ผู้ซื้อ / ผู้รับ / ผู้ขาย)" },
+  { key: "document_no", label: "document_no (เลขที่เอกสาร / ใบกำกับภาษี)" },
+  { key: "document_date", label: "document_date (วันที่ในเอกสาร)" },
+  { key: "total_amount", label: "total_amount (ยอดเงินรวมสุทธิ)" },
+  { key: "quantity", label: "quantity (จำนวนรวม)" },
+  { key: "document_type", label: "document_type (ประเภทเอกสาร)" },
+  { key: "source_file", label: "source_file (ชื่อไฟล์ต้นฉบับ)" },
+] as const;
+
+export const CORE_FIELDS_SET = new Set<string>(CORE_FIELDS_DEF.map((c) => c.key));
+
 export interface ExtractedField {
   id: number;
   sourceText: string;
@@ -48,16 +60,21 @@ export interface ReviewItem {
 }
 
 export interface DocumentJob {
-  id: string;
+  id: string | number;
   fileName: string;
-  type: DocumentType;
-  status: FieldStatus;
+  type?: string | DocumentType;
+  documentType?: DocumentType;
+  startedAt?: string;
+  uploadedAt?: string;
+  status: "success" | "processing" | "review" | "error";
   statusLabel: string;
-  startedAt: string;
   result: string;
 }
 
 export interface MenuItem {
   label: string;
   icon: LucideIcon;
+  active?: boolean;
 }
+
+export type NavItem = MenuItem;

@@ -176,48 +176,64 @@ export function App() {
     }
   }
 
-  function handleAddCustomField(key: string, value: string, isOther: boolean) {
-    const parsedValue = Number.isNaN(Number(value)) ? value : Number(value);
+  function handleMoveOtherToCore(sourceOtherKey: string, targetCoreKey: string, removeFromOther: boolean) {
+    let rawVal: unknown = "";
 
-    if (isOther) {
-      setJsonOutput((current) => ({
-        ...current,
-        other: {
-          ...(current.other || {}),
-          [key]: parsedValue,
-        },
-      }));
+    if (jsonOutput.other && sourceOtherKey in jsonOutput.other) {
+      rawVal = jsonOutput.other[sourceOtherKey];
     } else {
-      setJsonOutput((current) => ({
-        ...current,
-        [key]: parsedValue,
-      }));
+      const foundField = fields.find((f) => f.field === sourceOtherKey);
+      rawVal = foundField ? foundField.value : "";
     }
 
+    let parsedVal: string | number;
+    if (targetCoreKey === "quantity" || targetCoreKey === "total_amount") {
+      const num = Number(String(rawVal).replace(/,/g, "").trim());
+      parsedVal = Number.isNaN(num) ? 0 : num;
+    } else {
+      parsedVal = String(rawVal);
+    }
+
+    setJsonOutput((current) => {
+      const nextOther = { ...(current.other || {}) };
+      if (removeFromOther) {
+        delete nextOther[sourceOtherKey];
+      }
+      return {
+        ...current,
+        [targetCoreKey]: parsedVal,
+        other: nextOther,
+      };
+    });
+
     setFields((current) => {
-      const existing = current.findIndex((f) => f.field === key);
-      if (existing >= 0) {
-        return current.map((f, idx) =>
-          idx === existing
-            ? { ...f, value: String(parsedValue), confidence: 100, status: "success" }
+      let nextList = current;
+      if (removeFromOther) {
+        nextList = nextList.filter((f) => f.field !== sourceOtherKey);
+      }
+      const existingTargetIdx = nextList.findIndex((f) => f.field === targetCoreKey);
+      if (existingTargetIdx >= 0) {
+        return nextList.map((f, idx) =>
+          idx === existingTargetIdx
+            ? { ...f, value: String(parsedVal), confidence: 100, status: "success", isOther: false }
             : f,
         );
       }
       return [
-        ...current,
+        ...nextList,
         {
-          id: current.length + 1,
-          sourceText: value,
-          field: key,
-          value: String(parsedValue),
+          id: nextList.length + 1,
+          sourceText: String(rawVal),
+          field: targetCoreKey,
+          value: String(parsedVal),
           confidence: 100,
           status: "success",
-          isOther,
+          isOther: false,
         },
       ];
     });
 
-    showToast(`เพิ่มฟิลด์ "${key}" ลงใน ${isOther ? "other" : "โครงสร้างหลัก"} สำเร็จ`);
+    showToast(`ย้ายค่า "${sourceOtherKey}" ไปยัง 7 ฟิลด์หลัก "${targetCoreKey}" เรียบร้อยแล้ว`);
   }
 
   function handleDeleteCustomField(fieldKey: string, isOther?: boolean) {
@@ -414,7 +430,7 @@ export function App() {
                           json={jsonOutput}
                           onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
                           onDownload={() => createJsonDownload(jsonOutput)}
-                          onAddFieldToOther={(k, v) => handleAddCustomField(k, v, true)}
+                          onMoveOtherToCore={handleMoveOtherToCore}
                         />
                       ) : (
                         <SlmWaitingCard title="JSON Schema Output" />
@@ -437,7 +453,7 @@ export function App() {
                           json={jsonOutput}
                           onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
                           onDownload={() => createJsonDownload(jsonOutput)}
-                          onAddFieldToOther={(k, v) => handleAddCustomField(k, v, true)}
+                          onMoveOtherToCore={handleMoveOtherToCore}
                         />
                       ) : (
                         <SlmWaitingCard title="JSON Schema Output" />
@@ -454,7 +470,7 @@ export function App() {
                   fields={fields}
                   selectedType={selectedType}
                   onTypeChange={setSelectedType}
-                  onAddField={handleAddCustomField}
+                  onMoveOtherToCore={handleMoveOtherToCore}
                   onDeleteField={handleDeleteCustomField}
                 />
                 <RecentJobsTable jobs={jobs} />

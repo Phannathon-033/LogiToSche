@@ -1,13 +1,13 @@
-import { Braces, Clipboard, Download, Plus, Sparkles, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Braces, Clipboard, Download, Sparkles, X } from "lucide-react";
 import { useState } from "react";
-import type { JsonSchemaOutput } from "../types";
+import { CORE_FIELDS_DEF, type JsonSchemaOutput } from "../types";
 import { Card } from "./Card";
 
 interface JSONOutputPanelProps {
   json: JsonSchemaOutput;
   onCopy: () => void;
   onDownload: () => void;
-  onAddFieldToOther?: (key: string, value: string) => void;
+  onMoveOtherToCore?: (sourceOtherKey: string, targetCoreKey: string, removeFromOther: boolean) => void;
 }
 
 const tokenColors = {
@@ -17,22 +17,22 @@ const tokenColors = {
   punctuation: "text-slate-400",
 };
 
-export function JSONOutputPanel({ json, onCopy, onDownload, onAddFieldToOther }: JSONOutputPanelProps) {
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [newKey, setNewKey] = useState("");
-  const [newValue, setNewValue] = useState("");
+export function JSONOutputPanel({ json, onCopy, onDownload, onMoveOtherToCore }: JSONOutputPanelProps) {
+  const [showMoveForm, setShowMoveForm] = useState(false);
+  const otherKeys = json.other ? Object.keys(json.other).filter((k) => json.other[k] !== undefined && json.other[k] !== "") : [];
+  const [sourceKey, setSourceKey] = useState<string>(otherKeys[0] || "");
+  const [targetKey, setTargetKey] = useState<string>("party_name");
+  const [removeFromOther, setRemoveFromOther] = useState(true);
 
   const lines = JSON.stringify(json, null, 2).split("\n");
 
-  function handleAdd(e: React.FormEvent) {
+  function handleMove(e: React.FormEvent) {
     e.preventDefault();
-    if (!newKey.trim() || !newValue.trim()) return;
-    if (onAddFieldToOther) {
-      onAddFieldToOther(newKey.trim(), newValue.trim());
+    if (!sourceKey || !targetKey) return;
+    if (onMoveOtherToCore) {
+      onMoveOtherToCore(sourceKey, targetKey, removeFromOther);
     }
-    setNewKey("");
-    setNewValue("");
-    setShowAddForm(false);
+    setShowMoveForm(false);
   }
 
   return (
@@ -41,15 +41,18 @@ export function JSONOutputPanel({ json, onCopy, onDownload, onAddFieldToOther }:
       icon={<Braces className="h-5 w-5 text-primary" aria-hidden="true" />}
       actions={
         <div className="flex items-center gap-1.5">
-          {onAddFieldToOther && (
+          {onMoveOtherToCore && otherKeys.length > 0 && (
             <button
               type="button"
-              onClick={() => setShowAddForm(!showAddForm)}
-              className="inline-flex items-center gap-1 rounded-lg border border-cyan-500/30 bg-cyan-50 px-2 py-1 text-xs font-bold text-cyan-700 hover:bg-cyan-100 transition-colors"
-              title="เพิ่มฟิลด์ลงใน json_schema.other"
+              onClick={() => {
+                if (!sourceKey && otherKeys.length > 0) setSourceKey(otherKeys[0]);
+                setShowMoveForm(!showMoveForm);
+              }}
+              className="inline-flex items-center gap-1 rounded-lg border border-blue-500/30 bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700 hover:bg-blue-100 transition-colors"
+              title="ย้ายค่าจาก other ไปใส่ใน 7 ฟิลด์หลัก"
             >
-              <Plus className="h-3.5 w-3.5" />
-              <span>+ เพิ่มใน other</span>
+              <ArrowUpRight className="h-3.5 w-3.5" />
+              <span>ย้ายจาก other เข้าฟิลด์หลัก</span>
             </button>
           )}
           <button
@@ -64,46 +67,80 @@ export function JSONOutputPanel({ json, onCopy, onDownload, onAddFieldToOther }:
       }
       className="h-full"
     >
-      {showAddForm && (
+      {showMoveForm && (
         <form
-          onSubmit={handleAdd}
-          className="mb-3 p-3 rounded-xl border border-cyan-200 bg-cyan-50/70 space-y-2 animate-fadeIn"
+          onSubmit={handleMove}
+          className="mb-3 p-3.5 rounded-xl border border-blue-200 bg-blue-50/75 space-y-2.5 animate-fadeIn"
         >
-          <div className="flex items-center justify-between text-xs font-bold text-cyan-900">
+          <div className="flex items-center justify-between text-xs font-bold text-navy">
             <span className="flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-cyan-600" />
-              เพิ่มฟิลด์ใหม่ลงใน json_schema.other
+              <Sparkles className="h-3.5 w-3.5 text-primary" />
+              ย้ายข้อมูลจาก other เข้าสู่ 7 ฟิลด์หลัก
             </span>
             <button
               type="button"
-              onClick={() => setShowAddForm(false)}
+              onClick={() => setShowMoveForm(false)}
               className="text-slate-400 hover:text-slate-600"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2">
-            <input
-              type="text"
-              value={newKey}
-              onChange={(e) => setNewKey(e.target.value)}
-              placeholder="ชื่อฟิลด์ (เช่น carrier, notes)"
-              className="flex-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-              required
-            />
-            <input
-              type="text"
-              value={newValue}
-              onChange={(e) => setNewValue(e.target.value)}
-              placeholder="ค่าของฟิลด์ (เช่น Kerry, จัดส่งด่วน)"
-              className="flex-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-              required
-            />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                ฟิลด์ต้นทางใน other
+              </label>
+              <select
+                value={sourceKey}
+                onChange={(e) => setSourceKey(e.target.value)}
+                className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary font-medium"
+                required
+              >
+                {otherKeys.map((k) => (
+                  <option key={k} value={k}>
+                    {k}: {String(json.other?.[k]).slice(0, 25)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                7 ฟิลด์หลักเป้าหมาย
+              </label>
+              <select
+                value={targetKey}
+                onChange={(e) => setTargetKey(e.target.value)}
+                className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary font-medium"
+                required
+              >
+                {CORE_FIELDS_DEF.map((c) => (
+                  <option key={c.key} value={c.key}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between gap-2 pt-1">
+            <label className="inline-flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer font-medium">
+              <input
+                type="checkbox"
+                checked={removeFromOther}
+                onChange={(e) => setRemoveFromOther(e.target.checked)}
+                className="rounded border-slate-300 text-primary focus:ring-primary"
+              />
+              <span>ลบออกจาก other หลังจากย้าย</span>
+            </label>
+
             <button
               type="submit"
-              className="rounded-lg bg-cyan-600 hover:bg-cyan-700 px-3 py-1.5 text-xs font-bold text-white transition-colors"
+              className="inline-flex items-center gap-1 rounded-lg bg-primary hover:bg-primary/90 px-3 py-1.5 text-xs font-bold text-white transition-colors shadow-sm"
             >
-              บันทึก
+              <ArrowRight className="h-3 w-3" />
+              <span>ยืนยันการย้าย</span>
             </button>
           </div>
         </form>

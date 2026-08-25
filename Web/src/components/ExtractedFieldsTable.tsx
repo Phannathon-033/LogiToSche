@@ -1,6 +1,6 @@
-import { Plus, Sparkles, Trash2, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Sparkles, Trash2, X } from "lucide-react";
 import { useState } from "react";
-import type { DocumentType, ExtractedField } from "../types";
+import { CORE_FIELDS_DEF, CORE_FIELDS_SET, type DocumentType, type ExtractedField } from "../types";
 import { Card } from "./Card";
 import { DocumentTypeSelector } from "./DocumentTypeSelector";
 import { StatusBadge } from "./StatusBadge";
@@ -9,7 +9,7 @@ interface ExtractedFieldsTableProps {
   fields: ExtractedField[];
   selectedType: DocumentType;
   onTypeChange: (type: DocumentType) => void;
-  onAddField?: (key: string, value: string, isOther: boolean) => void;
+  onMoveOtherToCore?: (sourceOtherKey: string, targetCoreKey: string, removeFromOther: boolean) => void;
   onDeleteField?: (fieldKey: string, isOther?: boolean) => void;
 }
 
@@ -31,52 +31,57 @@ const FIELD_LABELS: Record<string, string> = {
   vat_amount: "ภาษีมูลค่าเพิ่ม 7%",
 };
 
-const CORE_FIELDS = new Set([
-  "document_type",
-  "document_no",
-  "document_date",
-  "party_name",
-  "source_file",
-  "quantity",
-  "total_amount",
-]);
-
 export function ExtractedFieldsTable({
   fields,
   selectedType,
   onTypeChange,
-  onAddField,
+  onMoveOtherToCore,
   onDeleteField,
 }: ExtractedFieldsTableProps) {
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [newKey, setNewKey] = useState("");
-  const [newValue, setNewValue] = useState("");
-  const [targetGroup, setTargetGroup] = useState<"other" | "core">("other");
+  const [showMoveModal, setShowMoveModal] = useState(false);
+  const [selectedSourceKey, setSelectedSourceKey] = useState<string>("");
+  const [selectedTargetKey, setSelectedTargetKey] = useState<string>("party_name");
+  const [removeFromOther, setRemoveFromOther] = useState(true);
 
-  function handleSaveField(e: React.FormEvent) {
-    e.preventDefault();
-    if (!newKey.trim() || !newValue.trim()) return;
+  const otherFields = fields.filter((f) => !CORE_FIELDS_SET.has(f.field) || f.isOther);
 
-    if (onAddField) {
-      onAddField(newKey.trim(), newValue.trim(), targetGroup === "other");
+  function openMoveModal(preselectedSourceKey?: string, preselectedTargetKey?: string) {
+    if (preselectedSourceKey) {
+      setSelectedSourceKey(preselectedSourceKey);
+    } else if (otherFields.length > 0) {
+      setSelectedSourceKey(otherFields[0].field);
     }
-    setNewKey("");
-    setNewValue("");
-    setShowAddModal(false);
+
+    if (preselectedTargetKey) {
+      setSelectedTargetKey(preselectedTargetKey);
+    }
+    setShowMoveModal(true);
   }
+
+  function handleConfirmMove(e: React.FormEvent) {
+    e.preventDefault();
+    if (!selectedSourceKey || !selectedTargetKey) return;
+
+    if (onMoveOtherToCore) {
+      onMoveOtherToCore(selectedSourceKey, selectedTargetKey, removeFromOther);
+    }
+    setShowMoveModal(false);
+  }
+
+  const selectedSourceField = otherFields.find((f) => f.field === selectedSourceKey);
 
   return (
     <Card
       title="ฟิลด์สำคัญที่สกัดได้ (7 ฟิลด์หลัก + Other)"
       actions={
-        onAddField ? (
+        onMoveOtherToCore && otherFields.length > 0 ? (
           <button
             type="button"
-            onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-600/30 bg-cyan-50 px-2.5 py-1 text-xs font-bold text-cyan-700 hover:bg-cyan-100/80 transition-all shadow-sm"
+            onClick={() => openMoveModal()}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-blue-600/30 bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700 hover:bg-blue-100 transition-all shadow-sm"
           >
-            <Plus className="h-3.5 w-3.5" />
-            <span>+ เพิ่มฟิลด์ใน other</span>
+            <ArrowUpRight className="h-4 w-4 text-blue-600" />
+            <span>ย้ายจาก other เข้า 7 ฟิลด์หลัก</span>
           </button>
         ) : undefined
       }
@@ -84,76 +89,97 @@ export function ExtractedFieldsTable({
     >
       <DocumentTypeSelector selected={selectedType} onChange={onTypeChange} />
 
-      {/* Add Field Modal / Form */}
-      {showAddModal && (
-        <div className="mt-3 p-3.5 rounded-xl border border-cyan-200 bg-cyan-50/50 space-y-3 animate-fadeIn">
+      {/* Move Other to Core Modal */}
+      {showMoveModal && (
+        <div className="mt-3 p-4 rounded-xl border border-blue-200 bg-blue-50/70 space-y-3 animate-fadeIn shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-cyan-900 flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-cyan-600" />
-              เพิ่มฟิลด์ข้อมูลลงในโครงสร้าง JSON
+            <span className="text-xs font-bold text-navy flex items-center gap-1.5">
+              <Sparkles className="h-4 w-4 text-primary" />
+              ย้ายค่าจาก Other เข้าสู่ 7 ฟิลด์หลัก (Move Other to Core Field)
             </span>
             <button
               type="button"
-              onClick={() => setShowAddModal(false)}
+              onClick={() => setShowMoveModal(false)}
               className="text-slate-400 hover:text-slate-600"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
-          <form onSubmit={handleSaveField} className="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
-            <div>
-              <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                ตำแหน่งจัดเก็บ
-              </label>
-              <select
-                value={targetGroup}
-                onChange={(e) => setTargetGroup(e.target.value as "other" | "core")}
-                className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-              >
-                <option value="other">ใน json_schema.other</option>
-                <option value="core">ใน 7 ฟิลด์หลัก (Root)</option>
-              </select>
+
+          <form onSubmit={handleConfirmMove} className="space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                  1. เลือกฟิลด์ต้นทางใน Other
+                </label>
+                <select
+                  value={selectedSourceKey}
+                  onChange={(e) => setSelectedSourceKey(e.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary font-medium"
+                  required
+                >
+                  {otherFields.length === 0 && <option value="">ไม่มีฟิลด์ใน other</option>}
+                  {otherFields.map((f) => (
+                    <option key={f.field} value={f.field}>
+                      {f.field} ({FIELD_LABELS[f.field] || "other"}): {f.value.slice(0, 30)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                  2. เลือก 7 ฟิลด์หลักเป้าหมายที่ต้องการแทนที่
+                </label>
+                <select
+                  value={selectedTargetKey}
+                  onChange={(e) => setSelectedTargetKey(e.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary font-medium"
+                  required
+                >
+                  {CORE_FIELDS_DEF.map((c) => (
+                    <option key={c.key} value={c.key}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-            <div>
-              <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                ชื่อฟิลด์ (Key)
+
+            {selectedSourceField && (
+              <div className="rounded-lg border border-blue-100 bg-white p-2.5 text-xs">
+                <span className="text-slate-500 block text-[11px]">ตัวอย่างค่าที่จะนำไปใส่ใน 7 ฟิลด์หลัก:</span>
+                <span className="font-bold text-navy text-sm mt-0.5 block">{selectedSourceField.value}</span>
+              </div>
+            )}
+
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <label className="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={removeFromOther}
+                  onChange={(e) => setRemoveFromOther(e.target.checked)}
+                  className="rounded border-slate-300 text-primary focus:ring-primary"
+                />
+                <span>ลบฟิลด์ออกจาก other หลังจากย้ายเข้าฟิลด์หลักแล้ว</span>
               </label>
-              <input
-                type="text"
-                value={newKey}
-                onChange={(e) => setNewKey(e.target.value)}
-                placeholder="เช่น driver_name, notes"
-                className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                ค่าของข้อมูล (Value)
-              </label>
-              <input
-                type="text"
-                value={newValue}
-                onChange={(e) => setNewValue(e.target.value)}
-                placeholder="เช่น นายสมชาย, คลัง A1"
-                className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-                required
-              />
-            </div>
-            <div className="flex items-end gap-2">
-              <button
-                type="submit"
-                className="flex-1 rounded-lg bg-cyan-600 hover:bg-cyan-700 py-1.5 text-xs font-bold text-white transition-colors"
-              >
-                บันทึกฟิลด์
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowAddModal(false)}
-                className="rounded-lg border border-slate-300 bg-white hover:bg-slate-100 px-2.5 py-1.5 text-xs font-semibold text-slate-600"
-              >
-                ยกเลิก
-              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowMoveModal(false)}
+                  className="rounded-lg border border-slate-300 bg-white hover:bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600"
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary hover:bg-primary/90 px-4 py-1.5 text-xs font-bold text-white transition-colors shadow-sm"
+                >
+                  <ArrowRight className="h-3.5 w-3.5" />
+                  <span>ยืนยันการย้ายเข้า 7 ฟิลด์หลัก</span>
+                </button>
+              </div>
             </div>
           </form>
         </div>
@@ -170,13 +196,13 @@ export function ExtractedFieldsTable({
               <th className="px-3 py-2">ความมั่นใจ</th>
               <th className="px-3 py-2">กลุ่มฟิลด์</th>
               <th className="px-3 py-2">สถานะ</th>
-              {onDeleteField && <th className="px-3 py-2 text-center">จัดการ</th>}
+              <th className="px-3 py-2 text-center">จัดการ</th>
             </tr>
           </thead>
           <tbody>
             {fields.length > 0 ? (
               fields.map((field) => {
-                const isCore = CORE_FIELDS.has(field.field);
+                const isCore = CORE_FIELDS_SET.has(field.field) && !field.isOther;
                 return (
                   <tr key={`${field.field}-${field.id}`} className="border-b border-line hover:bg-slate-50/50">
                     <td className="px-3 py-2 text-center text-slate-700">{field.id}</td>
@@ -201,20 +227,42 @@ export function ExtractedFieldsTable({
                     <td className="px-3 py-2">
                       <StatusBadge status={field.status} />
                     </td>
-                    {onDeleteField && (
-                      <td className="px-3 py-2 text-center">
-                        {!isCore && (
+                    <td className="px-3 py-2 text-center">
+                      {!isCore ? (
+                        <div className="flex items-center justify-center gap-1">
                           <button
                             type="button"
-                            onClick={() => onDeleteField(field.field, true)}
-                            className="p-1 text-slate-400 hover:text-red-600 rounded transition-colors"
-                            title="ลบฟิลด์ออกจาก other"
+                            onClick={() => openMoveModal(field.field)}
+                            className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-bold text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                            title="ย้ายค่านี้เข้าไปแทนที่ใน 7 ฟิลด์หลัก"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
+                            <ArrowUpRight className="h-3 w-3" />
+                            <span>ย้ายเข้าฟิลด์หลัก</span>
                           </button>
-                        )}
-                      </td>
-                    )}
+                          {onDeleteField && (
+                            <button
+                              type="button"
+                              onClick={() => onDeleteField(field.field, true)}
+                              className="p-1 text-slate-400 hover:text-red-600 rounded transition-colors"
+                              title="ลบฟิลด์ออกจาก other"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      ) : (
+                        otherFields.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => openMoveModal(undefined, field.field)}
+                            className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-700 hover:bg-slate-200 transition-colors"
+                            title="เลือกค่าจาก other มาใส่ฟิลด์นี้"
+                          >
+                            <span>เลือกจาก other</span>
+                          </button>
+                        )
+                      )}
+                    </td>
                   </tr>
                 );
               })
