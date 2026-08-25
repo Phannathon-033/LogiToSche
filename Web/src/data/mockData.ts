@@ -71,12 +71,17 @@ Total Amount                              52,162.50`;
 export const initialJson: JsonSchemaOutput = {
   document_type: "invoice",
   invoice_no: "INV-2024-001",
+  po_number: "PO-998822",
   document_date: "2024-05-15",
-  receiver_name: "ABC Logistics Co., Ltd.",
+  sender_name: "ABC Logistics Co., Ltd.",
+  receiver_name: "XYZ Importer Co., Ltd.",
+  tax_id: "0105558012345",
   truck_plate: "70-1234",
   gross_weight_kg: 25000,
   quantity: 120,
-  total_amount: 48750,
+  subtotal_amount: 48750,
+  vat_amount: 3412.5,
+  total_amount: 52162.5,
   other: {},
 };
 
