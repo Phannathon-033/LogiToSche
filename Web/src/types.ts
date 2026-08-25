@@ -78,3 +78,28 @@ export interface MenuItem {
 }
 
 export type NavItem = MenuItem;
+
+export interface SlmPromptPreset {
+  id: string;
+  category: "synonym" | "summary" | "validation" | "translation" | "custom";
+  categoryLabel: string;
+  title: string;
+  description: string;
+  prompt: string;
+  badge: string;
+}
+
+export interface SlmPromptRequest {
+  promptTemplateId: string;
+  userInstruction: string;
+  ocrText?: string;
+  jsonSchema?: JsonSchemaOutput;
+}
+
+export interface SlmPromptResponse {
+  resultText: string;
+  reasoning?: string;
+  category?: string;
+  model?: string;
+  device?: string;
+}

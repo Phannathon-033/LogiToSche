@@ -1,4 +1,12 @@
-import type { ConfidenceScore, ExtractedField, FieldStatus, JsonSchemaOutput, ReviewItem } from "../types";
+import type {
+  ConfidenceScore,
+  ExtractedField,
+  FieldStatus,
+  JsonSchemaOutput,
+  ReviewItem,
+  SlmPromptRequest,
+  SlmPromptResponse,
+} from "../types";
 import type { OcrLine } from "./ocrApi";
 
 interface SlmExtractRequest {
@@ -63,7 +71,12 @@ const ROOT_FIELDS = new Set<string>([
   "total_amount",
 ]);
 
-export async function runSlmExtraction({ documentTypeHint, sourceFile, ocrText, ocrLines }: SlmExtractRequest): Promise<SlmExtractionResult> {
+export async function runSlmExtraction({
+  documentTypeHint,
+  sourceFile,
+  ocrText,
+  ocrLines,
+}: SlmExtractRequest): Promise<SlmExtractionResult> {
   const response = await fetch("/api/slm/extract", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -108,6 +121,45 @@ export async function runSlmExtraction({ documentTypeHint, sourceFile, ocrText, 
       status: item.status,
       isOther: !ROOT_FIELDS.has(item.field),
     })),
+    model: data.model,
+    device: data.device,
+  };
+}
+
+export async function executeSlmPrompt({
+  promptTemplateId,
+  userInstruction,
+  ocrText,
+  jsonSchema,
+}: SlmPromptRequest): Promise<SlmPromptResponse> {
+  const response = await fetch("/api/slm/execute-prompt", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      prompt_template_id: promptTemplateId,
+      user_instruction: userInstruction,
+      ocr_text: ocrText || "",
+      json_schema: jsonSchema || {},
+    }),
+  });
+
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(detail || `SLM prompt execution failed with ${response.status}`);
+  }
+
+  const data = (await response.json()) as {
+    result_text: string;
+    reasoning?: string;
+    category?: string;
+    model?: string;
+    device?: string;
+  };
+
+  return {
+    resultText: data.result_text,
+    reasoning: data.reasoning,
+    category: data.category,
     model: data.model,
     device: data.device,
   };

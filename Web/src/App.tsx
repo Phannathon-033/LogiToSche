@@ -1,4 +1,4 @@
-import { BrainCircuit, CheckCircle2, FileSearch, RefreshCw, UploadCloud } from "lucide-react";
+import { BrainCircuit, CheckCircle2, FileSearch, RefreshCw, Sparkles, UploadCloud } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AppHeader } from "./components/AppHeader";
 import { ConfidenceCard } from "./components/ConfidenceCard";
@@ -12,6 +12,8 @@ import { ManualReviewModal } from "./components/ManualReviewModal";
 import { OCRResultPanel } from "./components/OCRResultPanel";
 import { RecentJobsTable } from "./components/RecentJobsTable";
 import { RegisterPage } from "./components/RegisterPage";
+import { SlmPromptAssistantModal } from "./components/SlmPromptAssistantModal";
+import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
 import { Toast } from "./components/Toast";
 import { WorkflowStepper } from "./components/WorkflowStepper";
 import { initialJson, initialSteps, ocrText } from "./data/mockData";
@@ -20,7 +22,7 @@ import { runPaddleOcr, type OcrLanguage } from "./services/ocrApi";
 import { runSlmExtraction } from "./services/slmApi";
 import type { ConfidenceScore, DocumentJob, DocumentType, ExtractedField, JsonSchemaOutput, ReviewItem } from "./types";
 
-type WorkspaceTab = "extraction" | "analysis" | "all";
+type WorkspaceTab = "extraction" | "assistant" | "analysis" | "all";
 
 export function App() {
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
@@ -42,6 +44,7 @@ export function App() {
   const [ocrLanguage, setOcrLanguage] = useState<OcrLanguage>("th");
   const [selectedType, setSelectedType] = useState<DocumentType>("Invoice");
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>("extraction");
+  const [showPromptModal, setShowPromptModal] = useState(false);
 
   const [jsonOutput, setJsonOutput] = useState<JsonSchemaOutput>(initialJson);
   const [fields, setFields] = useState<ExtractedField[]>([]);
@@ -414,12 +417,23 @@ export function App() {
                   <div className="mb-6 flex flex-wrap items-center justify-between border-b border-line pb-4">
                     <div className="flex flex-wrap items-center gap-2">
                       <TabButton active={workspaceTab === "extraction"} label="OCR & JSON" onClick={() => setWorkspaceTab("extraction")} />
+                      <TabButton active={workspaceTab === "assistant"} label="✨ AI Prompt Assistant" onClick={() => setWorkspaceTab("assistant")} />
                       <TabButton active={workspaceTab === "analysis"} label="Confidence & Review" onClick={() => setWorkspaceTab("analysis")} />
                       <TabButton active={workspaceTab === "all"} label="ทั้งหมด" onClick={() => setWorkspaceTab("all")} />
                     </div>
-                    <span className="hidden text-xs font-bold text-slate-500 sm:inline">
-                      Confidence: <b className="text-primary">{overallConfidence}%</b>
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setShowPromptModal(true)}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all shadow-sm"
+                      >
+                        <Sparkles className="h-3.5 w-3.5" />
+                        <span>AI Prompt สำเร็จรูป</span>
+                      </button>
+                      <span className="hidden text-xs font-bold text-slate-500 sm:inline">
+                        Confidence: <b className="text-primary">{overallConfidence}%</b>
+                      </span>
+                    </div>
                   </div>
 
                   {workspaceTab === "extraction" ? (
@@ -435,6 +449,17 @@ export function App() {
                       ) : (
                         <SlmWaitingCard title="JSON Schema Output" />
                       )}
+                    </div>
+                  ) : null}
+
+                  {workspaceTab === "assistant" ? (
+                    <div className="grid gap-6">
+                      <SlmPromptAssistantPanel
+                        ocrText={ocrResultText}
+                        jsonSchema={jsonOutput}
+                        onOpenFullAssistant={() => setShowPromptModal(true)}
+                        onShowToast={showToast}
+                      />
                     </div>
                   ) : null}
 
@@ -458,6 +483,14 @@ export function App() {
                       ) : (
                         <SlmWaitingCard title="JSON Schema Output" />
                       )}
+                      <div className="xl:col-span-2">
+                        <SlmPromptAssistantPanel
+                          ocrText={ocrResultText}
+                          jsonSchema={jsonOutput}
+                          onOpenFullAssistant={() => setShowPromptModal(true)}
+                          onShowToast={showToast}
+                        />
+                      </div>
                       {slmReady ? <ConfidenceCard overall={overallConfidence} scores={confidenceScores} /> : <SlmWaitingCard title="ความมั่นใจ / Confidence" />}
                       {slmReady ? <ManualReviewCard items={reviewItems} onReview={setReviewingItem} /> : <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />}
                     </div>
@@ -479,6 +512,14 @@ export function App() {
           )}
         </div>
       </main>
+
+      <SlmPromptAssistantModal
+        isOpen={showPromptModal}
+        onClose={() => setShowPromptModal(false)}
+        ocrText={ocrResultText}
+        jsonSchema={jsonOutput}
+        onShowToast={showToast}
+      />
 
       {reviewingItem ? <ManualReviewModal item={reviewingItem} onCancel={() => setReviewingItem(null)} onConfirm={handleConfirmReview} /> : null}
       {toast ? <Toast message={toast} onClose={() => setToast("")} /> : null}
