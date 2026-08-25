@@ -200,8 +200,8 @@ def health() -> dict[str, str]:
 async def ocr_document(file: UploadFile = File(...), lang: str = Form("th")) -> dict[str, Any]:
     lang = lang.lower().strip()
     suffix = Path(file.filename or "document").suffix.lower()
-    if suffix not in {".png", ".jpg", ".jpeg", ".pdf"}:
-        raise HTTPException(status_code=415, detail="รองรับเฉพาะ PDF, JPG, JPEG และ PNG")
+    if suffix not in {".png", ".jpg", ".jpeg", ".pdf", ".tif", ".tiff"}:
+        raise HTTPException(status_code=415, detail="รองรับเฉพาะ PDF, JPG, JPEG, PNG, TIF และ TIFF")
 
     payload = await file.read()
     if not payload:
