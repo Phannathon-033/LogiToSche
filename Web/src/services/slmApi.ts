@@ -3,6 +3,7 @@ import type { OcrLine } from "./ocrApi";
 
 interface SlmExtractRequest {
   documentTypeHint: string;
+  sourceFile?: string;
   ocrText: string;
   ocrLines: OcrLine[];
 }
@@ -13,6 +14,7 @@ interface SlmApiField {
   value: string;
   confidence: number;
   status: FieldStatus;
+  isOther?: boolean;
 }
 
 interface SlmApiConfidence {
@@ -29,6 +31,7 @@ interface SlmApiReviewItem {
   slmValue: string;
   confidence: number;
   status: "review" | "resolved";
+  isOther?: boolean;
 }
 
 interface SlmApiResponse {
@@ -50,24 +53,23 @@ export interface SlmExtractionResult {
   device: string;
 }
 
-const jsonFieldNames = new Set<keyof JsonSchemaOutput>([
+const ROOT_FIELDS = new Set<string>([
   "document_type",
-  "invoice_no",
+  "document_no",
   "document_date",
-  "receiver_name",
-  "truck_plate",
-  "gross_weight_kg",
+  "party_name",
+  "source_file",
   "quantity",
   "total_amount",
-  "other",
 ]);
 
-export async function runSlmExtraction({ documentTypeHint, ocrText, ocrLines }: SlmExtractRequest): Promise<SlmExtractionResult> {
+export async function runSlmExtraction({ documentTypeHint, sourceFile, ocrText, ocrLines }: SlmExtractRequest): Promise<SlmExtractionResult> {
   const response = await fetch("/api/slm/extract", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       document_type_hint: documentTypeHint,
+      source_file: sourceFile || "document",
       ocr_text: ocrText,
       ocr_lines: ocrLines,
     }),
@@ -81,33 +83,31 @@ export async function runSlmExtraction({ documentTypeHint, ocrText, ocrLines }: 
   const data = (await response.json()) as SlmApiResponse;
   return {
     jsonOutput: data.json_schema,
-    fields: data.fields
-      .filter((field) => jsonFieldNames.has(field.field as keyof JsonSchemaOutput))
-      .map((field, index) => ({
-        id: index + 1,
-        sourceText: field.sourceText,
-        field: field.field as keyof JsonSchemaOutput,
-        value: field.value,
-        confidence: field.confidence,
-        status: field.status,
-      })),
+    fields: (data.fields || []).map((field, index) => ({
+      id: index + 1,
+      sourceText: field.sourceText,
+      field: field.field,
+      value: field.value,
+      confidence: field.confidence,
+      status: field.status,
+      isOther: !ROOT_FIELDS.has(field.field),
+    })),
     confidenceScores: [
       { label: "การอ่านข้อความ (OCR)", value: data.confidence.ocr, tone: "green" },
       { label: "การทำความเข้าใจ (SLM)", value: data.confidence.slm, tone: "blue" },
-      { label: "การแมปฟิลด์", value: data.confidence.mapping, tone: "blue" },
-      { label: "ความครบถ้วนของข้อมูล", value: data.confidence.completeness, tone: "blue" },
+      { label: "การแมปฟิลด์หลัก 7 ฟิลด์", value: data.confidence.mapping, tone: "blue" },
+      { label: "ความครบถ้วนข้อมูล & Other", value: data.confidence.completeness, tone: "blue" },
     ],
     overallConfidence: data.confidence.overall,
-    reviewItems: data.review_items
-      .filter((item) => jsonFieldNames.has(item.field as keyof JsonSchemaOutput))
-      .map((item) => ({
-        id: item.field,
-        field: item.field as keyof JsonSchemaOutput,
-        ocrValue: item.ocrValue,
-        slmValue: item.slmValue,
-        confidence: item.confidence,
-        status: item.status,
-      })),
+    reviewItems: (data.review_items || []).map((item) => ({
+      id: item.field,
+      field: item.field,
+      ocrValue: item.ocrValue,
+      slmValue: item.slmValue,
+      confidence: item.confidence,
+      status: item.status,
+      isOther: !ROOT_FIELDS.has(item.field),
+    })),
     model: data.model,
     device: data.device,
   };

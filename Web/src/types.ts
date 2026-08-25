@@ -12,17 +12,11 @@ export interface ProcessingStep {
 
 export interface JsonSchemaOutput {
   document_type: string;
-  invoice_no: string;
-  po_number: string;
+  document_no: string;
   document_date: string;
-  sender_name: string;
-  receiver_name: string;
-  tax_id: string;
-  truck_plate: string;
-  gross_weight_kg: number;
+  party_name: string;
+  source_file: string;
   quantity: number;
-  subtotal_amount: number;
-  vat_amount: number;
   total_amount: number;
   other: Record<string, unknown>;
 }
@@ -30,10 +24,11 @@ export interface JsonSchemaOutput {
 export interface ExtractedField {
   id: number;
   sourceText: string;
-  field: keyof JsonSchemaOutput;
+  field: string;
   value: string;
   confidence: number;
   status: FieldStatus;
+  isOther?: boolean;
 }
 
 export interface ConfidenceScore {
@@ -44,11 +39,12 @@ export interface ConfidenceScore {
 
 export interface ReviewItem {
   id: string;
-  field: keyof JsonSchemaOutput;
+  field: string;
   ocrValue: string;
   slmValue: string;
   confidence: number;
   status: "review" | "resolved";
+  isOther?: boolean;
 }
 
 export interface DocumentJob {

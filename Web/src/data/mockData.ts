@@ -70,35 +70,34 @@ Total Amount                              52,162.50`;
 
 export const initialJson: JsonSchemaOutput = {
   document_type: "invoice",
-  invoice_no: "INV-2024-001",
-  po_number: "PO-998822",
+  document_no: "INV-2024-001",
   document_date: "2024-05-15",
-  sender_name: "ABC Logistics Co., Ltd.",
-  receiver_name: "XYZ Importer Co., Ltd.",
-  tax_id: "0105558012345",
-  truck_plate: "70-1234",
-  gross_weight_kg: 25000,
+  party_name: "ABC Logistics Co., Ltd.",
+  source_file: "sample_invoice.png",
   quantity: 120,
-  subtotal_amount: 48750,
-  vat_amount: 3412.5,
   total_amount: 52162.5,
-  other: {},
+  other: {
+    sender_name: "ABC Logistics Co., Ltd.",
+    receiver_name: "XYZ Importer Co., Ltd.",
+    po_number: "PO-998822",
+    tax_id: "0105558012345",
+    truck_plate: "70-1234",
+    gross_weight_kg: 25000,
+    subtotal_amount: 48750,
+    vat_amount: 3412.5,
+  },
 };
 
 export const initialFields: ExtractedField[] = [
-  { id: 1, sourceText: "INV-2024-001", field: "invoice_no", value: "INV-2024-001", confidence: 98, status: "success" },
-  { id: 2, sourceText: "15/05/2024", field: "document_date", value: "2024-05-15", confidence: 97, status: "success" },
-  {
-    id: 3,
-    sourceText: "ABC Logistics Co., Ltd.",
-    field: "receiver_name",
-    value: "ABC Logistics Co., Ltd.",
-    confidence: 96,
-    status: "success",
-  },
-  { id: 4, sourceText: "70-1234", field: "truck_plate", value: "70-1234", confidence: 78, status: "review" },
-  { id: 5, sourceText: "25,000 KG", field: "gross_weight_kg", value: "25000", confidence: 85, status: "review" },
+  { id: 1, sourceText: "INVOICE", field: "document_type", value: "invoice", confidence: 99, status: "success" },
+  { id: 2, sourceText: "INV-2024-001", field: "document_no", value: "INV-2024-001", confidence: 98, status: "success" },
+  { id: 3, sourceText: "15/05/2024", field: "document_date", value: "2024-05-15", confidence: 97, status: "success" },
+  { id: 4, sourceText: "ABC Logistics Co., Ltd.", field: "party_name", value: "ABC Logistics Co., Ltd.", confidence: 96, status: "success" },
+  { id: 5, sourceText: "sample_invoice.png", field: "source_file", value: "sample_invoice.png", confidence: 100, status: "success" },
   { id: 6, sourceText: "120", field: "quantity", value: "120", confidence: 96, status: "success" },
+  { id: 7, sourceText: "52,162.50", field: "total_amount", value: "52162.5", confidence: 98, status: "success" },
+  { id: 8, sourceText: "70-1234", field: "truck_plate", value: "70-1234", confidence: 85, status: "review", isOther: true },
+  { id: 9, sourceText: "25,000 KG", field: "gross_weight_kg", value: "25000", confidence: 85, status: "review", isOther: true },
 ];
 
 export const confidenceScores: ConfidenceScore[] = [

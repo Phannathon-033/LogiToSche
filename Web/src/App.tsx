@@ -145,6 +145,7 @@ export function App() {
 
       const slm = await runSlmExtraction({
         documentTypeHint: selectedType,
+        sourceFile: file.name,
         ocrText: text,
         ocrLines: ocr.lines,
       });
@@ -173,6 +174,65 @@ export function App() {
       );
       showToast(message);
     }
+  }
+
+  function handleAddCustomField(key: string, value: string, isOther: boolean) {
+    const parsedValue = Number.isNaN(Number(value)) ? value : Number(value);
+
+    if (isOther) {
+      setJsonOutput((current) => ({
+        ...current,
+        other: {
+          ...(current.other || {}),
+          [key]: parsedValue,
+        },
+      }));
+    } else {
+      setJsonOutput((current) => ({
+        ...current,
+        [key]: parsedValue,
+      }));
+    }
+
+    setFields((current) => {
+      const existing = current.findIndex((f) => f.field === key);
+      if (existing >= 0) {
+        return current.map((f, idx) =>
+          idx === existing
+            ? { ...f, value: String(parsedValue), confidence: 100, status: "success" }
+            : f,
+        );
+      }
+      return [
+        ...current,
+        {
+          id: current.length + 1,
+          sourceText: value,
+          field: key,
+          value: String(parsedValue),
+          confidence: 100,
+          status: "success",
+          isOther,
+        },
+      ];
+    });
+
+    showToast(`เพิ่มฟิลด์ "${key}" ลงใน ${isOther ? "other" : "โครงสร้างหลัก"} สำเร็จ`);
+  }
+
+  function handleDeleteCustomField(fieldKey: string, isOther?: boolean) {
+    if (isOther) {
+      setJsonOutput((current) => {
+        const nextOther = { ...(current.other || {}) };
+        delete nextOther[fieldKey];
+        return {
+          ...current,
+          other: nextOther,
+        };
+      });
+    }
+    setFields((current) => current.filter((f) => f.field !== fieldKey));
+    showToast(`ลบฟิลด์ "${fieldKey}" สำเร็จ`);
   }
 
   function handleResetDocument() {
@@ -212,14 +272,26 @@ export function App() {
   }
 
   function handleConfirmReview(item: ReviewItem, newValue: string) {
+    const parsedValue = Number.isNaN(Number(newValue)) ? newValue : Number(newValue);
     setReviewItems((current) => current.map((review) => (review.id === item.id ? { ...review, slmValue: newValue, status: "resolved" } : review)));
     setFields((current) =>
       current.map((field) => (field.field === item.field ? { ...field, value: newValue, confidence: 100, status: "success" } : field)),
     );
-    setJsonOutput((current) => ({
-      ...current,
-      [item.field]: Number.isNaN(Number(newValue)) ? newValue : Number(newValue),
-    }));
+    setJsonOutput((current) => {
+      if (item.isOther || (current.other && item.field in current.other)) {
+        return {
+          ...current,
+          other: {
+            ...current.other,
+            [item.field]: parsedValue,
+          },
+        };
+      }
+      return {
+        ...current,
+        [item.field]: parsedValue,
+      };
+    });
     setReviewingItem(null);
     showToast(`ยืนยันค่า ${item.field} แล้ว`);
   }
@@ -338,7 +410,12 @@ export function App() {
                     <div className="grid gap-6 xl:grid-cols-2">
                       <OCRResultPanel text={ocrResultText} onCopy={() => copyText(ocrResultText, "คัดลอก OCR Text แล้ว")} />
                       {slmReady ? (
-                        <JSONOutputPanel json={jsonOutput} onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")} onDownload={() => createJsonDownload(jsonOutput)} />
+                        <JSONOutputPanel
+                          json={jsonOutput}
+                          onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
+                          onDownload={() => createJsonDownload(jsonOutput)}
+                          onAddFieldToOther={(k, v) => handleAddCustomField(k, v, true)}
+                        />
                       ) : (
                         <SlmWaitingCard title="JSON Schema Output" />
                       )}
@@ -356,7 +433,12 @@ export function App() {
                     <div className="grid gap-6 xl:grid-cols-2">
                       <OCRResultPanel text={ocrResultText} onCopy={() => copyText(ocrResultText, "คัดลอก OCR Text แล้ว")} />
                       {slmReady ? (
-                        <JSONOutputPanel json={jsonOutput} onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")} onDownload={() => createJsonDownload(jsonOutput)} />
+                        <JSONOutputPanel
+                          json={jsonOutput}
+                          onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
+                          onDownload={() => createJsonDownload(jsonOutput)}
+                          onAddFieldToOther={(k, v) => handleAddCustomField(k, v, true)}
+                        />
                       ) : (
                         <SlmWaitingCard title="JSON Schema Output" />
                       )}
@@ -368,7 +450,13 @@ export function App() {
               </div>
 
               <section className="grid min-w-0 gap-8 2xl:grid-cols-[minmax(0,1.4fr)_minmax(400px,0.85fr)]">
-                <ExtractedFieldsTable fields={fields} selectedType={selectedType} onTypeChange={setSelectedType} />
+                <ExtractedFieldsTable
+                  fields={fields}
+                  selectedType={selectedType}
+                  onTypeChange={setSelectedType}
+                  onAddField={handleAddCustomField}
+                  onDeleteField={handleDeleteCustomField}
+                />
                 <RecentJobsTable jobs={jobs} />
               </section>
             </>

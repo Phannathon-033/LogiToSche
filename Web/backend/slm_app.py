@@ -62,6 +62,7 @@ class OcrLine(BaseModel):
 
 class SlmExtractRequest(BaseModel):
     document_type_hint: str = "Invoice"
+    source_file: str = "document"
     ocr_text: str = Field(default="", min_length=1)
     ocr_lines: list[OcrLine] = Field(default_factory=list)
 
@@ -83,7 +84,8 @@ def slm_extract(payload: SlmExtractRequest) -> dict[str, Any]:
                 "content": (
                     "You are an expert AI logistics document parser. "
                     "Extract structured fields from OCR text and return ONLY valid JSON matching the exact requested schema. "
-                    "Do not wrap in markdown or add commentary."
+                    "Top-level MUST have exactly 7 fields: document_type, document_no, document_date, party_name, source_file, quantity, total_amount, plus an 'other' object for all extra details. "
+                    "Do not wrap in markdown explanations."
                 ),
             },
             {"role": "user", "content": prompt},
@@ -102,7 +104,7 @@ def slm_extract(payload: SlmExtractRequest) -> dict[str, Any]:
         output_ids = generated_ids[0][inputs.input_ids.shape[-1] :]
         response_text = tokenizer.decode(output_ids, skip_special_tokens=True)
         data = parse_json_object(response_text)
-        normalized = normalize_slm_output(data)
+        normalized = normalize_slm_output(data, payload.source_file)
         return {**normalized, "model": SLM_MODEL_ID, "device": "cuda:0"}
     except Exception as exc:
         fallback = rule_based_extraction(payload)
@@ -113,10 +115,12 @@ def rule_based_extraction(payload: SlmExtractRequest) -> dict[str, Any]:
     text = payload.ocr_text
     
     inv_match = re.search(r'(?:invoice|inv|เลขที่|ใบกำกับภาษี|ใบแจ้งหนี้|พะย|no[\.\s:]*)\s*[:\.\s#]*([A-Za-z0-9\-\/]{3,25})', text, re.IGNORECASE)
-    invoice_no = inv_match.group(1).strip() if inv_match else ""
+    document_no = inv_match.group(1).strip() if inv_match else ""
 
     po_match = re.search(r'(?:po|p\.o\.|purchase order|ใบสั่งซื้อ|เลขที่ po)\s*[:\.\s#]*([A-Za-z0-9\-\/]{3,25})', text, re.IGNORECASE)
     po_number = po_match.group(1).strip() if po_match else ""
+    if not document_no and po_number:
+        document_no = po_number
 
     date_match = re.search(r'(\d{4}[\-\/\.]\d{2}[\-\/\.]\d{2}|\d{1,2}[\-\/\.]\d{1,2}[\-\/\.]\d{2,4})', text)
     document_date = date_match.group(1).strip() if date_match else ""
@@ -127,11 +131,16 @@ def rule_based_extraction(payload: SlmExtractRequest) -> dict[str, Any]:
     receiver_match = re.search(r'(?:customer|receiver|ผู้รับ|คลัง|ลูกค้า|ถึง|to:?)\s*[:\.\s]*([^\n\r]{3,60})', text, re.IGNORECASE)
     receiver_name = receiver_match.group(1).strip() if receiver_match else ""
 
+    party_name = receiver_name or sender_name or ""
+
     tax_match = re.search(r'(?:tax id|vat id|เลขประจำตัวผู้เสียภาษี|เลขผู้เสียภาษี|tax)\s*[:\.\s#]*([0-9\-\s]{10,18})', text, re.IGNORECASE)
     tax_id = tax_match.group(1).strip() if tax_match else ""
 
     plate_match = re.search(r'(?:ทะเบียน|plate|truck|รถทะเบียน)\s*[:\.\s]*([0-9]{1,2}\-[0-9]{3,4}|[ก-ฮ]{1,3}\s*[0-9]{1,4})', text, re.IGNORECASE)
     truck_plate = plate_match.group(1).strip() if plate_match else ""
+
+    qty_match = re.search(r'(?:qty|quantity|จำนวน|ยอดจำนวน)\s*[:\.\s]*([0-9,]+)', text, re.IGNORECASE)
+    quantity = to_number(qty_match.group(1)) if qty_match else 0
 
     subtotal_match = re.search(r'(?:subtotal|ยอดก่อนภาษี|ก่อน vat|รวมเงิน)\s*[:\s]*([0-9,]+\.?[0-9]*)', text, re.IGNORECASE)
     subtotal_amount = float(subtotal_match.group(1).replace(",", "")) if subtotal_match else 0.0
@@ -153,57 +162,70 @@ def rule_based_extraction(payload: SlmExtractRequest) -> dict[str, Any]:
         doc_type = "purchase_order"
 
     fields = []
-    if invoice_no:
-        fields.append({"sourceText": inv_match.group(0) if inv_match else invoice_no, "field": "invoice_no", "value": invoice_no, "confidence": 95, "status": "success"})
-    if po_number:
-        fields.append({"sourceText": po_match.group(0) if po_match else po_number, "field": "po_number", "value": po_number, "confidence": 92, "status": "success"})
+    if doc_type:
+        fields.append({"sourceText": doc_type, "field": "document_type", "value": doc_type, "confidence": 98, "status": "success"})
+    if document_no:
+        fields.append({"sourceText": inv_match.group(0) if inv_match else document_no, "field": "document_no", "value": document_no, "confidence": 95, "status": "success"})
     if document_date:
         fields.append({"sourceText": date_match.group(0) if date_match else document_date, "field": "document_date", "value": document_date, "confidence": 92, "status": "success"})
-    if sender_name:
-        fields.append({"sourceText": sender_match.group(0) if sender_match else sender_name, "field": "sender_name", "value": sender_name, "confidence": 88, "status": "success"})
-    if receiver_name:
-        fields.append({"sourceText": receiver_match.group(0) if receiver_match else receiver_name, "field": "receiver_name", "value": receiver_name, "confidence": 88, "status": "success"})
-    if tax_id:
-        fields.append({"sourceText": tax_match.group(0) if tax_match else tax_id, "field": "tax_id", "value": tax_id, "confidence": 90, "status": "success"})
-    if truck_plate:
-        fields.append({"sourceText": plate_match.group(0) if plate_match else truck_plate, "field": "truck_plate", "value": truck_plate, "confidence": 90, "status": "success"})
-    if subtotal_amount:
-        fields.append({"sourceText": subtotal_match.group(0) if subtotal_match else str(subtotal_amount), "field": "subtotal_amount", "value": str(subtotal_amount), "confidence": 95, "status": "success"})
-    if vat_amount:
-        fields.append({"sourceText": vat_match.group(0) if vat_match else str(vat_amount), "field": "vat_amount", "value": str(vat_amount), "confidence": 95, "status": "success"})
+    if party_name:
+        fields.append({"sourceText": receiver_match.group(0) if receiver_match else (sender_match.group(0) if sender_match else party_name), "field": "party_name", "value": party_name, "confidence": 90, "status": "success"})
+    fields.append({"sourceText": payload.source_file, "field": "source_file", "value": payload.source_file, "confidence": 100, "status": "success"})
+    if quantity:
+        fields.append({"sourceText": qty_match.group(0) if qty_match else str(quantity), "field": "quantity", "value": str(quantity), "confidence": 92, "status": "success"})
     if total_amount:
         fields.append({"sourceText": amount_match.group(0) if amount_match else str(total_amount), "field": "total_amount", "value": str(total_amount), "confidence": 95, "status": "success"})
 
+    # Other secondary fields
+    other_fields: dict[str, Any] = {}
+    if sender_name:
+        other_fields["sender_name"] = sender_name
+        fields.append({"sourceText": sender_name, "field": "sender_name", "value": sender_name, "confidence": 88, "status": "success", "isOther": True})
+    if receiver_name:
+        other_fields["receiver_name"] = receiver_name
+        fields.append({"sourceText": receiver_name, "field": "receiver_name", "value": receiver_name, "confidence": 88, "status": "success", "isOther": True})
+    if po_number:
+        other_fields["po_number"] = po_number
+        fields.append({"sourceText": po_number, "field": "po_number", "value": po_number, "confidence": 92, "status": "success", "isOther": True})
+    if tax_id:
+        other_fields["tax_id"] = tax_id
+        fields.append({"sourceText": tax_id, "field": "tax_id", "value": tax_id, "confidence": 90, "status": "success", "isOther": True})
+    if truck_plate:
+        other_fields["truck_plate"] = truck_plate
+        fields.append({"sourceText": truck_plate, "field": "truck_plate", "value": truck_plate, "confidence": 90, "status": "success", "isOther": True})
+    if subtotal_amount:
+        other_fields["subtotal_amount"] = subtotal_amount
+        fields.append({"sourceText": str(subtotal_amount), "field": "subtotal_amount", "value": str(subtotal_amount), "confidence": 95, "status": "success", "isOther": True})
+    if vat_amount:
+        other_fields["vat_amount"] = vat_amount
+        fields.append({"sourceText": str(vat_amount), "field": "vat_amount", "value": str(vat_amount), "confidence": 95, "status": "success", "isOther": True})
+
     review_items = []
-    if not invoice_no:
-        review_items.append({"field": "invoice_no", "ocrValue": "-", "slmValue": "-", "confidence": 40, "status": "review"})
+    if not document_no:
+        review_items.append({"field": "document_no", "ocrValue": "-", "slmValue": "-", "confidence": 40, "status": "review"})
     if not document_date:
         review_items.append({"field": "document_date", "ocrValue": "-", "slmValue": "-", "confidence": 40, "status": "review"})
+    if not party_name:
+        review_items.append({"field": "party_name", "ocrValue": "-", "slmValue": "-", "confidence": 40, "status": "review"})
 
     return {
         "json_schema": {
             "document_type": doc_type,
-            "invoice_no": invoice_no,
-            "po_number": po_number,
+            "document_no": document_no,
             "document_date": document_date,
-            "sender_name": sender_name,
-            "receiver_name": receiver_name,
-            "tax_id": tax_id,
-            "truck_plate": truck_plate,
-            "gross_weight_kg": 0,
-            "quantity": 0,
-            "subtotal_amount": subtotal_amount,
-            "vat_amount": vat_amount,
+            "party_name": party_name,
+            "source_file": payload.source_file,
+            "quantity": quantity,
             "total_amount": total_amount,
-            "other": {},
+            "other": other_fields,
         },
         "fields": fields,
         "confidence": {
-            "overall": 92 if len(fields) >= 3 else 65,
+            "overall": 92 if len(fields) >= 4 else 65,
             "ocr": 95,
             "slm": 90,
             "mapping": 92,
-            "completeness": 90 if len(fields) >= 4 else 55,
+            "completeness": 90 if len(fields) >= 5 else 60,
         },
         "review_items": review_items,
     }
@@ -233,34 +255,46 @@ def build_slm_prompt(payload: SlmExtractRequest) -> str:
     schema = {
         "json_schema": {
             "document_type": "invoice | bill_of_lading | packing_list | purchase_order | unknown",
-            "invoice_no": "Invoice/Document ID",
-            "po_number": "Purchase Order Number if present",
-            "document_date": "YYYY-MM-DD or document date string",
-            "sender_name": "Company issuing/sending the document",
-            "receiver_name": "Customer/Billed to/Shipping destination",
-            "tax_id": "Tax ID / VAT Registration number if present",
-            "truck_plate": "Vehicle plate or transport ID",
-            "gross_weight_kg": 0,
+            "document_no": "Document or invoice reference number",
+            "document_date": "YYYY-MM-DD or date string",
+            "party_name": "Customer, buyer, vendor, supplier, or party name",
+            "source_file": payload.source_file,
             "quantity": 0,
-            "subtotal_amount": 0,
-            "vat_amount": 0,
             "total_amount": 0,
-            "other": {},
+            "other": {
+                "sender_name": "",
+                "receiver_name": "",
+                "po_number": "",
+                "tax_id": "",
+                "truck_plate": "",
+                "gross_weight_kg": 0,
+                "subtotal_amount": 0,
+                "vat_amount": 0,
+            },
         },
-        "fields": [{"sourceText": "source text from OCR", "field": "invoice_no", "value": "normalized value", "confidence": 95, "status": "success | review | error | processing"}],
+        "fields": [
+            {"sourceText": "source text from OCR", "field": "document_no", "value": "normalized value", "confidence": 95, "status": "success | review | error | processing"},
+            {"sourceText": "source text from OCR", "field": "party_name", "value": "normalized value", "confidence": 92, "status": "success | review | error | processing"},
+        ],
         "confidence": {"overall": 90, "ocr": 95, "slm": 90, "mapping": 92, "completeness": 90},
-        "review_items": [{"field": "truck_plate", "ocrValue": "raw OCR value", "slmValue": "normalized value", "confidence": 50, "status": "review"}],
+        "review_items": [{"field": "document_no", "ocrValue": "raw OCR value", "slmValue": "normalized value", "confidence": 50, "status": "review"}],
     }
     return (
         "Extract logistics fields from OCR text and normalize into this EXACT JSON structure.\n"
-        "Instructions:\n"
-        "- Parse both Thai and English text.\n"
-        "- Normalize dates to YYYY-MM-DD when possible.\n"
-        "- Parse numerical fields (subtotal_amount, vat_amount, total_amount, gross_weight_kg, quantity) as numbers (float/int).\n"
-        "- Put unmapped extra key-value pairs into json_schema.other.\n"
-        "- Include confidence scores (0-100).\n"
-        "- Return ONLY valid JSON.\n\n"
-        f"Document type hint: {payload.document_type_hint}\n\n"
+        "STRICT REQUIREMENTS:\n"
+        "1. Top-level JSON MUST contain exactly these 7 keys:\n"
+        "   - 'document_type'\n"
+        "   - 'document_no'\n"
+        "   - 'document_date'\n"
+        "   - 'party_name'\n"
+        "   - 'source_file'\n"
+        "   - 'quantity'\n"
+        "   - 'total_amount'\n"
+        "2. Put ALL other fields (sender_name, receiver_name, po_number, tax_id, truck_plate, gross_weight_kg, subtotal_amount, vat_amount, etc.) inside the 'other' object.\n"
+        "3. Parse numbers for quantity, total_amount, subtotal_amount, vat_amount, gross_weight_kg.\n"
+        "4. Return ONLY valid JSON.\n\n"
+        f"Document type hint: {payload.document_type_hint}\n"
+        f"Source filename: {payload.source_file}\n\n"
         f"Required output shape:\n{json.dumps(schema, ensure_ascii=False, indent=2)}\n\n"
         f"OCR text:\n{payload.ocr_text}\n"
     )
@@ -282,25 +316,36 @@ def parse_json_object(text: str) -> dict[str, Any]:
         raise HTTPException(status_code=502, detail=f"SLM returned invalid JSON: {exc}") from exc
 
 
-def normalize_slm_output(data: dict[str, Any]) -> dict[str, Any]:
-    json_schema = data.get("json_schema") if isinstance(data.get("json_schema"), dict) else {}
+def normalize_slm_output(data: dict[str, Any], default_source_file: str = "document") -> dict[str, Any]:
+    raw_schema = data.get("json_schema") if isinstance(data.get("json_schema"), dict) else {}
     confidence = data.get("confidence") if isinstance(data.get("confidence"), dict) else {}
+
+    # Extract 7 core fields
+    document_type = str(raw_schema.get("document_type", "unknown"))
+    document_no = str(raw_schema.get("document_no") or raw_schema.get("invoice_no") or "")
+    document_date = str(raw_schema.get("document_date", ""))
+    party_name = str(raw_schema.get("party_name") or raw_schema.get("receiver_name") or raw_schema.get("sender_name") or "")
+    source_file = str(raw_schema.get("source_file") or default_source_file)
+    quantity = to_number(raw_schema.get("quantity"))
+    total_amount = to_number(raw_schema.get("total_amount"))
+
+    # Collect all other fields into 'other'
+    other_dict = raw_schema.get("other") if isinstance(raw_schema.get("other"), dict) else {}
+    reserved_keys = {"document_type", "document_no", "document_date", "party_name", "source_file", "quantity", "total_amount", "other"}
+    for k, v in raw_schema.items():
+        if k not in reserved_keys and k not in other_dict:
+            other_dict[k] = v
+
     return {
         "json_schema": {
-            "document_type": str(json_schema.get("document_type", "unknown")),
-            "invoice_no": str(json_schema.get("invoice_no", "")),
-            "po_number": str(json_schema.get("po_number", "")),
-            "document_date": str(json_schema.get("document_date", "")),
-            "sender_name": str(json_schema.get("sender_name", "")),
-            "receiver_name": str(json_schema.get("receiver_name", "")),
-            "tax_id": str(json_schema.get("tax_id", "")),
-            "truck_plate": str(json_schema.get("truck_plate", "")),
-            "gross_weight_kg": to_number(json_schema.get("gross_weight_kg")),
-            "quantity": to_number(json_schema.get("quantity")),
-            "subtotal_amount": to_number(json_schema.get("subtotal_amount")),
-            "vat_amount": to_number(json_schema.get("vat_amount")),
-            "total_amount": to_number(json_schema.get("total_amount")),
-            "other": json_schema.get("other") if isinstance(json_schema.get("other"), dict) else {},
+            "document_type": document_type,
+            "document_no": document_no,
+            "document_date": document_date,
+            "party_name": party_name,
+            "source_file": source_file,
+            "quantity": quantity,
+            "total_amount": total_amount,
+            "other": other_dict,
         },
         "fields": normalize_fields(data.get("fields")),
         "confidence": {
@@ -320,10 +365,17 @@ def normalize_fields(fields: Any) -> list[dict[str, Any]]:
     normalized = []
     for field in fields:
         if isinstance(field, dict):
+            field_name = str(field.get("field", ""))
+            # Remap legacy field names if needed
+            if field_name == "invoice_no":
+                field_name = "document_no"
+            elif field_name in {"receiver_name", "sender_name"} and not any(f.get("field") == "party_name" for f in normalized):
+                field_name = "party_name"
+
             normalized.append(
                 {
                     "sourceText": str(field.get("sourceText", "")),
-                    "field": str(field.get("field", "")),
+                    "field": field_name,
                     "value": str(field.get("value", "")),
                     "confidence": clamp_int(field.get("confidence"), 0, 100),
                     "status": normalize_status(field.get("status")),
@@ -338,9 +390,12 @@ def normalize_review_items(items: Any) -> list[dict[str, Any]]:
     normalized = []
     for item in items:
         if isinstance(item, dict):
+            field_name = str(item.get("field", ""))
+            if field_name == "invoice_no":
+                field_name = "document_no"
             normalized.append(
                 {
-                    "field": str(item.get("field", "")),
+                    "field": field_name,
                     "ocrValue": str(item.get("ocrValue", "")),
                     "slmValue": str(item.get("slmValue", "")),
                     "confidence": clamp_int(item.get("confidence"), 0, 100),
