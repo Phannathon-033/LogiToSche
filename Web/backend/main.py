@@ -470,20 +470,35 @@ def extract_lines(raw_result: Any) -> list[dict[str, Any]]:
     lines: list[dict[str, Any]] = []
 
     def walk(node: Any) -> None:
+        if node is None:
+            return
         if isinstance(node, dict):
-            if "dt_polys" in node or "rec_text" in node or "rec_score" in node:
-                polys = node.get("dt_polys", [])
-                texts = node.get("rec_text", [])
-                scores = node.get("rec_score", [])
+            texts = first_present(node, "rec_texts", "rec_text", "texts")
+            scores = first_present(node, "rec_scores", "rec_score", "scores")
+            boxes = first_present(node, "rec_polys", "dt_polys", "rec_boxes", "boxes")
+            if texts is not None:
+                if scores is None:
+                    scores = []
+                if boxes is None:
+                    boxes = []
                 for i, text in enumerate(texts):
-                    score = float(scores[i]) if i < len(scores) else 0.0
-                    box = polys[i] if i < len(polys) else None
-                    lines.append({"text": text, "confidence": score, "box": normalize_box(box)})
+                    score = float(scores[i]) if i < len(scores) else 0.95
+                    box = boxes[i] if i < len(boxes) else None
+                    lines.append({"text": str(text), "confidence": score, "box": normalize_box(box)})
                 return
             for value in node.values():
                 walk(value)
             return
         if isinstance(node, (list, tuple)):
+            if len(node) >= 2 and isinstance(node[1], (list, tuple)) and len(node[1]) >= 2 and isinstance(node[1][0], str):
+                lines.append(
+                    {
+                        "text": str(node[1][0]),
+                        "confidence": float(node[1][1]),
+                        "box": normalize_box(node[0]),
+                    }
+                )
+                return
             for value in node:
                 walk(value)
 
