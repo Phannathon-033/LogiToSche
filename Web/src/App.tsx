@@ -14,7 +14,8 @@ import { RecentJobsTable } from "./components/RecentJobsTable";
 import { RegisterPage } from "./components/RegisterPage";
 import { Toast } from "./components/Toast";
 import { WorkflowStepper } from "./components/WorkflowStepper";
-import { initialJson, initialSteps, ocrText } from "./data/mockData";
+import { AdminDashboard } from "./components/AdminDashboard";
+import { initialJson, initialSteps, ocrText, recentJobs } from "./data/mockData";
 import { createJsonDownload, nextStepState } from "./services/mockProcessingService";
 import { runPaddleOcr, type OcrLanguage } from "./services/ocrApi";
 import { runSlmExtraction } from "./services/slmApi";
@@ -42,10 +43,11 @@ export function App() {
   const [ocrLanguage, setOcrLanguage] = useState<OcrLanguage>("th");
   const [selectedType, setSelectedType] = useState<DocumentType>("Invoice");
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>("extraction");
+  const [viewMode, setViewMode] = useState<"user" | "admin">("user");
 
   const [jsonOutput, setJsonOutput] = useState<JsonSchemaOutput>(initialJson);
   const [fields, setFields] = useState<ExtractedField[]>([]);
-  const [jobs, setJobs] = useState<DocumentJob[]>([]);
+  const [jobs, setJobs] = useState<DocumentJob[]>(recentJobs);
   const [confidenceScores, setConfidenceScores] = useState<ConfidenceScore[]>([]);
   const [overallConfidence, setOverallConfidence] = useState(0);
   const [reviewItems, setReviewItems] = useState<ReviewItem[]>([]);
@@ -224,6 +226,15 @@ export function App() {
     showToast(`ยืนยันค่า ${item.field} แล้ว`);
   }
 
+  function handleUpdateJob(updatedJob: DocumentJob, updatedJson?: JsonSchemaOutput) {
+    setJobs((current) => current.map((job) => (job.id === updatedJob.id ? updatedJob : job)));
+    if (updatedJson) {
+      if (fileName === updatedJob.fileName) {
+        setJsonOutput(updatedJson);
+      }
+    }
+  }
+
   if (!userSession) {
     if (authMode === "register") {
       return (
@@ -246,131 +257,161 @@ export function App() {
       <AppHeader user={userSession} onLogout={handleLogout} />
       <main className="px-4 py-6 sm:px-6 lg:px-8">
         <div className="mx-auto flex w-full max-w-[1720px] flex-col gap-7">
-          <section className="rounded-2xl border border-line bg-white p-6 shadow-panel lg:p-8">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <span className="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-xs font-black uppercase text-cyan-600">LogiAI Docs to JSON</span>
-                  <span className="rounded-lg border border-emerald-500/30 bg-emerald-50/80 px-2.5 py-1 text-xs font-bold text-emerald-700">PaddleOCR GPU Accelerated</span>
-                  <span className="rounded-lg border border-blue-500/30 bg-blue-50/80 px-2.5 py-1 text-xs font-bold text-blue-700">Qwen2.5-1.5B CUDA</span>
-                </div>
-                <h1 className="mt-2 text-2xl font-black tracking-normal text-navy lg:text-3xl">ระบบแปลงเอกสารโลจิสติกส์เป็น JSON Schema</h1>
-                <p className="mt-1 max-w-4xl text-sm leading-6 text-slate-600">
-                  อัปโหลดเอกสารเพื่อ OCR ด้วย PaddleOCR บน GPU แล้วส่งข้อความให้ Qwen SLM วิเคราะห์เป็น JSON Schema, Confidence และ Manual Review
-                </p>
-              </div>
-
-              {hasDocument ? (
-                <button
-                  type="button"
-                  onClick={handleResetDocument}
-                  className="inline-flex items-center gap-2 rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
-                >
-                  <RefreshCw className="h-4 w-4 text-slate-500" aria-hidden="true" />
-                  รีเซ็ตเอกสาร
-                </button>
-              ) : null}
+          {/* Toggle View Mode for Admin */}
+          {(userSession?.role.includes("Admin") || userSession?.username === "somchai.w") && (
+            <div className="flex justify-end gap-2 bg-slate-100/80 border border-line p-1.5 rounded-2xl self-end shadow-sm">
+              <button
+                type="button"
+                onClick={() => setViewMode("user")}
+                className={`rounded-xl px-4 py-2 text-xs font-extrabold transition-all ${
+                  viewMode === "user" ? "bg-white text-navy shadow-sm border border-line" : "text-slate-600 hover:text-slate-950"
+                }`}
+              >
+                มุมมองเจ้าหน้าที่ (User Panel)
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("admin")}
+                className={`rounded-xl px-4 py-2 text-xs font-extrabold transition-all ${
+                  viewMode === "admin" ? "bg-navy text-white shadow-sm" : "text-slate-600 hover:text-slate-950"
+                }`}
+              >
+                มุมมองผู้ดูแลระบบ (Admin Panel)
+              </button>
             </div>
-          </section>
+          )}
 
-          {hasDocument ? <WorkflowStepper steps={steps} onStepClick={handleStepClick} /> : null}
-
-          {!hasDocument ? (
-            <div className="grid min-w-0 gap-8 xl:grid-cols-[minmax(380px,500px)_1fr]">
-              <section className="min-w-0 rounded-2xl border border-line bg-white p-6 shadow-panel">
-                <DocumentUploader
-                  fileName={fileName}
-                  fileSize={fileSize}
-                  progress={uploadProgress}
-                  language={ocrLanguage}
-                  onLanguageChange={setOcrLanguage}
-                  onFileSelect={handleFileSelect}
-                />
-              </section>
-              <AwaitingDocumentState />
-            </div>
+          {viewMode === "admin" ? (
+            <AdminDashboard jobs={jobs} onUpdateJob={handleUpdateJob} showToast={showToast} />
           ) : (
             <>
-              <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-blue-200 bg-blue-50/70 px-5 py-3.5">
-                <div className="flex items-center gap-3">
-                  <span className="grid h-10 w-10 place-items-center rounded-lg bg-primary font-extrabold text-white">{fileName.endsWith(".pdf") ? "PDF" : "IMG"}</span>
+              <section className="rounded-2xl border border-line bg-white p-6 shadow-panel lg:p-8">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                   <div>
-                    <div className="flex flex-wrap items-center gap-3">
-                      <p className="text-base font-extrabold text-navy">{fileName}</p>
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-bold text-success ring-1 ring-green-300">
-                        <CheckCircle2 className="h-3.5 w-3.5" />
-                        OCR: {ocrLanguage === "th" ? "ไทย + English" : "English"}
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-800 ring-1 ring-amber-300">
-                        <BrainCircuit className="h-3.5 w-3.5" />
-                        {slmReady ? "SLM พร้อมใช้งาน" : "รอผล SLM"}
-                      </span>
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <span className="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-xs font-black uppercase text-cyan-600">LogiAI Docs to JSON</span>
+                      <span className="rounded-lg border border-emerald-500/30 bg-emerald-50/80 px-2.5 py-1 text-xs font-bold text-emerald-700">PaddleOCR GPU Accelerated</span>
+                      <span className="rounded-lg border border-blue-500/30 bg-blue-50/80 px-2.5 py-1 text-xs font-bold text-blue-700">Qwen2.5-1.5B CUDA</span>
                     </div>
-                    <p className="mt-1 text-xs text-slate-600">ขนาด: {fileSize} · GPU pipeline: PaddleOCR + Qwen2.5</p>
+                    <h1 className="mt-2 text-2xl font-black tracking-normal text-navy lg:text-3xl">ระบบแปลงเอกสารโลจิสติกส์เป็น JSON Schema</h1>
+                    <p className="mt-1 max-w-4xl text-sm leading-6 text-slate-600">
+                      อัปโหลดเอกสารเพื่อ OCR ด้วย PaddleOCR บน GPU แล้วส่งข้อความให้ Qwen SLM วิเคราะห์เป็น JSON Schema, Confidence และ Manual Review
+                    </p>
                   </div>
+
+                  {hasDocument ? (
+                    <button
+                      type="button"
+                      onClick={handleResetDocument}
+                      className="inline-flex items-center gap-2 rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+                    >
+                      <RefreshCw className="h-4 w-4 text-slate-500" aria-hidden="true" />
+                      รีเซ็ตเอกสาร
+                    </button>
+                  ) : null}
                 </div>
+              </section>
 
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-blue-300 bg-white px-3.5 py-2 text-xs font-extrabold text-primary transition hover:bg-blue-50">
-                  <UploadCloud className="h-4 w-4" />
-                  เปลี่ยนไฟล์เอกสาร
-                  <input type="file" accept=".pdf,.jpg,.jpeg,.png" className="sr-only" onChange={(event) => handleFileSelect(event.target.files?.item(0) ?? null)} />
-                </label>
-              </div>
+              {hasDocument ? <WorkflowStepper steps={steps} onStepClick={handleStepClick} /> : null}
 
-              <div className="grid min-w-0 gap-8 lg:grid-cols-[440px_minmax(0,1fr)] xl:grid-cols-[480px_minmax(0,1fr)]">
-                <section className="flex min-w-0 flex-col rounded-2xl border border-line bg-white p-6 shadow-panel">
-                  <DocumentPreview previewUrl={previewUrl} previewName={fileName} progress={uploadProgress} onToast={showToast} />
-                </section>
-
-                <section className="flex min-w-0 flex-col rounded-2xl border border-line bg-white p-6 shadow-panel">
-                  <div className="mb-6 flex flex-wrap items-center justify-between border-b border-line pb-4">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <TabButton active={workspaceTab === "extraction"} label="OCR & JSON" onClick={() => setWorkspaceTab("extraction")} />
-                      <TabButton active={workspaceTab === "analysis"} label="Confidence & Review" onClick={() => setWorkspaceTab("analysis")} />
-                      <TabButton active={workspaceTab === "all"} label="ทั้งหมด" onClick={() => setWorkspaceTab("all")} />
+              {!hasDocument ? (
+                <div className="grid min-w-0 gap-8 xl:grid-cols-[minmax(380px,500px)_1fr]">
+                  <section className="min-w-0 rounded-2xl border border-line bg-white p-6 shadow-panel">
+                    <DocumentUploader
+                      fileName={fileName}
+                      fileSize={fileSize}
+                      progress={uploadProgress}
+                      language={ocrLanguage}
+                      onLanguageChange={setOcrLanguage}
+                      onFileSelect={handleFileSelect}
+                    />
+                  </section>
+                  <AwaitingDocumentState />
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-blue-200 bg-blue-50/70 px-5 py-3.5">
+                    <div className="flex items-center gap-3">
+                      <span className="grid h-10 w-10 place-items-center rounded-lg bg-primary font-extrabold text-white">{fileName.endsWith(".pdf") ? "PDF" : "IMG"}</span>
+                      <div>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <p className="text-base font-extrabold text-navy">{fileName}</p>
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-bold text-success ring-1 ring-green-300">
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                            OCR: {ocrLanguage === "th" ? "ไทย + English" : "English"}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-800 ring-1 ring-amber-300">
+                            <BrainCircuit className="h-3.5 w-3.5" />
+                            {slmReady ? "SLM พร้อมใช้งาน" : "รอผล SLM"}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-xs text-slate-600">ขนาด: {fileSize} · GPU pipeline: PaddleOCR + Qwen2.5</p>
+                      </div>
                     </div>
-                    <span className="hidden text-xs font-bold text-slate-500 sm:inline">
-                      Confidence: <b className="text-primary">{overallConfidence}%</b>
-                    </span>
+
+                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-blue-300 bg-white px-3.5 py-2 text-xs font-extrabold text-primary transition hover:bg-blue-50">
+                      <UploadCloud className="h-4 w-4" />
+                      เปลี่ยนไฟล์เอกสาร
+                      <input type="file" accept=".pdf,.jpg,.jpeg,.png" className="sr-only" onChange={(event) => handleFileSelect(event.target.files?.item(0) ?? null)} />
+                    </label>
                   </div>
 
-                  {workspaceTab === "extraction" ? (
-                    <div className="grid gap-6 xl:grid-cols-2">
-                      <OCRResultPanel text={ocrResultText} onCopy={() => copyText(ocrResultText, "คัดลอก OCR Text แล้ว")} />
-                      {slmReady ? (
-                        <JSONOutputPanel json={jsonOutput} onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")} onDownload={() => createJsonDownload(jsonOutput)} />
-                      ) : (
-                        <SlmWaitingCard title="JSON Schema Output" />
-                      )}
-                    </div>
-                  ) : null}
+                  <div className="grid min-w-0 gap-8 lg:grid-cols-[440px_minmax(0,1fr)] xl:grid-cols-[480px_minmax(0,1fr)]">
+                    <section className="flex min-w-0 flex-col rounded-2xl border border-line bg-white p-6 shadow-panel">
+                      <DocumentPreview previewUrl={previewUrl} previewName={fileName} progress={uploadProgress} onToast={showToast} />
+                    </section>
 
-                  {workspaceTab === "analysis" ? (
-                    <div className="grid gap-6 xl:grid-cols-2">
-                      {slmReady ? <ConfidenceCard overall={overallConfidence} scores={confidenceScores} /> : <SlmWaitingCard title="ความมั่นใจ / Confidence" />}
-                      {slmReady ? <ManualReviewCard items={reviewItems} onReview={setReviewingItem} /> : <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />}
-                    </div>
-                  ) : null}
+                    <section className="flex min-w-0 flex-col rounded-2xl border border-line bg-white p-6 shadow-panel">
+                      <div className="mb-6 flex flex-wrap items-center justify-between border-b border-line pb-4">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <TabButton active={workspaceTab === "extraction"} label="OCR & JSON" onClick={() => setWorkspaceTab("extraction")} />
+                          <TabButton active={workspaceTab === "analysis"} label="Confidence & Review" onClick={() => setWorkspaceTab("analysis")} />
+                          <TabButton active={workspaceTab === "all"} label="ทั้งหมด" onClick={() => setWorkspaceTab("all")} />
+                        </div>
+                        <span className="hidden text-xs font-bold text-slate-500 sm:inline">
+                          Confidence: <b className="text-primary">{overallConfidence}%</b>
+                        </span>
+                      </div>
 
-                  {workspaceTab === "all" ? (
-                    <div className="grid gap-6 xl:grid-cols-2">
-                      <OCRResultPanel text={ocrResultText} onCopy={() => copyText(ocrResultText, "คัดลอก OCR Text แล้ว")} />
-                      {slmReady ? (
-                        <JSONOutputPanel json={jsonOutput} onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")} onDownload={() => createJsonDownload(jsonOutput)} />
-                      ) : (
-                        <SlmWaitingCard title="JSON Schema Output" />
-                      )}
-                      {slmReady ? <ConfidenceCard overall={overallConfidence} scores={confidenceScores} /> : <SlmWaitingCard title="ความมั่นใจ / Confidence" />}
-                      {slmReady ? <ManualReviewCard items={reviewItems} onReview={setReviewingItem} /> : <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />}
-                    </div>
-                  ) : null}
-                </section>
-              </div>
+                      {workspaceTab === "extraction" ? (
+                        <div className="grid gap-6 xl:grid-cols-2">
+                          <OCRResultPanel text={ocrResultText} onCopy={() => copyText(ocrResultText, "คัดลอก OCR Text แล้ว")} />
+                          {slmReady ? (
+                            <JSONOutputPanel json={jsonOutput} onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")} onDownload={() => createJsonDownload(jsonOutput)} />
+                          ) : (
+                            <SlmWaitingCard title="JSON Schema Output" />
+                          )}
+                        </div>
+                      ) : null}
 
-              <section className="grid min-w-0 gap-8 2xl:grid-cols-[minmax(0,1.4fr)_minmax(400px,0.85fr)]">
-                <ExtractedFieldsTable fields={fields} selectedType={selectedType} onTypeChange={setSelectedType} />
-                <RecentJobsTable jobs={jobs} />
-              </section>
+                      {workspaceTab === "analysis" ? (
+                        <div className="grid gap-6 xl:grid-cols-2">
+                          {slmReady ? <ConfidenceCard overall={overallConfidence} scores={confidenceScores} /> : <SlmWaitingCard title="ความมั่นใจ / Confidence" />}
+                          {slmReady ? <ManualReviewCard items={reviewItems} onReview={setReviewingItem} /> : <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />}
+                        </div>
+                      ) : null}
+
+                      {workspaceTab === "all" ? (
+                        <div className="grid gap-6 xl:grid-cols-2">
+                          <OCRResultPanel text={ocrResultText} onCopy={() => copyText(ocrResultText, "คัดลอก OCR Text แล้ว")} />
+                          {slmReady ? (
+                            <JSONOutputPanel json={jsonOutput} onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")} onDownload={() => createJsonDownload(jsonOutput)} />
+                          ) : (
+                            <SlmWaitingCard title="JSON Schema Output" />
+                          )}
+                          {slmReady ? <ConfidenceCard overall={overallConfidence} scores={confidenceScores} /> : <SlmWaitingCard title="ความมั่นใจ / Confidence" />}
+                          {slmReady ? <ManualReviewCard items={reviewItems} onReview={setReviewingItem} /> : <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />}
+                        </div>
+                      ) : null}
+                    </section>
+                  </div>
+
+                  <section className="grid min-w-0 gap-8 2xl:grid-cols-[minmax(0,1.4fr)_minmax(400px,0.85fr)]">
+                    <ExtractedFieldsTable fields={fields} selectedType={selectedType} onTypeChange={setSelectedType} />
+                    <RecentJobsTable jobs={jobs} />
+                  </section>
+                </>
+              )}
             </>
           )}
         </div>
