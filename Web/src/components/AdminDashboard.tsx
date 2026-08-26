@@ -213,26 +213,6 @@ export function AdminDashboard({ jobs, onUpdateJob, showToast, setViewMode }: Ad
                 </button>
               ))}
             </div>
-
-            {/* Shortcuts */}
-            <div className="space-y-1.5">
-              <p className="px-3 text-[10px] font-black uppercase tracking-widest text-slate-500">ส่วน Shortcut</p>
-              {[
-                { name: "อัปโหลดเอกสาร", action: () => setViewMode("user") },
-                { name: "ตรวจสอบเอกสาร", action: () => setActiveMenu("ตรวจสอบ (Review)") },
-                { name: "Template Prompt", action: () => setActiveMenu("Prompt & SLM") },
-                { name: "API Documentation", action: () => showToast("เปิดดู API Documentation (Mock)") },
-              ].map((item) => (
-                <button
-                  key={item.name}
-                  onClick={item.action}
-                  className="w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:bg-slate-800 hover:text-white transition-all text-left"
-                >
-                  <span>{item.name}</span>
-                  <ArrowRight className="h-3 w-3 text-slate-600" />
-                </button>
-              ))}
-            </div>
           </div>
         </div>
 
