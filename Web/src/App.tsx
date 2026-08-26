@@ -252,6 +252,17 @@ export function App() {
     );
   }
 
+  if (viewMode === "admin") {
+    return (
+      <AdminDashboard
+        jobs={jobs}
+        onUpdateJob={handleUpdateJob}
+        showToast={showToast}
+        setViewMode={setViewMode}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-page text-ink antialiased">
       <AppHeader user={userSession} onLogout={handleLogout} />
@@ -263,28 +274,21 @@ export function App() {
               <button
                 type="button"
                 onClick={() => setViewMode("user")}
-                className={`rounded-xl px-4 py-2 text-xs font-extrabold transition-all ${
-                  viewMode === "user" ? "bg-white text-navy shadow-sm border border-line" : "text-slate-600 hover:text-slate-950"
-                }`}
+                className="rounded-xl px-4 py-2 text-xs font-extrabold transition-all bg-white text-navy shadow-sm border border-line"
               >
                 มุมมองเจ้าหน้าที่ (User Panel)
               </button>
               <button
                 type="button"
                 onClick={() => setViewMode("admin")}
-                className={`rounded-xl px-4 py-2 text-xs font-extrabold transition-all ${
-                  viewMode === "admin" ? "bg-navy text-white shadow-sm" : "text-slate-600 hover:text-slate-950"
-                }`}
+                className="rounded-xl px-4 py-2 text-xs font-extrabold transition-all text-slate-600 hover:text-slate-950"
               >
                 มุมมองผู้ดูแลระบบ (Admin Panel)
               </button>
             </div>
           )}
 
-          {viewMode === "admin" ? (
-            <AdminDashboard jobs={jobs} onUpdateJob={handleUpdateJob} showToast={showToast} />
-          ) : (
-            <>
+          <>
               <section className="rounded-2xl border border-line bg-white p-6 shadow-panel lg:p-8">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                   <div>
@@ -413,8 +417,7 @@ export function App() {
                 </>
               )}
             </>
-          )}
-        </div>
+          </div>
       </main>
 
       {reviewingItem ? <ManualReviewModal item={reviewingItem} onCancel={() => setReviewingItem(null)} onConfirm={handleConfirmReview} /> : null}
