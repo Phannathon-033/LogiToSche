@@ -659,10 +659,10 @@ def rule_based_fallback_extraction(payload: SlmExtractRequest) -> dict[str, Any]
     document_date = date_match.group(1).strip() if date_match else ""
 
     sender_match = re.search(r'(?:from|vendor|seller|ผู้ขาย|ผู้ส่ง|บริษัท|บจก|บมจ)\s*[:\.\s]*([^\n\r]{3,60})', text, re.IGNORECASE)
-    sender_name = sender_match.group(1).strip() if sender_name else ""
+    sender_name = sender_match.group(1).strip() if sender_match else ""
 
     receiver_match = re.search(r'(?:customer|receiver|ผู้รับ|คลัง|ลูกค้า|ถึง|to:?)\s*[:\.\s]*([^\n\r]{3,60})', text, re.IGNORECASE)
-    receiver_name = receiver_match.group(1).strip() if receiver_name else ""
+    receiver_name = receiver_match.group(1).strip() if receiver_match else ""
 
     party_name = receiver_name or sender_name or ""
 

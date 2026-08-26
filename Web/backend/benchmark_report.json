@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-08-25 20:14:42",
+  "total_samples": 2,
+  "json_valid_rate_pct": 100.0,
+  "avg_ocr_latency_sec": 3.53,
+  "avg_slm_latency_sec": 27.19,
+  "field_accuracy_rates": {
+    "document_type": "2/2 (100.0%)",
+    "document_no": "1/2 (50.0%)",
+    "document_date": "1/2 (50.0%)",
+    "party_name": "2/2 (100.0%)",
+    "source_file": "2/2 (100.0%)",
+    "quantity": "0/2 (0.0%)",
+    "total_amount": "1/2 (50.0%)",
+    "other_fields": "2/2 (100.0%)"
+  },
+  "discrepancies_count": 3,
+  "results": [
+    {
+      "file": "test_imagesa_a_a_h_aah01e00_88062630.tif",
+      "ocr_status": "ok",
+      "slm_status": "ok",
+      "ocr_lines": 22,
+      "ocr_time_sec": 2.7,
+      "slm_time_sec": 26.63,
+      "extracted_fields": {
+        "document_type": "purchase_order",
+        "document_no": "1018",
+        "document_date": "",
+        "party_name": "ber 4,",
+        "source_file": "test_imagesa_a_a_h_aah01e00_88062630.tif",
+        "quantity": 0,
+        "total_amount": 0.0,
+        "other": {
+          "receiver_name": "ber 4,",
+          "po_number": "1018"
+        }
+      },
+      "issues": [
+        "Missing document_date",
+        "Zero or missing total_amount"
+      ]
+    },
+    {
+      "file": "test_imagesa_a_a_i_aai47c00_2084020024.tif",
+      "ocr_status": "ok",
+      "slm_status": "ok",
+      "ocr_lines": 53,
+      "ocr_time_sec": 4.37,
+      "slm_time_sec": 27.76,
+      "extracted_fields": {
+        "document_type": "purchase_order",
+        "document_no": "",
+        "document_date": "01/01/95",
+        "party_name": "TALS BY",
+        "source_file": "test_imagesa_a_a_i_aai47c00_2084020024.tif",
+        "quantity": 0,
+        "total_amount": 3707.3,
+        "other": {
+          "receiver_name": "TALS BY"
+        }
+      },
+      "issues": [
+        "Missing document_no"
+      ]
+    }
+  ]
+}
