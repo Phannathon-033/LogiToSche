@@ -163,3 +163,67 @@ export const recentJobs: DocumentJob[] = [
     result: "95%",
   },
 ];
+
+export interface MockAdminDoc {
+  id: string;
+  fileName: string;
+  type: string;
+  uploadedBy: { name: string; role: string; avatar: string };
+  date: string;
+  status: string;
+  statusLabel: string;
+  result: string;
+}
+
+export const mockAdminDocs: MockAdminDoc[] = [
+  {
+    id: "INV_20250825_001.pdf",
+    fileName: "INV_20250825_001.pdf",
+    type: "Invoice",
+    uploadedBy: { name: "Nattapong P.", role: "User", avatar: "N" },
+    date: "25 ส.ค. 2025 14:30",
+    status: "success",
+    statusLabel: "Success",
+    result: "95.6%",
+  },
+  {
+    id: "BL_20250825_018.pdf",
+    fileName: "BL_20250825_018.pdf",
+    type: "Bill of Lading",
+    uploadedBy: { name: "Sirilak K.", role: "Operator", avatar: "S" },
+    date: "25 ส.ค. 2025 14:28",
+    status: "review",
+    statusLabel: "รอตรวจสอบ",
+    result: "88.2%",
+  },
+  {
+    id: "PL_20250825_017.pdf",
+    fileName: "PL_20250825_017.pdf",
+    type: "Packing List",
+    uploadedBy: { name: "Wichai T.", role: "User", avatar: "W" },
+    date: "25 ส.ค. 2025 14:25",
+    status: "success",
+    statusLabel: "สำเร็จ",
+    result: "94.1%",
+  },
+  {
+    id: "PO_20250825_016.pdf",
+    fileName: "PO_20250825_016.pdf",
+    type: "Purchase Order",
+    uploadedBy: { name: "Nattapong P.", role: "User", avatar: "N" },
+    date: "25 ส.ค. 2025 14:20",
+    status: "success",
+    statusLabel: "สำเร็จ",
+    result: "91.3%",
+  },
+  {
+    id: "INV_20250825_015.pdf",
+    fileName: "INV_20250825_015.pdf",
+    type: "Invoice",
+    uploadedBy: { name: "Sirilak K.", role: "Operator", avatar: "S" },
+    date: "25 ส.ค. 2025 14:15",
+    status: "error",
+    statusLabel: "ไม่ผ่านเกณฑ์",
+    result: "62.7%",
+  },
+];
