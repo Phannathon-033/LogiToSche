@@ -3,11 +3,11 @@ import { Users, Plus, ShieldAlert } from "lucide-react";
 
 export function AdminUserSettings() {
   const [users, setUsers] = useState([
-    { name: "สมชาย วงศ์สวัสดิ์", role: "Super Admin", email: "somchai.w@logiai.co.th", status: "Active", docs: 142 },
-    { name: "อนันต์ สุขใจ", role: "Operator", email: "anan.s@logiai.co.th", status: "Active", docs: 87 },
-    { name: "พิมลพรรณ สายชล", role: "Warehouse Manager", email: "pimonpan.p@logiai.co.th", status: "Active", docs: 54 },
+    { name: "สมชาย วงศ์สวัสดิ์", role: "Admin", email: "somchai.w@logiai.co.th", status: "Active", docs: 142 },
+    { name: "อนันต์ สุขใจ", role: "User", email: "anan.s@logiai.co.th", status: "Active", docs: 87 },
+    { name: "พิมลพรรณ สายชล", role: "User", email: "pimonpan.p@logiai.co.th", status: "Active", docs: 54 },
     { name: "Nattapong P.", role: "User", email: "nattapong.p@logiai.co.th", status: "Active", docs: 31 },
-    { name: "Sirilak K.", role: "Operator", email: "sirilak.k@logiai.co.th", status: "Active", docs: 68 },
+    { name: "Sirilak K.", role: "User", email: "sirilak.k@logiai.co.th", status: "Active", docs: 68 },
     { name: "Wichai T.", role: "User", email: "wichai.t@logiai.co.th", status: "Inactive", docs: 12 },
   ]);
 
@@ -62,11 +62,9 @@ export function AdminUserSettings() {
                 <td className="py-3.5 px-2 text-slate-500 font-semibold">{u.email}</td>
                 <td className="py-3.5 px-2">
                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                    u.role.includes("Admin") 
+                    u.role === "Admin" 
                       ? "bg-purple-50 text-purple-700 border border-purple-200" 
-                      : u.role === "Operator" 
-                        ? "bg-blue-50 text-blue-700 border border-blue-200"
-                        : "bg-slate-50 text-slate-600 border border-slate-200"
+                      : "bg-slate-50 text-slate-600 border border-slate-200"
                   }`}>
                     {u.role}
                   </span>

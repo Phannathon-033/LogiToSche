@@ -10,7 +10,7 @@ interface AppHeaderProps {
 export function AppHeader({ user, onLogout }: AppHeaderProps) {
   const initial = user?.name ? user.name.charAt(0) : "ส";
   const name = user?.name || "สมชาย วงศ์สวัสดิ์";
-  const role = user?.role || "ผู้ดูแลระบบ";
+  const role = user?.role || "Admin";
 
   return (
     <header className="sticky top-0 z-30 h-[72px] bg-slate-950 border-b border-cyan-500/20 text-white shadow-md">

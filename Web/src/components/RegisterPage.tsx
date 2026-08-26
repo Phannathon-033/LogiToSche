@@ -9,11 +9,8 @@ interface RegisterPageProps {
 }
 
 const ROLES = [
-  "เจ้าหน้าที่คีย์ข้อมูล (Data Operator)",
-  "ผู้จัดการคลังสินค้า (Logistics Manager)",
-  "เจ้าหน้าที่ตรวจสอบเอกสาร (Document Inspector)",
-  "วิศวกรโลจิสติกส์ (Logistics Engineer)",
-  "ผู้ดูแลระบบ (Admin)",
+  "User",
+  "Admin",
 ];
 
 export function RegisterPage({ onRegister, onSwitchToLogin }: RegisterPageProps) {
