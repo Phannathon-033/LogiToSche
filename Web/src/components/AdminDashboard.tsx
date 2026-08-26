@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Activity, 
   BarChart3, 
@@ -20,6 +20,7 @@ import {
   ClipboardCheck
 } from "lucide-react";
 import type { DocumentJob, JsonSchemaOutput } from "../types";
+import { getAdminSettings, saveAdminSettings, updateAdminDocument } from "../services/adminApi";
 
 // Import Admin Sub-components
 import { AdminOverview } from "./admin/AdminOverview";
@@ -66,6 +67,21 @@ export function AdminDashboard({ jobs, onUpdateJob, showToast, setViewMode }: Ad
   // Mock document datasets
   const [mockDocs, setMockDocs] = useState(mockAdminDocs);
 
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const config = await getAdminSettings();
+        setConfidenceThreshold(config.confidenceThreshold);
+        setSelectedModel(config.selectedModel);
+        setSystemPrompt(config.systemPrompt);
+        console.log("Real admin settings loaded from FastAPI API Server");
+      } catch (err) {
+        console.warn("Backend API not running. Using fallback mockup parameters.");
+      }
+    }
+    loadSettings();
+  }, []);
+
   function handleStartEdit(doc: any) {
     setEditingJob({
       id: doc.id,
@@ -89,9 +105,16 @@ export function AdminDashboard({ jobs, onUpdateJob, showToast, setViewMode }: Ad
     });
   }
 
-  function handleSaveEdit(e: React.FormEvent) {
+  async function handleSaveEdit(e: React.FormEvent) {
     e.preventDefault();
     if (!editingJob) return;
+
+    try {
+      await updateAdminDocument(editingJob.id, editJson);
+      showToast("บันทึกและอนุมัติข้อมูลเอกสารจริงสำเร็จ");
+    } catch {
+      showToast("ระบบอัปเดตข้อมูลเอกสารสำเร็จ (โหมดจำลอง)");
+    }
 
     setMockDocs(current => 
       current.map(doc => 
@@ -112,11 +135,19 @@ export function AdminDashboard({ jobs, onUpdateJob, showToast, setViewMode }: Ad
     }, editJson);
 
     setEditingJob(null);
-    showToast("แอดมินแก้ไขฟิลด์เอกสารและบันทึกสำเร็จ");
   }
 
-  function handleSaveSettings() {
-    showToast("บันทึกการตั้งค่าระบบเรียบร้อย");
+  async function handleSaveSettings() {
+    try {
+      await saveAdminSettings({
+        confidenceThreshold,
+        selectedModel,
+        systemPrompt,
+      });
+      showToast("บันทึกการตั้งค่าระบบลงเซิร์ฟเวอร์จริงสำเร็จ");
+    } catch {
+      showToast("บันทึกการตั้งค่าระบบเรียบร้อย (โหมดจำลอง)");
+    }
   }
 
   // Switch content rendering based on menu selected
