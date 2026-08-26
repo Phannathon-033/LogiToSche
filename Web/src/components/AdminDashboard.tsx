@@ -223,7 +223,7 @@ export function AdminDashboard({ jobs, onUpdateJob, showToast, setViewMode }: Ad
   return (
     <div className="flex min-h-screen bg-slate-50 text-slate-900 w-full font-sans">
       {/* 1. Sidebar Navigation (Fixed left) */}
-      <aside className="w-[280px] shrink-0 bg-slate-900 text-slate-300 flex flex-col justify-between min-h-screen sticky top-0 border-r border-slate-800">
+      <aside className="w-[280px] shrink-0 bg-slate-900 text-slate-300 flex flex-col justify-between h-screen sticky top-0 border-r border-slate-800">
         <div className="flex flex-col flex-1 overflow-y-auto">
           {/* Logo Area */}
           <div className="p-6 border-b border-slate-800 flex items-center gap-3">
@@ -243,11 +243,9 @@ export function AdminDashboard({ jobs, onUpdateJob, showToast, setViewMode }: Ad
               {[
                 { name: "ภาพรวมระบบ", icon: LayoutDashboard },
                 { name: "จัดการเอกสาร", icon: FolderOpen },
-                { name: "ตรวจสอบ (Review)", icon: ClipboardCheck },
                 { name: "งาน & ประวัติ", icon: Activity },
                 { name: "User Management", icon: Users },
                 { name: "Prompt & SLM", icon: Terminal },
-                { name: "ตั้งค่าระบบ", icon: Settings },
                 { name: "รายงาน & สถิติ", icon: BarChart3 },
                 { name: "กิจกรรมระบบ", icon: Braces },
               ].map((item) => (
