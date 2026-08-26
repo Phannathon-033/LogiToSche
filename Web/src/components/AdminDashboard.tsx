@@ -26,6 +26,7 @@ import { AdminOverview } from "./admin/AdminOverview";
 import { AdminReviewQueue } from "./admin/AdminReviewQueue";
 import { AdminPromptConfig } from "./admin/AdminPromptConfig";
 import { AdminUserSettings } from "./admin/AdminUserSettings";
+import { AdminJobsHistory } from "./admin/AdminJobsHistory";
 import { mockAdminDocs } from "../data/mockData";
 
 interface AdminDashboardProps {
@@ -147,6 +148,14 @@ export function AdminDashboard({ jobs, onUpdateJob, showToast, setViewMode }: Ad
             systemPrompt={systemPrompt}
             setSystemPrompt={setSystemPrompt}
             onSave={handleSaveSettings}
+          />
+        );
+      case "งาน & ประวัติ":
+        return (
+          <AdminJobsHistory 
+            jobs={jobs} 
+            mockDocs={mockDocs} 
+            showToast={showToast} 
           />
         );
       case "User Management":
