@@ -27,6 +27,8 @@ import { AdminReviewQueue } from "./admin/AdminReviewQueue";
 import { AdminPromptConfig } from "./admin/AdminPromptConfig";
 import { AdminUserSettings } from "./admin/AdminUserSettings";
 import { AdminJobsHistory } from "./admin/AdminJobsHistory";
+import { AdminReports } from "./admin/AdminReports";
+import { AdminActivityLogs } from "./admin/AdminActivityLogs";
 import { mockAdminDocs } from "../data/mockData";
 
 interface AdminDashboardProps {
@@ -158,6 +160,10 @@ export function AdminDashboard({ jobs, onUpdateJob, showToast, setViewMode }: Ad
             showToast={showToast} 
           />
         );
+      case "รายงาน & สถิติ":
+        return <AdminReports />;
+      case "กิจกรรมระบบ":
+        return <AdminActivityLogs />;
       case "User Management":
         return <AdminUserSettings />;
       default:
