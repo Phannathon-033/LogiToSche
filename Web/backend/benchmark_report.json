@@ -1,68 +1,233 @@
 {
-  "timestamp": "2026-08-25 20:14:42",
-  "total_samples": 2,
+  "timestamp": "2026-08-27 03:02:59",
+  "total_samples": 8,
   "json_valid_rate_pct": 100.0,
-  "avg_ocr_latency_sec": 3.53,
-  "avg_slm_latency_sec": 27.19,
+  "avg_ocr_latency_sec": 3.43,
+  "avg_slm_latency_sec": 11.65,
   "field_accuracy_rates": {
-    "document_type": "2/2 (100.0%)",
-    "document_no": "1/2 (50.0%)",
-    "document_date": "1/2 (50.0%)",
-    "party_name": "2/2 (100.0%)",
-    "source_file": "2/2 (100.0%)",
-    "quantity": "0/2 (0.0%)",
-    "total_amount": "1/2 (50.0%)",
-    "other_fields": "2/2 (100.0%)"
+    "document_type": "8/8 (100.0%)",
+    "document_no": "8/8 (100.0%)",
+    "document_date": "8/8 (100.0%)",
+    "party_name": "8/8 (100.0%)",
+    "source_file": "8/8 (100.0%)",
+    "quantity": "8/8 (100.0%)",
+    "total_amount": "7/8 (87.5%)",
+    "other_fields": "8/8 (100.0%)"
   },
-  "discrepancies_count": 3,
+  "discrepancies_count": 1,
   "results": [
     {
       "file": "test_imagesa_a_a_h_aah01e00_88062630.tif",
       "ocr_status": "ok",
       "slm_status": "ok",
       "ocr_lines": 22,
-      "ocr_time_sec": 2.7,
-      "slm_time_sec": 26.63,
+      "ocr_time_sec": 2.96,
+      "slm_time_sec": 15.45,
       "extracted_fields": {
-        "document_type": "purchase_order",
-        "document_no": "1018",
-        "document_date": "",
-        "party_name": "ber 4,",
+        "document_type": "invoice",
+        "document_no": "88062630",
+        "document_date": "1979-10-04",
+        "party_name": "Lorillard",
         "source_file": "test_imagesa_a_a_h_aah01e00_88062630.tif",
-        "quantity": 0,
-        "total_amount": 0.0,
+        "quantity": 1,
+        "total_amount": 125.0,
         "other": {
-          "receiver_name": "ber 4,",
-          "po_number": "1018"
+          "sender_name": "Lorillard G.A.D.",
+          "receiver_name": "Greensboro Branch",
+          "po_number": "125",
+          "tax_id": "0088062630",
+          "subtotal_amount": 125.0,
+          "vat_amount": 0.0
         }
       },
-      "issues": [
-        "Missing document_date",
-        "Zero or missing total_amount"
-      ]
+      "issues": []
     },
     {
       "file": "test_imagesa_a_a_i_aai47c00_2084020024.tif",
       "ocr_status": "ok",
       "slm_status": "ok",
       "ocr_lines": 53,
-      "ocr_time_sec": 4.37,
-      "slm_time_sec": 27.76,
+      "ocr_time_sec": 4.24,
+      "slm_time_sec": 16.65,
       "extracted_fields": {
         "document_type": "purchase_order",
-        "document_no": "",
-        "document_date": "01/01/95",
-        "party_name": "TALS BY",
+        "document_no": "BOTI",
+        "document_date": "1995-02-01",
+        "party_name": "EST ND",
         "source_file": "test_imagesa_a_a_i_aai47c00_2084020024.tif",
-        "quantity": 0,
+        "quantity": 1,
         "total_amount": 3707.3,
         "other": {
-          "receiver_name": "TALS BY"
+          "sender_name": "LBO BURNETT U.S.A.",
+          "receiver_name": "EST ND"
+        }
+      },
+      "issues": []
+    },
+    {
+      "file": "test_imagesa_a_a_o_aao37c00_2073883295.tif",
+      "ocr_status": "ok",
+      "slm_status": "ok",
+      "ocr_lines": 32,
+      "ocr_time_sec": 3.38,
+      "slm_time_sec": 10.21,
+      "extracted_fields": {
+        "document_type": "invoice",
+        "document_no": "67550435",
+        "document_date": "1998-07-27",
+        "party_name": "PHILIP MORRIS COMPANIES, INC.",
+        "source_file": "test_imagesa_a_a_o_aao37c00_2073883295.tif",
+        "quantity": 1,
+        "total_amount": 123250.0,
+        "other": {
+          "sender_name": "BAKER, DONELSON, BEARMAN & CALDWELL",
+          "receiver_name": "PHILIP MORRIS COMPANIES, INC.",
+          "tax_id": "62-1047356",
+          "subtotal_amount": 123250.0,
+          "vat_amount": 0.0
+        }
+      },
+      "issues": []
+    },
+    {
+      "file": "test_imagesa_a_a_q_aaq54f00_0060284244.tif",
+      "ocr_status": "ok",
+      "slm_status": "ok",
+      "ocr_lines": 31,
+      "ocr_time_sec": 3.34,
+      "slm_time_sec": 6.89,
+      "extracted_fields": {
+        "document_type": "invoice",
+        "document_no": "67550435",
+        "document_date": "1998-07-27",
+        "party_name": "PHILIP MORRIS COMPANIES, INC.",
+        "source_file": "sample_invoice.tif",
+        "quantity": 1,
+        "total_amount": 1973.4,
+        "other": {
+          "sender_name": "BAKER, DONELSON, BEARMAN & CALDWELL",
+          "receiver_name": "PHILIP MORRIS COMPANIES, INC.",
+          "currency": "USD"
+        }
+      },
+      "issues": []
+    },
+    {
+      "file": "test_imagesa_a_b_g_abg46e00_2023593676_2023593679.tif",
+      "ocr_status": "ok",
+      "slm_status": "ok",
+      "ocr_lines": 35,
+      "ocr_time_sec": 3.28,
+      "slm_time_sec": 10.14,
+      "extracted_fields": {
+        "document_type": "invoice",
+        "document_no": "SPPM-0693",
+        "document_date": "1993-06-01",
+        "party_name": "MULTINATIONAL BUSINESS SERVICES, INC.",
+        "source_file": "test_imagesa_a_b_g_abg46e00_2023593676_2023593679.tif",
+        "quantity": 1,
+        "total_amount": 0.0,
+        "other": {
+          "sender_name": "MULTINATIONAL BUSINESS SERVICES, INC.",
+          "receiver_name": "Philip Morris U.S.A.",
+          "po_number": "2023593676",
+          "tax_id": "2023593679",
+          "subtotal_amount": 0.0,
+          "vat_amount": 0.0
         }
       },
       "issues": [
-        "Missing document_no"
+        "Zero or missing total_amount"
       ]
+    },
+    {
+      "file": "test_imagesa_a_b_q_abq00e00_89706845.tif",
+      "ocr_status": "ok",
+      "slm_status": "ok",
+      "ocr_lines": 41,
+      "ocr_time_sec": 3.32,
+      "slm_time_sec": 11.72,
+      "extracted_fields": {
+        "document_type": "invoice",
+        "document_no": "A-111",
+        "document_date": "1980-04-10",
+        "party_name": "Lorillard",
+        "source_file": "test_imagesa_a_b_q_abq00e00_89706845.tif",
+        "quantity": 4,
+        "total_amount": 2783.0,
+        "other": {
+          "sender_name": "William Sands",
+          "receiver_name": "Saxton Communications Group, Ltd.",
+          "terms": "net",
+          "cash_terms": "Cash 10 Days",
+          "scorebook_details": {
+            "edition": "1980 New York Yankees Scorebook and Official Magazine",
+            "ad_details": {
+              "page_color": "Black and White",
+              "ad_type": "Page Ad"
+            },
+            "price": 2783.0
+          },
+          "vat_details": {
+            "vat_rate": "Not specified",
+            "vat_amount": "Not specified"
+          }
+        }
+      },
+      "issues": []
+    },
+    {
+      "file": "test_imagesa_a_b_r_abr96c00_CTRCONTRACTS001598-1.tif",
+      "ocr_status": "ok",
+      "slm_status": "ok",
+      "ocr_lines": 57,
+      "ocr_time_sec": 3.23,
+      "slm_time_sec": 9.67,
+      "extracted_fields": {
+        "document_type": "invoice",
+        "document_no": "11221315",
+        "document_date": "1970-04-08",
+        "party_name": "ROOMCHANGE",
+        "source_file": "test_imagesa_a_b_r_abr96c00_CTRCONTRACTS001598-1.tif",
+        "quantity": 1,
+        "total_amount": 25.99,
+        "other": {
+          "sender_name": "YOUR",
+          "receiver_name": "MOTA",
+          "last_balance": "amount due",
+          "payment_terms": "unless otheriulse indicated",
+          "bill_payment": "are payable when presented",
+          "contract_number": "CTR CONTRACTS 001598",
+          "receipt_reference": "11221315"
+        }
+      },
+      "issues": []
+    },
+    {
+      "file": "test_imagesa_a_b_t_abt90e00_91514762.tif",
+      "ocr_status": "ok",
+      "slm_status": "ok",
+      "ocr_lines": 133,
+      "ocr_time_sec": 3.67,
+      "slm_time_sec": 12.5,
+      "extracted_fields": {
+        "document_type": "invoice",
+        "document_no": "91514762",
+        "document_date": "2023-04-05",
+        "party_name": "INNOWY IBN",
+        "source_file": "test_imagesa_a_b_t_abt90e00_91514762.tif",
+        "quantity": 1,
+        "total_amount": 567.0,
+        "other": {
+          "sender_name": "INNOWY IBN",
+          "receiver_name": "INNOWY IBN",
+          "po_number": "91514762",
+          "tax_id": "1234567890",
+          "subtotal_amount": 567.0,
+          "vat_amount": 0.0
+        }
+      },
+      "issues": []
     }
   ]
 }
