@@ -35,6 +35,8 @@ import { useMemo, useState } from "react";
 import { initialJson } from "../data/mockData";
 import type { BatchDocumentItem, JsonSchemaOutput } from "../types";
 import { DocumentPreview } from "./DocumentPreview";
+import { OcrProcessingAnimation } from "./OcrProcessingAnimation";
+import { SlmReasoningAnimation } from "./SlmReasoningAnimation";
 import { JSONOutputPanel } from "./JSONOutputPanel";
 
 interface UploadedWorkspaceViewProps {
@@ -418,8 +420,12 @@ export function UploadedWorkspaceView({
               />
             </div>
 
-            {/* Right: Live PaddleOCR Extracted Lines */}
+            {/* Right: Live PaddleOCR Extracted Lines or Interactive Scan Animation */}
             <div className="flex flex-col justify-between min-w-0">
+              {activeDoc.status === "ocr_processing" || (ocrLines.length === 0 && isProcessing) ? (
+                <OcrProcessingAnimation fileName={fileName} isProcessing={true} />
+              ) : (
+                <>
               {/* Mode 1: Human Cards */}
               {ocrSubView === "cards" && (
                 <div className="h-[360px] min-h-[360px] overflow-y-auto space-y-2 pr-1">
@@ -552,6 +558,8 @@ export function UploadedWorkspaceView({
                   CUDA GPU Powered
                 </span>
               </div>
+                </>
+              )}
             </div>
           </div>
         </div>

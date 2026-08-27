@@ -1,3 +1,4 @@
+import { OcrProcessingAnimation } from "./OcrProcessingAnimation";
 import {
   AlignLeft,
   Check,
@@ -250,34 +251,7 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
       className="h-full"
     >
       {isLoading ? (
-        <div className="flex h-[460px] min-h-[460px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 shadow-inner">
-          <div className="relative mb-6 flex h-20 w-20 items-center justify-center">
-            <div className="absolute inset-0 rounded-full border-[3px] border-emerald-500/20" />
-            <div
-              className="absolute inset-0 rounded-full border-[3px] border-emerald-400 border-t-transparent border-r-transparent animate-spin"
-              style={{ animationDuration: "1.5s" }}
-            />
-            <TerminalSquare className="h-8 w-8 text-emerald-400 animate-pulse-slow" />
-          </div>
-
-          <h4 className="mb-2 font-mono text-sm font-bold tracking-wider text-emerald-400">
-            EXTRACTING OCR CONFIDENCE & BOUNDING BOXES
-          </h4>
-
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs text-emerald-500/80">กำลังประมวลผลข้อความ ค่า Confidence และ Bounding Box</span>
-            <span className="flex gap-0.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: "0ms" }} />
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: "150ms" }} />
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: "300ms" }} />
-            </span>
-          </div>
-
-          <div
-            className="pointer-events-none absolute inset-0 opacity-[0.03]"
-            style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, #34d399 2px, #34d399 4px)" }}
-          />
-        </div>
+        <OcrProcessingAnimation isProcessing={true} />
       ) : lines.length > 0 ? (
         <div className="space-y-3">
           {/* Summary Dashboard Banner (Human Readable) */}
