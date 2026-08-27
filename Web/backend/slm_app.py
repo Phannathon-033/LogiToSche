@@ -60,6 +60,7 @@ class OcrLine(BaseModel):
     text: str
     confidence: float = 0
     box: list[list[float]] | None = None
+    position: dict[str, Any] | None = None
 
 
 class SlmExtractRequest(BaseModel):
@@ -715,13 +716,41 @@ def build_slm_prompt(
         }
     }
 
+    # Format 2D spatial lines with positions [y, x]
+    spatial_section = ""
+    if payload.ocr_lines:
+        spatial_rows = []
+        for line in payload.ocr_lines[:50]:
+            t = (line.text or "").strip()
+            if not t:
+                continue
+            pos = line.position or {}
+            tag = pos.get("tag") or (f"[y:{int(line.box[0][1])}, x:{int(line.box[0][0])}]" if line.box and len(line.box) > 0 else "")
+            region = pos.get("region", "body")
+            if tag:
+                spatial_rows.append(f"- {tag} ({region}): \"{t}\"")
+            else:
+                spatial_rows.append(f"- \"{t}\"")
+        if spatial_rows:
+            spatial_section = (
+                "### 2D SPATIAL OCR LINES & POSITION COORDINATES [y, x] (Reading Order Top-to-Bottom, Left-to-Right):\n"
+                + "\n".join(spatial_rows)
+                + "\n\n"
+            )
+
     return (
         "Extract logistics document fields into the EXACT JSON Schema with 7 core fields + other.\n\n"
         "### FEW-SHOT EXAMPLE:\n"
         f"INPUT OCR:\n{exemplar_input}\n"
         f"OUTPUT JSON:\n{json.dumps(exemplar_output, indent=2)}\n\n"
-        "### TARGET DOCUMENT OCR TEXT:\n"
+        f"{spatial_section}"
+        "### TARGET DOCUMENT RAW OCR TEXT:\n"
         f"{payload.ocr_text[:3500]}\n\n"
+        "### SPATIAL REASONING GUIDANCE FOR HIGH ACCURACY:\n"
+        "1. TOP-LEFT/TOP-CENTER lines (y < 300) contain Sender / Issuer Company details.\n"
+        "2. TOP-RIGHT lines (y < 300, x > 400) contain Document Number, Invoice Date, Ref ID.\n"
+        "3. MIDDLE-LEFT lines (300 <= y <= 700) contain Bill To, Ship To, Client / Party Name.\n"
+        "4. BOTTOM-RIGHT lines (y > 700, x > 400) contain Subtotal, Tax/VAT, and Grand Total Amount.\n\n"
         "### EXTRACTION RULES:\n"
         f"1. document_type: one of 'invoice', 'bill_of_lading', 'packing_list', 'purchase_order'.\n"
         f"2. document_no: extract exact invoice/reference number (e.g. '{h_doc_no}').\n"

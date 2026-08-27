@@ -83,6 +83,7 @@ class OcrLine(BaseModel):
     text: str
     confidence: float = 0
     box: list[list[float]] | None = None
+    position: dict[str, Any] | None = None
 
 
 class SlmExtractRequest(BaseModel):
@@ -238,7 +239,19 @@ async def ocr_document(file: UploadFile = File(...), lang: str = Form("th")) -> 
         raw_result = predict(engine, tmp_path)
         lines = extract_lines(raw_result)
         text = "\n".join(line["text"] for line in lines if line["text"])
-        return {"text": text, "lines": lines, "engine": "PaddleOCR", "language": lang}
+        spatial_lines = [
+            f"{line['position']['tag']} ({line['position']['region']}): {line['text']}"
+            for line in lines
+            if line["text"] and "position" in line and "tag" in line["position"]
+        ]
+        spatial_text = "\n".join(spatial_lines)
+        return {
+            "text": text,
+            "spatial_text": spatial_text,
+            "lines": lines,
+            "engine": "PaddleOCR",
+            "language": lang,
+        }
     finally:
         tmp_path.unlink(missing_ok=True)
         release_ocr_engines()
@@ -589,8 +602,55 @@ def predict(engine: Any, path: Path) -> Any:
     return engine.ocr(str(path), cls=True)
 
 
+def compute_position_info(box: list[list[float]] | None, max_w: float = 1000.0, max_h: float = 1000.0) -> dict[str, Any]:
+    if not box or len(box) < 4:
+        return {"x": 0, "y": 0, "width": 0, "height": 0, "region": "middle", "tag": "[y:0, x:0]"}
+
+    try:
+        xs = [float(p[0]) for p in box]
+        ys = [float(p[1]) for p in box]
+        min_x, max_x = min(xs), max(xs)
+        min_y, max_y = min(ys), max(ys)
+        w = max(0.0, max_x - min_x)
+        h = max(0.0, max_y - min_y)
+        cx = (min_x + max_x) / 2.0
+        cy = (min_y + max_y) / 2.0
+
+        rel_y = cy / max(max_h, 1.0)
+        rel_x = cx / max(max_w, 1.0)
+
+        if rel_y < 0.28:
+            v_reg = "top"
+        elif rel_y > 0.72:
+            v_reg = "bottom"
+        else:
+            v_reg = "middle"
+
+        if rel_x < 0.35:
+            h_reg = "left"
+        elif rel_x > 0.65:
+            h_reg = "right"
+        else:
+            h_reg = "center"
+
+        region = f"{v_reg}-{h_reg}" if v_reg != "middle" or h_reg != "center" else "middle"
+
+        return {
+            "x": int(round(min_x)),
+            "y": int(round(min_y)),
+            "width": int(round(w)),
+            "height": int(round(h)),
+            "center_x": round(cx, 1),
+            "center_y": round(cy, 1),
+            "region": region,
+            "tag": f"[y:{int(round(min_y))}, x:{int(round(min_x))}]",
+        }
+    except Exception:
+        return {"x": 0, "y": 0, "width": 0, "height": 0, "region": "middle", "tag": "[y:0, x:0]"}
+
+
 def extract_lines(raw_result: Any) -> list[dict[str, Any]]:
-    lines: list[dict[str, Any]] = []
+    raw_lines: list[dict[str, Any]] = []
 
     def walk(node: Any) -> None:
         if node is None:
@@ -607,16 +667,16 @@ def extract_lines(raw_result: Any) -> list[dict[str, Any]]:
                 for i, text in enumerate(texts):
                     score = float(scores[i]) if i < len(scores) else 0.95
                     box = boxes[i] if i < len(boxes) else None
-                    lines.append({"text": str(text), "confidence": score, "box": normalize_box(box)})
+                    raw_lines.append({"text": str(text).strip(), "confidence": score, "box": normalize_box(box)})
                 return
             for value in node.values():
                 walk(value)
             return
         if isinstance(node, (list, tuple)):
             if len(node) >= 2 and isinstance(node[1], (list, tuple)) and len(node[1]) >= 2 and isinstance(node[1][0], str):
-                lines.append(
+                raw_lines.append(
                     {
-                        "text": str(node[1][0]),
+                        "text": str(node[1][0]).strip(),
                         "confidence": float(node[1][1]),
                         "box": normalize_box(node[0]),
                     }
@@ -626,6 +686,27 @@ def extract_lines(raw_result: Any) -> list[dict[str, Any]]:
                 walk(value)
 
     walk(raw_result)
+
+    # Compute page dimensions from all boxes
+    all_xs = [p[0] for line in raw_lines if line.get("box") for p in line["box"]]
+    all_ys = [p[1] for line in raw_lines if line.get("box") for p in line["box"]]
+    max_w = max(all_xs) if all_xs else 1000.0
+    max_h = max(all_ys) if all_ys else 1000.0
+
+    lines: list[dict[str, Any]] = []
+    for item in raw_lines:
+        if not item["text"]:
+            continue
+        pos = compute_position_info(item.get("box"), max_w, max_h)
+        lines.append({
+            "text": item["text"],
+            "confidence": round(item["confidence"], 4),
+            "box": item.get("box"),
+            "position": pos,
+        })
+
+    # Sort lines spatially: top-to-bottom (y), then left-to-right (x)
+    lines.sort(key=lambda l: (l["position"]["y"] // 15, l["position"]["x"]))
     return lines
 
 

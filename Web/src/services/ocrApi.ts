@@ -1,11 +1,22 @@
+export interface OcrPosition {
+  x: number;
+  y: number;
+  width?: number;
+  height?: number;
+  region?: string;
+  tag?: string;
+}
+
 export interface OcrLine {
   text: string;
   confidence: number;
   box?: number[][];
+  position?: OcrPosition;
 }
 
 export interface OcrApiResponse {
   text: string;
+  spatial_text?: string;
   lines: OcrLine[];
   engine: string;
   language: OcrLanguage;

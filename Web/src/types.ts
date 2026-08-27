@@ -142,6 +142,7 @@ export interface BatchDocumentItem {
   statusLabel: string;
   ocrProgress: number;
   ocrText: string;
+  spatialText?: string;
   ocrLines: any[];
   jsonOutput: JsonSchemaOutput | null;
   fields: ExtractedField[];

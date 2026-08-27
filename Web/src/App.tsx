@@ -183,6 +183,7 @@ export function App() {
         allDocs[i] = {
           ...allDocs[i],
           ocrText: text,
+          spatialText: ocr.spatial_text,
           ocrLines: ocr.lines,
           status: "ocr_completed",
           statusLabel: `OCR สำเร็จ (${i + 1}/${allDocs.length})`,
@@ -618,7 +619,12 @@ export function App() {
                   {workspaceTab === "extraction" ? (
                     <div className="space-y-6">
                       <div className="grid gap-6 xl:grid-cols-2">
-                        <OCRResultPanel text={ocrResultText} onCopy={() => copyText(ocrResultText, "คัดลอก OCR Text แล้ว")} />
+                        <OCRResultPanel
+                          text={ocrResultText}
+                          spatialText={activeDoc?.spatialText}
+                          lines={activeDoc?.ocrLines}
+                          onCopy={() => copyText(activeDoc?.spatialText || ocrResultText, "คัดลอก OCR Text แล้ว")}
+                        />
                         {slmReady ? (
                           <JSONOutputPanel
                             json={jsonOutput}
@@ -670,7 +676,12 @@ export function App() {
                   {workspaceTab === "all" ? (
                     <div className="space-y-6">
                       <div className="grid gap-6 xl:grid-cols-2">
-                        <OCRResultPanel text={ocrResultText} onCopy={() => copyText(ocrResultText, "คัดลอก OCR Text แล้ว")} />
+                        <OCRResultPanel
+                          text={ocrResultText}
+                          spatialText={activeDoc?.spatialText}
+                          lines={activeDoc?.ocrLines}
+                          onCopy={() => copyText(activeDoc?.spatialText || ocrResultText, "คัดลอก OCR Text แล้ว")}
+                        />
                         {slmReady ? (
                           <JSONOutputPanel
                             json={jsonOutput}
