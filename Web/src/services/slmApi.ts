@@ -4,6 +4,7 @@ import type {
   FieldStatus,
   JsonSchemaOutput,
   ReviewItem,
+  SlmPerformanceMetrics,
   SlmPromptRequest,
   SlmPromptResponse,
 } from "../types";
@@ -47,6 +48,7 @@ interface SlmApiResponse {
   fields: SlmApiField[];
   confidence: SlmApiConfidence;
   review_items: SlmApiReviewItem[];
+  performance?: SlmPerformanceMetrics;
   model: string;
   device: string;
 }
@@ -57,6 +59,7 @@ export interface SlmExtractionResult {
   confidenceScores: ConfidenceScore[];
   overallConfidence: number;
   reviewItems: ReviewItem[];
+  performance?: SlmPerformanceMetrics;
   model: string;
   device: string;
 }
@@ -121,6 +124,7 @@ export async function runSlmExtraction({
       status: item.status,
       isOther: !ROOT_FIELDS.has(item.field),
     })),
+    performance: data.performance,
     model: data.model,
     device: data.device,
   };

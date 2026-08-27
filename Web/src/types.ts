@@ -103,3 +103,23 @@ export interface SlmPromptResponse {
   model?: string;
   device?: string;
 }
+
+export interface SlmFieldAccuracy {
+  accuracy_pct: number;
+  status: "perfect" | "high" | "review" | "missing";
+  reasoning: string;
+}
+
+export interface SlmPerformanceMetrics {
+  accuracy_pct: number;
+  inference_time_sec: number;
+  tokens_generated: number;
+  token_speed_tps: number;
+  core_fields_fill_rate_pct: number;
+  schema_valid: boolean;
+  math_integrity_status: "verified" | "discrepancy" | "no_subtotal";
+  math_integrity_notes?: string;
+  field_accuracies: Record<string, SlmFieldAccuracy>;
+  model: string;
+  device: string;
+}

@@ -12,6 +12,7 @@ import { ManualReviewModal } from "./components/ManualReviewModal";
 import { OCRResultPanel } from "./components/OCRResultPanel";
 import { RecentJobsTable } from "./components/RecentJobsTable";
 import { RegisterPage } from "./components/RegisterPage";
+import { SlmAccuracyCard } from "./components/SlmAccuracyCard";
 import { SlmPromptAssistantModal } from "./components/SlmPromptAssistantModal";
 import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
 import { Toast } from "./components/Toast";
@@ -20,7 +21,7 @@ import { initialJson, initialSteps, ocrText } from "./data/mockData";
 import { createJsonDownload, nextStepState } from "./services/mockProcessingService";
 import { runPaddleOcr, type OcrLanguage } from "./services/ocrApi";
 import { runSlmExtraction } from "./services/slmApi";
-import type { ConfidenceScore, DocumentJob, DocumentType, ExtractedField, JsonSchemaOutput, ReviewItem } from "./types";
+import type { ConfidenceScore, DocumentJob, DocumentType, ExtractedField, JsonSchemaOutput, ReviewItem, SlmPerformanceMetrics } from "./types";
 
 type WorkspaceTab = "extraction" | "assistant" | "analysis" | "all";
 
@@ -51,6 +52,7 @@ export function App() {
   const [jobs, setJobs] = useState<DocumentJob[]>([]);
   const [confidenceScores, setConfidenceScores] = useState<ConfidenceScore[]>([]);
   const [overallConfidence, setOverallConfidence] = useState(0);
+  const [slmPerformance, setSlmPerformance] = useState<SlmPerformanceMetrics | null>(null);
   const [reviewItems, setReviewItems] = useState<ReviewItem[]>([]);
   const [reviewingItem, setReviewingItem] = useState<ReviewItem | null>(null);
   const [slmReady, setSlmReady] = useState(false);
@@ -157,15 +159,18 @@ export function App() {
       setFields(slm.fields);
       setConfidenceScores(slm.confidenceScores);
       setOverallConfidence(slm.overallConfidence);
+      setSlmPerformance(slm.performance ?? null);
       setReviewItems(slm.reviewItems);
       setSlmReady(true);
       setSteps(nextStepState(initialSteps, 6));
       setJobs((current) =>
         current.map((job) =>
-          job.fileName === file.name ? { ...job, status: "success", statusLabel: "SLM เสร็จสมบูรณ์", result: `${slm.overallConfidence}%` } : job,
+          job.fileName === file.name
+            ? { ...job, status: "success", statusLabel: "SLM เสร็จสมบูรณ์", result: `${slm.performance?.accuracy_pct ?? slm.overallConfidence}%` }
+            : job,
         ),
       );
-      showToast("Qwen SLM วิเคราะห์เอกสารสำเร็จ");
+      showToast(`Qwen SLM วิเคราะห์เอกสารสำเร็จ (${slm.performance?.accuracy_pct ?? slm.overallConfidence}% Accuracy)`);
     } catch (error) {
       const message = error instanceof Error ? error.message : "ไม่สามารถประมวลผลเอกสารได้";
       setOcrResultText((current) => current || `${ocrText}\n\n[ระบบสำรอง] ${message}`);
@@ -267,18 +272,20 @@ export function App() {
     setJobs([]);
     setConfidenceScores([]);
     setOverallConfidence(0);
+    setSlmPerformance(null);
     setReviewItems([]);
     setSlmReady(false);
     showToast("รีเซ็ตเอกสารเรียบร้อย");
   }
 
-  function handleStepClick(id: number) {
-    if (!hasDocument) {
-      showToast("กรุณาอัปโหลดเอกสารก่อน");
-      return;
+  function handleStepClick(stepId: number) {
+    if (stepId <= 3) {
+      setWorkspaceTab("extraction");
+    } else if (stepId === 4) {
+      setWorkspaceTab("assistant");
+    } else {
+      setWorkspaceTab("analysis");
     }
-    setSteps(nextStepState(steps, id));
-    showToast(`เปลี่ยนไปขั้นตอน ${id}`);
   }
 
   async function copyText(text: string, successMessage: string) {
@@ -290,12 +297,21 @@ export function App() {
     }
   }
 
-  function handleConfirmReview(item: ReviewItem, newValue: string) {
-    const parsedValue = Number.isNaN(Number(newValue)) ? newValue : Number(newValue);
-    setReviewItems((current) => current.map((review) => (review.id === item.id ? { ...review, slmValue: newValue, status: "resolved" } : review)));
+  function handleConfirmReview(item: ReviewItem, parsedValue: string | number) {
     setFields((current) =>
-      current.map((field) => (field.field === item.field ? { ...field, value: newValue, confidence: 100, status: "success" } : field)),
+      current.map((field) =>
+        field.field === item.field
+          ? {
+              ...field,
+              value: String(parsedValue),
+              confidence: 100,
+              status: "success",
+            }
+          : field,
+      ),
     );
+
+    setReviewItems((current) => current.filter((review) => review.field !== item.field));
     setJsonOutput((current) => {
       if (item.isOther || (current.other && item.field in current.other)) {
         return {
@@ -347,7 +363,7 @@ export function App() {
                 </div>
                 <h1 className="mt-2 text-2xl font-black tracking-normal text-navy lg:text-3xl">ระบบแปลงเอกสารโลจิสติกส์เป็น JSON Schema</h1>
                 <p className="mt-1 max-w-4xl text-sm leading-6 text-slate-600">
-                  อัปโหลดเอกสารเพื่อ OCR ด้วย PaddleOCR บน GPU แล้วส่งข้อความให้ Qwen SLM วิเคราะห์เป็น JSON Schema, Confidence และ Manual Review
+                  อัปโหลดเอกสารเพื่อ OCR ด้วย PaddleOCR บน GPU แล้วส่งข้อความให้ Qwen SLM วิเคราะห์เป็น JSON Schema พร้อมแสดงผลวิเคราะห์ประสิทธิภาพและความแม่นยำทุกครั้ง
                 </p>
               </div>
 
@@ -392,19 +408,19 @@ export function App() {
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         OCR: {ocrLanguage === "th" ? "ไทย + English" : "English"}
                       </span>
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-800 ring-1 ring-amber-300">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-bold text-indigo-800 ring-1 ring-indigo-300">
                         <BrainCircuit className="h-3.5 w-3.5" />
-                        {slmReady ? "SLM พร้อมใช้งาน" : "รอผล SLM"}
+                        {slmReady ? `SLM ความแม่นยำ: ${slmPerformance?.accuracy_pct ?? overallConfidence}%` : "กำลังรอผล SLM"}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-slate-600">ขนาด: {fileSize} · GPU pipeline: PaddleOCR + Qwen2.5</p>
+                    <p className="mt-1 text-xs text-slate-600">ขนาด: {fileSize} · GPU pipeline: PaddleOCR + Qwen2.5-1.5B CUDA</p>
                   </div>
                 </div>
 
                 <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-blue-300 bg-white px-3.5 py-2 text-xs font-extrabold text-primary transition hover:bg-blue-50">
                   <UploadCloud className="h-4 w-4" />
                   เปลี่ยนไฟล์เอกสาร
-                  <input type="file" accept=".pdf,.jpg,.jpeg,.png" className="sr-only" onChange={(event) => handleFileSelect(event.target.files?.item(0) ?? null)} />
+                  <input type="file" accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff" className="sr-only" onChange={(event) => handleFileSelect(event.target.files?.item(0) ?? null)} />
                 </label>
               </div>
 
@@ -418,7 +434,7 @@ export function App() {
                     <div className="flex flex-wrap items-center gap-2">
                       <TabButton active={workspaceTab === "extraction"} label="OCR & JSON" onClick={() => setWorkspaceTab("extraction")} />
                       <TabButton active={workspaceTab === "assistant"} label="✨ AI Prompt Assistant" onClick={() => setWorkspaceTab("assistant")} />
-                      <TabButton active={workspaceTab === "analysis"} label="Confidence & Review" onClick={() => setWorkspaceTab("analysis")} />
+                      <TabButton active={workspaceTab === "analysis"} label="📊 ประสิทธิภาพ & Review" onClick={() => setWorkspaceTab("analysis")} />
                       <TabButton active={workspaceTab === "all"} label="ทั้งหมด" onClick={() => setWorkspaceTab("all")} />
                     </div>
                     <div className="flex items-center gap-3">
@@ -431,24 +447,33 @@ export function App() {
                         <span>AI Prompt สำเร็จรูป</span>
                       </button>
                       <span className="hidden text-xs font-bold text-slate-500 sm:inline">
-                        Confidence: <b className="text-primary">{overallConfidence}%</b>
+                        ความแม่นยำ SLM: <b className="text-primary">{slmPerformance?.accuracy_pct ?? overallConfidence}%</b>
                       </span>
                     </div>
                   </div>
 
                   {workspaceTab === "extraction" ? (
-                    <div className="grid gap-6 xl:grid-cols-2">
-                      <OCRResultPanel text={ocrResultText} onCopy={() => copyText(ocrResultText, "คัดลอก OCR Text แล้ว")} />
+                    <div className="space-y-6">
+                      <div className="grid gap-6 xl:grid-cols-2">
+                        <OCRResultPanel text={ocrResultText} onCopy={() => copyText(ocrResultText, "คัดลอก OCR Text แล้ว")} />
+                        {slmReady ? (
+                          <JSONOutputPanel
+                            json={jsonOutput}
+                            onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
+                            onDownload={() => createJsonDownload(jsonOutput)}
+                            onMoveOtherToCore={handleMoveOtherToCore}
+                          />
+                        ) : (
+                          <SlmWaitingCard title="JSON Schema Output" />
+                        )}
+                      </div>
                       {slmReady ? (
-                        <JSONOutputPanel
-                          json={jsonOutput}
-                          onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
-                          onDownload={() => createJsonDownload(jsonOutput)}
-                          onMoveOtherToCore={handleMoveOtherToCore}
+                        <SlmAccuracyCard
+                          performance={slmPerformance}
+                          jsonOutput={jsonOutput}
+                          overallConfidence={overallConfidence}
                         />
-                      ) : (
-                        <SlmWaitingCard title="JSON Schema Output" />
-                      )}
+                      ) : null}
                     </div>
                   ) : null}
 
@@ -464,26 +489,44 @@ export function App() {
                   ) : null}
 
                   {workspaceTab === "analysis" ? (
-                    <div className="grid gap-6 xl:grid-cols-2">
-                      {slmReady ? <ConfidenceCard overall={overallConfidence} scores={confidenceScores} /> : <SlmWaitingCard title="ความมั่นใจ / Confidence" />}
-                      {slmReady ? <ManualReviewCard items={reviewItems} onReview={setReviewingItem} /> : <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />}
+                    <div className="space-y-6">
+                      {slmReady ? (
+                        <SlmAccuracyCard
+                          performance={slmPerformance}
+                          jsonOutput={jsonOutput}
+                          overallConfidence={overallConfidence}
+                        />
+                      ) : null}
+                      <div className="grid gap-6 xl:grid-cols-2">
+                        {slmReady ? <ConfidenceCard overall={overallConfidence} scores={confidenceScores} /> : <SlmWaitingCard title="ความมั่นใจ / Confidence" />}
+                        {slmReady ? <ManualReviewCard items={reviewItems} onReview={setReviewingItem} /> : <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />}
+                      </div>
                     </div>
                   ) : null}
 
                   {workspaceTab === "all" ? (
-                    <div className="grid gap-6 xl:grid-cols-2">
-                      <OCRResultPanel text={ocrResultText} onCopy={() => copyText(ocrResultText, "คัดลอก OCR Text แล้ว")} />
+                    <div className="space-y-6">
+                      <div className="grid gap-6 xl:grid-cols-2">
+                        <OCRResultPanel text={ocrResultText} onCopy={() => copyText(ocrResultText, "คัดลอก OCR Text แล้ว")} />
+                        {slmReady ? (
+                          <JSONOutputPanel
+                            json={jsonOutput}
+                            onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
+                            onDownload={() => createJsonDownload(jsonOutput)}
+                            onMoveOtherToCore={handleMoveOtherToCore}
+                          />
+                        ) : (
+                          <SlmWaitingCard title="JSON Schema Output" />
+                        )}
+                      </div>
                       {slmReady ? (
-                        <JSONOutputPanel
-                          json={jsonOutput}
-                          onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
-                          onDownload={() => createJsonDownload(jsonOutput)}
-                          onMoveOtherToCore={handleMoveOtherToCore}
+                        <SlmAccuracyCard
+                          performance={slmPerformance}
+                          jsonOutput={jsonOutput}
+                          overallConfidence={overallConfidence}
                         />
-                      ) : (
-                        <SlmWaitingCard title="JSON Schema Output" />
-                      )}
-                      <div className="xl:col-span-2">
+                      ) : null}
+                      <div>
                         <SlmPromptAssistantPanel
                           ocrText={ocrResultText}
                           jsonSchema={jsonOutput}
@@ -491,8 +534,10 @@ export function App() {
                           onShowToast={showToast}
                         />
                       </div>
-                      {slmReady ? <ConfidenceCard overall={overallConfidence} scores={confidenceScores} /> : <SlmWaitingCard title="ความมั่นใจ / Confidence" />}
-                      {slmReady ? <ManualReviewCard items={reviewItems} onReview={setReviewingItem} /> : <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />}
+                      <div className="grid gap-6 xl:grid-cols-2">
+                        {slmReady ? <ConfidenceCard overall={overallConfidence} scores={confidenceScores} /> : <SlmWaitingCard title="ความมั่นใจ / Confidence" />}
+                        {slmReady ? <ManualReviewCard items={reviewItems} onReview={setReviewingItem} /> : <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />}
+                      </div>
                     </div>
                   ) : null}
                 </section>
