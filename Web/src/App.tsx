@@ -214,15 +214,15 @@ export function App() {
       // PHASE 2: SLM EXTRACTION SEQUENTIALLY (ทีละรูป)
       // ==========================================
       setBatchPhase("slm");
-      setSteps(nextStepState(initialSteps, 4));
 
       for (let i = 0; i < allDocs.length; i++) {
         if (allDocs[i].status === "completed" || allDocs[i].status === "error") continue;
 
+        // Give a clear 1.2s visual transition so the user sees OCR finished and SLM reasoning starts
         allDocs[i] = {
           ...allDocs[i],
           status: "slm_processing",
-          statusLabel: `กำลังวิเคราะห์ SLM รูปที่ ${i + 1}/${allDocs.length} (GPU)...`,
+          statusLabel: `กำลังวิเคราะห์โครงสร้าง SLM (${i + 1}/${allDocs.length})...`,
         };
         setBatchDocuments([...allDocs]);
         setJobs((current) =>
@@ -230,6 +230,11 @@ export function App() {
             job.id === allDocs[i].id ? { ...job, statusLabel: "กำลังวิเคราะห์ Qwen SLM" } : job,
           ),
         );
+
+        await new Promise((resolve) => setTimeout(resolve, 1400));
+        if (allDocs[i].status === "completed" || allDocs[i].status === "error") continue;
+
+
 
         try {
           const slm = await runSlmExtraction({
