@@ -1,15 +1,7 @@
 import {
-  ArrowRight,
-  BrainCircuit,
   Check,
-  CheckCircle2,
-  Code2,
-  FileCode,
   Loader2,
-  Scan,
-  ScanText,
-  UploadCloud,
-  Zap,
+  Sparkles,
 } from "lucide-react";
 import type { BatchDocumentItem } from "../types";
 
@@ -27,7 +19,7 @@ export function DynamicStepTracker({ activeDoc, isProcessing = false }: DynamicS
 
   // Derive step lifecycle states
   const step1State = "completed"; // Upload is always done once doc is in workspace
-  
+
   let step2State: "completed" | "active" | "upcoming" = "upcoming";
   if (status === "ocr_processing") {
     step2State = "active";
@@ -52,143 +44,124 @@ export function DynamicStepTracker({ activeDoc, isProcessing = false }: DynamicS
   const steps = [
     {
       id: 1,
-      name: "1. Upload",
-      thLabel: "อัปโหลดเอกสาร",
-      desc: "นำเข้าไฟล์ PDF / JPG / PNG",
-      icon: UploadCloud,
+      num: "1",
+      title: "Upload",
+      subtitle: "อัปโหลดเอกสาร",
       state: step1State,
-      activeColor: "border-blue-500 bg-blue-500 text-white",
-      completedColor: "border-emerald-500 bg-emerald-500 text-white",
-      badgeText: "เสร็จสิ้น",
-      badgeClass: "bg-emerald-100 text-emerald-800 border-emerald-200",
+      statusLabel: "เสร็จสิ้น",
     },
     {
       id: 2,
-      name: "2. OCR",
-      thLabel: "ดึงข้อความจากเอกสาร",
-      desc: "PaddleOCR v5 (CUDA GPU)",
-      icon: Scan,
+      num: "2",
+      title: "OCR",
+      subtitle: "ดึงข้อความ (GPU)",
       state: step2State,
-      activeColor: "border-blue-600 bg-blue-600 text-white shadow-lg ring-4 ring-blue-100",
-      completedColor: "border-emerald-500 bg-emerald-500 text-white",
-      badgeText: step2State === "active" ? "กำลังสแกน GPU..." : step2State === "completed" ? "เสร็จสิ้น" : "รอดำเนินการ",
-      badgeClass:
-        step2State === "active"
-          ? "bg-blue-100 text-blue-800 border-blue-300 animate-pulse font-extrabold"
-          : step2State === "completed"
-          ? "bg-emerald-100 text-emerald-800 border-emerald-200"
-          : "bg-slate-100 text-slate-500 border-slate-200",
+      statusLabel: step2State === "active" ? "กำลังสแกน..." : step2State === "completed" ? "เสร็จสิ้น" : "รอคิว",
     },
     {
       id: 3,
-      name: "3. AI Reasoning",
-      thLabel: "วิเคราะห์และจัดโครงสร้าง",
-      desc: "Qwen2.5-1.5B Multimodal",
-      icon: BrainCircuit,
+      num: "3",
+      title: "AI Reasoning",
+      subtitle: "วิเคราะห์ Qwen SLM",
       state: step3State,
-      activeColor: "border-purple-600 bg-purple-600 text-white shadow-lg ring-4 ring-purple-100",
-      completedColor: "border-purple-600 bg-purple-600 text-white",
-      badgeText: step3State === "active" ? "กำลังประมวลผล SLM..." : step3State === "completed" ? "เสร็จสิ้น" : "รอดำเนินการ",
-      badgeClass:
-        step3State === "active"
-          ? "bg-purple-100 text-purple-800 border-purple-300 animate-pulse font-extrabold"
-          : step3State === "completed"
-          ? "bg-purple-100 text-purple-800 border-purple-200"
-          : "bg-slate-100 text-slate-500 border-slate-200",
+      statusLabel: step3State === "active" ? "กำลังวิเคราะห์..." : step3State === "completed" ? "เสร็จสิ้น" : "รอคิว",
     },
     {
       id: 4,
-      name: "4. JSON Output",
-      thLabel: "ส่งออกเป็น JSON Schema",
-      desc: "7 Core Fields + Other",
-      icon: Code2,
+      num: "4",
+      title: "JSON Output",
+      subtitle: "ส่งออก JSON Schema",
       state: step4State,
-      activeColor: "border-emerald-600 bg-emerald-600 text-white shadow-lg ring-4 ring-emerald-100",
-      completedColor: "border-emerald-600 bg-emerald-600 text-white",
-      badgeText: step4State === "completed" ? "พร้อมใช้งาน (Ready)" : "รอดำเนินการ",
-      badgeClass:
-        step4State === "completed"
-          ? "bg-emerald-100 text-emerald-800 border-emerald-200 font-extrabold"
-          : "bg-slate-100 text-slate-500 border-slate-200",
+      statusLabel: step4State === "completed" ? "พร้อมใช้งาน" : "รอคิว",
     },
   ];
 
   return (
     <section
-      className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-panel"
-      aria-label="แถบติดตามขั้นตอนการทำงาน (Workflow Step Tracker)"
+      className="rounded-2xl border border-slate-200 bg-white px-5 py-4 sm:px-8 sm:py-5 shadow-panel"
+      aria-label="ขั้นตอนการประมวลผล (Live Pipeline Step Tracker)"
     >
-      <div className="mb-3 flex items-center justify-between border-b border-slate-100 pb-2.5">
-        <div className="flex items-center gap-2">
-          <span className="flex h-2.5 w-2.5 rounded-full bg-blue-600 animate-ping" />
-          <h3 className="text-xs font-black uppercase tracking-wider text-slate-800">
-            สถานะขั้นตอนการประมวลผล (Live Pipeline Step)
-          </h3>
+      <div className="relative flex items-center justify-between">
+        {/* Connected Line Background */}
+        <div className="pointer-events-none absolute left-6 right-6 top-5 -translate-y-1/2 sm:left-10 sm:right-10">
+          <div className="h-0.5 w-full bg-slate-200" />
         </div>
-        <span className="text-[11px] font-bold text-slate-500">
-          เอกสาร: <b className="text-slate-900">{activeDoc.fileName}</b>
-        </span>
-      </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+        {/* Dynamic Connected Progress Line */}
+        <div className="pointer-events-none absolute left-6 right-6 top-5 -translate-y-1/2 sm:left-10 sm:right-10">
+          <div
+            className="h-0.5 bg-gradient-to-r from-emerald-500 via-blue-500 to-indigo-600 transition-all duration-700 ease-out"
+            style={{
+              width:
+                step4State === "completed"
+                  ? "100%"
+                  : step3State === "active" || step3State === "completed"
+                  ? "66%"
+                  : step2State === "active" || step2State === "completed"
+                  ? "33%"
+                  : "0%",
+            }}
+          />
+        </div>
+
+        {/* 4 Step Circular Nodes */}
         {steps.map((step, idx) => {
-          const StepIcon = step.icon;
           const isDone = step.state === "completed";
           const isActive = step.state === "active";
 
           return (
             <div
               key={step.id}
-              className={`relative flex flex-col justify-between rounded-xl border p-3.5 transition-all ${
-                isActive
-                  ? "border-blue-400 bg-gradient-to-br from-blue-50/80 to-indigo-50/50 shadow-md ring-2 ring-blue-500/20 scale-[1.02]"
-                  : isDone
-                  ? "border-emerald-200/90 bg-emerald-50/30"
-                  : "border-slate-200 bg-slate-50/50 opacity-65"
-              }`}
+              className="relative z-10 flex flex-col items-center text-center group cursor-default"
             >
-              <div className="flex items-start justify-between gap-2">
-                <div
-                  className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl font-bold transition ${
-                    isDone
-                      ? "bg-emerald-100 text-emerald-700"
-                      : isActive
-                      ? "bg-blue-600 text-white shadow-md animate-pulse"
-                      : "bg-slate-200 text-slate-500"
-                  }`}
-                >
-                  {isDone ? (
-                    <Check className="h-4 w-4 stroke-[3]" />
-                  ) : isActive ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <StepIcon className="h-4 w-4" />
-                  )}
-                </div>
-
-                <span
-                  className={`rounded-full border px-2 py-0.5 text-[10px] font-black ${step.badgeClass}`}
-                >
-                  {step.badgeText}
-                </span>
+              {/* Circular Number Node */}
+              <div
+                className={`grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-full font-black text-sm transition-all duration-300 ${
+                  isDone
+                    ? "bg-emerald-500 text-white shadow-sm ring-4 ring-emerald-100"
+                    : isActive
+                    ? "bg-blue-600 text-white shadow-md ring-4 ring-blue-100 scale-110 animate-pulse"
+                    : "border-2 border-slate-300 bg-white text-slate-400"
+                }`}
+              >
+                {isDone ? (
+                  <Check className="h-5 w-5 stroke-[3]" />
+                ) : isActive ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <span>{step.num}</span>
+                )}
               </div>
 
-              <div className="mt-3 space-y-0.5">
+              {/* Step Labels Below */}
+              <div className="mt-2.5 flex flex-col items-center space-y-0.5">
                 <p
-                  className={`text-xs font-black ${
+                  className={`text-xs font-black tracking-tight ${
                     isActive
-                      ? "text-blue-950"
+                      ? "text-blue-600 font-extrabold"
                       : isDone
                       ? "text-slate-900"
-                      : "text-slate-600"
+                      : "text-slate-400"
                   }`}
                 >
-                  {step.name}
+                  {step.title}
                 </p>
-                <p className="text-[11px] font-medium text-slate-500 truncate">
-                  {step.thLabel}
+                <p className="text-[11px] font-medium text-slate-500 hidden sm:block">
+                  {step.subtitle}
                 </p>
-                <p className="text-[10px] text-slate-400 truncate">{step.desc}</p>
+
+                {/* Status Pill */}
+                <span
+                  className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[9px] font-black border transition ${
+                    isActive
+                      ? "bg-blue-50 text-blue-700 border-blue-200 animate-pulse"
+                      : isDone
+                      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                      : "bg-slate-50 text-slate-400 border-slate-200"
+                  }`}
+                >
+                  {step.statusLabel}
+                </span>
               </div>
             </div>
           );
