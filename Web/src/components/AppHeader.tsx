@@ -1,4 +1,4 @@
-import { Bell, CircleHelp, Cloud, LogOut } from "lucide-react";
+import { Bell, CircleHelp, Cloud, Database, LogOut, ShieldCheck, Sparkles } from "lucide-react";
 import type { UserSession } from "./LoginPage";
 import { Logo } from "./Logo";
 
@@ -9,61 +9,70 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ user, onLogout, onOpenCloudHistory }: AppHeaderProps) {
-  const initial = user?.name ? user.name.charAt(0) : "ส";
-  const name = user?.name || "สมชาย วงศ์สวัสดิ์";
+  const initial = user?.name ? user.name.charAt(0) : "U";
+  const name = user?.name || "ผู้ใช้งานระบบ";
   const role = user?.role || "ผู้ดูแลระบบ";
 
   return (
-    <header className="sticky top-0 z-30 h-[72px] bg-slate-950 border-b border-cyan-500/20 text-white shadow-md">
-      <div className="flex h-full items-center gap-4 px-4 lg:px-6">
-        <Logo theme="light" size="md" />
-
-        <div className="hidden h-11 w-px bg-slate-800 lg:block" />
-
-        <div className="min-w-0 flex-1">
-          <h1 className="truncate text-lg font-black leading-6 sm:text-2xl text-white tracking-tight">ระบบแปลงเอกสารโลจิสติกส์เป็น JSON Schema</h1>
-          <p className="hidden truncate text-xs font-semibold text-cyan-400/90 sm:block">PaddleOCR + Qwen SLM Architecture (GPU Accelerated)</p>
+    <header className="sticky top-0 z-30 h-16 border-b border-slate-200 bg-white shadow-xs">
+      <div className="mx-auto flex h-full max-w-[1720px] items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Left: Logo & Product Title */}
+        <div className="flex items-center gap-3.5">
+          <Logo theme="dark" size="sm" />
+          <div className="hidden h-6 w-px bg-slate-200 sm:block" />
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-base font-extrabold text-navy sm:text-lg">
+                LogiAI
+              </h1>
+              <span className="rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-primary border border-blue-200/60">
+                Logistics to JSON Schema
+              </span>
+            </div>
+            <p className="hidden text-[11px] font-medium text-slate-500 md:block">
+              PaddleOCR (GPU) + Qwen2.5 SLM Multimodal Architecture
+            </p>
+          </div>
         </div>
 
-        <div className="ml-auto flex items-center gap-2.5">
+        {/* Right: Cloud Sync Button, Status Badges & Profile */}
+        <div className="flex items-center gap-2.5">
           {onOpenCloudHistory && (
             <button
               type="button"
               onClick={onOpenCloudHistory}
-              className="inline-flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-xs font-black text-amber-400 shadow-sm transition hover:bg-amber-500/20 hover:border-amber-500/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400"
-              title="เปิดคลังเอกสาร & JSON ที่บันทึกบน Cloud Firebase"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50/80 px-3.5 py-1.5 text-xs font-bold text-amber-900 shadow-xs transition hover:bg-amber-100 hover:border-amber-400"
+              title="เปิดคลังเอกสาร & JSON ที่บันทึกบน Google Cloud Firestore"
             >
-              <Cloud className="h-4 w-4 text-amber-400 animate-pulse" />
-              <span className="hidden sm:inline">Firebase Cloud</span>
+              <Cloud className="h-4 w-4 text-amber-600" />
+              <span className="font-extrabold">Firebase Cloud</span>
             </button>
           )}
 
-          <button type="button" className="relative rounded-xl p-2 hover:bg-slate-800/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400" aria-label="การแจ้งเตือน">
-            <Bell className="h-5 w-5 text-slate-300 hover:text-cyan-400 transition-colors" aria-hidden="true" />
-            <span className="absolute right-1 top-1 grid h-4 w-4 place-items-center rounded-full bg-cyan-500 text-[10px] font-black text-slate-950">5</span>
-          </button>
-          <button type="button" className="rounded-xl p-2 hover:bg-slate-800/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400" aria-label="ช่วยเหลือ">
-            <CircleHelp className="h-5 w-5 text-slate-300 hover:text-cyan-400 transition-colors" aria-hidden="true" />
-          </button>
-          
-          <div className="hidden items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/80 px-3 py-1.5 md:flex">
-            <span className="relative grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 text-white font-bold shadow-sm">
-              <span className="text-sm font-bold">{initial}</span>
-              <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-slate-950 bg-emerald-400" />
-            </span>
-            <span className="hidden text-left leading-tight xl:block">
-              <span className="block text-xs font-bold text-slate-100 truncate max-w-[140px]">{name}</span>
-              <span className="block text-[11px] text-cyan-400 font-semibold truncate max-w-[140px]">{role}</span>
-            </span>
+          <div className="hidden items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700 sm:flex">
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            <span>CUDA GPU Ready</span>
+          </div>
+
+          <div className="hidden h-6 w-px bg-slate-200 sm:block" />
+
+          {/* User Profile Pill */}
+          <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50/80 px-2.5 py-1">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-white shadow-xs">
+              {initial}
+            </div>
+            <div className="hidden text-left leading-tight lg:block">
+              <p className="max-w-[120px] truncate text-xs font-bold text-navy">{name}</p>
+              <p className="text-[10px] font-medium text-slate-500">{role}</p>
+            </div>
             {onLogout && (
               <button
                 type="button"
                 onClick={onLogout}
-                className="ml-1 flex items-center gap-1.5 rounded-lg border border-slate-700/60 bg-slate-800/60 px-2.5 py-1 text-xs font-semibold text-slate-300 hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400 transition-all"
+                className="rounded-lg p-1 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600"
                 title="ออกจากระบบ"
               >
                 <LogOut className="h-3.5 w-3.5" />
-                <span className="hidden xl:inline">ออกจากระบบ</span>
               </button>
             )}
           </div>

@@ -33,7 +33,7 @@ import type {
   SlmPerformanceMetrics,
 } from "./types";
 
-type WorkspaceTab = "extraction" | "analysis" | "all";
+type WorkspaceTab = "json" | "ocr" | "analytics" | "fields" | "jobs";
 
 export function App() {
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
@@ -54,7 +54,7 @@ export function App() {
 
   const [ocrLanguage, setOcrLanguage] = useState<OcrLanguage>("th");
   const [selectedType, setSelectedType] = useState<DocumentType>("Invoice");
-  const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>("extraction");
+  const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>("json");
   const [showCloudHistoryModal, setShowCloudHistoryModal] = useState(false);
 
   const [jobs, setJobs] = useState<DocumentJob[]>([]);
@@ -141,7 +141,7 @@ export function App() {
       setActiveDocIndex(0);
     }
     setIsBatchProcessing(true);
-    setWorkspaceTab("extraction");
+    setWorkspaceTab("json");
     showToast(`เริ่มประมวลผลแบทช์ ${files.length} รูป (เฟส 1: OCR ทุกรูป -> เฟส 2: SLM ทีละรูป)`);
 
     // Add job entries
@@ -591,16 +591,16 @@ export function App() {
 
     setBatchDocuments((prev) => [loadedItem, ...prev]);
     setActiveDocIndex(0);
-    setWorkspaceTab("extraction");
+    setWorkspaceTab("json");
     setSteps(nextStepState(initialSteps, 6));
     showToast(`☁️ โหลดเอกสาร "${record.fileName}" จาก Firebase สำเร็จ!`);
   }
 
   function handleStepClick(stepId: number) {
     if (stepId <= 3) {
-      setWorkspaceTab("extraction");
+      setWorkspaceTab("json");
     } else {
-      setWorkspaceTab("analysis");
+      setWorkspaceTab("analytics");
     }
   }
 
@@ -678,40 +678,14 @@ export function App() {
         onLogout={handleLogout}
         onOpenCloudHistory={() => setShowCloudHistoryModal(true)}
       />
-      <main className="px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mx-auto flex w-full max-w-[1720px] flex-col gap-7">
-          <section className="rounded-2xl border border-line bg-white p-6 shadow-panel lg:p-8">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <span className="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-xs font-black uppercase text-cyan-600">LogiAI Docs to JSON</span>
-                  <span className="rounded-lg border border-emerald-500/30 bg-emerald-50/80 px-2.5 py-1 text-xs font-bold text-emerald-700">PaddleOCR GPU Accelerated</span>
-                  <span className="rounded-lg border border-blue-500/30 bg-blue-50/80 px-2.5 py-1 text-xs font-bold text-blue-700">Qwen2.5-1.5B CUDA</span>
-                </div>
-                <h1 className="mt-2 text-2xl font-black tracking-normal text-navy lg:text-3xl">ระบบแปลงเอกสารโลจิสติกส์เป็น JSON Schema</h1>
-                <p className="mt-1 max-w-4xl text-sm leading-6 text-slate-600">
-                  อัปโหลดเอกสารเพื่อ OCR ด้วย PaddleOCR บน GPU แล้วส่งข้อความให้ Qwen SLM วิเคราะห์เป็น JSON Schema พร้อมแสดงผลวิเคราะห์ประสิทธิภาพและความแม่นยำทุกครั้ง
-                </p>
-              </div>
-
-              {hasDocument ? (
-                <button
-                  type="button"
-                  onClick={handleResetDocument}
-                  className="inline-flex items-center gap-2 rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
-                >
-                  <RefreshCw className="h-4 w-4 text-slate-500" aria-hidden="true" />
-                  รีเซ็ตเอกสารทั้งหมด
-                </button>
-              ) : null}
-            </div>
-          </section>
-
-          {hasDocument ? <WorkflowStepper steps={steps} onStepClick={handleStepClick} /> : null}
-
+      <main className="px-4 py-5 sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-[1720px] flex-col gap-5">
           {!hasDocument ? (
-            <div className="grid min-w-0 gap-8 xl:grid-cols-[minmax(380px,500px)_1fr]">
-              <section className="min-w-0 rounded-2xl border border-line bg-white p-6 shadow-panel">
+            /* ========================================================= */
+            /* EMPTY STATE: SIMPLE, INVITING DROPZONE & SAMPLE CARDS      */
+            /* ========================================================= */
+            <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(380px,480px)_1fr]">
+              <section className="min-w-0 rounded-2xl border border-slate-200 bg-white p-6 shadow-panel">
                 <DocumentUploader
                   batchCount={batchDocuments.length}
                   language={ocrLanguage}
@@ -722,8 +696,11 @@ export function App() {
               <AwaitingDocumentState />
             </div>
           ) : (
+            /* ========================================================= */
+            /* ACTIVE WORKSPACE: CLEAN 2-COLUMN STUDIO LAYOUT            */
+            /* ========================================================= */
             <>
-              {/* Batch Documents Horizontal Gallery & 2-Phase Progress Bar */}
+              {/* Batch Carousel & Progress Bar */}
               <BatchDocumentGallery
                 documents={batchDocuments}
                 activeIndex={activeDocIndex}
@@ -735,61 +712,65 @@ export function App() {
                 batchPhase={batchPhase}
               />
 
-              {/* Active Document Top Quick Banner */}
-              <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-blue-200 bg-blue-50/70 px-5 py-3.5">
+              {/* Active Document Top Quick Toolbar */}
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-3.5 shadow-panel">
                 <div className="flex items-center gap-3">
-                  <span className="grid h-10 w-10 place-items-center rounded-lg bg-primary font-extrabold text-white">{fileName.endsWith(".pdf") ? "PDF" : "IMG"}</span>
+                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-xs font-black text-white shadow-xs">
+                    {fileName.endsWith(".pdf") ? "PDF" : "IMG"}
+                  </span>
                   <div>
-                    <div className="flex flex-wrap items-center gap-3">
-                      <p className="text-base font-extrabold text-navy">{fileName}</p>
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-bold text-success ring-1 ring-green-300">
-                        <CheckCircle2 className="h-3.5 w-3.5" />
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <p className="text-sm font-black text-navy">{fileName}</p>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-700 border border-slate-200">
+                        <CheckCircle2 className="h-3 w-3 text-emerald-600" />
                         OCR: {ocrLanguage === "th" ? "ไทย + English" : "English"}
                       </span>
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-bold text-indigo-800 ring-1 ring-indigo-300">
-                        <BrainCircuit className="h-3.5 w-3.5" />
-                        {slmReady ? `SLM ความแม่นยำ: ${slmPerformance?.accuracy_pct ?? overallConfidence}%` : (activeDoc?.statusLabel ?? "กำลังรอผล")}
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800 border border-emerald-200">
+                        <BrainCircuit className="h-3 w-3 text-emerald-600" />
+                        {slmReady ? `ความแม่นยำ: ${slmPerformance?.accuracy_pct ?? overallConfidence}%` : (activeDoc?.statusLabel ?? "กำลังประมวลผล")}
                       </span>
                       {activeDoc?.cloudSyncStatus === "synced" ? (
                         <span
-                          className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-800 ring-1 ring-amber-300"
-                          title="ข้อมูลรูปภาพและ JSON Schema ถูกจัดเก็บบน Google Cloud Firebase (Firestore & Storage)"
+                          className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 border border-amber-200"
+                          title="ข้อมูลรูปภาพและ JSON Schema ถูกจัดเก็บบน Google Cloud Firestore"
                         >
-                          <Cloud className="h-3.5 w-3.5 text-amber-600" />
-                          <span>บันทึกลง Firebase แล้ว</span>
+                          <Cloud className="h-3 w-3 text-amber-600" />
+                          <span>บันทึกบน Firebase แล้ว</span>
                         </span>
                       ) : null}
                     </div>
-                    <p className="mt-1 text-xs text-slate-600">ขนาด: {fileSize} · เอกสารที่ {activeDocIndex + 1} จาก {batchDocuments.length} · GPU pipeline: PaddleOCR + Qwen2.5-1.5B CUDA</p>
+                    <p className="mt-0.5 text-[11px] text-slate-500">
+                      ขนาดไฟล์: {fileSize} · กำลังดูเอกสารที่ {activeDocIndex + 1} จากทั้งหมด {batchDocuments.length} รายการ
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2.5">
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
                     onClick={() => setShowCloudHistoryModal(true)}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-extrabold text-amber-900 transition hover:bg-amber-100"
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-900 shadow-xs transition hover:bg-amber-100"
                     title="เปิดคลังเอกสาร & JSON ที่เก็บไว้บน Cloud Firebase"
                   >
-                    <Cloud className="h-4 w-4 text-amber-600" />
-                    <span>คลัง Cloud Firebase</span>
+                    <Cloud className="h-3.5 w-3.5 text-amber-600" />
+                    <span>คลัง Cloud</span>
                   </button>
 
                   {slmReady ? (
                     <button
                       type="button"
                       onClick={handleManualCloudSync}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-extrabold text-slate-700 transition hover:bg-slate-50"
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-xs transition hover:bg-slate-50"
                       title="บันทึกข้อมูลและรูปภาพขึ้น Firebase อีกครั้ง"
                     >
-                      <Cloud className="h-4 w-4 text-primary" />
+                      <Cloud className="h-3.5 w-3.5 text-primary" />
                       <span>ซิงค์ขึ้น Cloud</span>
                     </button>
                   ) : null}
 
-                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-blue-300 bg-white px-3.5 py-2 text-xs font-extrabold text-primary transition hover:bg-blue-50">
-                    <UploadCloud className="h-4 w-4" />
-                    เพิ่มรูปเข้าแบทช์
+                  <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/80 px-3 py-1.5 text-xs font-bold text-primary shadow-xs transition hover:bg-blue-100">
+                    <UploadCloud className="h-3.5 w-3.5" />
+                    <span>เพิ่มรูปภาพ</span>
                     <input
                       type="file"
                       multiple
@@ -802,61 +783,105 @@ export function App() {
                       }}
                     />
                   </label>
+
+                  <button
+                    type="button"
+                    onClick={handleResetDocument}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600 shadow-xs transition hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600"
+                    title="ล้างเอกสารทั้งหมดและเริ่มใหม่"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" />
+                    <span>รีเซ็ต</span>
+                  </button>
                 </div>
               </div>
 
-              <div className="grid min-w-0 gap-8 lg:grid-cols-[440px_minmax(0,1fr)] xl:grid-cols-[480px_minmax(0,1fr)]">
-                <section className="flex min-w-0 flex-col rounded-2xl border border-line bg-white p-6 shadow-panel">
-                  <DocumentPreview previewUrl={previewUrl} previewName={fileName} progress={uploadProgress} onToast={showToast} />
+              {/* Main 2-Column Split Workbench */}
+              <div className="grid min-w-0 gap-6 lg:grid-cols-[440px_minmax(0,1fr)] xl:grid-cols-[480px_minmax(0,1fr)]">
+                {/* Left Column: Document Image Preview */}
+                <section className="flex min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-panel">
+                  <DocumentPreview
+                    previewUrl={previewUrl}
+                    previewName={fileName}
+                    progress={uploadProgress}
+                    onToast={showToast}
+                  />
                 </section>
 
-                <section className="flex min-w-0 flex-col rounded-2xl border border-line bg-white p-6 shadow-panel">
-                  <div className="mb-6 flex flex-wrap items-center justify-between border-b border-line pb-4">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <TabButton active={workspaceTab === "extraction"} label="OCR & JSON" onClick={() => setWorkspaceTab("extraction")} />
-                      <TabButton active={workspaceTab === "analysis"} label="📊 ประสิทธิภาพ & Review" onClick={() => setWorkspaceTab("analysis")} />
-                      <TabButton active={workspaceTab === "all"} label="ทั้งหมด" onClick={() => setWorkspaceTab("all")} />
+                {/* Right Column: Tabbed Clean Results Studio */}
+                <section className="flex min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-panel">
+                  {/* Clean Tab Selector Bar */}
+                  <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <TabButton
+                        active={workspaceTab === "json"}
+                        label="JSON Schema"
+                        onClick={() => setWorkspaceTab("json")}
+                      />
+                      <TabButton
+                        active={workspaceTab === "ocr"}
+                        label="ข้อความ OCR & Confidence"
+                        badge={activeDoc?.ocrLines?.length || undefined}
+                        onClick={() => setWorkspaceTab("ocr")}
+                      />
+                      <TabButton
+                        active={workspaceTab === "analytics"}
+                        label="ความแม่นยำ & Review"
+                        badge={reviewItems.length > 0 ? `รอตรวจ ${reviewItems.length}` : undefined}
+                        onClick={() => setWorkspaceTab("analytics")}
+                      />
+                      <TabButton
+                        active={workspaceTab === "fields"}
+                        label="ตารางฟิลด์สกัด"
+                        onClick={() => setWorkspaceTab("fields")}
+                      />
+                      <TabButton
+                        active={workspaceTab === "jobs"}
+                        label="ประวัติเซสชัน"
+                        badge={jobs.length}
+                        onClick={() => setWorkspaceTab("jobs")}
+                      />
                     </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs font-bold text-slate-500">
-                        ความแม่นยำ SLM: <b className="text-primary">{slmPerformance?.accuracy_pct ?? overallConfidence}%</b>
+
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-extrabold text-slate-500">
+                        SLM Accuracy: <b className="text-primary">{slmPerformance?.accuracy_pct ?? overallConfidence}%</b>
                       </span>
                     </div>
                   </div>
 
-                  {workspaceTab === "extraction" ? (
-                    <div className="space-y-6">
-                      <div className="grid gap-6 xl:grid-cols-2">
-                        <OCRResultPanel
-                          text={ocrResultText}
-                          spatialText={activeDoc?.spatialText}
-                          lines={activeDoc?.ocrLines}
-                          onCopy={() => copyText(activeDoc?.spatialText || ocrResultText, "คัดลอก OCR Text แล้ว")}
-                        />
-                        {slmReady ? (
-                          <JSONOutputPanel
-                            json={jsonOutput}
-                            onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
-                            onDownload={() => createJsonDownload(jsonOutput)}
-                            onMoveOtherToCore={handleMoveOtherToCore}
-                            onSaveJson={handleSaveJsonSchema}
-                          />
-                        ) : (
-                          <SlmWaitingCard title="JSON Schema Output" />
-                        )}
-                      </div>
+                  {/* Tab 1: JSON Schema Output & Editor */}
+                  {workspaceTab === "json" ? (
+                    <div className="min-w-0">
                       {slmReady ? (
-                        <SlmAccuracyCard
-                          performance={slmPerformance}
-                          jsonOutput={jsonOutput}
-                          overallConfidence={overallConfidence}
+                        <JSONOutputPanel
+                          json={jsonOutput}
+                          onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
+                          onDownload={() => createJsonDownload(jsonOutput)}
+                          onMoveOtherToCore={handleMoveOtherToCore}
+                          onSaveJson={handleSaveJsonSchema}
                         />
-                      ) : null}
+                      ) : (
+                        <SlmWaitingCard title="JSON Schema Output" />
+                      )}
                     </div>
                   ) : null}
 
-                  {workspaceTab === "analysis" ? (
-                    <div className="space-y-6">
+                  {/* Tab 2: OCR Result & Confidence Viewer */}
+                  {workspaceTab === "ocr" ? (
+                    <div className="min-w-0">
+                      <OCRResultPanel
+                        text={ocrResultText}
+                        spatialText={activeDoc?.spatialText}
+                        lines={activeDoc?.ocrLines}
+                        onCopy={() => copyText(activeDoc?.spatialText || ocrResultText, "คัดลอก OCR Text แล้ว")}
+                      />
+                    </div>
+                  ) : null}
+
+                  {/* Tab 3: Accuracy Metrics, Confidence Breakdown & Review */}
+                  {workspaceTab === "analytics" ? (
+                    <div className="space-y-5">
                       {slmReady ? (
                         <SlmAccuracyCard
                           performance={slmPerformance}
@@ -864,60 +889,42 @@ export function App() {
                           overallConfidence={overallConfidence}
                         />
                       ) : null}
-                      <div className="grid gap-6 xl:grid-cols-2">
-                        {slmReady ? <ConfidenceCard overall={overallConfidence} scores={confidenceScores} /> : <SlmWaitingCard title="ความมั่นใจ / Confidence" />}
-                        {slmReady ? <ManualReviewCard items={reviewItems} onReview={setReviewingItem} /> : <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />}
+                      <div className="grid gap-5 xl:grid-cols-2">
+                        {slmReady ? (
+                          <ConfidenceCard overall={overallConfidence} scores={confidenceScores} />
+                        ) : (
+                          <SlmWaitingCard title="ความมั่นใจ / Confidence" />
+                        )}
+                        {slmReady ? (
+                          <ManualReviewCard items={reviewItems} onReview={setReviewingItem} />
+                        ) : (
+                          <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />
+                        )}
                       </div>
                     </div>
                   ) : null}
 
-                  {workspaceTab === "all" ? (
-                    <div className="space-y-6">
-                      <div className="grid gap-6 xl:grid-cols-2">
-                        <OCRResultPanel
-                          text={ocrResultText}
-                          spatialText={activeDoc?.spatialText}
-                          lines={activeDoc?.ocrLines}
-                          onCopy={() => copyText(activeDoc?.spatialText || ocrResultText, "คัดลอก OCR Text แล้ว")}
-                        />
-                        {slmReady ? (
-                          <JSONOutputPanel
-                            json={jsonOutput}
-                            onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
-                            onDownload={() => createJsonDownload(jsonOutput)}
-                            onMoveOtherToCore={handleMoveOtherToCore}
-                            onSaveJson={handleSaveJsonSchema}
-                          />
-                        ) : (
-                          <SlmWaitingCard title="JSON Schema Output" />
-                        )}
-                      </div>
-                      {slmReady ? (
-                        <SlmAccuracyCard
-                          performance={slmPerformance}
-                          jsonOutput={jsonOutput}
-                          overallConfidence={overallConfidence}
-                        />
-                      ) : null}
-                      <div className="grid gap-6 xl:grid-cols-2">
-                        {slmReady ? <ConfidenceCard overall={overallConfidence} scores={confidenceScores} /> : <SlmWaitingCard title="ความมั่นใจ / Confidence" />}
-                        {slmReady ? <ManualReviewCard items={reviewItems} onReview={setReviewingItem} /> : <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />}
-                      </div>
+                  {/* Tab 4: Extracted Fields Table */}
+                  {workspaceTab === "fields" ? (
+                    <div className="min-w-0">
+                      <ExtractedFieldsTable
+                        fields={fields}
+                        selectedType={selectedType}
+                        onTypeChange={setSelectedType}
+                        onMoveOtherToCore={handleMoveOtherToCore}
+                        onDeleteField={handleDeleteCustomField}
+                      />
+                    </div>
+                  ) : null}
+
+                  {/* Tab 5: Recent Jobs History */}
+                  {workspaceTab === "jobs" ? (
+                    <div className="min-w-0">
+                      <RecentJobsTable jobs={jobs} />
                     </div>
                   ) : null}
                 </section>
               </div>
-
-              <section className="grid min-w-0 gap-8 2xl:grid-cols-[minmax(0,1.4fr)_minmax(400px,0.85fr)]">
-                <ExtractedFieldsTable
-                  fields={fields}
-                  selectedType={selectedType}
-                  onTypeChange={setSelectedType}
-                  onMoveOtherToCore={handleMoveOtherToCore}
-                  onDeleteField={handleDeleteCustomField}
-                />
-                <RecentJobsTable jobs={jobs} />
-              </section>
             </>
           )}
         </div>
@@ -930,22 +937,49 @@ export function App() {
         onShowToast={showToast}
       />
 
-      {reviewingItem ? <ManualReviewModal item={reviewingItem} onCancel={() => setReviewingItem(null)} onConfirm={handleConfirmReview} /> : null}
+      {reviewingItem ? (
+        <ManualReviewModal
+          item={reviewingItem}
+          onCancel={() => setReviewingItem(null)}
+          onConfirm={handleConfirmReview}
+        />
+      ) : null}
       {toast ? <Toast message={toast} onClose={() => setToast("")} /> : null}
     </div>
   );
 }
 
-function TabButton({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
+function TabButton({
+  active,
+  label,
+  badge,
+  onClick,
+}: {
+  active: boolean;
+  label: string;
+  badge?: string | number;
+  onClick: () => void;
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-extrabold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${
-        active ? "bg-navy text-white shadow-sm" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+      className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-extrabold transition ${
+        active
+          ? "bg-navy text-white shadow-xs"
+          : "bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-navy"
       }`}
     >
-      {label}
+      <span>{label}</span>
+      {badge !== undefined && (
+        <span
+          className={`rounded-full px-1.5 py-0.2 text-[10px] font-black ${
+            active ? "bg-white/20 text-white" : "bg-slate-200 text-slate-700"
+          }`}
+        >
+          {badge}
+        </span>
+      )}
     </button>
   );
 }
@@ -958,7 +992,9 @@ function AwaitingDocumentState() {
           <FileSearch className="h-8 w-8" aria-hidden="true" />
         </div>
         <h2 className="text-xl font-extrabold text-navy">พร้อมรับเอกสารสำหรับประมวลผล</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-600">เลือกไฟล์ PDF, JPG หรือ PNG เพื่อเริ่ม OCR ด้วย PaddleOCR GPU และวิเคราะห์ต่อด้วย Qwen SLM บน CUDA</p>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          เลือกไฟล์ PDF, JPG หรือ PNG เพื่อเริ่ม OCR ด้วย PaddleOCR GPU และวิเคราะห์ต่อด้วย Qwen SLM บน CUDA
+        </p>
       </div>
     </section>
   );
