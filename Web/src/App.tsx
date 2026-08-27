@@ -15,6 +15,7 @@ import { OCRResultPanel } from "./components/OCRResultPanel";
 import { RecentJobsTable } from "./components/RecentJobsTable";
 import { RegisterPage } from "./components/RegisterPage";
 import { SlmAccuracyCard } from "./components/SlmAccuracyCard";
+import { SlmReasoningAnimation } from "./components/SlmReasoningAnimation";
 import { Toast } from "./components/Toast";
 import { WorkflowStepper } from "./components/WorkflowStepper";
 import { initialJson, initialSteps, ocrText } from "./data/mockData";
@@ -862,7 +863,11 @@ export function App() {
                           onSaveJson={handleSaveJsonSchema}
                         />
                       ) : (
-                        <SlmWaitingCard title="JSON Schema Output" />
+                        <SlmReasoningAnimation
+                          title="กำลังประมวลผล JSON Schema ด้วย Qwen SLM"
+                          fileName={fileName}
+                          isProcessing={activeDoc?.status === "slm_processing" || activeDoc?.status === "ocr_processing"}
+                        />
                       )}
                     </div>
                   ) : null}
@@ -893,12 +898,18 @@ export function App() {
                         {slmReady ? (
                           <ConfidenceCard overall={overallConfidence} scores={confidenceScores} />
                         ) : (
-                          <SlmWaitingCard title="ความมั่นใจ / Confidence" />
+                          <SlmReasoningAnimation
+                            title="ความมั่นใจ / Confidence"
+                            fileName={fileName}
+                          />
                         )}
                         {slmReady ? (
                           <ManualReviewCard items={reviewItems} onReview={setReviewingItem} />
                         ) : (
-                          <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />
+                          <div className="flex h-full min-h-[220px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center">
+                            <BrainCircuit className="h-8 w-8 text-slate-400 animate-pulse" />
+                            <p className="mt-2 text-xs font-bold text-slate-600">กำลังรอผลการตรวจสอบโดย SLM</p>
+                          </div>
                         )}
                       </div>
                     </div>
