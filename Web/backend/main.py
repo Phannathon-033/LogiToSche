@@ -81,7 +81,8 @@ _slm_model: Any | None = None
 
 class OcrLine(BaseModel):
     text: str
-    confidence: float = 0
+    confidence: float = 0.0
+    bounding_box: list[list[float]] | None = None
     box: list[list[float]] | None = None
     position: dict[str, Any] | None = None
 
@@ -698,10 +699,13 @@ def extract_lines(raw_result: Any) -> list[dict[str, Any]]:
         if not item["text"]:
             continue
         pos = compute_position_info(item.get("box"), max_w, max_h)
+        b_box = item.get("box") or []
+        conf_val = round(float(item["confidence"]), 2)
         lines.append({
             "text": item["text"],
-            "confidence": round(item["confidence"], 4),
-            "box": item.get("box"),
+            "confidence": conf_val,
+            "bounding_box": b_box,
+            "box": b_box,
             "position": pos,
         })
 

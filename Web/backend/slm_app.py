@@ -58,7 +58,8 @@ _slm_model: Any | None = None
 
 class OcrLine(BaseModel):
     text: str
-    confidence: float = 0
+    confidence: float = 0.0
+    bounding_box: list[list[float]] | None = None
     box: list[list[float]] | None = None
     position: dict[str, Any] | None = None
 

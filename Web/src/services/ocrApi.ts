@@ -10,6 +10,7 @@ export interface OcrPosition {
 export interface OcrLine {
   text: string;
   confidence: number;
+  bounding_box?: number[][];
   box?: number[][];
   position?: OcrPosition;
 }
