@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Users, Plus, ShieldAlert } from "lucide-react";
 
-export function AdminUserSettings() {
+interface AdminUserSettingsProps { showToast?: (message: string) => void; }
+
+export function AdminUserSettings({ showToast: _showToast }: AdminUserSettingsProps) {
   const [users, setUsers] = useState([
     { name: "สมชาย วงศ์สวัสดิ์", role: "Admin", email: "somchai.w@logiai.co.th", status: "Active", docs: 142 },
     { name: "อนันต์ สุขใจ", role: "User", email: "anan.s@logiai.co.th", status: "Active", docs: 87 },
