@@ -433,6 +433,72 @@ export function App() {
     showToast(`ลบฟิลด์ "${fieldKey}" สำเร็จ`);
   }
 
+  async function handleSaveJsonSchema(updatedJson: JsonSchemaOutput) {
+    // Reconstruct fields array
+    const otherObj = updatedJson.other || {};
+    const nextFields: ExtractedField[] = [
+      { id: 1, sourceText: updatedJson.document_type || "invoice", field: "document_type", value: updatedJson.document_type || "invoice", confidence: 99, status: "success", isOther: false },
+      { id: 2, sourceText: updatedJson.document_no || "-", field: "document_no", value: updatedJson.document_no || "-", confidence: 99, status: "success", isOther: false },
+      { id: 3, sourceText: updatedJson.document_date || "-", field: "document_date", value: updatedJson.document_date || "-", confidence: 99, status: "success", isOther: false },
+      { id: 4, sourceText: updatedJson.party_name || "-", field: "party_name", value: updatedJson.party_name || "-", confidence: 99, status: "success", isOther: false },
+      { id: 5, sourceText: updatedJson.source_file || fileName, field: "source_file", value: updatedJson.source_file || fileName, confidence: 100, status: "success", isOther: false },
+      { id: 6, sourceText: String(updatedJson.quantity ?? 1), field: "quantity", value: String(updatedJson.quantity ?? 1), confidence: 99, status: "success", isOther: false },
+      { id: 7, sourceText: String(updatedJson.total_amount ?? 0), field: "total_amount", value: String(updatedJson.total_amount ?? 0), confidence: 99, status: "success", isOther: false },
+    ];
+
+    Object.entries(otherObj).forEach(([k, v], idx) => {
+      if (k !== "storage_url") {
+        nextFields.push({
+          id: 8 + idx,
+          sourceText: String(v),
+          field: k,
+          value: String(v),
+          confidence: 95,
+          status: "success",
+          isOther: true,
+        });
+      }
+    });
+
+    if (activeDoc) {
+      setBatchDocuments((prev) =>
+        prev.map((doc, idx) =>
+          idx === activeDocIndex ? { ...doc, jsonOutput: updatedJson, fields: nextFields } : doc
+        )
+      );
+
+      // Auto-save to Firebase Firestore
+      try {
+        await saveDocumentToFirebase(
+          {
+            id: activeDoc.id,
+            fileName: activeDoc.fileName,
+            fileSize: activeDoc.fileSize,
+            fileType: activeDoc.file?.type || "image/jpeg",
+            documentType: selectedType,
+            jsonSchema: updatedJson,
+            fields: nextFields,
+            confidenceScores: activeDoc.confidenceScores,
+            overallConfidence: activeDoc.overallConfidence,
+            performance: activeDoc.performance ?? null,
+            reviewItems: activeDoc.reviewItems,
+            ocrText: activeDoc.ocrText,
+            spatialText: activeDoc.spatialText,
+            userEmail: userSession?.email || "guest@logiai.local",
+            userName: userSession?.name || "Guest User",
+          },
+          activeDoc.file
+        );
+        showToast("🎉 บันทึกการแก้ไข JSON Schema ลง Cloud Firestore เรียบร้อย!");
+      } catch (err) {
+        console.warn("Cloud save warning after manual edit:", err);
+        showToast("💾 บันทึกการแก้ไข JSON Schema เรียบร้อย");
+      }
+    } else {
+      showToast("💾 บันทึกการแก้ไข JSON Schema เรียบร้อย");
+    }
+  }
+
   function handleResetDocument() {
     batchDocuments.forEach((doc) => {
       if (doc.previewUrl) URL.revokeObjectURL(doc.previewUrl);
@@ -766,6 +832,7 @@ export function App() {
                             onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
                             onDownload={() => createJsonDownload(jsonOutput)}
                             onMoveOtherToCore={handleMoveOtherToCore}
+                            onSaveJson={handleSaveJsonSchema}
                           />
                         ) : (
                           <SlmWaitingCard title="JSON Schema Output" />
@@ -812,6 +879,7 @@ export function App() {
                             onCopy={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
                             onDownload={() => createJsonDownload(jsonOutput)}
                             onMoveOtherToCore={handleMoveOtherToCore}
+                            onSaveJson={handleSaveJsonSchema}
                           />
                         ) : (
                           <SlmWaitingCard title="JSON Schema Output" />
