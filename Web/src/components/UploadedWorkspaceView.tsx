@@ -299,9 +299,9 @@ export function UploadedWorkspaceView({
       )}
 
       {/* ========================================================================= */}
-      {/* 3. MAIN 3-COLUMN STUDIO WORKBENCH GRID                                    */}
+      {/* 3. MAIN 2-COLUMN STUDIO WORKBENCH GRID (Spacious & Clean)                 */}
       {/* ========================================================================= */}
-      <section className="grid min-w-0 gap-6 xl:grid-cols-[1.3fr_1.1fr_270px]">
+      <section className="grid min-w-0 gap-6 lg:grid-cols-[1.15fr_1fr]">
         {/* ===================================================================== */}
         {/* COLUMN 1 (LEFT): OCR RESULT (Image Viewer + Human Cards / Table)      */}
         {/* ===================================================================== */}
@@ -429,7 +429,7 @@ export function UploadedWorkspaceView({
         </div>
 
         {/* ===================================================================== */}
-        {/* COLUMN 2 (MIDDLE): SLM JSON RESULT (Code Editor & Output)             */}
+        {/* COLUMN 2 (RIGHT): SLM JSON RESULT (Code Editor & Output)              */}
         {/* ===================================================================== */}
         <div className="flex min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-panel">
           {/* Card Header */}
@@ -492,93 +492,92 @@ export function UploadedWorkspaceView({
             </button>
           </div>
         </div>
+      </section>
 
-        {/* ===================================================================== */}
-        {/* COLUMN 3 (RIGHT): TELEMETRY & STATUS SIDEBAR                          */}
-        {/* ===================================================================== */}
-        <div className="flex flex-col justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-panel">
-          <div className="space-y-3.5">
-            {/* Step 1: OCR Ready */}
-            <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
-              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-emerald-100 text-emerald-700">
-                <Scan className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold text-slate-500">OCR</p>
-                <p className="text-xs font-black text-emerald-700">Ready</p>
-              </div>
+      {/* ========================================================================= */}
+      {/* 4. TELEMETRY & STATUS CARD (Moved to Bottom as Requested by User)          */}
+      {/* ========================================================================= */}
+      <section className="flex flex-col justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-panel">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          {/* Step 1: OCR Ready */}
+          <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-emerald-100 text-emerald-700">
+              <Scan className="h-4 w-4" />
             </div>
-
-            {/* Step 2: SLM Done */}
-            <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
-              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-purple-100 text-purple-700">
-                <BrainCircuit className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold text-slate-500">SLM (AI Reasoning)</p>
-                <p className="text-xs font-black text-purple-700">Done</p>
-              </div>
-            </div>
-
-            {/* Step 3: Output JSON Ready */}
-            <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
-              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-rose-100 text-rose-700">
-                <Code2 className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold text-slate-500">Output</p>
-                <p className="text-xs font-black text-slate-900">JSON Ready</p>
-              </div>
-            </div>
-
-            <div className="my-2 h-px bg-slate-100" />
-
-            {/* Metric 1: OCR Accuracy */}
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
-                <Target className="h-3.5 w-3.5 text-blue-600" />
-                OCR Accuracy
-              </span>
-              <span className="text-xs font-black text-slate-900 font-mono">
-                {accuracyPct}%
-              </span>
-            </div>
-
-            {/* Metric 2: Fields Extracted */}
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
-                <Layers className="h-3.5 w-3.5 text-indigo-600" />
-                Fields Extracted
-              </span>
-              <span className="text-xs font-black text-slate-900 font-mono">
-                {fieldsCount}
-              </span>
-            </div>
-
-            {/* Metric 3: Processing Time */}
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
-                <Clock className="h-3.5 w-3.5 text-purple-600" />
-                Processing Time
-              </span>
-              <span className="text-xs font-black text-slate-900 font-mono">
-                {processingTime}
-              </span>
+            <div>
+              <p className="text-[11px] font-bold text-slate-500">OCR</p>
+              <p className="text-xs font-black text-emerald-700">Ready</p>
             </div>
           </div>
 
-          {/* Sidebar Footer */}
-          <div className="border-t border-slate-100 pt-3 text-[11px] font-semibold text-slate-400">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Last updated: Just now
+          {/* Step 2: SLM Done */}
+          <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-purple-100 text-purple-700">
+              <BrainCircuit className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-slate-500">SLM (AI Reasoning)</p>
+              <p className="text-xs font-black text-purple-700">Done</p>
+            </div>
+          </div>
+
+          {/* Step 3: Output JSON Ready */}
+          <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-rose-100 text-rose-700">
+              <Code2 className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-slate-500">Output</p>
+              <p className="text-xs font-black text-slate-900">JSON Ready</p>
+            </div>
+          </div>
+
+          {/* Metric 1: OCR Accuracy */}
+          <div className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+            <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+              <Target className="h-4 w-4 text-blue-600" />
+              OCR Accuracy
+            </span>
+            <span className="text-sm font-black text-slate-900 font-mono">
+              {accuracyPct}%
             </span>
           </div>
+
+          {/* Metric 2: Fields Extracted */}
+          <div className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+            <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+              <Layers className="h-4 w-4 text-indigo-600" />
+              Fields Extracted
+            </span>
+            <span className="text-sm font-black text-slate-900 font-mono">
+              {fieldsCount}
+            </span>
+          </div>
+
+          {/* Metric 3: Processing Time */}
+          <div className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+            <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+              <Clock className="h-4 w-4 text-purple-600" />
+              Processing Time
+            </span>
+            <span className="text-sm font-black text-slate-900 font-mono">
+              {processingTime}
+            </span>
+          </div>
+        </div>
+
+        {/* Status Footer */}
+        <div className="flex items-center justify-between border-t border-slate-100 pt-3 text-[11px] font-semibold text-slate-400">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            Last updated: Just now
+          </span>
+          <span className="text-slate-500">PaddleOCR GPU + Qwen2.5-1.5B Multimodal Architecture</span>
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 4. BOTTOM 4-STEP PIPELINE STEPPER                                         */}
+      {/* 5. BOTTOM 4-STEP PIPELINE STEPPER                                         */}
       {/* ========================================================================= */}
       <section className="grid grid-cols-2 gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-panel sm:grid-cols-4 sm:gap-6">
         {/* Step 1: Upload */}
