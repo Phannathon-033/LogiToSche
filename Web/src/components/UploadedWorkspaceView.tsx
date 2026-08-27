@@ -509,15 +509,34 @@ export function UploadedWorkspaceView({
             </button>
           </div>
 
-          {/* JSON Output / Editor or Real-Time SLM Reasoning Animation */}
+          {/* JSON Output / Editor or Real-Time SLM Reasoning Animation or Waiting Queue */}
           <div className="flex-1 min-w-0 flex flex-col">
-            {activeDoc.status === "slm_processing" || activeDoc.status === "ocr_processing" || !activeDoc.jsonOutput ? (
+            {activeDoc.status === "ocr_processing" ? (
+              /* State 1: OCR is currently reading text, SLM is quietly waiting in queue (NOT loading yet) */
+              <div className="flex h-full min-h-[440px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/70 p-6 text-center">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-500 shadow-xs mb-3 border border-indigo-100">
+                  <BrainCircuit className="h-7 w-7 opacity-80" />
+                </div>
+                <h4 className="text-sm font-black text-slate-800">
+                  รอรับข้อมูลจาก PaddleOCR (Waiting for OCR)
+                </h4>
+                <p className="mt-1.5 text-xs text-slate-500 max-w-xs leading-relaxed">
+                  ระบบกำลังสแกนและดึงข้อความในเอกสารฝั่งซ้าย เมื่อสแกนเสร็จสิ้น ฝั่งนี้จะเริ่มวิเคราะห์โครงสร้าง JSON ทันที
+                </p>
+                <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-slate-200/80 px-3.5 py-1 text-[11px] font-bold text-slate-600 border border-slate-300/60">
+                  <span className="h-2 w-2 rounded-full bg-slate-400" />
+                  <span>สเต็ปถัดไป: สกัด 7 ฟิลด์หลักด้วย Qwen SLM</span>
+                </div>
+              </div>
+            ) : activeDoc.status === "slm_processing" || (!activeDoc.jsonOutput && isProcessing) ? (
+              /* State 2: OCR is finished, SLM is actively reasoning */
               <SlmReasoningAnimation
                 title="กำลังวิเคราะห์และจัดโครงสร้าง JSON Schema ด้วย Qwen SLM (GPU)"
                 fileName={fileName}
                 isProcessing={true}
               />
-            ) : (
+            ) : activeDoc.jsonOutput ? (
+              /* State 3: SLM completed, display JSON schema */
               <JSONOutputPanel
                 json={activeDoc.jsonOutput}
                 onCopy={onCopyJson}
@@ -525,6 +544,12 @@ export function UploadedWorkspaceView({
                 onMoveOtherToCore={onMoveOtherToCore}
                 onSaveJson={onSaveToFirebase}
               />
+            ) : (
+              /* State 4: Standby */
+              <div className="flex h-full min-h-[440px] flex-col items-center justify-center rounded-xl border border-slate-200 bg-slate-50 p-6 text-center text-slate-400">
+                <FileCode className="h-10 w-10 mb-2 opacity-50" />
+                <p className="text-xs font-bold">พร้อมสำหรับการวิเคราะห์ JSON Schema</p>
+              </div>
             )}
           </div>
 
