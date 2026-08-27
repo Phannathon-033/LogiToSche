@@ -123,3 +123,33 @@ export interface SlmPerformanceMetrics {
   model: string;
   device: string;
 }
+
+export type BatchFileStatus =
+  | "queued"
+  | "ocr_processing"
+  | "ocr_completed"
+  | "slm_processing"
+  | "completed"
+  | "error";
+
+export interface BatchDocumentItem {
+  id: string;
+  file: File;
+  fileName: string;
+  fileSize: string;
+  previewUrl: string | null;
+  status: BatchFileStatus;
+  statusLabel: string;
+  ocrProgress: number;
+  ocrText: string;
+  ocrLines: any[];
+  jsonOutput: JsonSchemaOutput | null;
+  fields: ExtractedField[];
+  confidenceScores: ConfidenceScore[];
+  overallConfidence: number;
+  performance: SlmPerformanceMetrics | null;
+  reviewItems: ReviewItem[];
+  error?: string;
+  startedAt?: string;
+  completedAt?: string;
+}

@@ -1,6 +1,7 @@
-import { BrainCircuit, CheckCircle2, FileSearch, RefreshCw, Sparkles, UploadCloud } from "lucide-react";
+import { BrainCircuit, CheckCircle2, FileSearch, Layers, Plus, RefreshCw, Sparkles, UploadCloud } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AppHeader } from "./components/AppHeader";
+import { BatchDocumentGallery } from "./components/BatchDocumentGallery";
 import { ConfidenceCard } from "./components/ConfidenceCard";
 import { DocumentPreview } from "./components/DocumentPreview";
 import { DocumentUploader } from "./components/DocumentUploader";
@@ -21,7 +22,16 @@ import { initialJson, initialSteps, ocrText } from "./data/mockData";
 import { createJsonDownload, nextStepState } from "./services/mockProcessingService";
 import { runPaddleOcr, type OcrLanguage } from "./services/ocrApi";
 import { runSlmExtraction } from "./services/slmApi";
-import type { ConfidenceScore, DocumentJob, DocumentType, ExtractedField, JsonSchemaOutput, ReviewItem, SlmPerformanceMetrics } from "./types";
+import type {
+  BatchDocumentItem,
+  ConfidenceScore,
+  DocumentJob,
+  DocumentType,
+  ExtractedField,
+  JsonSchemaOutput,
+  ReviewItem,
+  SlmPerformanceMetrics,
+} from "./types";
 
 type WorkspaceTab = "extraction" | "assistant" | "analysis" | "all";
 
@@ -37,26 +47,35 @@ export function App() {
   });
 
   const [steps, setSteps] = useState(initialSteps);
-  const [fileName, setFileName] = useState("");
-  const [fileSize, setFileSize] = useState("");
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [ocrResultText, setOcrResultText] = useState("");
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [batchDocuments, setBatchDocuments] = useState<BatchDocumentItem[]>([]);
+  const [activeDocIndex, setActiveDocIndex] = useState<number>(0);
+  const [isBatchProcessing, setIsBatchProcessing] = useState<boolean>(false);
+  const [batchPhase, setBatchPhase] = useState<"idle" | "ocr" | "slm" | "completed">("idle");
+
   const [ocrLanguage, setOcrLanguage] = useState<OcrLanguage>("th");
   const [selectedType, setSelectedType] = useState<DocumentType>("Invoice");
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>("extraction");
   const [showPromptModal, setShowPromptModal] = useState(false);
 
-  const [jsonOutput, setJsonOutput] = useState<JsonSchemaOutput>(initialJson);
-  const [fields, setFields] = useState<ExtractedField[]>([]);
   const [jobs, setJobs] = useState<DocumentJob[]>([]);
-  const [confidenceScores, setConfidenceScores] = useState<ConfidenceScore[]>([]);
-  const [overallConfidence, setOverallConfidence] = useState(0);
-  const [slmPerformance, setSlmPerformance] = useState<SlmPerformanceMetrics | null>(null);
-  const [reviewItems, setReviewItems] = useState<ReviewItem[]>([]);
   const [reviewingItem, setReviewingItem] = useState<ReviewItem | null>(null);
-  const [slmReady, setSlmReady] = useState(false);
   const [toast, setToast] = useState("");
+
+  const activeDoc = batchDocuments[activeDocIndex] || null;
+  const hasDocument = batchDocuments.length > 0;
+
+  const fileName = activeDoc?.fileName ?? "";
+  const fileSize = activeDoc?.fileSize ?? "";
+  const previewUrl = activeDoc?.previewUrl ?? null;
+  const ocrResultText = activeDoc?.ocrText ?? "";
+  const jsonOutput = activeDoc?.jsonOutput ?? initialJson;
+  const fields = activeDoc?.fields ?? [];
+  const confidenceScores = activeDoc?.confidenceScores ?? [];
+  const overallConfidence = activeDoc?.overallConfidence ?? 0;
+  const slmPerformance = activeDoc?.performance ?? null;
+  const reviewItems = activeDoc?.reviewItems ?? [];
+  const slmReady = activeDoc?.status === "completed" && activeDoc?.jsonOutput !== null;
+  const uploadProgress = activeDoc?.status === "completed" ? 100 : (activeDoc?.status === "ocr_completed" ? 60 : (activeDoc?.status === "ocr_processing" ? 30 : 0));
 
   function handleLogin(session: UserSession) {
     setUserSession(session);
@@ -82,109 +101,224 @@ export function App() {
     }
   }
 
-  const hasDocument = fileName.length > 0;
-
   useEffect(() => {
     if (!toast) return;
     const timeout = window.setTimeout(() => setToast(""), 2600);
     return () => window.clearTimeout(timeout);
   }, [toast]);
 
-  useEffect(() => {
-    return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-    };
-  }, [previewUrl]);
-
   function showToast(message: string) {
     setToast(message);
   }
 
-  async function handleFileSelect(file: File | null) {
-    if (!file) return;
+  async function handleBatchFilesSelect(files: File[]) {
+    if (!files || files.length === 0) return;
 
-    const startedAt = new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
-    setFileName(file.name);
-    setFileSize(`${(file.size / 1024 / 1024).toFixed(2)} MB`);
-    setUploadProgress(18);
-    setSteps(nextStepState(initialSteps, 2));
-    setOcrResultText("กำลังส่งไฟล์ไปยัง PaddleOCR GPU...");
+    const startIndex = batchDocuments.length;
+    const newItems: BatchDocumentItem[] = files.map((file, i) => ({
+      id: `${Date.now()}_${startIndex + i}_${file.name}`,
+      file,
+      fileName: file.name,
+      fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+      previewUrl: file.type.startsWith("image/") || file.name.match(/\.(tif|tiff|png|jpg|jpeg)$/i) ? URL.createObjectURL(file) : null,
+      status: "queued",
+      statusLabel: "รอคิวประมวลผล",
+      ocrProgress: 0,
+      ocrText: "",
+      ocrLines: [],
+      jsonOutput: null,
+      fields: [],
+      confidenceScores: [],
+      overallConfidence: 0,
+      performance: null,
+      reviewItems: [],
+      startedAt: new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }),
+    }));
+
+    const allDocs = [...batchDocuments, ...newItems];
+    setBatchDocuments(allDocs);
+    if (batchDocuments.length === 0) {
+      setActiveDocIndex(0);
+    }
+    setIsBatchProcessing(true);
     setWorkspaceTab("extraction");
-    setSlmReady(false);
-    setFields([]);
-    setReviewItems([]);
-    setConfidenceScores([]);
-    setOverallConfidence(0);
-    setJsonOutput(initialJson);
-    setJobs([
-      {
-        id: `${Date.now()}`,
-        fileName: file.name,
-        type: selectedType,
-        status: "processing",
-        statusLabel: "กำลังประมวลผล OCR",
-        startedAt,
-        result: "-",
-      },
-    ]);
-    showToast("เริ่มประมวลผล OCR ด้วย GPU");
+    showToast(`เริ่มประมวลผลแบทช์ ${files.length} รูป (เฟส 1: OCR ทุกรูป -> เฟส 2: SLM ทีละรูป)`);
 
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl(file.type.startsWith("image/") ? URL.createObjectURL(file) : null);
+    // Add job entries
+    const newJobs: DocumentJob[] = newItems.map((item) => ({
+      id: item.id,
+      fileName: item.fileName,
+      type: selectedType,
+      status: "processing",
+      statusLabel: "รอคิว OCR",
+      startedAt: item.startedAt,
+      result: "-",
+    }));
+    setJobs((prev) => [...newJobs, ...prev]);
 
-    [42, 68, 86, 100].forEach((value, index) => {
-      window.setTimeout(() => setUploadProgress(value), 160 * (index + 1));
-    });
+    // ==========================================
+    // PHASE 1: OCR ALL IMAGES FIRST (ตามโจทย์ผู้ใช้)
+    // ==========================================
+    setBatchPhase("ocr");
+    setSteps(nextStepState(initialSteps, 2));
 
-    try {
-      const ocr = await runPaddleOcr(file, ocrLanguage);
-      const text = ocr.text || "PaddleOCR ไม่พบข้อความในไฟล์นี้";
-      setOcrResultText(text);
-      setSteps(nextStepState(initialSteps, 4));
+    for (let i = 0; i < allDocs.length; i++) {
+      if (allDocs[i].status === "completed" || allDocs[i].status === "ocr_completed") continue;
+
+      allDocs[i] = {
+        ...allDocs[i],
+        status: "ocr_processing",
+        statusLabel: `กำลัง OCR รูปที่ ${i + 1}/${allDocs.length} (GPU)...`,
+      };
+      setBatchDocuments([...allDocs]);
       setJobs((current) =>
         current.map((job) =>
-          job.fileName === file.name ? { ...job, statusLabel: "กำลังวิเคราะห์ด้วย Qwen SLM", result: "Qwen GPU" } : job,
+          job.id === allDocs[i].id ? { ...job, statusLabel: "กำลังประมวลผล OCR (GPU)" } : job,
         ),
       );
-      showToast("OCR สำเร็จ กำลังส่งต่อให้ Qwen SLM");
 
-      const slm = await runSlmExtraction({
-        documentTypeHint: selectedType,
-        sourceFile: file.name,
-        ocrText: text,
-        ocrLines: ocr.lines,
-      });
+      try {
+        const ocr = await runPaddleOcr(allDocs[i].file, ocrLanguage);
+        const text = ocr.text || "PaddleOCR ไม่พบข้อความในไฟล์นี้";
+        allDocs[i] = {
+          ...allDocs[i],
+          ocrText: text,
+          ocrLines: ocr.lines,
+          status: "ocr_completed",
+          statusLabel: `OCR สำเร็จ (${i + 1}/${allDocs.length})`,
+        };
+        setBatchDocuments([...allDocs]);
+        setJobs((current) =>
+          current.map((job) =>
+            job.id === allDocs[i].id ? { ...job, statusLabel: "OCR สำเร็จ (รอคิว SLM)", result: "OCR Done" } : job,
+          ),
+        );
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "OCR Error";
+        allDocs[i] = {
+          ...allDocs[i],
+          status: "error",
+          statusLabel: "OCR ล้มเหลว",
+          error: msg,
+        };
+        setBatchDocuments([...allDocs]);
+      }
+    }
 
-      setJsonOutput(slm.jsonOutput);
-      setFields(slm.fields);
-      setConfidenceScores(slm.confidenceScores);
-      setOverallConfidence(slm.overallConfidence);
-      setSlmPerformance(slm.performance ?? null);
-      setReviewItems(slm.reviewItems);
-      setSlmReady(true);
-      setSteps(nextStepState(initialSteps, 6));
+    // ==========================================
+    // PHASE 2: SLM EXTRACTION SEQUENTIALLY (ทีละรูป)
+    // ==========================================
+    setBatchPhase("slm");
+    setSteps(nextStepState(initialSteps, 4));
+
+    for (let i = 0; i < allDocs.length; i++) {
+      if (allDocs[i].status === "completed" || allDocs[i].status === "error") continue;
+
+      allDocs[i] = {
+        ...allDocs[i],
+        status: "slm_processing",
+        statusLabel: `กำลังวิเคราะห์ SLM รูปที่ ${i + 1}/${allDocs.length} (GPU)...`,
+      };
+      setBatchDocuments([...allDocs]);
       setJobs((current) =>
         current.map((job) =>
-          job.fileName === file.name
-            ? { ...job, status: "success", statusLabel: "SLM เสร็จสมบูรณ์", result: `${slm.performance?.accuracy_pct ?? slm.overallConfidence}%` }
-            : job,
+          job.id === allDocs[i].id ? { ...job, statusLabel: "กำลังวิเคราะห์ Qwen SLM" } : job,
         ),
       );
-      showToast(`Qwen SLM วิเคราะห์เอกสารสำเร็จ (${slm.performance?.accuracy_pct ?? slm.overallConfidence}% Accuracy)`);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "ไม่สามารถประมวลผลเอกสารได้";
-      setOcrResultText((current) => current || `${ocrText}\n\n[ระบบสำรอง] ${message}`);
-      setSteps(nextStepState(initialSteps, 3));
-      setJobs((current) =>
-        current.map((job) =>
-          job.fileName === file.name ? { ...job, status: "error", statusLabel: "ประมวลผลไม่สำเร็จ", result: "-" } : job,
-        ),
-      );
-      showToast(message);
+
+      try {
+        const slm = await runSlmExtraction({
+          documentTypeHint: selectedType,
+          sourceFile: allDocs[i].fileName,
+          ocrText: allDocs[i].ocrText,
+          ocrLines: allDocs[i].ocrLines,
+        });
+
+        allDocs[i] = {
+          ...allDocs[i],
+          jsonOutput: slm.jsonOutput,
+          fields: slm.fields,
+          confidenceScores: slm.confidenceScores,
+          overallConfidence: slm.overallConfidence,
+          performance: slm.performance ?? null,
+          reviewItems: slm.reviewItems,
+          status: "completed",
+          statusLabel: `เสร็จสมบูรณ์ (${slm.performance?.accuracy_pct ?? slm.overallConfidence}%)`,
+        };
+        setBatchDocuments([...allDocs]);
+        setJobs((current) =>
+          current.map((job) =>
+            job.id === allDocs[i].id
+              ? {
+                  ...job,
+                  status: "success",
+                  statusLabel: "SLM เสร็จสมบูรณ์",
+                  result: `${slm.performance?.accuracy_pct ?? slm.overallConfidence}%`,
+                }
+              : job,
+          ),
+        );
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "SLM Error";
+        allDocs[i] = {
+          ...allDocs[i],
+          status: "error",
+          statusLabel: "SLM ล้มเหลว",
+          error: msg,
+        };
+        setBatchDocuments([...allDocs]);
+      }
+    }
+
+    setBatchPhase("completed");
+    setIsBatchProcessing(false);
+    setSteps(nextStepState(initialSteps, 6));
+    showToast(`🎉 ประมวลผลแบทช์เสร็จสมบูรณ์ทั้งหมด ${allDocs.length} เอกสารแล้ว!`);
+  }
+
+  function handleSelectDocIndex(index: number) {
+    if (index >= 0 && index < batchDocuments.length) {
+      setActiveDocIndex(index);
     }
   }
 
+  function handleRemoveBatchDoc(index: number) {
+    const docToRemove = batchDocuments[index];
+    if (docToRemove?.previewUrl) {
+      URL.revokeObjectURL(docToRemove.previewUrl);
+    }
+    const nextList = batchDocuments.filter((_, idx) => idx !== index);
+    setBatchDocuments(nextList);
+    if (nextList.length === 0) {
+      handleResetDocument();
+    } else if (activeDocIndex >= nextList.length) {
+      setActiveDocIndex(nextList.length - 1);
+    }
+    showToast(`ลบเอกสารออกจากแบทช์แล้ว`);
+  }
+
+  function handleExportAllJson() {
+    const completedSchemas = batchDocuments
+      .filter((d) => d.jsonOutput !== null)
+      .map((d) => d.jsonOutput);
+
+    if (completedSchemas.length === 0) {
+      showToast("ยังไม่มีเอกสารที่ประมวลผล JSON เสร็จสิ้น");
+      return;
+    }
+
+    const blob = new Blob([JSON.stringify(completedSchemas, null, 2)], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `logiai_batch_export_${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    showToast(`ดาวน์โหลด JSON รวม ${completedSchemas.length} เอกสารเรียบร้อยแล้ว`);
+  }
+
   function handleMoveOtherToCore(sourceOtherKey: string, targetCoreKey: string, removeFromOther: boolean) {
+    if (!activeDoc) return;
     let rawVal: unknown = "";
 
     if (jsonOutput.other && sourceOtherKey in jsonOutput.other) {
@@ -202,35 +336,32 @@ export function App() {
       parsedVal = String(rawVal);
     }
 
-    setJsonOutput((current) => {
-      const nextOther = { ...(current.other || {}) };
-      if (removeFromOther) {
-        delete nextOther[sourceOtherKey];
-      }
-      return {
-        ...current,
-        [targetCoreKey]: parsedVal,
-        other: nextOther,
-      };
-    });
+    const nextOther = { ...(jsonOutput.other || {}) };
+    if (removeFromOther) {
+      delete nextOther[sourceOtherKey];
+    }
+    const nextJson: JsonSchemaOutput = {
+      ...jsonOutput,
+      [targetCoreKey]: parsedVal,
+      other: nextOther,
+    };
 
-    setFields((current) => {
-      let nextList = current;
-      if (removeFromOther) {
-        nextList = nextList.filter((f) => f.field !== sourceOtherKey);
-      }
-      const existingTargetIdx = nextList.findIndex((f) => f.field === targetCoreKey);
-      if (existingTargetIdx >= 0) {
-        return nextList.map((f, idx) =>
-          idx === existingTargetIdx
-            ? { ...f, value: String(parsedVal), confidence: 100, status: "success", isOther: false }
-            : f,
-        );
-      }
-      return [
-        ...nextList,
+    let nextFields = fields;
+    if (removeFromOther) {
+      nextFields = nextFields.filter((f) => f.field !== sourceOtherKey);
+    }
+    const existingTargetIdx = nextFields.findIndex((f) => f.field === targetCoreKey);
+    if (existingTargetIdx >= 0) {
+      nextFields = nextFields.map((f, idx) =>
+        idx === existingTargetIdx
+          ? { ...f, value: String(parsedVal), confidence: 100, status: "success", isOther: false }
+          : f,
+      );
+    } else {
+      nextFields = [
+        ...nextFields,
         {
-          id: nextList.length + 1,
+          id: nextFields.length + 1,
           sourceText: String(rawVal),
           field: targetCoreKey,
           value: String(parsedVal),
@@ -239,43 +370,47 @@ export function App() {
           isOther: false,
         },
       ];
-    });
+    }
 
+    setBatchDocuments((prev) =>
+      prev.map((doc, idx) =>
+        idx === activeDocIndex ? { ...doc, jsonOutput: nextJson, fields: nextFields } : doc,
+      ),
+    );
     showToast(`ย้ายค่า "${sourceOtherKey}" ไปยัง 7 ฟิลด์หลัก "${targetCoreKey}" เรียบร้อยแล้ว`);
   }
 
   function handleDeleteCustomField(fieldKey: string, isOther?: boolean) {
+    if (!activeDoc) return;
+    const nextOther = { ...(jsonOutput.other || {}) };
     if (isOther) {
-      setJsonOutput((current) => {
-        const nextOther = { ...(current.other || {}) };
-        delete nextOther[fieldKey];
-        return {
-          ...current,
-          other: nextOther,
-        };
-      });
+      delete nextOther[fieldKey];
     }
-    setFields((current) => current.filter((f) => f.field !== fieldKey));
+    const nextJson: JsonSchemaOutput = {
+      ...jsonOutput,
+      other: nextOther,
+    };
+    const nextFields = fields.filter((f) => f.field !== fieldKey);
+
+    setBatchDocuments((prev) =>
+      prev.map((doc, idx) =>
+        idx === activeDocIndex ? { ...doc, jsonOutput: nextJson, fields: nextFields } : doc,
+      ),
+    );
     showToast(`ลบฟิลด์ "${fieldKey}" สำเร็จ`);
   }
 
   function handleResetDocument() {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setFileName("");
-    setFileSize("");
-    setPreviewUrl(null);
-    setOcrResultText("");
-    setUploadProgress(0);
+    batchDocuments.forEach((doc) => {
+      if (doc.previewUrl) URL.revokeObjectURL(doc.previewUrl);
+    });
+    setBatchDocuments([]);
+    setActiveDocIndex(0);
+    setIsBatchProcessing(false);
+    setBatchPhase("idle");
     setSteps(initialSteps);
-    setJsonOutput(initialJson);
-    setFields([]);
     setJobs([]);
-    setConfidenceScores([]);
-    setOverallConfidence(0);
-    setSlmPerformance(null);
-    setReviewItems([]);
-    setSlmReady(false);
-    showToast("รีเซ็ตเอกสารเรียบร้อย");
+    showToast("รีเซ็ตเอกสารทั้งหมดเรียบร้อย");
   }
 
   function handleStepClick(stepId: number) {
@@ -298,35 +433,42 @@ export function App() {
   }
 
   function handleConfirmReview(item: ReviewItem, parsedValue: string | number) {
-    setFields((current) =>
-      current.map((field) =>
-        field.field === item.field
-          ? {
-              ...field,
-              value: String(parsedValue),
-              confidence: 100,
-              status: "success",
-            }
-          : field,
-      ),
+    if (!activeDoc) return;
+    const nextFields = fields.map((field) =>
+      field.field === item.field
+        ? {
+            ...field,
+            value: String(parsedValue),
+            confidence: 100,
+            status: "success" as const,
+          }
+        : field,
     );
 
-    setReviewItems((current) => current.filter((review) => review.field !== item.field));
-    setJsonOutput((current) => {
-      if (item.isOther || (current.other && item.field in current.other)) {
-        return {
-          ...current,
-          other: {
-            ...current.other,
-            [item.field]: parsedValue,
-          },
-        };
-      }
-      return {
-        ...current,
+    const nextReviews = reviewItems.filter((review) => review.field !== item.field);
+    let nextJson: JsonSchemaOutput;
+    if (item.isOther || (jsonOutput.other && item.field in jsonOutput.other)) {
+      nextJson = {
+        ...jsonOutput,
+        other: {
+          ...jsonOutput.other,
+          [item.field]: parsedValue,
+        },
+      };
+    } else {
+      nextJson = {
+        ...jsonOutput,
         [item.field]: parsedValue,
       };
-    });
+    }
+
+    setBatchDocuments((prev) =>
+      prev.map((doc, idx) =>
+        idx === activeDocIndex
+          ? { ...doc, jsonOutput: nextJson, fields: nextFields, reviewItems: nextReviews }
+          : doc,
+      ),
+    );
     setReviewingItem(null);
     showToast(`ยืนยันค่า ${item.field} แล้ว`);
   }
@@ -374,7 +516,7 @@ export function App() {
                   className="inline-flex items-center gap-2 rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                 >
                   <RefreshCw className="h-4 w-4 text-slate-500" aria-hidden="true" />
-                  รีเซ็ตเอกสาร
+                  รีเซ็ตเอกสารทั้งหมด
                 </button>
               ) : null}
             </div>
@@ -386,18 +528,29 @@ export function App() {
             <div className="grid min-w-0 gap-8 xl:grid-cols-[minmax(380px,500px)_1fr]">
               <section className="min-w-0 rounded-2xl border border-line bg-white p-6 shadow-panel">
                 <DocumentUploader
-                  fileName={fileName}
-                  fileSize={fileSize}
-                  progress={uploadProgress}
+                  batchCount={batchDocuments.length}
                   language={ocrLanguage}
                   onLanguageChange={setOcrLanguage}
-                  onFileSelect={handleFileSelect}
+                  onFilesSelect={handleBatchFilesSelect}
                 />
               </section>
               <AwaitingDocumentState />
             </div>
           ) : (
             <>
+              {/* Batch Documents Horizontal Gallery & 2-Phase Progress Bar */}
+              <BatchDocumentGallery
+                documents={batchDocuments}
+                activeIndex={activeDocIndex}
+                onSelectIndex={handleSelectDocIndex}
+                onAddFiles={handleBatchFilesSelect}
+                onRemoveDocument={handleRemoveBatchDoc}
+                onExportAllJson={handleExportAllJson}
+                isProcessing={isBatchProcessing}
+                batchPhase={batchPhase}
+              />
+
+              {/* Active Document Top Quick Banner */}
               <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-blue-200 bg-blue-50/70 px-5 py-3.5">
                 <div className="flex items-center gap-3">
                   <span className="grid h-10 w-10 place-items-center rounded-lg bg-primary font-extrabold text-white">{fileName.endsWith(".pdf") ? "PDF" : "IMG"}</span>
@@ -410,17 +563,27 @@ export function App() {
                       </span>
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-bold text-indigo-800 ring-1 ring-indigo-300">
                         <BrainCircuit className="h-3.5 w-3.5" />
-                        {slmReady ? `SLM ความแม่นยำ: ${slmPerformance?.accuracy_pct ?? overallConfidence}%` : "กำลังรอผล SLM"}
+                        {slmReady ? `SLM ความแม่นยำ: ${slmPerformance?.accuracy_pct ?? overallConfidence}%` : (activeDoc?.statusLabel ?? "กำลังรอผล")}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-slate-600">ขนาด: {fileSize} · GPU pipeline: PaddleOCR + Qwen2.5-1.5B CUDA</p>
+                    <p className="mt-1 text-xs text-slate-600">ขนาด: {fileSize} · เอกสารที่ {activeDocIndex + 1} จาก {batchDocuments.length} · GPU pipeline: PaddleOCR + Qwen2.5-1.5B CUDA</p>
                   </div>
                 </div>
 
                 <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-blue-300 bg-white px-3.5 py-2 text-xs font-extrabold text-primary transition hover:bg-blue-50">
                   <UploadCloud className="h-4 w-4" />
-                  เปลี่ยนไฟล์เอกสาร
-                  <input type="file" accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff" className="sr-only" onChange={(event) => handleFileSelect(event.target.files?.item(0) ?? null)} />
+                  เพิ่มรูปภาพ/เอกสารเข้าแบทช์
+                  <input
+                    type="file"
+                    multiple
+                    accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff"
+                    className="sr-only"
+                    onChange={(event) => {
+                      const files = Array.from(event.target.files ?? []);
+                      if (files.length > 0) handleBatchFilesSelect(files);
+                      event.target.value = "";
+                    }}
+                  />
                 </label>
               </div>
 

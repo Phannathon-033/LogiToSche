@@ -4,22 +4,49 @@ import type { OcrLanguage } from "../services/ocrApi";
 import { Card } from "./Card";
 
 interface DocumentUploaderProps {
-  fileName: string;
-  fileSize: string;
-  progress: number;
+  fileName?: string;
+  fileSize?: string;
+  progress?: number;
+  batchCount?: number;
   language: OcrLanguage;
   onLanguageChange: (language: OcrLanguage) => void;
-  onFileSelect: (file: File | null) => void;
+  onFileSelect?: (file: File | null) => void;
+  onFilesSelect: (files: File[]) => void;
 }
 
-export function DocumentUploader({ fileName, fileSize, progress, language, onLanguageChange, onFileSelect }: DocumentUploaderProps) {
+export function DocumentUploader({
+  fileName,
+  fileSize,
+  progress = 0,
+  batchCount = 0,
+  language,
+  onLanguageChange,
+  onFilesSelect,
+}: DocumentUploaderProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [dragging, setDragging] = useState(false);
-  const fileKind = fileName.toLowerCase().endsWith(".pdf") ? "PDF" : "IMG";
+  const fileKind = fileName?.toLowerCase().endsWith(".pdf") ? "PDF" : "IMG";
+
+  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    setDragging(false);
+    const files = Array.from(event.dataTransfer.files || []);
+    if (files.length > 0) {
+      onFilesSelect(files);
+    }
+  }
+
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files || []);
+    if (files.length > 0) {
+      onFilesSelect(files);
+    }
+    event.target.value = "";
+  }
 
   return (
     <Card
-      title="อัปโหลดเอกสาร"
+      title="อัปโหลดเอกสาร (แทรกได้หลายรูปพร้อมกัน)"
       actions={
         <label className="flex items-center gap-2 text-xs font-bold text-slate-600">
           OCR
@@ -41,51 +68,57 @@ export function DocumentUploader({ fileName, fileSize, progress, language, onLan
           setDragging(true);
         }}
         onDragLeave={() => setDragging(false)}
-        onDrop={(event) => {
-          event.preventDefault();
-          setDragging(false);
-          onFileSelect(event.dataTransfer.files.item(0));
-        }}
-        className={`rounded-lg border border-dashed p-5 text-center transition ${
-          dragging ? "border-primary bg-blue-50" : "border-blue-300 bg-white"
+        onDrop={handleDrop}
+        className={`rounded-lg border border-dashed p-6 text-center transition ${
+          dragging ? "border-primary bg-blue-50/80 ring-2 ring-primary/40" : "border-blue-300 bg-white dark:bg-slate-800/80"
         }`}
       >
         <input
           ref={inputRef}
           type="file"
-          accept=".pdf,.jpg,.jpeg,.png"
+          multiple
+          accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff"
           className="sr-only"
           id="document-upload"
-          onChange={(event) => onFileSelect(event.target.files?.item(0) ?? null)}
+          onChange={handleInputChange}
         />
-        <div className="mx-auto mb-3 grid h-11 w-11 place-items-center rounded-full border border-blue-200 bg-blue-50 text-primary">
+        <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full border border-blue-200 bg-blue-50 text-primary dark:border-blue-900/50 dark:bg-blue-950/40">
           <UploadCloud className="h-6 w-6" aria-hidden="true" />
         </div>
-        <p className="text-sm font-medium text-slate-600">
-          ลากไฟล์มาวางที่นี่ หรือ{" "}
+        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+          ลากไฟล์รูปภาพ/PDF มาวางที่นี่ หรือ{" "}
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
             className="font-extrabold text-primary underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
           >
-            คลิกเพื่อเลือกไฟล์
+            คลิกเพื่อเลือกไฟล์ (เลือกหลายไฟล์ได้พร้อมกัน)
           </button>
         </p>
-        <p className="mt-1 text-xs text-slate-500">รองรับไฟล์: PDF, JPG, PNG (ขนาดไม่เกิน 20MB)</p>
+        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          รองรับไฟล์: JPG, PNG, TIFF/TIF, PDF (ระบบจะ OCR ทุกรูปให้เสร็จก่อน แล้วส่งเข้า SLM ทีละรูป)
+        </p>
 
-        {fileName ? (
-          <div className="mt-5 flex items-center gap-3 rounded-md border border-line bg-slate-50 p-3 text-left">
+        {batchCount > 0 && fileName ? (
+          <div className="mt-5 flex items-center gap-3 rounded-md border border-line bg-slate-50 p-3 text-left dark:border-slate-700 dark:bg-slate-800">
             <span className={`grid h-9 w-9 place-items-center rounded text-[10px] font-bold text-white ${fileKind === "PDF" ? "bg-red-600" : "bg-primary"}`}>
               {fileKind}
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-extrabold text-ink">{fileName}</p>
+              <div className="flex items-center gap-2">
+                <p className="truncate text-sm font-extrabold text-ink dark:text-white">{fileName}</p>
+                {batchCount > 1 ? (
+                  <span className="rounded bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                    +{batchCount - 1} ไฟล์ในแบทช์
+                  </span>
+                ) : null}
+              </div>
               <p className="mt-1 text-xs font-bold text-slate-500">OCR: {language === "th" ? "ไทย + English" : "English"}</p>
-              <div className="mt-2 h-1.5 rounded-full bg-slate-200">
+              <div className="mt-2 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700">
                 <span className="block h-1.5 rounded-full bg-primary" style={{ width: `${progress}%` }} />
               </div>
             </div>
-            <span className="text-xs text-slate-600">{fileSize}</span>
+            <span className="text-xs text-slate-600 dark:text-slate-300">{fileSize}</span>
             <CheckCircle2 className="h-4 w-4 shrink-0 text-success" aria-label="อัปโหลดสำเร็จ" />
           </div>
         ) : null}
