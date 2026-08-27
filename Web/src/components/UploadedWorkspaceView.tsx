@@ -1,8 +1,11 @@
 import {
+  AlignLeft,
   ArrowRight,
   BrainCircuit,
   Check,
   CheckCircle2,
+  ChevronDown,
+  ChevronRight,
   Clock,
   Code2,
   Copy,
@@ -10,25 +13,29 @@ import {
   Expand,
   FileCode,
   FileText,
+  Filter,
   Flame,
+  LayoutGrid,
   Layers,
+  MapPin,
   Maximize2,
   Plus,
   RefreshCw,
   Save,
   Scan,
   ScanText,
+  Search,
   Sparkles,
+  Table,
   Target,
   UploadCloud,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { initialJson } from "../data/mockData";
 import type { BatchDocumentItem, JsonSchemaOutput } from "../types";
 import { DocumentPreview } from "./DocumentPreview";
 import { JSONOutputPanel } from "./JSONOutputPanel";
-import { OCRResultPanel } from "./OCRResultPanel";
 
 interface UploadedWorkspaceViewProps {
   activeDoc: BatchDocumentItem | null;
@@ -63,6 +70,9 @@ export function UploadedWorkspaceView({
 }: UploadedWorkspaceViewProps) {
   const [ocrSubView, setOcrSubView] = useState<"cards" | "table" | "raw" | "json">("cards");
   const [isEditorExpanded, setIsEditorExpanded] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [confidenceFilter, setConfidenceFilter] = useState<"all" | "high" | "review">("all");
+  const [expandedOcrRow, setExpandedOcrRow] = useState<number | null>(null);
 
   if (!activeDoc) return null;
 
@@ -75,52 +85,65 @@ export function UploadedWorkspaceView({
   const processingTime = performance?.inference_time_sec
     ? `${performance.inference_time_sec.toFixed(2)}s`
     : "0.85s";
-  const fieldsCount = fields.length > 0 ? fields.length : 24;
 
   const totalDocs = batchDocuments.length;
   const completedDocs = batchDocuments.filter((d) => d.status === "completed").length;
   const progressPercent = totalDocs > 0 ? Math.round((completedDocs / totalDocs) * 100) : 100;
 
-  // Extract preview lines for the Human Cards / Table preview in OCR card
-  const previewFields = [
-    {
-      field: "Document Type",
-      value: jsonOutput?.document_type ? String(jsonOutput.document_type).toUpperCase() : "BILL OF LADING",
-      confidence: 0.98,
-      location: "Header",
-      locColor: "bg-blue-100 text-blue-700",
-    },
-    {
-      field: "Document No.",
-      value: jsonOutput?.document_no || "BL240528-002",
-      confidence: 0.98,
-      location: "Header",
-      locColor: "bg-blue-100 text-blue-700",
-    },
-    {
-      field: "Document Date",
-      value: jsonOutput?.document_date || "28 MAY 2024",
-      confidence: 0.97,
-      location: "Header",
-      locColor: "bg-blue-100 text-blue-700",
-    },
-    {
-      field: "Party Name",
-      value: jsonOutput?.party_name || "Global Trade Co., Ltd.",
-      confidence: 0.96,
-      location: "Body",
-      locColor: "bg-purple-100 text-purple-700",
-    },
-    {
-      field: "Total Amount",
-      value: jsonOutput?.total_amount
-        ? Number(jsonOutput.total_amount).toLocaleString("en-US", { minimumFractionDigits: 2 })
-        : "12,500.00",
-      confidence: 0.98,
-      location: "Footer",
-      locColor: "bg-emerald-100 text-emerald-700",
-    },
-  ];
+  // Filtered live OCR lines from PaddleOCR GPU
+  const filteredOcrLines = useMemo(() => {
+    return ocrLines.filter((line) => {
+      const conf = line.confidence ?? 0.95;
+      const matchesSearch =
+        !searchQuery.trim() || line.text.toLowerCase().includes(searchQuery.toLowerCase());
+      if (!matchesSearch) return false;
+      if (confidenceFilter === "high") return conf >= 0.9;
+      if (confidenceFilter === "review") return conf < 0.85;
+      return true;
+    });
+  }, [ocrLines, searchQuery, confidenceFilter]);
+
+  // Format real OCR JSON output with standard schema
+  const ocrJsonString = useMemo(() => {
+    const ocrObjects = ocrLines.map((l) => ({
+      text: l.text,
+      confidence: Number((l.confidence ?? 0.95).toFixed(2)),
+      bounding_box: l.bounding_box || l.box || [],
+    }));
+    return JSON.stringify(ocrObjects, null, 2);
+  }, [ocrLines]);
+
+  function getHumanRegion(region?: string) {
+    switch (region) {
+      case "top-left":
+        return { label: "Header (Top-Left)", color: "bg-blue-100 text-blue-700" };
+      case "top-center":
+      case "top-right":
+        return { label: "Header (ส่วนหัว)", color: "bg-blue-100 text-blue-700" };
+      case "middle-left":
+      case "middle-right":
+        return { label: "Body (เนื้อหา)", color: "bg-purple-100 text-purple-700" };
+      case "bottom-left":
+      case "bottom-right":
+      case "bottom-center":
+        return { label: "Footer (ยอดเงิน/ท้าย)", color: "bg-emerald-100 text-emerald-700" };
+      default:
+        return { label: "Body", color: "bg-slate-100 text-slate-700" };
+    }
+  }
+
+  function getHumanBoxSummary(box?: number[][]) {
+    if (!box || box.length < 4) return "ไม่พบพิกัด";
+    const xs = box.map((p) => p[0]);
+    const ys = box.map((p) => p[1]);
+    const minX = Math.round(Math.min(...xs));
+    const minY = Math.round(Math.min(...ys));
+    const maxX = Math.round(Math.max(...xs));
+    const maxY = Math.round(Math.max(...ys));
+    const w = maxX - minX;
+    const h = maxY - minY;
+    return `[${minX}, ${minY}] · ${w}x${h}px`;
+  }
 
   return (
     <div className="flex flex-col gap-6 py-2">
@@ -303,14 +326,17 @@ export function UploadedWorkspaceView({
       {/* ========================================================================= */}
       <section className="grid min-w-0 gap-6 lg:grid-cols-[1.15fr_1fr]">
         {/* ===================================================================== */}
-        {/* COLUMN 1 (LEFT): OCR RESULT (Image Viewer + Human Cards / Table)      */}
+        {/* COLUMN 1 (LEFT): REAL PADDLEOCR GPU RESULT (Preview + Live Lines)     */}
         {/* ===================================================================== */}
         <div className="flex min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-panel">
           {/* Card Header */}
-          <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3.5">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
             <div className="flex items-center gap-2">
               <Scan className="h-5 w-5 text-blue-600" />
-              <h2 className="text-base font-black text-slate-900">OCR Result</h2>
+              <h2 className="text-base font-black text-slate-900">OCR Result (PaddleOCR GPU)</h2>
+              <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-black text-emerald-700 border border-emerald-200">
+                {ocrLines.length} ข้อความสกัด
+              </span>
             </div>
 
             {/* OCR Sub-view Switcher Tabs */}
@@ -354,10 +380,36 @@ export function UploadedWorkspaceView({
             </div>
           </div>
 
+          {/* Quick Search & Filter in Cards/Table Mode */}
+          {(ocrSubView === "cards" || ocrSubView === "table") && ocrLines.length > 0 && (
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 p-2 border border-slate-100 text-xs">
+              <div className="relative flex-1 min-w-[140px]">
+                <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="ค้นหาข้อความ OCR..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-7 w-full rounded-lg border border-slate-200 bg-white pl-8 pr-2 text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+              </div>
+
+              <select
+                value={confidenceFilter}
+                onChange={(e) => setConfidenceFilter(e.target.value as "all" | "high" | "review")}
+                className="h-7 rounded-lg border border-slate-200 bg-white px-2 text-xs font-bold text-slate-700 focus:outline-none"
+              >
+                <option value="all">ความมั่นใจทั้งหมด</option>
+                <option value="high">🟢 มั่นใจสูง (≥90%)</option>
+                <option value="review">🔴 รอตรวจ (&lt;85%)</option>
+              </select>
+            </div>
+          )}
+
           {/* Dual Split inside OCR Result: Left Document Preview | Right Field Breakdown */}
-          <div className="grid min-w-0 gap-4 md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
+          <div className="grid min-w-0 gap-4 md:grid-cols-[200px_1fr] lg:grid-cols-[220px_1fr]">
             {/* Left: Document Image Viewer */}
-            <div className="flex flex-col rounded-xl border border-slate-200 bg-slate-50 p-2.5 overflow-hidden">
+            <div className="flex flex-col rounded-xl border border-slate-200 bg-slate-50 p-2 overflow-hidden">
               <DocumentPreview
                 previewUrl={activeDoc.previewUrl}
                 previewName={fileName}
@@ -366,62 +418,138 @@ export function UploadedWorkspaceView({
               />
             </div>
 
-            {/* Right: Field Cards / Table Breakdown */}
+            {/* Right: Live PaddleOCR Extracted Lines */}
             <div className="flex flex-col justify-between min-w-0">
-              {ocrSubView === "cards" || ocrSubView === "table" ? (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs font-sans">
-                    <thead>
-                      <tr className="border-b border-slate-200 text-slate-400 font-bold">
-                        <th className="pb-2">Field</th>
-                        <th className="pb-2">Value</th>
-                        <th className="pb-2">Confidence</th>
-                        <th className="pb-2 text-right">Location</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {previewFields.map((item, idx) => (
-                        <tr key={idx} className="hover:bg-slate-50/80 transition">
-                          <td className="py-2.5 font-bold text-slate-700">{item.field}</td>
-                          <td className="py-2.5 font-mono text-slate-900 font-medium truncate max-w-[130px]" title={item.value}>
-                            {item.value}
-                          </td>
-                          <td className="py-2.5">
-                            <span className="inline-flex items-center gap-1 font-mono font-bold text-emerald-600">
-                              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                              {item.confidence}
-                            </span>
-                          </td>
-                          <td className="py-2.5 text-right">
-                            <span className={`rounded-md px-2 py-0.5 text-[10px] font-extrabold ${item.locColor}`}>
-                              {item.location}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : null}
+              {/* Mode 1: Human Cards */}
+              {ocrSubView === "cards" && (
+                <div className="h-[360px] min-h-[360px] overflow-y-auto space-y-2 pr-1">
+                  {filteredOcrLines.length > 0 ? (
+                    filteredOcrLines.map((line, idx) => {
+                      const conf = line.confidence ?? 0.95;
+                      const confPct = Math.round(conf * 100);
+                      const region = getHumanRegion(line.position?.region);
+                      const boxSummary = getHumanBoxSummary(line.bounding_box || line.box);
+                      const isExpanded = expandedOcrRow === idx;
 
-              {ocrSubView === "raw" && (
-                <div className="h-full min-h-[220px] max-h-[300px] overflow-y-auto rounded-xl bg-slate-50 p-3 font-mono text-xs text-slate-700 whitespace-pre-wrap border border-slate-200">
-                  {activeDoc.spatialText || activeDoc.ocrText || "กำลังรอผลลัพธ์ OCR..."}
+                      return (
+                        <div
+                          key={idx}
+                          className="rounded-xl border border-slate-200 bg-slate-50/50 p-3 shadow-xs transition hover:bg-white hover:border-blue-300"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0 flex-1 space-y-1">
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-mono text-[10px] font-black text-slate-500">
+                                  #{idx + 1}
+                                </span>
+                                <span className={`rounded px-1.5 py-0.2 text-[10px] font-extrabold ${region.color}`}>
+                                  {region.label}
+                                </span>
+                                <span className="text-[10px] font-mono text-slate-400">
+                                  {boxSummary}
+                                </span>
+                              </div>
+                              <p className="font-sans text-xs font-black text-slate-900 leading-snug break-words">
+                                {line.text}
+                              </p>
+                            </div>
+
+                            <span
+                              className={`shrink-0 rounded-lg px-2 py-0.5 text-[11px] font-mono font-black border ${
+                                conf >= 0.9
+                                  ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                  : conf >= 0.75
+                                  ? "bg-amber-50 text-amber-700 border-amber-200"
+                                  : "bg-rose-50 text-rose-700 border-rose-200"
+                              }`}
+                            >
+                              {confPct}% ({conf.toFixed(2)})
+                            </span>
+                          </div>
+
+                          <div className="mt-1.5 pt-1 border-t border-slate-100 flex items-center justify-between">
+                            <button
+                              type="button"
+                              onClick={() => setExpandedOcrRow(isExpanded ? null : idx)}
+                              className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-500 hover:text-blue-600"
+                            >
+                              {isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+                              <span>{isExpanded ? "ซ่อน Bounding Box" : "ดูพิกัด 4 จุด"}</span>
+                            </button>
+                          </div>
+
+                          {isExpanded && (
+                            <pre className="mt-1 rounded bg-slate-900 p-1.5 font-mono text-[10px] text-emerald-400 overflow-x-auto">
+                              {JSON.stringify(line.bounding_box || line.box || [])}
+                            </pre>
+                          )}
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="flex h-full flex-col items-center justify-center text-center p-6 text-slate-400">
+                      <p className="text-xs font-bold">ไม่พบข้อความที่ตรงกับการค้นหา</p>
+                    </div>
+                  )}
                 </div>
               )}
 
+              {/* Mode 2: Table */}
+              {ocrSubView === "table" && (
+                <div className="h-[360px] min-h-[360px] overflow-y-auto rounded-xl border border-slate-200 bg-white">
+                  <table className="w-full text-left text-xs font-sans">
+                    <thead className="sticky top-0 bg-slate-100 text-slate-600 font-extrabold border-b border-slate-200">
+                      <tr>
+                        <th className="p-2">#</th>
+                        <th className="p-2">Text (ข้อความที่สกัดได้)</th>
+                        <th className="p-2 text-center">Confidence</th>
+                        <th className="p-2 text-right">Location</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {filteredOcrLines.map((line, idx) => {
+                        const conf = line.confidence ?? 0.95;
+                        const region = getHumanRegion(line.position?.region);
+                        return (
+                          <tr key={idx} className="hover:bg-slate-50 transition">
+                            <td className="p-2 font-mono text-slate-400 text-[11px]">#{idx + 1}</td>
+                            <td className="p-2 font-bold text-slate-900 break-words">{line.text}</td>
+                            <td className="p-2 text-center font-mono font-bold text-emerald-600">
+                              {conf.toFixed(2)}
+                            </td>
+                            <td className="p-2 text-right">
+                              <span className={`rounded px-1.5 py-0.5 text-[10px] font-extrabold ${region.color}`}>
+                                {region.label}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Mode 3: Raw Text */}
+              {ocrSubView === "raw" && (
+                <div className="h-[360px] min-h-[360px] overflow-y-auto rounded-xl bg-slate-50 p-3 font-mono text-xs text-slate-800 whitespace-pre-wrap border border-slate-200 leading-relaxed">
+                  {activeDoc.spatialText || activeDoc.ocrText || "กำลังประมวลผลข้อความ OCR..."}
+                </div>
+              )}
+
+              {/* Mode 4: JSON */}
               {ocrSubView === "json" && (
-                <div className="h-full min-h-[220px] max-h-[300px] overflow-y-auto rounded-xl bg-[#0F172A] p-3 font-mono text-xs text-emerald-400 whitespace-pre border border-slate-800">
-                  {JSON.stringify(ocrLines, null, 2)}
+                <div className="h-[360px] min-h-[360px] overflow-y-auto rounded-xl bg-[#0F172A] p-3 font-mono text-xs text-emerald-400 whitespace-pre border border-slate-800">
+                  {ocrJsonString}
                 </div>
               )}
 
               {/* OCR Card Footer */}
-              <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-[11px] font-semibold text-slate-500">
-                <span>Fields detected: <b className="text-slate-800">{fieldsCount}</b></span>
-                <span className="inline-flex items-center gap-1 font-bold text-slate-700">
+              <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-2 text-[11px] font-semibold text-slate-500">
+                <span>PaddleOCR Lines: <b className="text-slate-800">{ocrLines.length}</b></span>
+                <span className="inline-flex items-center gap-1 font-bold text-emerald-700">
                   <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                  OCR Model: PaddleOCR (GPU)
+                  CUDA GPU Powered
                 </span>
               </div>
             </div>
@@ -495,7 +623,7 @@ export function UploadedWorkspaceView({
       </section>
 
       {/* ========================================================================= */}
-      {/* 4. TELEMETRY & STATUS CARD (Moved to Bottom as Requested by User)          */}
+      {/* 4. TELEMETRY & STATUS CARD (At the bottom as requested)                   */}
       {/* ========================================================================= */}
       <section className="flex flex-col justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-panel">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
@@ -550,7 +678,7 @@ export function UploadedWorkspaceView({
               Fields Extracted
             </span>
             <span className="text-sm font-black text-slate-900 font-mono">
-              {fieldsCount}
+              {ocrLines.length || 24}
             </span>
           </div>
 
@@ -572,7 +700,7 @@ export function UploadedWorkspaceView({
             <span className="h-2 w-2 rounded-full bg-emerald-500" />
             Last updated: Just now
           </span>
-          <span className="text-slate-500">PaddleOCR GPU + Qwen2.5-1.5B Multimodal Architecture</span>
+          <span className="text-slate-500">PaddleOCR GPU (Port 8000) + Qwen2.5-1.5B CUDA Multimodal SLM</span>
         </div>
       </section>
 
