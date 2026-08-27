@@ -39,131 +39,89 @@ export const initialSteps: ProcessingStep[] = [
 
 export const documentTypes: DocumentType[] = ["Invoice", "Bill of Lading", "Packing List", "Purchase Order"];
 
-export const ocrText = `INVOICE
-ABC Logistics Co., Ltd.
-88/9 Moo 4, Bangna-Trad Rd.
-Bang Phli, Samut Prakan 10540
-Thailand
-Tel: +66 2 123 4567
+export const ocrText = `BILL OF LADING
+Shipper: Siam Global Logistics Co., Ltd.
+88/9 Sukhumvit Rd, Bangkok 10110 Thailand
+Consignee: Tokyo Freight Corp.
+4-1-1 Marunouchi, Chiyoda-ku, Tokyo Japan
 
-Invoice No.      INV-2024-001
-Invoice Date    15/05/2024
-Due Date        30/05/2024
-
-Bill To:
-XYZ Importer Co., Ltd.
-99/1 Sukhumvit Rd.
-Klongtoey, Bangkok 10110
-Thailand
-
-Ship To:
-XYZ Warehouse
-700/2 Amata City Chonburi
-Mueang Chonburi, Chonburi 20000
-Thailand
-
-Description       Quantity    Unit Price    Amount (THB)
-Logistics Service 120         406.25        48,750.00
-Subtotal                                  48,750.00
-VAT 7%                                     3,412.50
-Total Amount                              52,162.50`;
+B/L No: BL-2024-88910
+Date of Issue: 2024-08-25
+Port of Loading: Bangkok Port, Thailand
+Port of Discharge: Tokyo Port, Japan
+PO Reference: PO-2024-9988
+Description: Auto Spare Parts
+Quantity: 200 Packages
+Unit Price: USD 79.00
+Total Amount: USD 15,800.00`;
 
 export const initialJson: JsonSchemaOutput = {
-  document_type: "invoice",
-  document_no: "INV-2024-001",
-  document_date: "2024-05-15",
-  party_name: "ABC Logistics Co., Ltd.",
-  source_file: "sample_invoice.png",
-  quantity: 120,
-  total_amount: 52162.5,
+  document_type: "bill_of_lading",
+  document_number: "BL-2024-88910",
+  document_date: "2024-08-25",
+  sender: "Siam Global Logistics Co., Ltd.",
+  receiver: "Tokyo Freight Corp.",
+  origin: "Bangkok Port, Thailand",
+  destination: "Tokyo Port, Japan",
+  reference_number: "PO-2024-9988",
+  unit_price: 79.0,
+  total_amount: 15800.0,
+  currency: "USD",
+  document_no: "BL-2024-88910",
+  party_name: "Siam Global Logistics Co., Ltd.",
+  source_file: "bill_of_lading_sample.jpg",
+  quantity: 200,
   other: {
-    sender_name: "ABC Logistics Co., Ltd.",
-    receiver_name: "XYZ Importer Co., Ltd.",
-    po_number: "PO-998822",
-    tax_id: "0105558012345",
-    truck_plate: "70-1234",
-    gross_weight_kg: 25000,
-    subtotal_amount: 48750,
-    vat_amount: 3412.5,
+    gross_weight: "4,500 KGS",
+    measurement: "12.5 CBM",
+    container_no: "TGHU1234567",
+    subtotal_amount: 15800.0,
+    vat_amount: 0.0,
+    payment_terms: "Freight Prepaid",
+    tracking_no: "BL-2024-88910",
   },
 };
 
 export const initialFields: ExtractedField[] = [
-  { id: 1, sourceText: "INVOICE", field: "document_type", value: "invoice", confidence: 99, status: "success" },
-  { id: 2, sourceText: "INV-2024-001", field: "document_no", value: "INV-2024-001", confidence: 98, status: "success" },
-  { id: 3, sourceText: "15/05/2024", field: "document_date", value: "2024-05-15", confidence: 97, status: "success" },
-  { id: 4, sourceText: "ABC Logistics Co., Ltd.", field: "party_name", value: "ABC Logistics Co., Ltd.", confidence: 96, status: "success" },
-  { id: 5, sourceText: "sample_invoice.png", field: "source_file", value: "sample_invoice.png", confidence: 100, status: "success" },
-  { id: 6, sourceText: "120", field: "quantity", value: "120", confidence: 96, status: "success" },
-  { id: 7, sourceText: "52,162.50", field: "total_amount", value: "52162.5", confidence: 98, status: "success" },
-  { id: 8, sourceText: "70-1234", field: "truck_plate", value: "70-1234", confidence: 85, status: "review", isOther: true },
-  { id: 9, sourceText: "25,000 KG", field: "gross_weight_kg", value: "25000", confidence: 85, status: "review", isOther: true },
+  { id: 1, sourceText: "bill_of_lading", field: "document_type", value: "bill_of_lading", confidence: 100, status: "success" },
+  { id: 2, sourceText: "BL-2024-88910", field: "document_number", value: "BL-2024-88910", confidence: 99, status: "success" },
+  { id: 3, sourceText: "2024-08-25", field: "document_date", value: "2024-08-25", confidence: 98, status: "success" },
+  { id: 4, sourceText: "Siam Global Logistics Co., Ltd.", field: "sender", value: "Siam Global Logistics Co., Ltd.", confidence: 98, status: "success" },
+  { id: 5, sourceText: "Tokyo Freight Corp.", field: "receiver", value: "Tokyo Freight Corp.", confidence: 97, status: "success" },
+  { id: 6, sourceText: "Bangkok Port, Thailand", field: "origin", value: "Bangkok Port, Thailand", confidence: 96, status: "success" },
+  { id: 7, sourceText: "Tokyo Port, Japan", field: "destination", value: "Tokyo Port, Japan", confidence: 96, status: "success" },
+  { id: 8, sourceText: "PO-2024-9988", field: "reference_number", value: "PO-2024-9988", confidence: 95, status: "success" },
+  { id: 9, sourceText: "79.00", field: "unit_price", value: "79.00", confidence: 95, status: "success" },
+  { id: 10, sourceText: "15,800.00", field: "total_amount", value: "15800.00", confidence: 99, status: "success" },
+  { id: 11, sourceText: "USD", field: "currency", value: "USD", confidence: 100, status: "success" },
 ];
 
 export const confidenceScores: ConfidenceScore[] = [
-  { label: "การอ่านข้อความ (OCR)", value: 95, tone: "green" },
-  { label: "การทำความเข้าใจ (SLM)", value: 90, tone: "blue" },
-  { label: "การแมปฟิลด์", value: 91, tone: "blue" },
-  { label: "ความครบถ้วนข้อมูล", value: 89, tone: "blue" },
+  { label: "การอ่านข้อความ (OCR)", value: 98, tone: "green" },
+  { label: "การระบุคู่ค้า (Sender/Receiver)", value: 97, tone: "blue" },
+  { label: "เส้นทางขนส่ง (Origin/Destination)", value: 96, tone: "blue" },
+  { label: "ราคาและยอดเงิน (Price/Total)", value: 99, tone: "green" },
 ];
 
-export const initialReviewItems: ReviewItem[] = [
-  { id: "truck_plate", field: "truck_plate", ocrValue: "70-123A", slmValue: "70-1234", confidence: 78, status: "review" },
-  {
-    id: "gross_weight_kg",
-    field: "gross_weight_kg",
-    ocrValue: "25,000 KG",
-    slmValue: "25000",
-    confidence: 85,
-    status: "review",
-  },
-  { id: "total_amount", field: "total_amount", ocrValue: "52,162.50", slmValue: "48750", confidence: 82, status: "review" },
-];
+export const initialReviewItems: ReviewItem[] = [];
 
 export const recentJobs: DocumentJob[] = [
   {
     id: "job-1",
-    fileName: "Invoice_INV-2024-001.pdf",
-    type: "Invoice",
-    status: "processing",
-    statusLabel: "กำลังประมวลผล OCR",
+    fileName: "BOL_BL-2024-88910.jpg",
+    type: "Bill of Lading",
+    status: "success",
+    statusLabel: "สกัด 11 ฟิลด์สมบูรณ์",
     startedAt: "10:24",
-    result: "-",
+    result: "98.4%",
   },
   {
     id: "job-2",
-    fileName: "BOL_BL-2024-078.jpg",
-    type: "Bill of Lading",
-    status: "success",
-    statusLabel: "เสร็จสมบูรณ์",
-    startedAt: "09:48",
-    result: "98%",
-  },
-  {
-    id: "job-3",
-    fileName: "PL_PL-2024-056.pdf",
-    type: "Packing List",
-    status: "success",
-    statusLabel: "เสร็จสมบูรณ์",
-    startedAt: "09:15",
-    result: "91%",
-  },
-  {
-    id: "job-4",
-    fileName: "PO_PO-2024-033.pdf",
-    type: "Purchase Order",
-    status: "success",
-    statusLabel: "เสร็จสมบูรณ์",
-    startedAt: "เมื่อวาน 16:42",
-    result: "93%",
-  },
-  {
-    id: "job-5",
-    fileName: "Invoice_INV-2024-000.pdf",
+    fileName: "Invoice_INV-2024-001.pdf",
     type: "Invoice",
     status: "success",
     statusLabel: "เสร็จสมบูรณ์",
-    startedAt: "เมื่อวาน 15:21",
-    result: "95%",
+    startedAt: "09:48",
+    result: "99.0%",
   },
 ];

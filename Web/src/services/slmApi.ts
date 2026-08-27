@@ -79,12 +79,16 @@ export interface SlmExtractionResult {
 
 const ROOT_FIELDS = new Set<string>([
   "document_type",
-  "document_no",
+  "document_number",
   "document_date",
-  "party_name",
-  "source_file",
-  "quantity",
+  "sender",
+  "receiver",
+  "origin",
+  "destination",
+  "reference_number",
+  "unit_price",
   "total_amount",
+  "currency",
 ]);
 
 export async function runSlmExtraction({

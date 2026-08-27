@@ -12,23 +12,36 @@ export interface ProcessingStep {
 
 export interface JsonSchemaOutput {
   document_type: string;
-  document_no: string;
+  document_number: string;
   document_date: string;
-  party_name: string;
-  source_file: string;
-  quantity: number;
+  sender: string;
+  receiver: string;
+  origin: string;
+  destination: string;
+  reference_number: string;
+  unit_price: number;
   total_amount: number;
-  other: Record<string, unknown>;
+  currency: string;
+  // Legacy aliases
+  document_no?: string;
+  party_name?: string;
+  source_file?: string;
+  quantity?: number;
+  other?: Record<string, any>;
 }
 
 export const CORE_FIELDS_DEF = [
-  { key: "party_name", label: "party_name (ชื่อคู่ค้า / ผู้ซื้อ / ผู้รับ / ผู้ขาย)" },
-  { key: "document_no", label: "document_no (เลขที่เอกสาร / ใบกำกับภาษี)" },
-  { key: "document_date", label: "document_date (วันที่ในเอกสาร)" },
-  { key: "total_amount", label: "total_amount (ยอดเงินรวมสุทธิ)" },
-  { key: "quantity", label: "quantity (จำนวนรวม)" },
   { key: "document_type", label: "document_type (ประเภทเอกสาร)" },
-  { key: "source_file", label: "source_file (ชื่อไฟล์ต้นฉบับ)" },
+  { key: "document_number", label: "document_number (เลขที่เอกสาร)" },
+  { key: "document_date", label: "document_date (วันที่เอกสาร)" },
+  { key: "sender", label: "sender (ผู้ส่ง / ผู้ขาย)" },
+  { key: "receiver", label: "receiver (ผู้รับ / ผู้ซื้อ)" },
+  { key: "origin", label: "origin (ต้นทาง)" },
+  { key: "destination", label: "destination (ปลายทาง)" },
+  { key: "reference_number", label: "reference_number (เลขที่อ้างอิง)" },
+  { key: "unit_price", label: "unit_price (ราคาต่อหน่วย)" },
+  { key: "total_amount", label: "total_amount (มูลค่ารวม)" },
+  { key: "currency", label: "currency (สกุลเงิน)" },
 ] as const;
 
 export const CORE_FIELDS_SET = new Set<string>(CORE_FIELDS_DEF.map((c) => c.key));

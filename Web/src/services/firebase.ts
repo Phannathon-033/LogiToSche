@@ -279,24 +279,36 @@ export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<F
       const data = docSnap.data() as any;
       const schemaOut: JsonSchemaOutput = {
         document_type: data.document_type || "invoice",
-        document_no: data.document_no || "-",
+        document_number: data.document_number || data.document_no || "-",
         document_date: data.document_date || "-",
-        party_name: data.party_name || "-",
+        sender: data.sender || data.party_name || "-",
+        receiver: data.receiver || "-",
+        origin: data.origin || "-",
+        destination: data.destination || "-",
+        reference_number: data.reference_number || data.document_number || data.document_no || "-",
+        unit_price: Number(data.unit_price) || 0,
+        total_amount: Number(data.total_amount) || 0,
+        currency: data.currency || "THB",
+        document_no: data.document_number || data.document_no || "-",
+        party_name: data.sender || data.party_name || "-",
         source_file: data.source_file || docSnap.id,
         quantity: data.quantity ?? 1,
-        total_amount: data.total_amount ?? 0,
         other: data.other && typeof data.other === "object" ? data.other : {},
       };
 
       const otherObj = schemaOut.other || {};
       const fieldsList: ExtractedField[] = [
         { id: 1, sourceText: schemaOut.document_type, field: "document_type", value: schemaOut.document_type, confidence: 98, status: "success", isOther: false },
-        { id: 2, sourceText: schemaOut.document_no, field: "document_no", value: schemaOut.document_no, confidence: 96, status: "success", isOther: false },
+        { id: 2, sourceText: schemaOut.document_number, field: "document_number", value: schemaOut.document_number, confidence: 96, status: "success", isOther: false },
         { id: 3, sourceText: schemaOut.document_date, field: "document_date", value: schemaOut.document_date, confidence: 95, status: "success", isOther: false },
-        { id: 4, sourceText: schemaOut.party_name, field: "party_name", value: schemaOut.party_name, confidence: 94, status: "success", isOther: false },
-        { id: 5, sourceText: schemaOut.source_file, field: "source_file", value: schemaOut.source_file, confidence: 100, status: "success", isOther: false },
-        { id: 6, sourceText: String(schemaOut.quantity), field: "quantity", value: String(schemaOut.quantity), confidence: 92, status: "success", isOther: false },
-        { id: 7, sourceText: String(schemaOut.total_amount), field: "total_amount", value: String(schemaOut.total_amount), confidence: 96, status: "success", isOther: false },
+        { id: 4, sourceText: schemaOut.sender, field: "sender", value: schemaOut.sender, confidence: 94, status: "success", isOther: false },
+        { id: 5, sourceText: schemaOut.receiver, field: "receiver", value: schemaOut.receiver, confidence: 94, status: "success", isOther: false },
+        { id: 6, sourceText: schemaOut.origin, field: "origin", value: schemaOut.origin, confidence: 93, status: "success", isOther: false },
+        { id: 7, sourceText: schemaOut.destination, field: "destination", value: schemaOut.destination, confidence: 93, status: "success", isOther: false },
+        { id: 8, sourceText: schemaOut.reference_number, field: "reference_number", value: schemaOut.reference_number, confidence: 95, status: "success", isOther: false },
+        { id: 9, sourceText: String(schemaOut.unit_price), field: "unit_price", value: String(schemaOut.unit_price), confidence: 95, status: "success", isOther: false },
+        { id: 10, sourceText: String(schemaOut.total_amount), field: "total_amount", value: String(schemaOut.total_amount), confidence: 96, status: "success", isOther: false },
+        { id: 11, sourceText: schemaOut.currency, field: "currency", value: schemaOut.currency, confidence: 98, status: "success", isOther: false },
       ];
 
       Object.entries(otherObj).forEach(([k, v], idx) => {
