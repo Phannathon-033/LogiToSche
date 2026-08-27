@@ -1,4 +1,4 @@
-import { BrainCircuit, CheckCircle2, Cloud, FileSearch, Layers, Plus, RefreshCw, Sparkles, UploadCloud } from "lucide-react";
+import { BrainCircuit, CheckCircle2, Cloud, FileSearch, Layers, Plus, RefreshCw, UploadCloud } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AppHeader } from "./components/AppHeader";
 import { BatchDocumentGallery } from "./components/BatchDocumentGallery";
@@ -15,8 +15,6 @@ import { OCRResultPanel } from "./components/OCRResultPanel";
 import { RecentJobsTable } from "./components/RecentJobsTable";
 import { RegisterPage } from "./components/RegisterPage";
 import { SlmAccuracyCard } from "./components/SlmAccuracyCard";
-import { SlmPromptAssistantModal } from "./components/SlmPromptAssistantModal";
-import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
 import { Toast } from "./components/Toast";
 import { WorkflowStepper } from "./components/WorkflowStepper";
 import { initialJson, initialSteps, ocrText } from "./data/mockData";
@@ -35,7 +33,7 @@ import type {
   SlmPerformanceMetrics,
 } from "./types";
 
-type WorkspaceTab = "extraction" | "assistant" | "analysis" | "all";
+type WorkspaceTab = "extraction" | "analysis" | "all";
 
 export function App() {
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
@@ -57,7 +55,6 @@ export function App() {
   const [ocrLanguage, setOcrLanguage] = useState<OcrLanguage>("th");
   const [selectedType, setSelectedType] = useState<DocumentType>("Invoice");
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>("extraction");
-  const [showPromptModal, setShowPromptModal] = useState(false);
   const [showCloudHistoryModal, setShowCloudHistoryModal] = useState(false);
 
   const [jobs, setJobs] = useState<DocumentJob[]>([]);
@@ -529,8 +526,6 @@ export function App() {
   function handleStepClick(stepId: number) {
     if (stepId <= 3) {
       setWorkspaceTab("extraction");
-    } else if (stepId === 4) {
-      setWorkspaceTab("assistant");
     } else {
       setWorkspaceTab("analysis");
     }
@@ -746,20 +741,11 @@ export function App() {
                   <div className="mb-6 flex flex-wrap items-center justify-between border-b border-line pb-4">
                     <div className="flex flex-wrap items-center gap-2">
                       <TabButton active={workspaceTab === "extraction"} label="OCR & JSON" onClick={() => setWorkspaceTab("extraction")} />
-                      <TabButton active={workspaceTab === "assistant"} label="✨ AI Prompt Assistant" onClick={() => setWorkspaceTab("assistant")} />
                       <TabButton active={workspaceTab === "analysis"} label="📊 ประสิทธิภาพ & Review" onClick={() => setWorkspaceTab("analysis")} />
                       <TabButton active={workspaceTab === "all"} label="ทั้งหมด" onClick={() => setWorkspaceTab("all")} />
                     </div>
                     <div className="flex items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setShowPromptModal(true)}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all shadow-sm"
-                      >
-                        <Sparkles className="h-3.5 w-3.5" />
-                        <span>AI Prompt สำเร็จรูป</span>
-                      </button>
-                      <span className="hidden text-xs font-bold text-slate-500 sm:inline">
+                      <span className="text-xs font-bold text-slate-500">
                         ความแม่นยำ SLM: <b className="text-primary">{slmPerformance?.accuracy_pct ?? overallConfidence}%</b>
                       </span>
                     </div>
@@ -792,17 +778,6 @@ export function App() {
                           overallConfidence={overallConfidence}
                         />
                       ) : null}
-                    </div>
-                  ) : null}
-
-                  {workspaceTab === "assistant" ? (
-                    <div className="grid gap-6">
-                      <SlmPromptAssistantPanel
-                        ocrText={ocrResultText}
-                        jsonSchema={jsonOutput}
-                        onOpenFullAssistant={() => setShowPromptModal(true)}
-                        onShowToast={showToast}
-                      />
                     </div>
                   ) : null}
 
@@ -849,14 +824,6 @@ export function App() {
                           overallConfidence={overallConfidence}
                         />
                       ) : null}
-                      <div>
-                        <SlmPromptAssistantPanel
-                          ocrText={ocrResultText}
-                          jsonSchema={jsonOutput}
-                          onOpenFullAssistant={() => setShowPromptModal(true)}
-                          onShowToast={showToast}
-                        />
-                      </div>
                       <div className="grid gap-6 xl:grid-cols-2">
                         {slmReady ? <ConfidenceCard overall={overallConfidence} scores={confidenceScores} /> : <SlmWaitingCard title="ความมั่นใจ / Confidence" />}
                         {slmReady ? <ManualReviewCard items={reviewItems} onReview={setReviewingItem} /> : <SlmWaitingCard title="ต้องตรวจสอบโดยมนุษย์ (Review Required)" />}
@@ -880,14 +847,6 @@ export function App() {
           )}
         </div>
       </main>
-
-      <SlmPromptAssistantModal
-        isOpen={showPromptModal}
-        onClose={() => setShowPromptModal(false)}
-        ocrText={ocrResultText}
-        jsonSchema={jsonOutput}
-        onShowToast={showToast}
-      />
 
       <FirebaseCloudHistoryModal
         isOpen={showCloudHistoryModal}
