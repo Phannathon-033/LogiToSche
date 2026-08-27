@@ -1,4 +1,4 @@
-import { BrainCircuit, CheckCircle2, FileSearch, Layers, Plus, RefreshCw, Sparkles, UploadCloud } from "lucide-react";
+import { BrainCircuit, CheckCircle2, Cloud, FileSearch, Layers, Plus, RefreshCw, Sparkles, UploadCloud } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AppHeader } from "./components/AppHeader";
 import { BatchDocumentGallery } from "./components/BatchDocumentGallery";
@@ -6,6 +6,7 @@ import { ConfidenceCard } from "./components/ConfidenceCard";
 import { DocumentPreview } from "./components/DocumentPreview";
 import { DocumentUploader } from "./components/DocumentUploader";
 import { ExtractedFieldsTable } from "./components/ExtractedFieldsTable";
+import { FirebaseCloudHistoryModal } from "./components/FirebaseCloudHistoryModal";
 import { JSONOutputPanel } from "./components/JSONOutputPanel";
 import { LoginPage, type UserSession } from "./components/LoginPage";
 import { ManualReviewCard } from "./components/ManualReviewCard";
@@ -19,6 +20,7 @@ import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
 import { Toast } from "./components/Toast";
 import { WorkflowStepper } from "./components/WorkflowStepper";
 import { initialJson, initialSteps, ocrText } from "./data/mockData";
+import { saveDocumentToFirebase, type FirebaseDocumentRecord } from "./services/firebase";
 import { createJsonDownload, nextStepState } from "./services/mockProcessingService";
 import { runPaddleOcr, type OcrLanguage } from "./services/ocrApi";
 import { runSlmExtraction } from "./services/slmApi";
@@ -56,6 +58,7 @@ export function App() {
   const [selectedType, setSelectedType] = useState<DocumentType>("Invoice");
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>("extraction");
   const [showPromptModal, setShowPromptModal] = useState(false);
+  const [showCloudHistoryModal, setShowCloudHistoryModal] = useState(false);
 
   const [jobs, setJobs] = useState<DocumentJob[]>([]);
   const [reviewingItem, setReviewingItem] = useState<ReviewItem | null>(null);
@@ -259,6 +262,38 @@ export function App() {
               : job,
           ),
         );
+
+        // Auto-save image file and JSON schema to Google Cloud Firebase
+        try {
+          const fbRecord = await saveDocumentToFirebase(
+            {
+              id: allDocs[i].id,
+              fileName: allDocs[i].fileName,
+              fileSize: allDocs[i].fileSize,
+              fileType: allDocs[i].file.type || "image/jpeg",
+              documentType: selectedType,
+              jsonSchema: slm.jsonOutput,
+              fields: slm.fields,
+              confidenceScores: slm.confidenceScores,
+              overallConfidence: slm.overallConfidence,
+              performance: slm.performance ?? null,
+              reviewItems: slm.reviewItems,
+              ocrText: allDocs[i].ocrText,
+              spatialText: allDocs[i].spatialText,
+              userEmail: userSession?.email || "guest@logiai.local",
+              userName: userSession?.name || "Guest User",
+            },
+            allDocs[i].file
+          );
+          allDocs[i].cloudSyncStatus = "synced";
+          allDocs[i].cloudRecordId = fbRecord.id;
+          allDocs[i].storageUrl = fbRecord.storageUrl;
+          setBatchDocuments([...allDocs]);
+        } catch (cloudErr) {
+          console.warn("Firebase Cloud Sync warning:", cloudErr);
+          allDocs[i].cloudSyncStatus = "local_only";
+          setBatchDocuments([...allDocs]);
+        }
       } catch (err) {
         const msg = err instanceof Error ? err.message : "SLM Error";
         allDocs[i] = {
@@ -414,6 +449,83 @@ export function App() {
     showToast("รีเซ็ตเอกสารทั้งหมดเรียบร้อย");
   }
 
+  async function handleManualCloudSync() {
+    if (!activeDoc || !activeDoc.jsonOutput) {
+      showToast("ยังไม่มีข้อมูล JSON Schema ให้บันทึกขึ้น Cloud");
+      return;
+    }
+    showToast("☁️ กำลังบันทึกข้อมูลขึ้น Google Cloud Firebase...");
+    try {
+      const fbRecord = await saveDocumentToFirebase(
+        {
+          id: activeDoc.id,
+          fileName: activeDoc.fileName,
+          fileSize: activeDoc.fileSize,
+          fileType: activeDoc.file.type || "image/jpeg",
+          documentType: selectedType,
+          jsonSchema: activeDoc.jsonOutput,
+          fields: activeDoc.fields,
+          confidenceScores: activeDoc.confidenceScores,
+          overallConfidence: activeDoc.overallConfidence,
+          performance: activeDoc.performance ?? null,
+          reviewItems: activeDoc.reviewItems,
+          ocrText: activeDoc.ocrText,
+          spatialText: activeDoc.spatialText,
+          userEmail: userSession?.email || "guest@logiai.local",
+          userName: userSession?.name || "Guest User",
+        },
+        activeDoc.file
+      );
+
+      const nextList = [...batchDocuments];
+      nextList[activeDocIndex] = {
+        ...nextList[activeDocIndex],
+        cloudSyncStatus: "synced",
+        cloudRecordId: fbRecord.id,
+        storageUrl: fbRecord.storageUrl,
+      };
+      setBatchDocuments(nextList);
+      showToast(`☁️ บันทึกเอกสาร "${activeDoc.fileName}" ขึ้น Firebase เรียบร้อย!`);
+    } catch (err) {
+      console.error(err);
+      showToast("บันทึกขึ้น Firebase ล้มเหลว กรุณาลองใหม่อีกครั้ง");
+    }
+  }
+
+  function handleLoadFromCloud(record: FirebaseDocumentRecord) {
+    const dummyFile = new File([""], record.fileName, { type: record.fileType || "image/jpeg" });
+    const loadedItem: BatchDocumentItem = {
+      id: record.id,
+      file: dummyFile,
+      fileName: record.fileName,
+      fileSize: record.fileSize || "0.50 MB",
+      previewUrl: record.storageUrl || null,
+      status: "completed",
+      statusLabel: `โหลดจาก Firebase (${record.performance?.accuracy_pct ?? record.overallConfidence}%)`,
+      ocrProgress: 100,
+      ocrText: record.ocrText || "",
+      spatialText: record.spatialText,
+      ocrLines: [],
+      jsonOutput: record.jsonSchema,
+      fields: record.fields || [],
+      confidenceScores: record.confidenceScores || [],
+      overallConfidence: record.overallConfidence || 95,
+      performance: record.performance || null,
+      reviewItems: record.reviewItems || [],
+      cloudSyncStatus: "synced",
+      cloudRecordId: record.id,
+      storageUrl: record.storageUrl,
+      startedAt: new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }),
+      completedAt: new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }),
+    };
+
+    setBatchDocuments((prev) => [loadedItem, ...prev]);
+    setActiveDocIndex(0);
+    setWorkspaceTab("extraction");
+    setSteps(nextStepState(initialSteps, 6));
+    showToast(`☁️ โหลดเอกสาร "${record.fileName}" จาก Firebase สำเร็จ!`);
+  }
+
   function handleStepClick(stepId: number) {
     if (stepId <= 3) {
       setWorkspaceTab("extraction");
@@ -493,7 +605,11 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-page text-ink antialiased">
-      <AppHeader user={userSession} onLogout={handleLogout} />
+      <AppHeader
+        user={userSession}
+        onLogout={handleLogout}
+        onOpenCloudHistory={() => setShowCloudHistoryModal(true)}
+      />
       <main className="px-4 py-6 sm:px-6 lg:px-8">
         <div className="mx-auto flex w-full max-w-[1720px] flex-col gap-7">
           <section className="rounded-2xl border border-line bg-white p-6 shadow-panel lg:p-8">
@@ -566,26 +682,59 @@ export function App() {
                         <BrainCircuit className="h-3.5 w-3.5" />
                         {slmReady ? `SLM ความแม่นยำ: ${slmPerformance?.accuracy_pct ?? overallConfidence}%` : (activeDoc?.statusLabel ?? "กำลังรอผล")}
                       </span>
+                      {activeDoc?.cloudSyncStatus === "synced" ? (
+                        <span
+                          className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-800 ring-1 ring-amber-300"
+                          title="ข้อมูลรูปภาพและ JSON Schema ถูกจัดเก็บบน Google Cloud Firebase (Firestore & Storage)"
+                        >
+                          <Cloud className="h-3.5 w-3.5 text-amber-600" />
+                          <span>บันทึกลง Firebase แล้ว</span>
+                        </span>
+                      ) : null}
                     </div>
                     <p className="mt-1 text-xs text-slate-600">ขนาด: {fileSize} · เอกสารที่ {activeDocIndex + 1} จาก {batchDocuments.length} · GPU pipeline: PaddleOCR + Qwen2.5-1.5B CUDA</p>
                   </div>
                 </div>
 
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-blue-300 bg-white px-3.5 py-2 text-xs font-extrabold text-primary transition hover:bg-blue-50">
-                  <UploadCloud className="h-4 w-4" />
-                  เพิ่มรูปภาพ/เอกสารเข้าแบทช์
-                  <input
-                    type="file"
-                    multiple
-                    accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff"
-                    className="sr-only"
-                    onChange={(event) => {
-                      const files = Array.from(event.target.files ?? []);
-                      if (files.length > 0) handleBatchFilesSelect(files);
-                      event.target.value = "";
-                    }}
-                  />
-                </label>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setShowCloudHistoryModal(true)}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-extrabold text-amber-900 transition hover:bg-amber-100"
+                    title="เปิดคลังเอกสาร & JSON ที่เก็บไว้บน Cloud Firebase"
+                  >
+                    <Cloud className="h-4 w-4 text-amber-600" />
+                    <span>คลัง Cloud Firebase</span>
+                  </button>
+
+                  {slmReady ? (
+                    <button
+                      type="button"
+                      onClick={handleManualCloudSync}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-extrabold text-slate-700 transition hover:bg-slate-50"
+                      title="บันทึกข้อมูลและรูปภาพขึ้น Firebase อีกครั้ง"
+                    >
+                      <Cloud className="h-4 w-4 text-primary" />
+                      <span>ซิงค์ขึ้น Cloud</span>
+                    </button>
+                  ) : null}
+
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-blue-300 bg-white px-3.5 py-2 text-xs font-extrabold text-primary transition hover:bg-blue-50">
+                    <UploadCloud className="h-4 w-4" />
+                    เพิ่มรูปเข้าแบทช์
+                    <input
+                      type="file"
+                      multiple
+                      accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff"
+                      className="sr-only"
+                      onChange={(event) => {
+                        const files = Array.from(event.target.files ?? []);
+                        if (files.length > 0) handleBatchFilesSelect(files);
+                        event.target.value = "";
+                      }}
+                    />
+                  </label>
+                </div>
               </div>
 
               <div className="grid min-w-0 gap-8 lg:grid-cols-[440px_minmax(0,1fr)] xl:grid-cols-[480px_minmax(0,1fr)]">
@@ -737,6 +886,13 @@ export function App() {
         onClose={() => setShowPromptModal(false)}
         ocrText={ocrResultText}
         jsonSchema={jsonOutput}
+        onShowToast={showToast}
+      />
+
+      <FirebaseCloudHistoryModal
+        isOpen={showCloudHistoryModal}
+        onClose={() => setShowCloudHistoryModal(false)}
+        onLoadDocument={handleLoadFromCloud}
         onShowToast={showToast}
       />
 

@@ -1,13 +1,14 @@
-import { Bell, CircleHelp, LogOut } from "lucide-react";
+import { Bell, CircleHelp, Cloud, LogOut } from "lucide-react";
 import type { UserSession } from "./LoginPage";
 import { Logo } from "./Logo";
 
 interface AppHeaderProps {
   user?: UserSession | null;
   onLogout?: () => void;
+  onOpenCloudHistory?: () => void;
 }
 
-export function AppHeader({ user, onLogout }: AppHeaderProps) {
+export function AppHeader({ user, onLogout, onOpenCloudHistory }: AppHeaderProps) {
   const initial = user?.name ? user.name.charAt(0) : "ส";
   const name = user?.name || "สมชาย วงศ์สวัสดิ์";
   const role = user?.role || "ผู้ดูแลระบบ";
@@ -24,7 +25,19 @@ export function AppHeader({ user, onLogout }: AppHeaderProps) {
           <p className="hidden truncate text-xs font-semibold text-cyan-400/90 sm:block">PaddleOCR + Qwen SLM Architecture (GPU Accelerated)</p>
         </div>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-2.5">
+          {onOpenCloudHistory && (
+            <button
+              type="button"
+              onClick={onOpenCloudHistory}
+              className="inline-flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-xs font-black text-amber-400 shadow-sm transition hover:bg-amber-500/20 hover:border-amber-500/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400"
+              title="เปิดคลังเอกสาร & JSON ที่บันทึกบน Cloud Firebase"
+            >
+              <Cloud className="h-4 w-4 text-amber-400 animate-pulse" />
+              <span className="hidden sm:inline">Firebase Cloud</span>
+            </button>
+          )}
+
           <button type="button" className="relative rounded-xl p-2 hover:bg-slate-800/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400" aria-label="การแจ้งเตือน">
             <Bell className="h-5 w-5 text-slate-300 hover:text-cyan-400 transition-colors" aria-hidden="true" />
             <span className="absolute right-1 top-1 grid h-4 w-4 place-items-center rounded-full bg-cyan-500 text-[10px] font-black text-slate-950">5</span>

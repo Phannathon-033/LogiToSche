@@ -153,4 +153,7 @@ export interface BatchDocumentItem {
   error?: string;
   startedAt?: string;
   completedAt?: string;
+  cloudRecordId?: string;
+  cloudSyncStatus?: "synced" | "uploading" | "failed" | "local_only";
+  storageUrl?: string;
 }
