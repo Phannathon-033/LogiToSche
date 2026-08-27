@@ -8,6 +8,7 @@ import { DocumentUploader } from "./components/DocumentUploader";
 import { ExtractedFieldsTable } from "./components/ExtractedFieldsTable";
 import { FirebaseCloudHistoryModal } from "./components/FirebaseCloudHistoryModal";
 import { JSONOutputPanel } from "./components/JSONOutputPanel";
+import { LandingHeroConverter } from "./components/LandingHeroConverter";
 import { LoginPage, type UserSession } from "./components/LoginPage";
 import { ManualReviewCard } from "./components/ManualReviewCard";
 import { ManualReviewModal } from "./components/ManualReviewModal";
@@ -683,18 +684,17 @@ export function App() {
         <div className="mx-auto flex w-full max-w-[1720px] flex-col gap-5">
           {!hasDocument ? (
             /* ========================================================= */
-            /* EMPTY STATE: SIMPLE, INVITING DROPZONE & SAMPLE CARDS      */
+            /* EMPTY STATE: WHITE THEME HERO CONVERTER & WORKFLOW        */
             /* ========================================================= */
-            <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(380px,480px)_1fr]">
-              <section className="min-w-0 rounded-2xl border border-slate-200 bg-white p-6 shadow-panel">
-                <DocumentUploader
-                  batchCount={batchDocuments.length}
-                  language={ocrLanguage}
-                  onLanguageChange={setOcrLanguage}
-                  onFilesSelect={handleBatchFilesSelect}
-                />
-              </section>
-              <AwaitingDocumentState />
+            <div className="mx-auto w-full max-w-[1320px]">
+              <LandingHeroConverter
+                language={ocrLanguage}
+                onLanguageChange={setOcrLanguage}
+                onFilesSelect={handleBatchFilesSelect}
+                onOpenPricing={() => showToast("แพ็กเกจ: ใช้งานฟรีสำหรับนักศึกษาและทดสอบระบบ")}
+                onOpenFeatures={() => showToast("ฟีเจอร์: PaddleOCR GPU + Qwen2.5 SLM Multimodal + Firebase Cloud")}
+                onOpenWorkflow={() => showToast("กระบวนการ: Upload -> OCR -> AI Reasoning -> JSON Schema")}
+              />
             </div>
           ) : (
             /* ========================================================= */
