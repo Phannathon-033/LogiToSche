@@ -15,6 +15,19 @@ interface SlmExtractRequest {
   sourceFile?: string;
   ocrText: string;
   ocrLines: OcrLine[];
+  imageFile?: File | Blob;
+}
+
+function fileToBase64(file: File | Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result);
+    };
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
 }
 
 interface SlmApiField {
@@ -79,7 +92,17 @@ export async function runSlmExtraction({
   sourceFile,
   ocrText,
   ocrLines,
+  imageFile,
 }: SlmExtractRequest): Promise<SlmExtractionResult> {
+  let imageBase64: string | undefined;
+  if (imageFile) {
+    try {
+      imageBase64 = await fileToBase64(imageFile);
+    } catch (err) {
+      console.warn("Could not encode image to base64 for SLM:", err);
+    }
+  }
+
   const response = await fetch("/api/slm/extract", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -88,6 +111,7 @@ export async function runSlmExtraction({
       source_file: sourceFile || "document",
       ocr_text: ocrText,
       ocr_lines: ocrLines,
+      image_base64: imageBase64,
     }),
   });
 

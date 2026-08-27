@@ -234,6 +234,7 @@ export function App() {
             sourceFile: allDocs[i].fileName,
             ocrText: allDocs[i].ocrText,
             ocrLines: allDocs[i].ocrLines,
+            imageFile: allDocs[i].file,
           });
 
           allDocs[i] = {
