@@ -211,25 +211,40 @@ export function FirebaseCloudHistoryModal({
                 <AlertCircle className="h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
                 <div className="space-y-1">
                   <p className="font-bold text-sm">
-                    🛠️ ขั้นตอนการเปิดใช้งาน Cloud Firestore Database ใน Firebase Console (ทำเพียงครั้งเดียว):
+                    🛠️ ขั้นตอนการเปิดสิทธิ์การบันทึกข้อมูลใน Firebase Console (ทำเพียง 10 วินาที):
                   </p>
-                  <ol className="list-decimal pl-5 space-y-1 text-slate-700 dark:text-slate-300">
+                  <ol className="list-decimal pl-5 space-y-1.5 text-slate-700 dark:text-slate-300">
                     <li>
-                      เปิดลิงก์นี้:{" "}
+                      ไปที่เมนู <b>Firestore Rules</b>:{" "}
                       <a
-                        href="https://console.firebase.google.com/project/json-schema-f38aa/firestore"
+                        href="https://console.firebase.google.com/project/json-schema-f38aa/firestore/rules"
                         target="_blank"
                         rel="noreferrer"
                         className="font-bold text-blue-600 underline hover:text-blue-800 dark:text-blue-400"
                       >
-                        https://console.firebase.google.com/project/json-schema-f38aa/firestore
+                        https://console.firebase.google.com/project/json-schema-f38aa/firestore/rules
                         <ExternalLink className="ml-1 inline h-3 w-3" />
                       </a>
                     </li>
-                    <li>คลิกปุ่ม <b>"Create database"</b> (หรือสร้างฐานข้อมูล)</li>
-                    <li>เลือก Location เช่น <code>asia-southeast1 (Singapore)</code> หรือตามสะดวก</li>
-                    <li>เลือก <b>"Start in test mode"</b> (โหมดทดสอบ เพื่ออนุญาตให้อ่าน/เขียนข้อมูลได้) แล้วกด <b>Enable</b></li>
-                    <li>กลับมากดปุ่ม <b>"ซิงค์ขึ้น Cloud"</b> ในหน้านี้ ข้อมูลทั้งหมดจะถูกส่งเข้า Firestore ทันที!</li>
+                    <li>
+                      เปลี่ยนเป็น <code className="rounded bg-amber-200/80 px-1 font-mono text-[11px] font-bold text-amber-900">allow read, write: if true;</code> แล้วกดปุ่ม <b>"Publish" (เผยแพร่)</b>
+                    </li>
+                    <li>
+                      ไปที่เมนู <b>Storage Rules</b>:{" "}
+                      <a
+                        href="https://console.firebase.google.com/project/json-schema-f38aa/storage/rules"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-bold text-blue-600 underline hover:text-blue-800 dark:text-blue-400"
+                      >
+                        https://console.firebase.google.com/project/json-schema-f38aa/storage/rules
+                        <ExternalLink className="ml-1 inline h-3 w-3" />
+                      </a>{" "}
+                      เปลี่ยนเป็น <code className="rounded bg-amber-200/80 px-1 font-mono text-[11px] font-bold text-amber-900">allow read, write: if true;</code> แล้วกด <b>"Publish"</b>
+                    </li>
+                    <li>
+                      กลับมากดปุ่ม <b>"ซิงค์ขึ้น Cloud"</b> ด้านบน ข้อมูลเอกสารทั้งหมดจะถูกส่งขึ้น Firebase Cloud ทันที!
+                    </li>
                   </ol>
                 </div>
               </div>

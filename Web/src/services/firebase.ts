@@ -255,14 +255,20 @@ export async function saveDocumentToFirebase(
 /**
  * Fetch past documents from Firestore + Local Cache
  */
-export async function fetchFirebaseDocuments(limitCount: number = 30): Promise<FirebaseDocumentRecord[]> {
+export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<FirebaseDocumentRecord[]> {
   const localDocs = getLocalCachedDocuments();
   let cloudDocs: FirebaseDocumentRecord[] = [];
 
   try {
     const collRef = collection(db, "logistics_extractions");
-    const q = query(collRef, orderBy("createdAt", "desc"), limit(limitCount));
-    const querySnapshot = await getDocs(q);
+    let querySnapshot;
+    try {
+      const q = query(collRef, orderBy("createdAt", "desc"), limit(limitCount));
+      querySnapshot = await getDocs(q);
+    } catch {
+      const qSimple = query(collRef, limit(limitCount));
+      querySnapshot = await getDocs(qSimple);
+    }
 
     querySnapshot.forEach((docSnap) => {
       const data = docSnap.data();
@@ -285,7 +291,14 @@ export async function fetchFirebaseDocuments(limitCount: number = 30): Promise<F
     map.set(doc.id, doc);
   }
 
-  return Array.from(map.values());
+  const allRecords = Array.from(map.values());
+  allRecords.sort((a, b) => {
+    const tA = typeof a.createdAt === "string" ? new Date(a.createdAt).getTime() : (a.createdAt?.toMillis ? a.createdAt.toMillis() : 0);
+    const tB = typeof b.createdAt === "string" ? new Date(b.createdAt).getTime() : (b.createdAt?.toMillis ? b.createdAt.toMillis() : 0);
+    return tB - tA;
+  });
+
+  return allRecords;
 }
 
 /**
