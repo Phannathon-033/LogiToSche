@@ -27,7 +27,7 @@ export function OcrProcessingAnimation({
 }: OcrProcessingAnimationProps) {
   const [activeStep, setActiveStep] = useState(0);
   const [elapsedMs, setElapsedMs] = useState(0);
-  const [boostCount, setBoostCount] = useState(0);
+  
   const [streamLog, setStreamLog] = useState<string[]>([
     "[GPU:0] Initializing PaddleOCR v5 inference engine...",
     "[GPU:0] Loading PP-OCRv5_server_det model weights (CUDA Device 0)...",
@@ -104,7 +104,7 @@ export function OcrProcessingAnimation({
 
   return (
     <div className="flex h-full min-h-[440px] flex-col justify-between overflow-hidden rounded-2xl border border-blue-200 bg-gradient-to-b from-blue-50/50 via-white to-slate-50 p-5 shadow-inner">
-      {/* Top Banner: Status + Interactive Turbo Booster */}
+      {/* Top Banner: Status */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-blue-100 pb-3.5">
         <div className="flex items-center gap-2.5">
           <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md">
@@ -124,19 +124,7 @@ export function OcrProcessingAnimation({
           </div>
         </div>
 
-        {/* Turbo Booster Button */}
-        <button
-          type="button"
-          onClick={() => setBoostCount((c) => c + 1)}
-          className="group inline-flex items-center gap-1.5 rounded-xl border border-blue-300 bg-white px-3 py-1.5 text-xs font-black text-blue-700 shadow-xs transition hover:bg-blue-600 hover:text-white active:scale-95"
-          title="กดเพื่อเพิ่มพลังประมวลผล GPU สแกน OCR ให้เร็วขึ้น!"
-        >
-          <Zap className="h-3.5 w-3.5 text-amber-500 group-hover:text-amber-300 animate-bounce" />
-          <span>เร่งสปีด OCR {boostCount > 0 ? `(+${boostCount * 15}%)` : ""}</span>
-          <span className="rounded-full bg-blue-100 group-hover:bg-blue-800 px-1.5 py-0.2 text-[10px] font-mono">
-            ⚡ {boostCount}
-          </span>
-        </button>
+        
       </div>
 
       {/* Center Grid: Left Live Radar Scan Visual | Right 4 Pipeline Steps */}

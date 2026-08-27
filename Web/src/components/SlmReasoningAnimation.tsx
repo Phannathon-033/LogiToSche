@@ -61,7 +61,7 @@ export function SlmReasoningAnimation({
   const [elapsedSeconds, setElapsedSeconds] = useState(0.0);
   const [tokensCount, setTokensCount] = useState(38);
   const [snippetIndex, setSnippetIndex] = useState(0);
-  const [boostClicks, setBoostClicks] = useState(0);
+  
 
   // Live timer and step progression simulator
   useEffect(() => {
@@ -81,10 +81,7 @@ export function SlmReasoningAnimation({
     };
   }, []);
 
-  function handleBoost() {
-    setBoostClicks((prev) => prev + 1);
-    setTokensCount((prev) => prev + 25);
-  }
+
 
   return (
     <div className="flex h-full min-h-[460px] flex-col overflow-hidden rounded-2xl border border-indigo-200/80 bg-gradient-to-b from-[#0B0F19] via-[#0F172A] to-[#0B0F19] p-5 font-sans text-white shadow-panel relative">
@@ -206,21 +203,13 @@ export function SlmReasoningAnimation({
             <span className="inline-block h-3.5 w-2 animate-pulse bg-cyan-400 align-middle ml-1" />
           </div>
 
-          {/* Fun interactive accelerator button */}
-          <div className="mt-3 flex items-center justify-between pt-2 border-t border-slate-800/60">
-            <span className="text-[10px] text-slate-500">
-              {boostClicks > 0 ? `🚀 บูสต์สปีด x${boostClicks}!` : "💡 กำลังประมวลผลบน CUDA"}
+          {/* Hardware & Inference Status */}
+          <div className="mt-3 flex items-center justify-between pt-2 border-t border-slate-800/60 text-[10px] text-slate-400">
+            <span className="inline-flex items-center gap-1.5 font-bold text-slate-300">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              กำลังรันโมเดล Qwen2.5 บน GPU
             </span>
-
-            <button
-              type="button"
-              onClick={handleBoost}
-              className="inline-flex items-center gap-1 rounded-lg border border-cyan-500/40 bg-cyan-950/60 px-2.5 py-1 text-[11px] font-bold text-cyan-300 transition hover:bg-cyan-900/60 hover:scale-105 active:scale-95"
-              title="คลิกเพื่อส่งพลังประมวลผลเพิ่มให้ SLM"
-            >
-              <Zap className="h-3 w-3 text-cyan-400" />
-              <span>เร่งสปีด AI {boostClicks > 0 ? `(+${boostClicks * 25})` : ""}</span>
-            </button>
+            <span className="font-mono text-cyan-400 font-bold">FP16 CUDA:0</span>
           </div>
         </div>
       </div>
