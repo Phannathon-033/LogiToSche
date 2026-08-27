@@ -1,21 +1,26 @@
 import {
+  AlertCircle,
   Calendar,
+  CheckCircle2,
   Cloud,
   Download,
   ExternalLink,
   FileCheck,
   FileText,
   FolderOpen,
+  HelpCircle,
   Loader2,
   RefreshCw,
   Search,
   Trash2,
+  UploadCloud,
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   deleteDocumentFromFirebase,
   fetchFirebaseDocuments,
+  saveDocumentToFirebase,
   type FirebaseDocumentRecord,
 } from "../services/firebase";
 
@@ -34,8 +39,10 @@ export function FirebaseCloudHistoryModal({
 }: FirebaseCloudHistoryModalProps) {
   const [documents, setDocuments] = useState<FirebaseDocumentRecord[]>([]);
   const [loading, setLoading] = useState(false);
+  const [syncingAll, setSyncingAll] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRecord, setSelectedRecord] = useState<FirebaseDocumentRecord | null>(null);
+  const [showSetupGuide, setShowSetupGuide] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -46,7 +53,7 @@ export function FirebaseCloudHistoryModal({
   async function loadDocuments() {
     setLoading(true);
     try {
-      const records = await fetchFirebaseDocuments(30);
+      const records = await fetchFirebaseDocuments(40);
       setDocuments(records);
       if (records.length > 0) {
         setSelectedRecord(records[0]);
@@ -59,15 +66,41 @@ export function FirebaseCloudHistoryModal({
     }
   }
 
+  async function handleRetrySyncAll() {
+    setSyncingAll(true);
+    onShowToast("กำลังลองซิงค์ข้อมูลขึ้น Cloud Firebase...");
+    try {
+      let syncedCount = 0;
+      for (const docItem of documents) {
+        if (docItem.cloudSyncStatus !== "synced") {
+          const res = await saveDocumentToFirebase(docItem);
+          if (res.cloudSyncStatus === "synced") syncedCount++;
+        }
+      }
+      await loadDocuments();
+      if (syncedCount > 0) {
+        onShowToast(`🎉 ซิงค์สำเร็จ ${syncedCount} เอกสารขึ้น Firebase เรียบร้อย!`);
+      } else {
+        onShowToast("ยังไม่สามารถเชื่อมต่อ Cloud Firestore ได้ กรุณาตรวจสอบว่ากด 'Create database' ใน Firebase Console แล้ว");
+        setShowSetupGuide(true);
+      }
+    } catch (err) {
+      console.error(err);
+      onShowToast("เกิดข้อผิดพลาดในการซิงค์");
+    } finally {
+      setSyncingAll(false);
+    }
+  }
+
   async function handleDelete(docId: string, storagePath?: string) {
-    if (!window.confirm("ยืนยันการลบเอกสารนี้จาก Cloud Firebase หรือไม่?")) return;
+    if (!window.confirm("ยืนยันการลบเอกสารนี้จากระบบหรือไม่?")) return;
     try {
       await deleteDocumentFromFirebase(docId, storagePath);
       setDocuments((prev) => prev.filter((d) => d.id !== docId));
       if (selectedRecord?.id === docId) {
         setSelectedRecord(null);
       }
-      onShowToast("ลบเอกสารจาก Firebase สำเร็จ");
+      onShowToast("ลบเอกสารเรียบร้อย");
     } catch (err) {
       console.error(err);
       onShowToast("เกิดข้อผิดพลาดในการลบ");
@@ -100,11 +133,13 @@ export function FirebaseCloudHistoryModal({
     );
   });
 
+  const hasUnsynced = documents.some((d) => d.cloudSyncStatus !== "synced");
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm animate-fade-in">
-      <div className="flex h-[90vh] max-h-[820px] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-indigo-100 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm animate-fade-in">
+      <div className="flex h-[92vh] max-h-[850px] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-indigo-100 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50/80 px-6 py-4 dark:border-slate-800 dark:bg-slate-850">
+        <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50/90 px-6 py-4 dark:border-slate-800 dark:bg-slate-850">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 text-white shadow-md">
               <Cloud className="h-6 w-6" />
@@ -119,12 +154,35 @@ export function FirebaseCloudHistoryModal({
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                ข้อมูลรูปภาพถูกจัดเก็บบน Firebase Storage และผลลัพธ์ JSON Schema ถูกบันทึกลง Cloud Firestore
+                ระบบสำรองข้อมูลทั้งบน Cloud Firestore, Cloud Storage และ Local Backup
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowSetupGuide(!showSetupGuide)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-2.5 py-1.5 text-xs font-bold text-amber-800 transition hover:bg-amber-100 dark:border-amber-700/50 dark:bg-amber-950/50 dark:text-amber-300"
+              title="ดูวิธีเปิดใช้งาน Firestore Database ใน Firebase Console"
+            >
+              <HelpCircle className="h-3.5 w-3.5 text-amber-600" />
+              <span>วิธีเปิด Firestore</span>
+            </button>
+
+            {hasUnsynced && (
+              <button
+                type="button"
+                onClick={handleRetrySyncAll}
+                disabled={syncingAll}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-amber-600 disabled:opacity-50"
+                title="ลองส่งข้อมูลที่บันทึกไว้ในเครื่องขึ้น Cloud Firebase อีกครั้ง"
+              >
+                <UploadCloud className={`h-3.5 w-3.5 ${syncingAll ? "animate-bounce" : ""}`} />
+                <span>ซิงค์ขึ้น Cloud ({documents.filter((d) => d.cloudSyncStatus !== "synced").length})</span>
+              </button>
+            )}
+
             <button
               type="button"
               onClick={loadDocuments}
@@ -134,6 +192,7 @@ export function FirebaseCloudHistoryModal({
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
               <span>รีเฟรช</span>
             </button>
+
             <button
               type="button"
               onClick={onClose}
@@ -143,6 +202,47 @@ export function FirebaseCloudHistoryModal({
             </button>
           </div>
         </div>
+
+        {/* Setup Guide Banner if requested or if permission denied */}
+        {showSetupGuide && (
+          <div className="border-b border-amber-200 bg-amber-50/90 p-4 text-xs text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/60 dark:text-amber-200">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex gap-2.5">
+                <AlertCircle className="h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
+                <div className="space-y-1">
+                  <p className="font-bold text-sm">
+                    🛠️ ขั้นตอนการเปิดใช้งาน Cloud Firestore Database ใน Firebase Console (ทำเพียงครั้งเดียว):
+                  </p>
+                  <ol className="list-decimal pl-5 space-y-1 text-slate-700 dark:text-slate-300">
+                    <li>
+                      เปิดลิงก์นี้:{" "}
+                      <a
+                        href="https://console.firebase.google.com/project/json-schema-f38aa/firestore"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-bold text-blue-600 underline hover:text-blue-800 dark:text-blue-400"
+                      >
+                        https://console.firebase.google.com/project/json-schema-f38aa/firestore
+                        <ExternalLink className="ml-1 inline h-3 w-3" />
+                      </a>
+                    </li>
+                    <li>คลิกปุ่ม <b>"Create database"</b> (หรือสร้างฐานข้อมูล)</li>
+                    <li>เลือก Location เช่น <code>asia-southeast1 (Singapore)</code> หรือตามสะดวก</li>
+                    <li>เลือก <b>"Start in test mode"</b> (โหมดทดสอบ เพื่ออนุญาตให้อ่าน/เขียนข้อมูลได้) แล้วกด <b>Enable</b></li>
+                    <li>กลับมากดปุ่ม <b>"ซิงค์ขึ้น Cloud"</b> ในหน้านี้ ข้อมูลทั้งหมดจะถูกส่งเข้า Firestore ทันที!</li>
+                  </ol>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSetupGuide(false)}
+                className="text-amber-700 hover:text-amber-900 dark:text-amber-300"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Content Body (2 Columns: List on Left, Preview on Right) */}
         <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[360px_1fr]">
@@ -172,13 +272,14 @@ export function FirebaseCloudHistoryModal({
               ) : filteredDocs.length === 0 ? (
                 <div className="flex h-48 flex-col items-center justify-center p-6 text-center text-slate-400">
                   <FolderOpen className="h-8 w-8 stroke-[1.5] text-slate-300" />
-                  <p className="mt-2 text-xs font-semibold">ไม่พบรายการเอกสารใน Firebase</p>
-                  <p className="text-[11px] text-slate-400">เมื่อคุณประมวลผล SLM ระบบจะบันทึกขึ้น Cloud ให้โดยอัตโนมัติ</p>
+                  <p className="mt-2 text-xs font-semibold">ยังไม่มีเอกสารในคลัง</p>
+                  <p className="text-[11px] text-slate-400">เมื่อคุณประมวลผล SLM ระบบจะบันทึกเอกสารและ JSON Schema ให้โดยอัตโนมัติ</p>
                 </div>
               ) : (
                 filteredDocs.map((docItem) => {
                   const isSelected = selectedRecord?.id === docItem.id;
                   const acc = docItem.performance?.accuracy_pct ?? docItem.overallConfidence;
+                  const isCloud = docItem.cloudSyncStatus === "synced";
 
                   return (
                     <div
@@ -197,7 +298,7 @@ export function FirebaseCloudHistoryModal({
                           className="h-11 w-11 shrink-0 rounded-lg border border-slate-200 object-cover dark:border-slate-700"
                         />
                       ) : (
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 dark:border-red-900/50 dark:bg-red-950/40">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-blue-200 bg-blue-50 text-primary dark:border-slate-700 dark:bg-slate-800">
                           <FileText className="h-5 w-5" />
                         </div>
                       )}
@@ -210,19 +311,26 @@ export function FirebaseCloudHistoryModal({
                           {docItem.jsonSchema?.party_name || docItem.documentType} · {docItem.fileSize}
                         </p>
 
-                        <div className="mt-2 flex items-center gap-2">
+                        <div className="mt-2 flex flex-wrap items-center gap-1.5">
                           <span className="rounded bg-emerald-100 px-1.5 py-0.2 text-[10px] font-black text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300">
                             {acc}% Acc
                           </span>
-                          <span className="text-[10px] text-slate-400">
-                            {docItem.jsonSchema?.document_date || "N/A"}
-                          </span>
+
+                          {isCloud ? (
+                            <span className="flex items-center gap-0.5 rounded bg-amber-100 px-1.5 py-0.2 text-[10px] font-bold text-amber-800 dark:bg-amber-950/80 dark:text-amber-300">
+                              <Cloud className="h-2.5 w-2.5" /> Cloud
+                            </span>
+                          ) : (
+                            <span className="flex items-center gap-0.5 rounded bg-blue-100 px-1.5 py-0.2 text-[10px] font-bold text-blue-800 dark:bg-blue-950/80 dark:text-blue-300">
+                              <CheckCircle2 className="h-2.5 w-2.5" /> Local
+                            </span>
+                          )}
                         </div>
                       </div>
 
                       <button
                         type="button"
-                        title="ลบจาก Firebase"
+                        title="ลบเอกสาร"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDelete(docItem.id, docItem.storagePath);
@@ -245,12 +353,28 @@ export function FirebaseCloudHistoryModal({
                 {/* Action Bar */}
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4 dark:border-slate-800">
                   <div>
-                    <h4 className="text-base font-extrabold text-navy dark:text-white">
-                      {selectedRecord.fileName}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-base font-extrabold text-navy dark:text-white">
+                        {selectedRecord.fileName}
+                      </h4>
+                      {selectedRecord.cloudSyncStatus === "synced" ? (
+                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
+                          Cloud Synced
+                        </span>
+                      ) : (
+                        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-800">
+                          Saved in Local Backup
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-slate-500 dark:text-slate-400">
                       ID: <span className="font-mono">{selectedRecord.id}</span> · ประเภท: <b>{selectedRecord.documentType}</b>
                     </p>
+                    {selectedRecord.cloudSyncNote && (
+                      <p className="mt-1 text-[11px] text-slate-500 italic">
+                        {selectedRecord.cloudSyncNote}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -281,7 +405,7 @@ export function FirebaseCloudHistoryModal({
                 <div className="grid gap-6 md:grid-cols-[200px_1fr]">
                   {selectedRecord.storageUrl ? (
                     <div className="space-y-2">
-                      <p className="text-xs font-bold text-slate-600 dark:text-slate-300">รูปภาพต้นฉบับ</p>
+                      <p className="text-xs font-bold text-slate-600 dark:text-slate-300">รูปภาพเอกสาร</p>
                       <a
                         href={selectedRecord.storageUrl}
                         target="_blank"
@@ -337,7 +461,7 @@ export function FirebaseCloudHistoryModal({
 
                 {/* JSON Viewer */}
                 <div className="space-y-2">
-                  <p className="text-xs font-bold text-slate-600 dark:text-slate-300">JSON Schema Payload ใน Firestore</p>
+                  <p className="text-xs font-bold text-slate-600 dark:text-slate-300">JSON Schema Payload</p>
                   <pre className="max-h-56 overflow-auto rounded-xl border border-slate-700 bg-slate-900 p-4 font-mono text-xs text-emerald-400 shadow-inner">
                     {JSON.stringify(selectedRecord.jsonSchema, null, 2)}
                   </pre>

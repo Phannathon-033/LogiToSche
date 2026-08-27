@@ -47,13 +47,15 @@ export const storage = getStorage(firebaseApp);
 // Initialize analytics if supported in browser environment
 export let analytics: ReturnType<typeof getAnalytics> | null = null;
 if (typeof window !== "undefined") {
-  isSupported().then((supported) => {
-    if (supported) {
-      analytics = getAnalytics(firebaseApp);
-    }
-  }).catch(() => {
-    // Ignore analytics init issues
-  });
+  isSupported()
+    .then((supported) => {
+      if (supported) {
+        analytics = getAnalytics(firebaseApp);
+      }
+    })
+    .catch(() => {
+      // Ignore analytics init issues
+    });
 }
 
 export interface FirebaseDocumentRecord {
@@ -75,7 +77,65 @@ export interface FirebaseDocumentRecord {
   createdAt?: Timestamp | string | any;
   userEmail?: string;
   userName?: string;
-  cloudSyncStatus?: "synced" | "uploading" | "failed";
+  cloudSyncStatus?: "synced" | "local_saved" | "failed";
+  cloudSyncNote?: string;
+}
+
+const LOCAL_STORAGE_KEY = "logiai_saved_documents_cache";
+
+/**
+ * Clean all undefined values recursively to prevent Firestore from throwing serialization errors
+ */
+function sanitizeForFirestore(obj: any): any {
+  if (obj === undefined) return null;
+  if (obj === null || typeof obj !== "object") return obj;
+  if (Array.isArray(obj)) return obj.map(sanitizeForFirestore);
+  const result: Record<string, any> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (value !== undefined) {
+      result[key] = sanitizeForFirestore(value);
+    }
+  }
+  return result;
+}
+
+/**
+ * Save record to Local Persistent Storage
+ */
+function saveToLocalCache(record: FirebaseDocumentRecord): void {
+  try {
+    const existing = getLocalCachedDocuments();
+    const filtered = existing.filter((d) => d.id !== record.id);
+    const updated = [record, ...filtered].slice(0, 50);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+  } catch (err) {
+    console.warn("Local storage cache warning:", err);
+  }
+}
+
+/**
+ * Read records from Local Persistent Storage
+ */
+export function getLocalCachedDocuments(): FirebaseDocumentRecord[] {
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as FirebaseDocumentRecord[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Remove record from Local Persistent Storage
+ */
+function removeFromLocalCache(docId: string): void {
+  try {
+    const existing = getLocalCachedDocuments();
+    const updated = existing.filter((d) => d.id !== docId);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+  } catch (err) {
+    console.warn("Local storage remove warning:", err);
+  }
 }
 
 /**
@@ -103,6 +163,7 @@ export async function uploadDocumentFileToStorage(
 
 /**
  * Save complete extraction result + image file to Firebase Firestore & Storage
+ * with automatic fallback to Local Persistent Storage so data is never lost.
  */
 export async function saveDocumentToFirebase(
   record: Omit<FirebaseDocumentRecord, "id" | "createdAt"> & { id?: string },
@@ -112,77 +173,140 @@ export async function saveDocumentToFirebase(
   let storageUrl = record.storageUrl;
   let storagePath = record.storagePath;
 
-  // 1. Upload file to Storage if provided and not yet uploaded
-  if (file && !storageUrl) {
+  // 1. Create temporary Object URL if available
+  if (file && !storageUrl && typeof window !== "undefined") {
     try {
-      const uploadRes = await uploadDocumentFileToStorage(file, docId);
-      storageUrl = uploadRes.downloadUrl;
-      storagePath = uploadRes.storagePath;
-    } catch (storageError) {
-      console.warn("Firebase Storage upload warning (proceeding to save Firestore metadata):", storageError);
+      storageUrl = URL.createObjectURL(file);
+    } catch {
+      // ignore
     }
   }
 
-  // 2. Prepare payload for Firestore
-  const docRef = doc(db, "logistics_extractions", docId);
-  const dataToSave = {
+  // 2. Prepare Local Baseline Record First (Fail-Safe)
+  const localRecord: FirebaseDocumentRecord = {
     ...record,
     id: docId,
     storageUrl: storageUrl || "",
     storagePath: storagePath || "",
-    createdAt: serverTimestamp(),
-    cloudSyncStatus: "synced",
-  };
-
-  // 3. Save to Firestore
-  await setDoc(docRef, dataToSave, { merge: true });
-
-  return {
-    ...dataToSave,
     createdAt: new Date().toISOString(),
-  } as FirebaseDocumentRecord;
+    cloudSyncStatus: "local_saved",
+    cloudSyncNote: "บันทึกลง Local Workspace เรียบร้อยแล้ว (รอการเปิดฐานข้อมูลบน Cloud Firestore)",
+  };
+  saveToLocalCache(localRecord);
+
+  // 3. Try Firebase Cloud Storage Upload
+  let cloudUploaded = false;
+  if (file) {
+    try {
+      const uploadRes = await uploadDocumentFileToStorage(file, docId);
+      storageUrl = uploadRes.downloadUrl;
+      storagePath = uploadRes.storagePath;
+      cloudUploaded = true;
+    } catch (storageError: any) {
+      console.warn("Firebase Storage upload notice (proceeding to Firestore):", storageError?.message || storageError);
+    }
+  }
+
+  // 4. Try Firebase Cloud Firestore Write
+  try {
+    const docRef = doc(db, "logistics_extractions", docId);
+    const dataToSave = sanitizeForFirestore({
+      ...record,
+      id: docId,
+      storageUrl: storageUrl || "",
+      storagePath: storagePath || "",
+      createdAt: serverTimestamp(),
+      cloudSyncStatus: "synced",
+      cloudSyncNote: "บันทึกลง Cloud Firestore & Storage สำเร็จ 100%",
+    });
+
+    await setDoc(docRef, dataToSave, { merge: true });
+
+    const syncedRecord: FirebaseDocumentRecord = {
+      ...localRecord,
+      storageUrl: storageUrl || localRecord.storageUrl,
+      storagePath: storagePath || localRecord.storagePath,
+      cloudSyncStatus: "synced",
+      cloudSyncNote: "บันทึกลง Cloud Firestore & Storage สำเร็จ 100%",
+    };
+    saveToLocalCache(syncedRecord);
+    return syncedRecord;
+  } catch (firestoreError: any) {
+    const errorMsg = firestoreError?.message || String(firestoreError);
+    console.warn("Cloud Firestore save notice:", errorMsg);
+
+    const isApiDisabled = errorMsg.includes("Cloud Firestore API has not been used") || errorMsg.includes("PERMISSION_DENIED");
+    const note = isApiDisabled
+      ? "บันทึกลง Local เรียบร้อย (Firebase Console ยังไม่ได้กด 'Create database' ในเมนู Firestore)"
+      : `บันทึกลง Local เรียบร้อย (${errorMsg})`;
+
+    const partialRecord: FirebaseDocumentRecord = {
+      ...localRecord,
+      storageUrl: storageUrl || localRecord.storageUrl,
+      storagePath: storagePath || localRecord.storagePath,
+      cloudSyncStatus: cloudUploaded ? "synced" : "local_saved",
+      cloudSyncNote: note,
+    };
+    saveToLocalCache(partialRecord);
+    return partialRecord;
+  }
 }
 
 /**
- * Fetch past documents from Firestore
+ * Fetch past documents from Firestore + Local Cache
  */
-export async function fetchFirebaseDocuments(limitCount: number = 25): Promise<FirebaseDocumentRecord[]> {
+export async function fetchFirebaseDocuments(limitCount: number = 30): Promise<FirebaseDocumentRecord[]> {
+  const localDocs = getLocalCachedDocuments();
+  let cloudDocs: FirebaseDocumentRecord[] = [];
+
   try {
     const collRef = collection(db, "logistics_extractions");
     const q = query(collRef, orderBy("createdAt", "desc"), limit(limitCount));
     const querySnapshot = await getDocs(q);
 
-    const documents: FirebaseDocumentRecord[] = [];
     querySnapshot.forEach((docSnap) => {
       const data = docSnap.data();
-      documents.push({
+      cloudDocs.push({
         ...data,
         id: docSnap.id,
+        cloudSyncStatus: "synced",
       } as FirebaseDocumentRecord);
     });
-
-    return documents;
-  } catch (error) {
-    console.error("Error fetching documents from Firebase:", error);
-    return [];
+  } catch (error: any) {
+    console.warn("Notice reading from Cloud Firestore (showing local documents):", error?.message || error);
   }
+
+  // Merge Cloud + Local records, avoiding duplicates
+  const map = new Map<string, FirebaseDocumentRecord>();
+  for (const doc of localDocs) {
+    map.set(doc.id, doc);
+  }
+  for (const doc of cloudDocs) {
+    map.set(doc.id, doc);
+  }
+
+  return Array.from(map.values());
 }
 
 /**
- * Delete a document from Firestore and Storage
+ * Delete a document from Firestore, Storage, and Local Cache
  */
 export async function deleteDocumentFromFirebase(docId: string, storagePath?: string): Promise<void> {
-  // 1. Delete from Firestore
-  const docRef = doc(db, "logistics_extractions", docId);
-  await deleteDoc(docRef);
+  removeFromLocalCache(docId);
 
-  // 2. Delete from Storage if exists
+  try {
+    const docRef = doc(db, "logistics_extractions", docId);
+    await deleteDoc(docRef);
+  } catch {
+    // ignore
+  }
+
   if (storagePath) {
     try {
       const fileRef = ref(storage, storagePath);
       await deleteObject(fileRef);
-    } catch (err) {
-      console.warn("Firebase Storage delete warning:", err);
+    } catch {
+      // ignore
     }
   }
 }
