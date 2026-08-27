@@ -69,34 +69,33 @@ export function DocumentUploader({
         }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
-        className={`rounded-lg border border-dashed p-6 text-center transition ${
-          dragging ? "border-primary bg-blue-50/80 ring-2 ring-primary/40" : "border-blue-300 bg-white dark:bg-slate-800/80"
+        onClick={() => inputRef.current?.click()}
+        className={`cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition-all ${
+          dragging
+            ? "border-primary bg-blue-50/90 ring-4 ring-primary/20 scale-[1.01]"
+            : "border-blue-300 bg-white hover:border-primary hover:bg-blue-50/40 dark:bg-slate-800/80"
         }`}
       >
         <input
           ref={inputRef}
           type="file"
           multiple
-          accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff"
+          accept="image/*,.pdf,.jpg,.jpeg,.png,.tif,.tiff"
           className="sr-only"
           id="document-upload"
           onChange={handleInputChange}
         />
-        <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full border border-blue-200 bg-blue-50 text-primary dark:border-blue-900/50 dark:bg-blue-950/40">
-          <UploadCloud className="h-6 w-6" aria-hidden="true" />
+        <div className="mx-auto mb-3.5 grid h-14 w-14 place-items-center rounded-2xl border border-blue-200 bg-blue-50 text-primary shadow-sm dark:border-blue-900/50 dark:bg-blue-950/40">
+          <UploadCloud className="h-7 w-7" aria-hidden="true" />
         </div>
-        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-          ลากไฟล์รูปภาพ/PDF มาวางที่นี่ หรือ{" "}
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            className="font-extrabold text-primary underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
-          >
-            คลิกเพื่อเลือกไฟล์ (เลือกหลายไฟล์ได้พร้อมกัน)
-          </button>
+        <p className="text-base font-bold text-navy dark:text-slate-200">
+          คลิกที่นี่ หรือลากไฟล์รูปภาพ/PDF มาวาง
         </p>
-        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-          รองรับไฟล์: JPG, PNG, TIFF/TIF, PDF (ระบบจะ OCR ทุกรูปให้เสร็จก่อน แล้วส่งเข้า SLM ทีละรูป)
+        <p className="mt-1 text-xs font-semibold text-primary">
+          (สามารถเลือกได้หลายรูปพร้อมกันเพื่อรันเป็นแบทช์)
+        </p>
+        <p className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">
+          รองรับ: JPG, JPEG, PNG, TIFF/TIF, PDF · ระบบจะ OCR ทุกรูปบน GPU แล้วส่งเข้า SLM ต่อเนื่อง
         </p>
 
         {batchCount > 0 && fileName ? (

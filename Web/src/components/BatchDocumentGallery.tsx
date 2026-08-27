@@ -119,7 +119,7 @@ export function BatchDocumentGallery({
             ref={fileInputRef}
             type="file"
             multiple
-            accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff"
+            accept="image/*,.pdf,.jpg,.jpeg,.png,.tif,.tiff"
             className="sr-only"
             onChange={(e) => {
               const files = Array.from(e.target.files || []);
@@ -130,11 +130,10 @@ export function BatchDocumentGallery({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            disabled={isProcessing}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/80 px-3 py-1.5 text-xs font-bold text-primary shadow-sm transition hover:bg-blue-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
           >
-            <Plus className="h-3.5 w-3.5 text-primary" />
-            เพิ่มรูปภาพ
+            <Plus className="h-3.5 w-3.5" />
+            เพิ่มรูปภาพเข้าแบทช์
           </button>
 
           {slmDoneCount > 0 ? (

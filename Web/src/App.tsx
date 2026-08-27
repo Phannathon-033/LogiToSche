@@ -156,157 +156,163 @@ export function App() {
     }));
     setJobs((prev) => [...newJobs, ...prev]);
 
-    // ==========================================
-    // PHASE 1: OCR ALL IMAGES FIRST (ตามโจทย์ผู้ใช้)
-    // ==========================================
-    setBatchPhase("ocr");
-    setSteps(nextStepState(initialSteps, 2));
+    try {
+      // ==========================================
+      // PHASE 1: OCR ALL IMAGES FIRST (ตามโจทย์ผู้ใช้)
+      // ==========================================
+      setBatchPhase("ocr");
+      setSteps(nextStepState(initialSteps, 2));
 
-    for (let i = 0; i < allDocs.length; i++) {
-      if (allDocs[i].status === "completed" || allDocs[i].status === "ocr_completed") continue;
+      for (let i = 0; i < allDocs.length; i++) {
+        if (allDocs[i].status === "completed" || allDocs[i].status === "ocr_completed") continue;
 
-      allDocs[i] = {
-        ...allDocs[i],
-        status: "ocr_processing",
-        statusLabel: `กำลัง OCR รูปที่ ${i + 1}/${allDocs.length} (GPU)...`,
-      };
-      setBatchDocuments([...allDocs]);
-      setJobs((current) =>
-        current.map((job) =>
-          job.id === allDocs[i].id ? { ...job, statusLabel: "กำลังประมวลผล OCR (GPU)" } : job,
-        ),
-      );
-
-      try {
-        const ocr = await runPaddleOcr(allDocs[i].file, ocrLanguage);
-        const text = ocr.text || "PaddleOCR ไม่พบข้อความในไฟล์นี้";
         allDocs[i] = {
           ...allDocs[i],
-          ocrText: text,
-          spatialText: ocr.spatial_text,
-          ocrLines: ocr.lines,
-          status: "ocr_completed",
-          statusLabel: `OCR สำเร็จ (${i + 1}/${allDocs.length})`,
+          status: "ocr_processing",
+          statusLabel: `กำลัง OCR รูปที่ ${i + 1}/${allDocs.length} (GPU)...`,
         };
         setBatchDocuments([...allDocs]);
         setJobs((current) =>
           current.map((job) =>
-            job.id === allDocs[i].id ? { ...job, statusLabel: "OCR สำเร็จ (รอคิว SLM)", result: "OCR Done" } : job,
-          ),
-        );
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : "OCR Error";
-        allDocs[i] = {
-          ...allDocs[i],
-          status: "error",
-          statusLabel: "OCR ล้มเหลว",
-          error: msg,
-        };
-        setBatchDocuments([...allDocs]);
-      }
-    }
-
-    // ==========================================
-    // PHASE 2: SLM EXTRACTION SEQUENTIALLY (ทีละรูป)
-    // ==========================================
-    setBatchPhase("slm");
-    setSteps(nextStepState(initialSteps, 4));
-
-    for (let i = 0; i < allDocs.length; i++) {
-      if (allDocs[i].status === "completed" || allDocs[i].status === "error") continue;
-
-      allDocs[i] = {
-        ...allDocs[i],
-        status: "slm_processing",
-        statusLabel: `กำลังวิเคราะห์ SLM รูปที่ ${i + 1}/${allDocs.length} (GPU)...`,
-      };
-      setBatchDocuments([...allDocs]);
-      setJobs((current) =>
-        current.map((job) =>
-          job.id === allDocs[i].id ? { ...job, statusLabel: "กำลังวิเคราะห์ Qwen SLM" } : job,
-        ),
-      );
-
-      try {
-        const slm = await runSlmExtraction({
-          documentTypeHint: selectedType,
-          sourceFile: allDocs[i].fileName,
-          ocrText: allDocs[i].ocrText,
-          ocrLines: allDocs[i].ocrLines,
-        });
-
-        allDocs[i] = {
-          ...allDocs[i],
-          jsonOutput: slm.jsonOutput,
-          fields: slm.fields,
-          confidenceScores: slm.confidenceScores,
-          overallConfidence: slm.overallConfidence,
-          performance: slm.performance ?? null,
-          reviewItems: slm.reviewItems,
-          status: "completed",
-          statusLabel: `เสร็จสมบูรณ์ (${slm.performance?.accuracy_pct ?? slm.overallConfidence}%)`,
-        };
-        setBatchDocuments([...allDocs]);
-        setJobs((current) =>
-          current.map((job) =>
-            job.id === allDocs[i].id
-              ? {
-                  ...job,
-                  status: "success",
-                  statusLabel: "SLM เสร็จสมบูรณ์",
-                  result: `${slm.performance?.accuracy_pct ?? slm.overallConfidence}%`,
-                }
-              : job,
+            job.id === allDocs[i].id ? { ...job, statusLabel: "กำลังประมวลผล OCR (GPU)" } : job,
           ),
         );
 
-        // Auto-save image file and JSON schema to Google Cloud Firebase
         try {
-          const fbRecord = await saveDocumentToFirebase(
-            {
-              id: allDocs[i].id,
-              fileName: allDocs[i].fileName,
-              fileSize: allDocs[i].fileSize,
-              fileType: allDocs[i].file.type || "image/jpeg",
-              documentType: selectedType,
-              jsonSchema: slm.jsonOutput,
-              fields: slm.fields,
-              confidenceScores: slm.confidenceScores,
-              overallConfidence: slm.overallConfidence,
-              performance: slm.performance ?? null,
-              reviewItems: slm.reviewItems,
-              ocrText: allDocs[i].ocrText,
-              spatialText: allDocs[i].spatialText,
-              userEmail: userSession?.email || "guest@logiai.local",
-              userName: userSession?.name || "Guest User",
-            },
-            allDocs[i].file
-          );
-          allDocs[i].cloudSyncStatus = "synced";
-          allDocs[i].cloudRecordId = fbRecord.id;
-          allDocs[i].storageUrl = fbRecord.storageUrl;
+          const ocr = await runPaddleOcr(allDocs[i].file, ocrLanguage);
+          const text = ocr.text || "PaddleOCR ไม่พบข้อความในไฟล์นี้";
+          allDocs[i] = {
+            ...allDocs[i],
+            ocrText: text,
+            spatialText: ocr.spatial_text,
+            ocrLines: ocr.lines,
+            status: "ocr_completed",
+            statusLabel: `OCR สำเร็จ (${i + 1}/${allDocs.length})`,
+          };
           setBatchDocuments([...allDocs]);
-        } catch (cloudErr) {
-          console.warn("Firebase Cloud Sync warning:", cloudErr);
-          allDocs[i].cloudSyncStatus = "local_only";
+          setJobs((current) =>
+            current.map((job) =>
+              job.id === allDocs[i].id ? { ...job, statusLabel: "OCR สำเร็จ (รอคิว SLM)", result: "OCR Done" } : job,
+            ),
+          );
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : "OCR Error";
+          allDocs[i] = {
+            ...allDocs[i],
+            status: "error",
+            statusLabel: "OCR ล้มเหลว",
+            error: msg,
+          };
           setBatchDocuments([...allDocs]);
         }
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : "SLM Error";
+      }
+
+      // ==========================================
+      // PHASE 2: SLM EXTRACTION SEQUENTIALLY (ทีละรูป)
+      // ==========================================
+      setBatchPhase("slm");
+      setSteps(nextStepState(initialSteps, 4));
+
+      for (let i = 0; i < allDocs.length; i++) {
+        if (allDocs[i].status === "completed" || allDocs[i].status === "error") continue;
+
         allDocs[i] = {
           ...allDocs[i],
-          status: "error",
-          statusLabel: "SLM ล้มเหลว",
-          error: msg,
+          status: "slm_processing",
+          statusLabel: `กำลังวิเคราะห์ SLM รูปที่ ${i + 1}/${allDocs.length} (GPU)...`,
         };
         setBatchDocuments([...allDocs]);
-      }
-    }
+        setJobs((current) =>
+          current.map((job) =>
+            job.id === allDocs[i].id ? { ...job, statusLabel: "กำลังวิเคราะห์ Qwen SLM" } : job,
+          ),
+        );
 
-    setBatchPhase("completed");
-    setIsBatchProcessing(false);
-    setSteps(nextStepState(initialSteps, 6));
-    showToast(`🎉 ประมวลผลแบทช์เสร็จสมบูรณ์ทั้งหมด ${allDocs.length} เอกสารแล้ว!`);
+        try {
+          const slm = await runSlmExtraction({
+            documentTypeHint: selectedType,
+            sourceFile: allDocs[i].fileName,
+            ocrText: allDocs[i].ocrText,
+            ocrLines: allDocs[i].ocrLines,
+          });
+
+          allDocs[i] = {
+            ...allDocs[i],
+            jsonOutput: slm.jsonOutput,
+            fields: slm.fields,
+            confidenceScores: slm.confidenceScores,
+            overallConfidence: slm.overallConfidence,
+            performance: slm.performance ?? null,
+            reviewItems: slm.reviewItems,
+            status: "completed",
+            statusLabel: `เสร็จสมบูรณ์ (${slm.performance?.accuracy_pct ?? slm.overallConfidence}%)`,
+          };
+          setBatchDocuments([...allDocs]);
+          setJobs((current) =>
+            current.map((job) =>
+              job.id === allDocs[i].id
+                ? {
+                    ...job,
+                    status: "success",
+                    statusLabel: "SLM เสร็จสมบูรณ์",
+                    result: `${slm.performance?.accuracy_pct ?? slm.overallConfidence}%`,
+                  }
+                : job,
+            ),
+          );
+
+          // Auto-save image file and JSON schema to Google Cloud Firebase
+          try {
+            const fbRecord = await saveDocumentToFirebase(
+              {
+                id: allDocs[i].id,
+                fileName: allDocs[i].fileName,
+                fileSize: allDocs[i].fileSize,
+                fileType: allDocs[i].file.type || "image/jpeg",
+                documentType: selectedType,
+                jsonSchema: slm.jsonOutput,
+                fields: slm.fields,
+                confidenceScores: slm.confidenceScores,
+                overallConfidence: slm.overallConfidence,
+                performance: slm.performance ?? null,
+                reviewItems: slm.reviewItems,
+                ocrText: allDocs[i].ocrText,
+                spatialText: allDocs[i].spatialText,
+                userEmail: userSession?.email || "guest@logiai.local",
+                userName: userSession?.name || "Guest User",
+              },
+              allDocs[i].file
+            );
+            allDocs[i].cloudSyncStatus = "synced";
+            allDocs[i].cloudRecordId = fbRecord.id;
+            allDocs[i].storageUrl = fbRecord.storageUrl;
+            setBatchDocuments([...allDocs]);
+          } catch (cloudErr) {
+            console.warn("Firebase Cloud Sync warning:", cloudErr);
+            allDocs[i].cloudSyncStatus = "local_only";
+            setBatchDocuments([...allDocs]);
+          }
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : "SLM Error";
+          allDocs[i] = {
+            ...allDocs[i],
+            status: "error",
+            statusLabel: "SLM ล้มเหลว",
+            error: msg,
+          };
+          setBatchDocuments([...allDocs]);
+        }
+      }
+
+      setBatchPhase("completed");
+      setSteps(nextStepState(initialSteps, 6));
+      showToast(`🎉 ประมวลผลแบทช์เสร็จสมบูรณ์ทั้งหมด ${allDocs.length} เอกสารแล้ว!`);
+    } catch (batchErr) {
+      console.error("Batch processing error:", batchErr);
+      showToast("เกิดข้อผิดพลาดในการประมวลผลแบทช์");
+    } finally {
+      setIsBatchProcessing(false);
+    }
   }
 
   function handleSelectDocIndex(index: number) {
@@ -786,7 +792,7 @@ export function App() {
                     <input
                       type="file"
                       multiple
-                      accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff"
+                      accept="image/*,.pdf,.jpg,.jpeg,.png,.tif,.tiff"
                       className="sr-only"
                       onChange={(event) => {
                         const files = Array.from(event.target.files ?? []);
