@@ -342,6 +342,73 @@ def parse_robust_quantity(text: str) -> int:
     return 1
 
 
+def parse_robust_other_details(text: str) -> dict[str, Any]:
+    """Dynamically analyze and extract extra logistics metadata for the other dictionary."""
+    details: dict[str, Any] = {}
+
+    # 1. PO Number / Purchase Order
+    po_m = re.search(r'(?:po\s*#|purchase\s*order|ใบสั่งซื้อ|your\s*order\s*no|p\.o\.\s*no|order\s*no)\s*[:\.\s#]*([A-Za-z0-9\-\/]{3,25})', text, re.IGNORECASE)
+    if po_m:
+        val = po_m.group(1).strip(" .:#-_")
+        if len(val) >= 2 and not val.lower().startswith(("date", "invoice", "the")):
+            details["po_number"] = val
+
+    # 2. Tax ID / VAT Registration
+    tax_m = re.search(r'(?:tax\s*id|vat\s*id|tax\s*no|เลขประจำตัวผู้เสียภาษี|เลขผู้เสียภาษี|tin|taxpayer\s*id)\s*[:\.\s#]*([0-9\-\s]{8,18})', text, re.IGNORECASE)
+    if tax_m:
+        details["tax_id"] = tax_m.group(1).strip()
+
+    # 3. Phone / Telephone Number
+    tel_m = re.search(r'(?:tel|telephone|phone|เบอร์โทร|โทร|mobile)\s*[:\.\s#]*([+0-9\s\-()]{8,22})', text, re.IGNORECASE)
+    if tel_m:
+        val = tel_m.group(1).strip(" .:#-_")
+        if sum(c.isdigit() for c in val) >= 7:
+            details["phone_number"] = val
+
+    # 4. Email Address
+    email_m = re.search(r'\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,})\b', text)
+    if email_m:
+        details["email"] = email_m.group(1).strip()
+
+    # 5. Currency
+    if re.search(r'\b(USD|\$)\b', text):
+        details["currency"] = "USD"
+    elif re.search(r'\b(THB|บาท|฿)\b', text):
+        details["currency"] = "THB"
+    elif re.search(r'\b(EUR|€)\b', text):
+        details["currency"] = "EUR"
+    elif re.search(r'\b(JPY|¥)\b', text):
+        details["currency"] = "JPY"
+
+    # 6. Payment Terms / Credit Terms / Due Date
+    terms_m = re.search(r'(?:terms|payment\s*terms|เงื่อนไขการชำระเงิน|credit\s*terms)\s*[:\.\s#]*([^\n\r]{3,40})', text, re.IGNORECASE)
+    if terms_m:
+        t_val = terms_m.group(1).strip(" .:#")
+        if len(t_val) >= 3 and not t_val.lower().startswith(("total", "invoice")):
+            details["payment_terms"] = t_val
+
+    due_m = re.search(r'(?:due\s*date|payment\s*due|กำหนดชำระ)\s*[:\.\s#]*([^\n\r]{6,30})', text, re.IGNORECASE)
+    if due_m:
+        d_parsed = parse_robust_date(due_m.group(1))
+        if d_parsed:
+            details["due_date"] = d_parsed
+
+    # 7. Discount
+    disc_m = re.search(r'(?:discount|ส่วนลด)\s*[:\.\s$#]*([0-9,]+\.[0-9]{2})', text, re.IGNORECASE)
+    if disc_m:
+        try:
+            details["discount_amount"] = float(disc_m.group(1).replace(",", ""))
+        except ValueError:
+            pass
+
+    # 8. Shipping / Tracking / Carrier / Vessel
+    track_m = re.search(r'(?:tracking\s*(?:no|#)|awb\s*(?:no|#)|b\/l\s*(?:no|#)|เลขพัสดุ)\s*[:\.\s#]*([A-Za-z0-9\-]{4,30})', text, re.IGNORECASE)
+    if track_m:
+        details["tracking_no"] = track_m.group(1).strip()
+
+    return details
+
+
 # ==============================================================================
 def compute_slm_performance_metrics(
     schema: dict[str, Any],
@@ -547,7 +614,7 @@ def slm_extract(payload: SlmExtractRequest) -> dict[str, Any]:
         with torch.inference_mode():
             generated_ids = model.generate(
                 **inputs,
-                max_new_tokens=400,
+                max_new_tokens=450,
                 do_sample=False,
                 temperature=0.1,
                 repetition_penalty=1.05,
@@ -557,7 +624,7 @@ def slm_extract(payload: SlmExtractRequest) -> dict[str, Any]:
         tokens_count = len(output_ids)
         response_text = tokenizer.decode(output_ids, skip_special_tokens=True)
         data = parse_json_object(response_text)
-        normalized = normalize_slm_output(data, payload.source_file, h_party, h_sender, h_receiver, h_doc_no, h_date, h_total, h_subtotal, h_vat, h_qty)
+        normalized = normalize_slm_output(data, payload.source_file, payload.ocr_text, h_party, h_sender, h_receiver, h_doc_no, h_date, h_total, h_subtotal, h_vat, h_qty)
         
         elapsed_sec = time.perf_counter() - start_time
         perf = compute_slm_performance_metrics(normalized["json_schema"], elapsed_sec, tokens_count, is_fallback=False)
@@ -594,12 +661,6 @@ def rule_based_extraction(
     elif "purchase order" in text.lower() or "po" in text.lower() or "ใบสั่งซื้อ" in text:
         doc_type = "purchase_order"
 
-    tax_match = re.search(r'(?:tax id|vat id|tax no|เลขประจำตัวผู้เสียภาษี|เลขผู้เสียภาษี)\s*[:\.\s#]*([0-9\-\s]{8,18})', text, re.IGNORECASE)
-    tax_id = tax_match.group(1).strip() if tax_match else ""
-
-    po_match = re.search(r'(?:po\s*#|purchase order|ใบสั่งซื้อ|your order no)\s*[:\.\s#]*([A-Za-z0-9\-\/]{3,20})', text, re.IGNORECASE)
-    po_number = po_match.group(1).strip() if po_match else ""
-
     fields = [
         {"sourceText": doc_type, "field": "document_type", "value": doc_type, "confidence": 98, "status": "success"},
         {"sourceText": document_no or "-", "field": "document_no", "value": document_no, "confidence": 95 if document_no else 40, "status": "success" if document_no else "review"},
@@ -611,24 +672,22 @@ def rule_based_extraction(
     ]
 
     other_fields: dict[str, Any] = {}
+    h_other = parse_robust_other_details(text)
+    for k, v in h_other.items():
+        if v:
+            other_fields[k] = v
+
     if sender_name:
         other_fields["sender_name"] = sender_name
-        fields.append({"sourceText": sender_name, "field": "sender_name", "value": sender_name, "confidence": 90, "status": "success", "isOther": True})
     if receiver_name:
         other_fields["receiver_name"] = receiver_name
-        fields.append({"sourceText": receiver_name, "field": "receiver_name", "value": receiver_name, "confidence": 90, "status": "success", "isOther": True})
-    if po_number:
-        other_fields["po_number"] = po_number
-        fields.append({"sourceText": po_number, "field": "po_number", "value": po_number, "confidence": 92, "status": "success", "isOther": True})
-    if tax_id:
-        other_fields["tax_id"] = tax_id
-        fields.append({"sourceText": tax_id, "field": "tax_id", "value": tax_id, "confidence": 92, "status": "success", "isOther": True})
     if subtotal_amount:
         other_fields["subtotal_amount"] = subtotal_amount
-        fields.append({"sourceText": str(subtotal_amount), "field": "subtotal_amount", "value": str(subtotal_amount), "confidence": 95, "status": "success", "isOther": True})
     if vat_amount:
         other_fields["vat_amount"] = vat_amount
-        fields.append({"sourceText": str(vat_amount), "field": "vat_amount", "value": str(vat_amount), "confidence": 95, "status": "success", "isOther": True})
+
+    for k, v in other_fields.items():
+        fields.append({"sourceText": str(v), "field": str(k), "value": str(v), "confidence": 90, "status": "success", "isOther": True})
 
     review_items = []
     if not document_no:
@@ -759,7 +818,10 @@ def build_slm_prompt(
         f"5. source_file: '{payload.source_file}'.\n"
         f"6. quantity: integer or decimal total items (e.g. {h_qty}).\n"
         f"7. total_amount: numeric gross/net total (e.g. {h_total}).\n"
-        "8. other: dictionary for all extra details (sender_name, receiver_name, po_number, tax_id, subtotal_amount, vat_amount, etc.).\n\n"
+        "8. other: DYNAMIC JSON OBJECT for ALL other information found in the document. "
+        "You have full freedom to extract and separate any additional details using any appropriate descriptive snake_case keys "
+        "(e.g. sender_name, receiver_name, sender_address, receiver_address, po_number, tax_id, subtotal_amount, vat_amount, discount_amount, currency, payment_terms, due_date, phone_number, email, item_description, carrier_name, tracking_no, bank_info, container_no, vessel_name, salesperson, branch, etc.). "
+        "Dynamically extract all useful context and metadata into 'other'!\n\n"
         "Return ONLY the valid JSON object:"
     )
 
@@ -783,6 +845,7 @@ def parse_json_object(text: str) -> dict[str, Any]:
 def normalize_slm_output(
     data: dict[str, Any],
     default_source_file: str = "document",
+    ocr_text: str = "",
     h_party: str = "",
     h_sender: str = "",
     h_receiver: str = "",
@@ -827,12 +890,19 @@ def normalize_slm_output(
     if total_amount <= 0.0 and h_total > 0.0:
         total_amount = h_total
 
-    # Other dictionary collection
+    # Other dictionary collection (fully dynamic - preserve all keys extracted by SLM)
     other_dict = raw_schema.get("other") if isinstance(raw_schema.get("other"), dict) else {}
     reserved_keys = {"document_type", "document_no", "document_date", "party_name", "source_file", "quantity", "total_amount", "other"}
     for k, v in raw_schema.items():
         if k not in reserved_keys and k not in other_dict:
             other_dict[k] = v
+
+    # Merge heuristic extractions if not already present
+    if ocr_text:
+        h_other = parse_robust_other_details(ocr_text)
+        for k, v in h_other.items():
+            if k not in other_dict and v:
+                other_dict[k] = v
 
     if h_sender and "sender_name" not in other_dict:
         other_dict["sender_name"] = h_sender
