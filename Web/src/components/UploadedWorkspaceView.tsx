@@ -70,7 +70,7 @@ export function UploadedWorkspaceView({
   onShowToast,
   isProcessing = false,
 }: UploadedWorkspaceViewProps) {
-  const [ocrSubView, setOcrSubView] = useState<"cards" | "table" | "raw" | "json">("cards");
+  const [ocrSubView, setOcrSubView] = useState<"table" | "raw" | "json">("table");
   const [isEditorExpanded, setIsEditorExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [confidenceFilter, setConfidenceFilter] = useState<"all" | "high" | "review">("all");
@@ -343,15 +343,7 @@ export function UploadedWorkspaceView({
 
             {/* OCR Sub-view Switcher Tabs */}
             <div className="flex items-center rounded-xl bg-slate-100 p-1 text-xs font-bold">
-              <button
-                type="button"
-                onClick={() => setOcrSubView("cards")}
-                className={`rounded-lg px-2.5 py-1 transition ${
-                  ocrSubView === "cards" ? "bg-white text-slate-900 shadow-xs" : "text-slate-500 hover:text-slate-900"
-                }`}
-              >
-                Human Cards
-              </button>
+
               <button
                 type="button"
                 onClick={() => setOcrSubView("table")}
@@ -383,7 +375,7 @@ export function UploadedWorkspaceView({
           </div>
 
           {/* Quick Search & Filter in Cards/Table Mode */}
-          {(ocrSubView === "cards" || ocrSubView === "table") && ocrLines.length > 0 && (
+          {ocrSubView === "table" && ocrLines.length > 0 && (
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 p-2 border border-slate-100 text-xs">
               <div className="relative flex-1 min-w-[140px]">
                 <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
@@ -426,80 +418,6 @@ export function UploadedWorkspaceView({
                 <OcrProcessingAnimation fileName={fileName} isProcessing={true} />
               ) : (
                 <>
-              {/* Mode 1: Human Cards */}
-              {ocrSubView === "cards" && (
-                <div className="flex-1 min-h-[440px] max-h-[600px] overflow-y-auto space-y-2 pr-1">
-                  {filteredOcrLines.length > 0 ? (
-                    filteredOcrLines.map((line, idx) => {
-                      const conf = line.confidence ?? 0.95;
-                      const confPct = Math.round(conf * 100);
-                      const region = getHumanRegion(line.position?.region);
-                      const boxSummary = getHumanBoxSummary(line.bounding_box || line.box);
-                      const isExpanded = expandedOcrRow === idx;
-
-                      return (
-                        <div
-                          key={idx}
-                          className="rounded-xl border border-slate-200 bg-slate-50/50 p-3 shadow-xs transition hover:bg-white hover:border-blue-300"
-                        >
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="min-w-0 flex-1 space-y-1">
-                              <div className="flex items-center gap-1.5">
-                                <span className="font-mono text-[10px] font-black text-slate-500">
-                                  #{idx + 1}
-                                </span>
-                                <span className={`rounded px-1.5 py-0.2 text-[10px] font-extrabold ${region.color}`}>
-                                  {region.label}
-                                </span>
-                                <span className="text-[10px] font-mono text-slate-400">
-                                  {boxSummary}
-                                </span>
-                              </div>
-                              <p className="font-sans text-xs font-black text-slate-900 leading-snug break-words">
-                                {line.text}
-                              </p>
-                            </div>
-
-                            <span
-                              className={`shrink-0 rounded-lg px-2 py-0.5 text-[11px] font-mono font-black border ${
-                                conf >= 0.9
-                                  ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                  : conf >= 0.75
-                                  ? "bg-amber-50 text-amber-700 border-amber-200"
-                                  : "bg-rose-50 text-rose-700 border-rose-200"
-                              }`}
-                            >
-                              {confPct}% ({conf.toFixed(2)})
-                            </span>
-                          </div>
-
-                          <div className="mt-1.5 pt-1 border-t border-slate-100 flex items-center justify-between">
-                            <button
-                              type="button"
-                              onClick={() => setExpandedOcrRow(isExpanded ? null : idx)}
-                              className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-500 hover:text-blue-600"
-                            >
-                              {isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-                              <span>{isExpanded ? "ซ่อน Bounding Box" : "ดูพิกัด 4 จุด"}</span>
-                            </button>
-                          </div>
-
-                          {isExpanded && (
-                            <pre className="mt-1 rounded bg-slate-900 p-1.5 font-mono text-[10px] text-emerald-400 overflow-x-auto">
-                              {JSON.stringify(line.bounding_box || line.box || [])}
-                            </pre>
-                          )}
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <div className="flex h-full flex-col items-center justify-center text-center p-6 text-slate-400">
-                      <p className="text-xs font-bold">ไม่พบข้อความที่ตรงกับการค้นหา</p>
-                    </div>
-                  )}
-                </div>
-              )}
-
               {/* Mode 2: Table */}
               {ocrSubView === "table" && (
                 <div className="flex-1 min-h-[440px] max-h-[600px] overflow-y-auto rounded-xl border border-slate-200 bg-white">

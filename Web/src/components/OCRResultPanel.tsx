@@ -29,7 +29,7 @@ interface OCRResultPanelProps {
 }
 
 export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRResultPanelProps) {
-  const [viewMode, setViewMode] = useState<"cards" | "table" | "json" | "raw">("cards");
+  const [viewMode, setViewMode] = useState<"table" | "json" | "raw">("table");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterConfidence, setFilterConfidence] = useState<"all" | "high" | "review">("all");
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
@@ -178,19 +178,7 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
         <div className="flex flex-wrap items-center gap-2">
           {!isLoading && lines.length > 0 ? (
             <div className="flex items-center rounded-xl border border-slate-200 bg-slate-100 p-0.5 dark:border-slate-700 dark:bg-slate-800">
-              <button
-                type="button"
-                onClick={() => setViewMode("cards")}
-                className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold transition ${
-                  viewMode === "cards"
-                    ? "bg-white text-primary shadow-sm dark:bg-slate-700 dark:text-white"
-                    : "text-slate-600 hover:text-navy dark:text-slate-400"
-                }`}
-                title="โหมดการ์ดอ่านง่ายสำหรับมนุษย์ (Human-Friendly Cards)"
-              >
-                <LayoutGrid className="h-3.5 w-3.5" />
-                <span>การ์ดอ่านง่าย</span>
-              </button>
+
 
               <button
                 type="button"
@@ -293,102 +281,6 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
               </select>
             </div>
           </div>
-
-          {/* ========================================================= */}
-          {/* VIEW MODE 1: HUMAN-FRIENDLY CARDS (โหมดการ์ดอ่านง่าย) */}
-          {/* ========================================================= */}
-          {viewMode === "cards" ? (
-            <div className="h-[385px] min-h-[385px] space-y-2.5 overflow-auto pr-1">
-              {filteredLines.map((line, idx) => {
-                const conf = line.confidence ?? 0.95;
-                const confBadge = getConfidenceBadge(conf);
-                const regionInfo = getHumanRegion(line.position?.region);
-                const boxInfo = getHumanBoxInfo(line.bounding_box || line.box);
-                const isExpanded = expandedRow === idx;
-
-                return (
-                  <div
-                    key={idx}
-                    className="group rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition hover:border-blue-400 hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
-                  >
-                    <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between">
-                      {/* Left: Text Content & Index */}
-                      <div className="flex-1 space-y-1.5">
-                        <div className="flex items-center gap-2">
-                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 font-mono text-[10px] font-black text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                            #{idx + 1}
-                          </span>
-                          <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-bold ${regionInfo.color}`}>
-                            <MapPin className="h-3 w-3" />
-                            <span>{regionInfo.label}</span>
-                          </span>
-                          <span className="text-[11px] font-mono text-slate-500">
-                            {boxInfo.summary}
-                          </span>
-                        </div>
-
-                        {/* Highlighted OCR text line */}
-                        <p className="font-sans text-sm font-extrabold leading-relaxed text-navy dark:text-white">
-                          {line.text}
-                        </p>
-                      </div>
-
-                      {/* Right: Human Confidence Gauge */}
-                      <div className="flex shrink-0 flex-col items-end gap-1">
-                        <div className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-black shadow-xs ${confBadge.badge}`}>
-                          <span className={`h-2 w-2 rounded-full ${confBadge.dot}`} />
-                          <span>{confBadge.pct} ({confBadge.score})</span>
-                          <span className="font-semibold text-[10px]">· {confBadge.label}</span>
-                        </div>
-
-                        {/* Mini confidence visual meter bar */}
-                        <div className="h-1.5 w-28 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
-                          <div
-                            className={`h-full rounded-full ${confBadge.bar}`}
-                            style={{ width: `${Math.round(conf * 100)}%` }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Expandable Technical Bounding Box Coordinates */}
-                    <div className="mt-2.5 border-t border-slate-100 pt-2 dark:border-slate-800">
-                      <button
-                        type="button"
-                        onClick={() => setExpandedRow(isExpanded ? null : idx)}
-                        className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 transition hover:text-primary"
-                      >
-                        {isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-                        <span>{isExpanded ? "ซ่อนพิกัดดิบ (Raw Bounding Box)" : "ดูพิกัดดิบ Bounding Box 4 จุด"}</span>
-                      </button>
-
-                      {isExpanded ? (
-                        <div className="mt-1.5 rounded-lg bg-slate-900 p-2 font-mono text-[11px] text-emerald-400 shadow-inner">
-                          <code>{JSON.stringify(line.bounding_box || line.box || [])}</code>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                );
-              })}
-
-              {filteredLines.length === 0 ? (
-                <div className="flex h-48 flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 p-6 text-center text-slate-500">
-                  <p className="font-bold">ไม่พบข้อความ OCR ที่ตรงกับเงื่อนไขการค้นหา</p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery("");
-                      setFilterConfidence("all");
-                    }}
-                    className="mt-2 text-xs font-extrabold text-primary underline"
-                  >
-                    ล้างตัวกรอง
-                  </button>
-                </div>
-              ) : null}
-            </div>
-          ) : null}
 
           {/* ========================================================= */}
           {/* VIEW MODE 2: STRUCTURED TABLE VIEW (โหมดตารางแจกแจง) */}
