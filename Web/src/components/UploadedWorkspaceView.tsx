@@ -35,6 +35,7 @@ import { useMemo, useState } from "react";
 import { initialJson } from "../data/mockData";
 import type { BatchDocumentItem, JsonSchemaOutput } from "../types";
 import { DocumentPreview } from "./DocumentPreview";
+import { DynamicStepTracker } from "./DynamicStepTracker";
 import { OcrProcessingAnimation } from "./OcrProcessingAnimation";
 import { SlmReasoningAnimation } from "./SlmReasoningAnimation";
 import { JSONOutputPanel } from "./JSONOutputPanel";
@@ -324,7 +325,12 @@ export function UploadedWorkspaceView({
       )}
 
       {/* ========================================================================= */}
-      {/* 3. MAIN 2-COLUMN STUDIO WORKBENCH GRID (Spacious & Clean)                 */}
+      {/* 3. WORKFLOW STEP TRACKER (แสดงขั้นตอนปัจจุบันแบบ Real-Time)               */}
+      {/* ========================================================================= */}
+      <DynamicStepTracker activeDoc={activeDoc} isProcessing={isProcessing} />
+
+      {/* ========================================================================= */}
+      {/* 4. MAIN 2-COLUMN STUDIO WORKBENCH GRID (Spacious & Clean)                 */}
       {/* ========================================================================= */}
       <section className="grid min-w-0 gap-6 lg:grid-cols-[1.15fr_1fr]">
         {/* ===================================================================== */}
@@ -630,66 +636,7 @@ export function UploadedWorkspaceView({
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 5. BOTTOM 4-STEP PIPELINE STEPPER                                         */}
-      {/* ========================================================================= */}
-      <section className="grid grid-cols-2 gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-panel sm:grid-cols-4 sm:gap-6">
-        {/* Step 1: Upload */}
-        <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-700">
-            <Check className="h-4 w-4 stroke-[3]" />
-          </div>
-          <div>
-            <p className="text-xs font-black text-slate-900">1. Upload</p>
-            <p className="text-[11px] text-slate-500">อัปโหลดเอกสาร</p>
-            <span className="mt-1 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-black text-emerald-700 border border-emerald-200">
-              Completed
-            </span>
-          </div>
-        </div>
-
-        {/* Step 2: OCR */}
-        <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-700">
-            <Check className="h-4 w-4 stroke-[3]" />
-          </div>
-          <div>
-            <p className="text-xs font-black text-slate-900">2. OCR</p>
-            <p className="text-[11px] text-slate-500">ดึงข้อความจากเอกสาร</p>
-            <span className="mt-1 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-black text-emerald-700 border border-emerald-200">
-              Completed
-            </span>
-          </div>
-        </div>
-
-        {/* Step 3: AI Reasoning */}
-        <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-purple-100 text-purple-700">
-            <BrainCircuit className="h-4 w-4" />
-          </div>
-          <div>
-            <p className="text-xs font-black text-slate-900">3. AI Reasoning</p>
-            <p className="text-[11px] text-slate-500">วิเคราะห์และจัดโครงสร้างข้อมูล</p>
-            <span className="mt-1 inline-block rounded-full bg-purple-50 px-2 py-0.5 text-[9px] font-black text-purple-700 border border-purple-200">
-              Completed
-            </span>
-          </div>
-        </div>
-
-        {/* Step 4: JSON Output */}
-        <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-rose-100 text-rose-700">
-            <Code2 className="h-4 w-4" />
-          </div>
-          <div>
-            <p className="text-xs font-black text-slate-900">4. JSON Output</p>
-            <p className="text-[11px] text-slate-500">ส่งออกเป็น JSON Schema</p>
-            <span className="mt-1 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-black text-emerald-700 border border-emerald-200">
-              Ready
-            </span>
-          </div>
-        </div>
-      </section>
+      
     </div>
   );
 }
