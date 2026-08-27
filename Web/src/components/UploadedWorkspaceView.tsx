@@ -409,7 +409,7 @@ export function UploadedWorkspaceView({
           )}
 
           {/* Dual Split inside OCR Result: Left Document Preview | Right Field Breakdown */}
-          <div className="grid min-w-0 gap-4 md:grid-cols-[200px_1fr] lg:grid-cols-[220px_1fr]">
+          <div className="grid min-w-0 gap-4 md:grid-cols-[220px_1fr] lg:grid-cols-[260px_1fr] flex-1">
             {/* Left: Document Image Viewer */}
             <div className="flex flex-col rounded-xl border border-slate-200 bg-slate-50 p-2 overflow-hidden">
               <DocumentPreview
@@ -428,7 +428,7 @@ export function UploadedWorkspaceView({
                 <>
               {/* Mode 1: Human Cards */}
               {ocrSubView === "cards" && (
-                <div className="h-[360px] min-h-[360px] overflow-y-auto space-y-2 pr-1">
+                <div className="flex-1 min-h-[440px] max-h-[600px] overflow-y-auto space-y-2 pr-1">
                   {filteredOcrLines.length > 0 ? (
                     filteredOcrLines.map((line, idx) => {
                       const conf = line.confidence ?? 0.95;
@@ -502,7 +502,7 @@ export function UploadedWorkspaceView({
 
               {/* Mode 2: Table */}
               {ocrSubView === "table" && (
-                <div className="h-[360px] min-h-[360px] overflow-y-auto rounded-xl border border-slate-200 bg-white">
+                <div className="flex-1 min-h-[440px] max-h-[600px] overflow-y-auto rounded-xl border border-slate-200 bg-white">
                   <table className="w-full text-left text-xs font-sans">
                     <thead className="sticky top-0 bg-slate-100 text-slate-600 font-extrabold border-b border-slate-200">
                       <tr>
@@ -538,14 +538,14 @@ export function UploadedWorkspaceView({
 
               {/* Mode 3: Raw Text */}
               {ocrSubView === "raw" && (
-                <div className="h-[360px] min-h-[360px] overflow-y-auto rounded-xl bg-slate-50 p-3 font-mono text-xs text-slate-800 whitespace-pre-wrap border border-slate-200 leading-relaxed">
+                <div className="flex-1 min-h-[440px] max-h-[600px] overflow-y-auto rounded-xl bg-slate-50 p-3 font-mono text-xs text-slate-800 whitespace-pre-wrap border border-slate-200 leading-relaxed">
                   {activeDoc.spatialText || activeDoc.ocrText || "กำลังประมวลผลข้อความ OCR..."}
                 </div>
               )}
 
               {/* Mode 4: JSON */}
               {ocrSubView === "json" && (
-                <div className="h-[360px] min-h-[360px] overflow-y-auto rounded-xl bg-[#0F172A] p-3 font-mono text-xs text-emerald-400 whitespace-pre border border-slate-800">
+                <div className="flex-1 min-h-[440px] max-h-[600px] overflow-y-auto rounded-xl bg-[#0F172A] p-3 font-mono text-xs text-emerald-400 whitespace-pre border border-slate-800">
                   {ocrJsonString}
                 </div>
               )}

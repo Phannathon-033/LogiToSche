@@ -688,7 +688,7 @@ export function JSONOutputPanel({
       ) : (
         /* NORMAL READ-ONLY VIEW */
         <>
-          <div className="min-h-[400px] h-[400px] min-w-0 overflow-auto rounded-xl bg-[#0F172A] p-4 font-mono text-xs leading-6 text-slate-100 shadow-inner">
+          <div className="flex-1 min-h-[440px] max-h-[600px] min-w-0 overflow-auto rounded-xl bg-[#0F172A] p-4 font-mono text-xs leading-6 text-slate-100 shadow-inner">
             {lines.map((line, index) => (
               <div key={`${line}-${index}`} className="grid grid-cols-[38px_1fr] gap-2">
                 <span className="select-none border-r border-slate-700/60 pr-2.5 text-right text-slate-500">
