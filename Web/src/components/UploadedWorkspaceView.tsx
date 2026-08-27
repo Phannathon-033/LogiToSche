@@ -509,15 +509,23 @@ export function UploadedWorkspaceView({
             </button>
           </div>
 
-          {/* JSON Output / Editor */}
-          <div className="flex-1 min-w-0">
-            <JSONOutputPanel
-              json={jsonOutput}
-              onCopy={onCopyJson}
-              onDownload={onDownloadJson}
-              onMoveOtherToCore={onMoveOtherToCore}
-              onSaveJson={onSaveToFirebase}
-            />
+          {/* JSON Output / Editor or Real-Time SLM Reasoning Animation */}
+          <div className="flex-1 min-w-0 flex flex-col">
+            {activeDoc.status === "slm_processing" || activeDoc.status === "ocr_processing" || !activeDoc.jsonOutput ? (
+              <SlmReasoningAnimation
+                title="กำลังวิเคราะห์และจัดโครงสร้าง JSON Schema ด้วย Qwen SLM (GPU)"
+                fileName={fileName}
+                isProcessing={true}
+              />
+            ) : (
+              <JSONOutputPanel
+                json={activeDoc.jsonOutput}
+                onCopy={onCopyJson}
+                onDownload={onDownloadJson}
+                onMoveOtherToCore={onMoveOtherToCore}
+                onSaveJson={onSaveToFirebase}
+              />
+            )}
           </div>
 
           {/* Card Bottom Actions */}
