@@ -633,6 +633,34 @@ def compute_slm_performance_metrics(
 # Model Invocation & Schema Formatting
 # ==============================================================================
 
+def get_slm():
+    global _slm_tokenizer, _slm_model
+    if _slm_tokenizer is not None and _slm_model is not None:
+        return _slm_tokenizer, _slm_model
+    if torch is None or AutoModelForCausalLM is None or AutoTokenizer is None:
+        raise RuntimeError(f"PyTorch / Transformers not available: {IMPORT_ERROR}")
+
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+
+    print(f"Loading SLM model {SLM_MODEL_ID} on {device} ({dtype})...")
+    tokenizer = AutoTokenizer.from_pretrained(SLM_MODEL_ID, trust_remote_code=True)
+    model = AutoModelForCausalLM.from_pretrained(
+        SLM_MODEL_ID,
+        torch_dtype=dtype,
+        device_map="auto" if torch.cuda.is_available() else None,
+        trust_remote_code=True,
+    )
+    if not torch.cuda.is_available():
+        model = model.to(device)
+    model.eval()
+
+    _slm_tokenizer = tokenizer
+    _slm_model = model
+    print(f"SLM model {SLM_MODEL_ID} loaded successfully on {device}!")
+    return _slm_tokenizer, _slm_model
+
+
 @app.post("/api/slm/extract")
 def slm_extract(payload: SlmExtractRequest) -> dict[str, Any]:
     # Extract robust baseline heuristic features first
