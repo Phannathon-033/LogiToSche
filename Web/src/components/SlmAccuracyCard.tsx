@@ -38,13 +38,17 @@ export function SlmAccuracyCard({
   const fieldAccs = performance?.field_accuracies || {};
 
   const coreFieldsList = [
-    { key: "document_type", label: "ประเภทเอกสาร (document_type)", value: jsonOutput.document_type || "-" },
-    { key: "document_no", label: "เลขที่เอกสาร (document_no)", value: jsonOutput.document_no || "-" },
-    { key: "document_date", label: "วันที่เอกสาร (document_date)", value: jsonOutput.document_date || "-" },
-    { key: "party_name", label: "ชื่อคู่ค้าหลัก (party_name)", value: jsonOutput.party_name || "-" },
-    { key: "source_file", label: "ไฟล์ต้นฉบับ (source_file)", value: jsonOutput.source_file || "-" },
-    { key: "quantity", label: "จำนวนรวม (quantity)", value: String(jsonOutput.quantity || "1") },
-    { key: "total_amount", label: "ยอดเงินรวมสุทธิ (total_amount)", value: jsonOutput.total_amount ? `${Number(jsonOutput.total_amount).toLocaleString("th-TH", { minimumFractionDigits: 2 })}` : "-" },
+    { key: "document_type", label: "1. ประเภทเอกสาร (document_type)", value: jsonOutput.document_type || "-" },
+    { key: "document_number", label: "2. เลขที่เอกสาร (document_number)", value: jsonOutput.document_number || (jsonOutput as any).document_no || "-" },
+    { key: "document_date", label: "3. วันที่เอกสาร (document_date)", value: jsonOutput.document_date || "-" },
+    { key: "sender", label: "4. ผู้ส่ง / ผู้ขาย (sender)", value: jsonOutput.sender || (jsonOutput as any).party_name || "-" },
+    { key: "receiver", label: "5. ผู้รับ / ผู้ซื้อ (receiver)", value: jsonOutput.receiver || "-" },
+    { key: "origin", label: "6. ต้นทาง (origin)", value: jsonOutput.origin || "-" },
+    { key: "destination", label: "7. ปลายทาง (destination)", value: jsonOutput.destination || "-" },
+    { key: "reference_number", label: "8. เลขที่อ้างอิง (reference_number)", value: jsonOutput.reference_number || "-" },
+    { key: "unit_price", label: "9. ราคาต่อหน่วย (unit_price)", value: jsonOutput.unit_price ? `${Number(jsonOutput.unit_price).toLocaleString("th-TH", { minimumFractionDigits: 2 })}` : "0.00" },
+    { key: "total_amount", label: "10. มูลค่ารวม (total_amount)", value: jsonOutput.total_amount ? `${Number(jsonOutput.total_amount).toLocaleString("th-TH", { minimumFractionDigits: 2 })}` : "0.00" },
+    { key: "currency", label: "11. สกุลเงิน (currency)", value: jsonOutput.currency || "THB" },
   ];
 
   function getAccuracyColor(pct: number) {
@@ -84,8 +88,8 @@ export function SlmAccuracyCard({
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-0.5 text-xs font-semibold text-rose-700 ring-1 ring-inset ring-rose-600/20 dark:bg-rose-950/50 dark:text-rose-300">
-        <HelpCircle className="h-3.5 w-3.5" /> รอตรวจสอบ ({pct.toFixed(1)}%)
+      <span className="inline-flex items-center gap-1 rounded-full bg-rose-100 border border-rose-300 px-2.5 py-0.5 text-xs font-extrabold text-rose-800 ring-1 ring-inset ring-rose-400/40 shadow-xs dark:bg-rose-950 dark:text-rose-200">
+        <HelpCircle className="h-3.5 w-3.5 text-rose-600" /> 🔴 ต่ำกว่าเกณฑ์ ({pct.toFixed(1)}%)
       </span>
     );
   }

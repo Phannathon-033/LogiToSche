@@ -140,7 +140,9 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
 
   function getConfidenceBadge(conf: number) {
     const pct = Math.round(conf * 100);
-    if (conf >= 0.9) {
+    const isBelowThreshold = conf < 0.85;
+
+    if (conf >= 0.90) {
       return {
         pct: `${pct}%`,
         score: conf.toFixed(2),
@@ -148,25 +150,29 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
         badge: "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800",
         bar: "bg-emerald-500",
         dot: "bg-emerald-500",
+        isLow: false,
       };
     }
-    if (conf >= 0.75) {
+    if (conf >= 0.85) {
       return {
         pct: `${pct}%`,
         score: conf.toFixed(2),
-        label: "มั่นใจปานกลาง",
-        badge: "bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800",
-        bar: "bg-amber-500",
-        dot: "bg-amber-500",
+        label: "ผ่านเกณฑ์ (ปกติ)",
+        badge: "bg-blue-50 text-blue-800 border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800",
+        bar: "bg-blue-500",
+        dot: "bg-blue-500",
+        isLow: false,
       };
     }
+    // Below 85% threshold -> High-contrast RED highlight
     return {
       pct: `${pct}%`,
       score: conf.toFixed(2),
-      label: "ควรตรวจสอบ",
-      badge: "bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800",
-      bar: "bg-rose-500",
-      dot: "bg-rose-500",
+      label: "ต่ำกว่าเกณฑ์ (รอตรวจ)",
+      badge: "bg-rose-100 text-rose-900 border-rose-400 font-extrabold ring-1 ring-rose-400/50 shadow-xs dark:bg-rose-950 dark:text-rose-200 dark:border-rose-700",
+      bar: "bg-rose-600",
+      dot: "bg-rose-600",
+      isLow: true,
     };
   }
 
@@ -305,12 +311,24 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
                     const boxInfo = getHumanBoxInfo(line.bounding_box || line.box);
 
                     return (
-                      <tr key={idx} className="hover:bg-blue-50/40 dark:hover:bg-slate-800/60">
+                      <tr
+                        key={idx}
+                        className={`transition-colors ${
+                          confBadge.isLow
+                            ? "bg-rose-50/85 hover:bg-rose-100/80 border-l-4 border-l-rose-500 dark:bg-rose-950/50 dark:border-l-rose-500"
+                            : "hover:bg-blue-50/40 dark:hover:bg-slate-800/60"
+                        }`}
+                      >
                         <td className="px-3 py-2.5 font-mono text-[11px] font-bold text-slate-500">#{idx + 1}</td>
-                        <td className="px-3 py-2.5 font-bold text-navy dark:text-white">{line.text}</td>
+                        <td className={`px-3 py-2.5 font-bold ${confBadge.isLow ? "text-rose-900 dark:text-rose-200" : "text-navy dark:text-white"}`}>
+                          <div className="flex items-center gap-1.5">
+                            {confBadge.isLow && <span className="inline-block h-2 w-2 rounded-full bg-rose-500 animate-pulse" title="ต่ำกว่าเกณฑ์" />}
+                            <span>{line.text}</span>
+                          </div>
+                        </td>
                         <td className="px-3 py-2.5 text-center">
                           <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-black ${confBadge.badge}`}>
-                            {confBadge.pct} ({confBadge.score})
+                            {confBadge.isLow ? "🔴 " : ""}{confBadge.pct} ({confBadge.score})
                           </span>
                         </td>
                         <td className="px-3 py-2.5">
