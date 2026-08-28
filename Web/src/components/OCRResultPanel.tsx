@@ -52,7 +52,8 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
   // Filtered lines according to search and confidence filter
   const filteredLines = useMemo(() => {
     return lines.filter((line) => {
-      const conf = line.confidence ?? 0.95;
+      const rawConf = line.confidence ?? 0.95;
+                    const conf = rawConf > 1.0 ? rawConf / 100.0 : rawConf;
       const matchesSearch = !searchQuery.trim() || line.text.toLowerCase().includes(searchQuery.toLowerCase());
       if (!matchesSearch) return false;
       if (filterConfidence === "high") return conf >= 0.9;
@@ -305,7 +306,8 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-medium dark:divide-slate-800">
                   {filteredLines.map((line, idx) => {
-                    const conf = line.confidence ?? 0.95;
+                    const rawConf = line.confidence ?? 0.95;
+                    const conf = rawConf > 1.0 ? rawConf / 100.0 : rawConf;
                     const confBadge = getConfidenceBadge(conf);
                     const regionInfo = getHumanRegion(line.position?.region);
                     const boxInfo = getHumanBoxInfo(line.bounding_box || line.box);

@@ -93,14 +93,15 @@ export function UploadedWorkspaceView({
   const completedDocs = batchDocuments.filter((d) => d.status === "completed").length;
   const progressPercent = totalDocs > 0 ? Math.round((completedDocs / totalDocs) * 100) : 100;
 
-  // Filtered live OCR lines from PaddleOCR GPU
+  // Filtered live OCR lines from PaddleOCR GPU with normalized confidence
   const filteredOcrLines = useMemo(() => {
     return ocrLines.filter((line) => {
-      const conf = line.confidence ?? 0.95;
+      const rawConf = line.confidence ?? 0.95;
+      const conf = rawConf > 1.0 ? rawConf / 100.0 : rawConf;
       const matchesSearch =
         !searchQuery.trim() || line.text.toLowerCase().includes(searchQuery.toLowerCase());
       if (!matchesSearch) return false;
-      if (confidenceFilter === "high") return conf >= 0.9;
+      if (confidenceFilter === "high") return conf >= 0.85;
       if (confidenceFilter === "review") return conf < 0.85;
       return true;
     });
@@ -438,14 +439,40 @@ export function UploadedWorkspaceView({
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                       {filteredOcrLines.map((line, idx) => {
-                        const conf = line.confidence ?? 0.95;
+                        const rawConf = line.confidence ?? 0.95;
+                        const conf = rawConf > 1.0 ? rawConf / 100.0 : rawConf;
+                        const pct = Math.round(conf * 100);
+                        const isLowConfidence = conf < 0.85;
                         const region = getHumanRegion(line.position?.region);
+
                         return (
-                          <tr key={idx} className="hover:bg-slate-50 transition">
+                          <tr
+                            key={idx}
+                            className={`transition-colors ${
+                              isLowConfidence
+                                ? "bg-rose-50/90 hover:bg-rose-100/90 border-l-4 border-l-rose-500"
+                                : "hover:bg-slate-50"
+                            }`}
+                          >
                             <td className="p-2 font-mono text-slate-400 text-[11px]">#{idx + 1}</td>
-                            <td className="p-2 font-bold text-slate-900 break-words">{line.text}</td>
-                            <td className="p-2 text-center font-mono font-bold text-emerald-600">
-                              {conf.toFixed(2)}
+                            <td className={`p-2 font-bold break-words ${isLowConfidence ? "text-rose-950 font-extrabold" : "text-slate-900"}`}>
+                              <div className="flex items-center gap-1.5">
+                                {isLowConfidence && (
+                                  <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-rose-500 animate-pulse" title="ความมั่นใจต่ำกว่าเกณฑ์" />
+                                )}
+                                <span>{line.text}</span>
+                              </div>
+                            </td>
+                            <td className="p-2 text-center">
+                              {isLowConfidence ? (
+                                <span className="inline-flex items-center gap-1 rounded-md bg-rose-100 border border-rose-300 px-2 py-0.5 font-mono text-xs font-black text-rose-800 ring-1 ring-rose-400/40 shadow-xs">
+                                  🔴 {conf.toFixed(2)} ({pct}%)
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 border border-emerald-200 px-2 py-0.5 font-mono text-xs font-bold text-emerald-700">
+                                  🟢 {conf.toFixed(2)} ({pct}%)
+                                </span>
+                              )}
                             </td>
                             <td className="p-2 text-right">
                               <span className={`rounded px-1.5 py-0.5 text-[10px] font-extrabold ${region.color}`}>
