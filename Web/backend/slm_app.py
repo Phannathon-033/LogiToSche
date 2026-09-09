@@ -1311,3 +1311,31 @@ def execute_rule_based_prompt(payload: SlmPromptRequest, exc: Exception) -> str:
         f"จากการวิเคราะห์ข้อมูลเอกสาร {doc_type} (เลขที่ {doc_no}) พบว่าข้อมูลคู่ค้าคือ '{party}' "
         f"ยอดรวมคือ {total:,.2f} บาท ข้อมูลทั้งหมดถูกจัดโครงสร้างใน 7 ฟิลด์หลักและ other อย่างสมบูรณ์"
     )
+
+# ==============================================================================
+# K-Fold Cross-Validation & Benchmark Endpoints (Thesis Methodology)
+# ==============================================================================
+
+@app.get("/api/benchmark/ground-truth")
+def get_benchmark_ground_truth():
+    """Retrieve the Ground Truth benchmark dataset for 11 core logistics fields."""
+    gt_path = BASE_DIR / "ground_truth_dataset.json"
+    if not gt_path.exists():
+        raise HTTPException(status_code=404, detail="Ground truth dataset not found")
+    return json.loads(gt_path.read_text(encoding="utf-8"))
+
+
+@app.get("/api/benchmark/kfold")
+def get_kfold_report(k: int = 5, rerun: bool = False):
+    """Run or retrieve K-Fold Cross-Validation evaluation report."""
+    report_path = BASE_DIR / "kfold_evaluation_report.json"
+    if rerun or not report_path.exists():
+        try:
+            from kfold_evaluator import run_kfold_evaluation
+            run_kfold_evaluation(k_splits=k)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"K-Fold evaluation failed: {exc}")
+    
+    if report_path.exists():
+        return json.loads(report_path.read_text(encoding="utf-8"))
+    raise HTTPException(status_code=500, detail="Report generation failed")

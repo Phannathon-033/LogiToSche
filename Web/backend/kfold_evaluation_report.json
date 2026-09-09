@@ -1,0 +1,288 @@
+{
+  "method": "5-Fold Cross-Validation",
+  "dataset": "LogiSchema Multi-format Logistics Document Benchmark Ground Truth Dataset (11 Core Fields)",
+  "total_documents": 15,
+  "k_splits": 5,
+  "metrics_summary": {
+    "mean_accuracy_pct": 100.0,
+    "accuracy_std_dev": 0.0,
+    "accuracy_display": "100.0% ± 0.0%",
+    "mean_f1_score_pct": 100.0,
+    "f1_std_dev": 0.0,
+    "f1_display": "100.0% ± 0.0%",
+    "mean_similarity_pct": 100.0,
+    "similarity_std_dev": 0.0,
+    "similarity_display": "100.0% ± 0.0%"
+  },
+  "field_performance": {
+    "document_type": {
+      "mean_accuracy_pct": 100.0,
+      "std_dev": 0.0,
+      "display": "100.0% ± 0.0%",
+      "scores_per_fold": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    "document_number": {
+      "mean_accuracy_pct": 100.0,
+      "std_dev": 0.0,
+      "display": "100.0% ± 0.0%",
+      "scores_per_fold": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    "document_date": {
+      "mean_accuracy_pct": 100.0,
+      "std_dev": 0.0,
+      "display": "100.0% ± 0.0%",
+      "scores_per_fold": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    "sender": {
+      "mean_accuracy_pct": 100.0,
+      "std_dev": 0.0,
+      "display": "100.0% ± 0.0%",
+      "scores_per_fold": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    "receiver": {
+      "mean_accuracy_pct": 100.0,
+      "std_dev": 0.0,
+      "display": "100.0% ± 0.0%",
+      "scores_per_fold": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    "origin": {
+      "mean_accuracy_pct": 100.0,
+      "std_dev": 0.0,
+      "display": "100.0% ± 0.0%",
+      "scores_per_fold": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    "destination": {
+      "mean_accuracy_pct": 100.0,
+      "std_dev": 0.0,
+      "display": "100.0% ± 0.0%",
+      "scores_per_fold": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    "reference_number": {
+      "mean_accuracy_pct": 100.0,
+      "std_dev": 0.0,
+      "display": "100.0% ± 0.0%",
+      "scores_per_fold": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    "unit_price": {
+      "mean_accuracy_pct": 100.0,
+      "std_dev": 0.0,
+      "display": "100.0% ± 0.0%",
+      "scores_per_fold": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    "total_amount": {
+      "mean_accuracy_pct": 100.0,
+      "std_dev": 0.0,
+      "display": "100.0% ± 0.0%",
+      "scores_per_fold": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    },
+    "currency": {
+      "mean_accuracy_pct": 100.0,
+      "std_dev": 0.0,
+      "display": "100.0% ± 0.0%",
+      "scores_per_fold": [
+        100.0,
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    }
+  },
+  "folds": [
+    {
+      "fold": 1,
+      "val_samples_count": 3,
+      "val_doc_ids": [
+        "DOC-001",
+        "DOC-010",
+        "DOC-012"
+      ],
+      "overall_accuracy_pct": 100.0,
+      "avg_similarity_pct": 100.0,
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score_pct": 100.0,
+      "field_accuracies": {
+        "document_type": 100.0,
+        "document_number": 100.0,
+        "document_date": 100.0,
+        "sender": 100.0,
+        "receiver": 100.0,
+        "origin": 100.0,
+        "destination": 100.0,
+        "reference_number": 100.0,
+        "unit_price": 100.0,
+        "total_amount": 100.0,
+        "currency": 100.0
+      }
+    },
+    {
+      "fold": 2,
+      "val_samples_count": 3,
+      "val_doc_ids": [
+        "DOC-006",
+        "DOC-009",
+        "DOC-014"
+      ],
+      "overall_accuracy_pct": 100.0,
+      "avg_similarity_pct": 100.0,
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score_pct": 100.0,
+      "field_accuracies": {
+        "document_type": 100.0,
+        "document_number": 100.0,
+        "document_date": 100.0,
+        "sender": 100.0,
+        "receiver": 100.0,
+        "origin": 100.0,
+        "destination": 100.0,
+        "reference_number": 100.0,
+        "unit_price": 100.0,
+        "total_amount": 100.0,
+        "currency": 100.0
+      }
+    },
+    {
+      "fold": 3,
+      "val_samples_count": 3,
+      "val_doc_ids": [
+        "DOC-002",
+        "DOC-003",
+        "DOC-015"
+      ],
+      "overall_accuracy_pct": 100.0,
+      "avg_similarity_pct": 100.0,
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score_pct": 100.0,
+      "field_accuracies": {
+        "document_type": 100.0,
+        "document_number": 100.0,
+        "document_date": 100.0,
+        "sender": 100.0,
+        "receiver": 100.0,
+        "origin": 100.0,
+        "destination": 100.0,
+        "reference_number": 100.0,
+        "unit_price": 100.0,
+        "total_amount": 100.0,
+        "currency": 100.0
+      }
+    },
+    {
+      "fold": 4,
+      "val_samples_count": 3,
+      "val_doc_ids": [
+        "DOC-005",
+        "DOC-008",
+        "DOC-011"
+      ],
+      "overall_accuracy_pct": 100.0,
+      "avg_similarity_pct": 100.0,
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score_pct": 100.0,
+      "field_accuracies": {
+        "document_type": 100.0,
+        "document_number": 100.0,
+        "document_date": 100.0,
+        "sender": 100.0,
+        "receiver": 100.0,
+        "origin": 100.0,
+        "destination": 100.0,
+        "reference_number": 100.0,
+        "unit_price": 100.0,
+        "total_amount": 100.0,
+        "currency": 100.0
+      }
+    },
+    {
+      "fold": 5,
+      "val_samples_count": 3,
+      "val_doc_ids": [
+        "DOC-004",
+        "DOC-007",
+        "DOC-013"
+      ],
+      "overall_accuracy_pct": 100.0,
+      "avg_similarity_pct": 100.0,
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score_pct": 100.0,
+      "field_accuracies": {
+        "document_type": 100.0,
+        "document_number": 100.0,
+        "document_date": 100.0,
+        "sender": 100.0,
+        "receiver": 100.0,
+        "origin": 100.0,
+        "destination": 100.0,
+        "reference_number": 100.0,
+        "unit_price": 100.0,
+        "total_amount": 100.0,
+        "currency": 100.0
+      }
+    }
+  ]
+}
