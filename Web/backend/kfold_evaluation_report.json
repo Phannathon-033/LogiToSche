@@ -1,7 +1,7 @@
 {
   "method": "5-Fold Cross-Validation",
   "dataset": "LogiSchema Multi-format Logistics Document Benchmark Ground Truth Dataset (11 Core Fields)",
-  "total_documents": 15,
+  "total_documents": 16,
   "k_splits": 5,
   "metrics_summary": {
     "mean_accuracy_pct": 100.0,
@@ -151,11 +151,12 @@
   "folds": [
     {
       "fold": 1,
-      "val_samples_count": 3,
+      "val_samples_count": 4,
       "val_doc_ids": [
         "DOC-001",
-        "DOC-010",
-        "DOC-012"
+        "DOC-002",
+        "DOC-006",
+        "DOC-015"
       ],
       "overall_accuracy_pct": 100.0,
       "avg_similarity_pct": 100.0,
@@ -180,8 +181,8 @@
       "fold": 2,
       "val_samples_count": 3,
       "val_doc_ids": [
-        "DOC-006",
         "DOC-009",
+        "DOC-012",
         "DOC-014"
       ],
       "overall_accuracy_pct": 100.0,
@@ -207,9 +208,9 @@
       "fold": 3,
       "val_samples_count": 3,
       "val_doc_ids": [
-        "DOC-002",
         "DOC-003",
-        "DOC-015"
+        "DOC-010",
+        "DOC-016"
       ],
       "overall_accuracy_pct": 100.0,
       "avg_similarity_pct": 100.0,

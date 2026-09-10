@@ -1,7 +1,7 @@
 {
   "description": "LogiSchema Multi-format Logistics Document Benchmark Ground Truth Dataset (11 Core Fields)",
   "version": "1.0",
-  "total_documents": 15,
+  "total_documents": 16,
   "core_fields": [
     "document_type",
     "document_number",
@@ -285,6 +285,26 @@
         "total_amount": 2800.0,
         "currency": "THB"
       }
+    },
+    {
+      "id": "DOC-016",
+      "file_name": "test_verification_doc.png",
+      "category": "invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "INV-TEST-2024",
+        "document_date": "2024-09-10",
+        "sender": "Global Logistics Hub Co.",
+        "receiver": "Southern Cargo Services",
+        "origin": "Bangkok Port",
+        "destination": "Surat Thani Terminal",
+        "reference_number": "PO-99881",
+        "unit_price": 750.0,
+        "total_amount": 1500.0,
+        "currency": "THB"
+      },
+      "annotated_at": "2026-09-10 10:11:44",
+      "status": "verified"
     }
   ]
 }
