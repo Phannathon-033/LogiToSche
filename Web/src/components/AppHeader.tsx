@@ -1,4 +1,4 @@
-import { Cloud, LogOut } from "lucide-react";
+import { BookmarkCheck, Cloud, LogOut } from "lucide-react";
 import type { UserSession } from "./LoginPage";
 import { Logo } from "./Logo";
 
@@ -6,6 +6,7 @@ interface AppHeaderProps {
   user?: UserSession | null;
   onLogout?: () => void;
   onOpenCloudHistory?: () => void;
+  onOpenGroundTruth?: () => void;
   onOpenSignIn?: () => void;
   onOpenFeatures?: () => void;
   onOpenWorkflow?: () => void;
@@ -16,6 +17,7 @@ export function AppHeader({
   user,
   onLogout,
   onOpenCloudHistory,
+  onOpenGroundTruth,
   onOpenSignIn,
   onOpenFeatures,
   onOpenWorkflow,
@@ -64,6 +66,17 @@ export function AppHeader({
 
         {/* Right: Cloud Sync Button & User Actions */}
         <div className="flex items-center gap-3">
+          {onOpenGroundTruth && (
+            <button
+              type="button"
+              onClick={onOpenGroundTruth}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-purple-300 bg-purple-50/90 px-3.5 py-1.5 text-xs font-bold text-purple-900 shadow-xs transition hover:bg-purple-100 hover:border-purple-400"
+              title="เปิดดูคลังข้อมูลเฉลย Ground Truth และผลการประเมิน K-Fold Cross-Validation"
+            >
+              <BookmarkCheck className="h-4 w-4 text-purple-600" />
+              <span className="font-extrabold">Ground Truth & Benchmark</span>
+            </button>
+          )}
           {onOpenCloudHistory && (
             <button
               type="button"

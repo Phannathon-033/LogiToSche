@@ -7,6 +7,7 @@ import { DocumentPreview } from "./components/DocumentPreview";
 import { DocumentUploader } from "./components/DocumentUploader";
 import { ExtractedFieldsTable } from "./components/ExtractedFieldsTable";
 import { FirebaseCloudHistoryModal } from "./components/FirebaseCloudHistoryModal";
+import { GroundTruthViewerModal } from "./components/GroundTruthViewerModal";
 import { JSONOutputPanel } from "./components/JSONOutputPanel";
 import { LandingHeroConverter } from "./components/LandingHeroConverter";
 import { LoginPage, type UserSession } from "./components/LoginPage";
@@ -59,6 +60,7 @@ export function App() {
   const [selectedType, setSelectedType] = useState<DocumentType>("Invoice");
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>("json");
   const [showCloudHistoryModal, setShowCloudHistoryModal] = useState(false);
+  const [showGroundTruthModal, setShowGroundTruthModal] = useState(false);
 
   const [jobs, setJobs] = useState<DocumentJob[]>([]);
   const [reviewingItem, setReviewingItem] = useState<ReviewItem | null>(null);
@@ -684,6 +686,7 @@ export function App() {
       <AppHeader
         user={userSession}
         onLogout={handleLogout}
+        onOpenGroundTruth={() => setShowGroundTruthModal(true)}
         onOpenCloudHistory={() => setShowCloudHistoryModal(true)}
       />
       <main className="px-4 py-5 sm:px-6 lg:px-8">

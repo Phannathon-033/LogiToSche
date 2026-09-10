@@ -1,7 +1,7 @@
 {
   "description": "LogiSchema Multi-format Logistics Document Benchmark Ground Truth Dataset (11 Core Fields)",
   "version": "1.0",
-  "total_documents": 16,
+  "total_documents": 18,
   "core_fields": [
     "document_type",
     "document_number",
@@ -304,6 +304,46 @@
         "currency": "THB"
       },
       "annotated_at": "2026-09-10 10:11:44",
+      "status": "verified"
+    },
+    {
+      "id": "DOC-017",
+      "file_name": "document_1789010401291.png",
+      "category": "invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "4177",
+        "document_date": "1995-08-10",
+        "sender": "POWERFORCE\"",
+        "receiver": "Powerforce, A Division of Actmedia",
+        "origin": "DAIE OF IN",
+        "destination": "re Marketing Work",
+        "reference_number": "4177",
+        "unit_price": 266.11,
+        "total_amount": 266.11,
+        "currency": "THB"
+      },
+      "annotated_at": "2026-09-10 10:20:01",
+      "status": "verified"
+    },
+    {
+      "id": "DOC-018",
+      "file_name": "document_1789010402872.png",
+      "category": "invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "4177",
+        "document_date": "1995-08-10",
+        "sender": "POWERFORCE\"",
+        "receiver": "Powerforce, A Division of Actmedia",
+        "origin": "DAIE OF IN",
+        "destination": "re Marketing Work",
+        "reference_number": "4177",
+        "unit_price": 266.11,
+        "total_amount": 266.11,
+        "currency": "THB"
+      },
+      "annotated_at": "2026-09-10 10:20:02",
       "status": "verified"
     }
   ]
