@@ -2,6 +2,7 @@ import {
   AlertCircle,
   ArrowRight,
   ArrowUpRight,
+  BookmarkCheck,
   Braces,
   Check,
   CheckCircle2,
@@ -46,6 +47,50 @@ export function JSONOutputPanel({
   const [isEditing, setIsEditing] = useState(false);
   const [editTab, setEditTab] = useState<"form" | "raw">("form");
   const [showMoveForm, setShowMoveForm] = useState(false);
+  const [isSavingGt, setIsSavingGt] = useState(false);
+  const [gtSavedSuccess, setGtSavedSuccess] = useState(false);
+
+  async function handleSaveAsGroundTruth() {
+    setIsSavingGt(true);
+    try {
+      const fileName = json.source_file && json.source_file !== "document" ? json.source_file : `document_${Date.now()}.png`;
+      const payload = {
+        file_name: fileName,
+        category: formDocType || json.document_type || "invoice",
+        ground_truth: {
+          document_type: formDocType || json.document_type || "invoice",
+          document_number: formDocNumber || (json as any).document_number || (json as any).document_no || "-",
+          document_date: formDocDate || json.document_date || "-",
+          sender: formSender || (json as any).sender || (json as any).party_name || "-",
+          receiver: formReceiver || (json as any).receiver || "-",
+          origin: formOrigin || (json as any).origin || "-",
+          destination: formDestination || (json as any).destination || "-",
+          reference_number: formRefNumber || (json as any).reference_number || "-",
+          unit_price: Number(formUnitPrice || (json as any).unit_price || 0),
+          total_amount: Number(formTotalAmount || json.total_amount || 0),
+          currency: formCurrency || json.currency || "THB",
+        }
+      };
+
+      const resp = await fetch("http://127.0.0.1:8001/api/benchmark/save-ground-truth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (resp.ok) {
+        setGtSavedSuccess(true);
+        setTimeout(() => setGtSavedSuccess(false), 4000);
+      } else {
+        alert("ไม่สามารถบันทึก Ground Truth ได้ กรุณาตรวจสอบว่าเซิร์ฟเวอร์ SLM รันอยู่");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์ SLM (Port 8001)");
+    } finally {
+      setIsSavingGt(false);
+    }
+  }
 
   // Raw editor state
   const [rawText, setRawText] = useState("");
@@ -248,6 +293,20 @@ export function JSONOutputPanel({
                   <span>แก้ไข JSON</span>
                 </button>
               )}
+              <button
+                type="button"
+                onClick={handleSaveAsGroundTruth}
+                disabled={isSavingGt}
+                className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-extrabold transition-all shadow-sm ${
+                  gtSavedSuccess
+                    ? "border-emerald-500 bg-emerald-100 text-emerald-800"
+                    : "border-purple-300 bg-purple-50 text-purple-700 hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-950/60 dark:text-purple-300"
+                }`}
+                title="บันทึกค่าที่ตรวจยืนยันนี้เข้าเป็นเฉลยจริง (Ground Truth Dataset) สำหรับทำ Benchmark และ K-Fold"
+              >
+                <BookmarkCheck className={`h-3.5 w-3.5 ${gtSavedSuccess ? "text-emerald-600" : "text-purple-600"}`} />
+                <span>{gtSavedSuccess ? "บันทึกเฉลยเรียบร้อย!" : isSavingGt ? "กำลังบันทึก..." : "บันทึกเป็น Ground Truth"}</span>
+              </button>
               {onMoveOtherToCore && otherKeys.length > 0 && (
                 <button
                   type="button"

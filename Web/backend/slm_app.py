@@ -1339,3 +1339,68 @@ def get_kfold_report(k: int = 5, rerun: bool = False):
     if report_path.exists():
         return json.loads(report_path.read_text(encoding="utf-8"))
     raise HTTPException(status_code=500, detail="Report generation failed")
+
+
+class GroundTruthEntry(BaseModel):
+    id: str | None = None
+    file_name: str
+    category: str = "invoice"
+    ground_truth: dict[str, Any]
+
+
+@app.post("/api/benchmark/save-ground-truth")
+def save_ground_truth(entry: GroundTruthEntry):
+    """Save or update verified human ground truth for a document into ground_truth_dataset.json."""
+    gt_path = BASE_DIR / "ground_truth_dataset.json"
+    if not gt_path.exists():
+        data = {
+            "description": "LogiSchema Multi-format Logistics Document Benchmark Ground Truth Dataset (11 Core Fields)",
+            "version": "1.0",
+            "total_documents": 0,
+            "core_fields": [
+                "document_type", "document_number", "document_date", "sender", "receiver",
+                "origin", "destination", "reference_number", "unit_price", "total_amount", "currency"
+            ],
+            "documents": []
+        }
+    else:
+        data = json.loads(gt_path.read_text(encoding="utf-8"))
+
+    doc_id = entry.id or f"DOC-{len(data.get('documents', [])) + 1:03d}"
+    docs = data.get("documents", [])
+    
+    # Check if entry with same file_name exists
+    existing_idx = next((i for i, d in enumerate(docs) if d.get("file_name") == entry.file_name), -1)
+    
+    entry_dict = {
+        "id": doc_id,
+        "file_name": entry.file_name,
+        "category": entry.category,
+        "ground_truth": entry.ground_truth,
+        "annotated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "status": "verified"
+    }
+
+    if existing_idx >= 0:
+        entry_dict["id"] = docs[existing_idx]["id"]
+        docs[existing_idx] = entry_dict
+    else:
+        docs.append(entry_dict)
+
+    data["documents"] = docs
+    data["total_documents"] = len(docs)
+    gt_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    # Automatically re-run K-Fold evaluation
+    try:
+        from kfold_evaluator import run_kfold_evaluation
+        run_kfold_evaluation(k_splits=min(5, len(docs)))
+    except Exception as e:
+        print(f"Warning: Auto K-Fold re-run failed: {e}")
+
+    return {
+        "status": "success",
+        "message": f"Saved ground truth for {entry.file_name} successfully",
+        "doc_id": entry_dict["id"],
+        "total_documents": len(docs)
+    }
