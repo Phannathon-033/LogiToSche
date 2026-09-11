@@ -7,6 +7,7 @@ import {
   ChevronDown,
   ChevronRight,
   Clock,
+  Cloud,
   Code2,
   Copy,
   Crosshair,
@@ -62,7 +63,9 @@ interface UploadedWorkspaceViewProps {
   onExportAllJson: () => void;
   onCopyJson: () => void;
   onDownloadJson: () => void;
-  onSaveToFirebase: (updatedJson: JsonSchemaOutput) => void;
+  onSaveToFirebase: (updatedJson?: JsonSchemaOutput) => void;
+  onUpdateLocalJson?: (updatedJson: JsonSchemaOutput) => void;
+  isSavingToFirebase?: boolean;
   onMoveOtherToCore?: (sourceOtherKey: string, targetCoreKey: string, removeFromOther: boolean) => void;
   onShowToast: (msg: string) => void;
   onUpdateOcrLines?: (updatedLines: any[]) => void;
@@ -81,6 +84,8 @@ export function UploadedWorkspaceView({
   onCopyJson,
   onDownloadJson,
   onSaveToFirebase,
+  onUpdateLocalJson,
+  isSavingToFirebase = false,
   onMoveOtherToCore,
   onShowToast,
   onUpdateOcrLines,
@@ -945,10 +950,12 @@ export function UploadedWorkspaceView({
             <button
               type="button"
               onClick={() => onSaveToFirebase(jsonOutput)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900 shadow-xs transition hover:bg-amber-100"
+              disabled={isSavingToFirebase}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3.5 py-1.5 text-xs font-extrabold text-white shadow-xs shadow-blue-500/20 transition hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50"
+              title="บันทึกข้อมูลและ JSON Schema ชุดนี้ลง Cloud Firebase"
             >
-              <Save className="h-3.5 w-3.5 text-amber-600" />
-              <span>บันทึก Firebase</span>
+              <Cloud className="h-3.5 w-3.5" />
+              <span>{isSavingToFirebase ? "กำลังบันทึก..." : "บันทึก Firebase"}</span>
             </button>
           </div>
         </div>
@@ -1113,7 +1120,8 @@ export function UploadedWorkspaceView({
                   onCopy={onCopyJson}
                   onDownload={onDownloadJson}
                   onMoveOtherToCore={onMoveOtherToCore}
-                  onSaveJson={onSaveToFirebase}
+                  onSaveJson={onUpdateLocalJson || onSaveToFirebase}
+                  onSaveToFirebase={onSaveToFirebase}
                 />
               </div>
             </div>

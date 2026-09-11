@@ -20,6 +20,7 @@ import { SlmAccuracyCard } from "./components/SlmAccuracyCard";
 import { SlmReasoningAnimation } from "./components/SlmReasoningAnimation";
 import { Toast } from "./components/Toast";
 import { UploadedWorkspaceView } from "./components/UploadedWorkspaceView";
+import { FirebaseSaveSuccessModal } from "./components/FirebaseSaveSuccessModal";
 import { WorkflowStepper } from "./components/WorkflowStepper";
 import { initialJson, initialSteps, ocrText } from "./data/mockData";
 import { saveDocumentToFirebase, type FirebaseDocumentRecord } from "./services/firebase";
@@ -61,6 +62,13 @@ export function App() {
   const [workspaceTab, setWorkspaceTab] = useState<WorkspaceTab>("json");
   const [showCloudHistoryModal, setShowCloudHistoryModal] = useState(false);
   const [showGroundTruthModal, setShowGroundTruthModal] = useState(false);
+  const [firebaseSuccessModal, setFirebaseSuccessModal] = useState<{
+    isOpen: boolean;
+    fileName: string;
+    remainingCount: number;
+    isLast: boolean;
+  } | null>(null);
+  const [isSavingToFirebase, setIsSavingToFirebase] = useState(false);
 
   const [jobs, setJobs] = useState<DocumentJob[]>([]);
   const [reviewingItem, setReviewingItem] = useState<ReviewItem | null>(null);
@@ -272,37 +280,9 @@ export function App() {
             ),
           );
 
-          // Auto-save image file and JSON schema to Google Cloud Firebase
-          try {
-            const fbRecord = await saveDocumentToFirebase(
-              {
-                id: allDocs[i].id,
-                fileName: allDocs[i].fileName,
-                fileSize: allDocs[i].fileSize,
-                fileType: allDocs[i].file.type || "image/jpeg",
-                documentType: selectedType,
-                jsonSchema: slm.jsonOutput,
-                fields: slm.fields,
-                confidenceScores: slm.confidenceScores,
-                overallConfidence: slm.overallConfidence,
-                performance: slm.performance ?? null,
-                reviewItems: slm.reviewItems,
-                ocrText: allDocs[i].ocrText,
-                spatialText: allDocs[i].spatialText,
-                userEmail: userSession?.email || "guest@logiai.local",
-                userName: userSession?.name || "Guest User",
-              },
-              allDocs[i].file
-            );
-            allDocs[i].cloudSyncStatus = "synced";
-            allDocs[i].cloudRecordId = fbRecord.id;
-            allDocs[i].storageUrl = fbRecord.storageUrl;
-            setBatchDocuments([...allDocs]);
-          } catch (cloudErr) {
-            console.warn("Firebase Cloud Sync warning:", cloudErr);
-            allDocs[i].cloudSyncStatus = "local_only";
-            setBatchDocuments([...allDocs]);
-          }
+          // Keep document in active workspace memory without auto-saving to Cloud Firebase
+          allDocs[i].cloudSyncStatus = "local_only";
+          setBatchDocuments([...allDocs]);
         } catch (err) {
           const msg = err instanceof Error ? err.message : "SLM Error";
           allDocs[i] = {
@@ -450,8 +430,8 @@ export function App() {
     showToast(`ลบฟิลด์ "${fieldKey}" สำเร็จ`);
   }
 
-  async function handleSaveJsonSchema(updatedJson: JsonSchemaOutput) {
-    // Reconstruct fields array
+  function handleUpdateLocalJson(updatedJson: JsonSchemaOutput) {
+    if (!activeDoc) return;
     const otherObj = updatedJson.other || {};
     const nextFields: ExtractedField[] = [
       { id: 1, sourceText: updatedJson.document_type || "invoice", field: "document_type", value: updatedJson.document_type || "invoice", confidence: 99, status: "success", isOther: false },
@@ -477,42 +457,89 @@ export function App() {
       }
     });
 
-    if (activeDoc) {
-      setBatchDocuments((prev) =>
-        prev.map((doc, idx) =>
-          idx === activeDocIndex ? { ...doc, jsonOutput: updatedJson, fields: nextFields } : doc
-        )
+    setBatchDocuments((prev) =>
+      prev.map((doc, idx) =>
+        idx === activeDocIndex ? { ...doc, jsonOutput: updatedJson, fields: nextFields } : doc
+      )
+    );
+    showToast("บันทึกการแก้ไข JSON ใน Workspace เรียบร้อย");
+  }
+
+  async function handleSaveToFirebase(updatedJson?: JsonSchemaOutput) {
+    if (!activeDoc) {
+      showToast("ไม่มีเอกสารที่พร้อมบันทึก");
+      return;
+    }
+    const jsonToSave = updatedJson || activeDoc.jsonOutput;
+    if (!jsonToSave) {
+      showToast("ยังไม่มีข้อมูล JSON Schema ให้บันทึกขึ้น Cloud Firebase");
+      return;
+    }
+
+    setIsSavingToFirebase(true);
+    try {
+      let currentFields = activeDoc.fields;
+      if (updatedJson) {
+        const otherObj = updatedJson.other || {};
+        currentFields = [
+          { id: 1, sourceText: updatedJson.document_type || "invoice", field: "document_type", value: updatedJson.document_type || "invoice", confidence: 99, status: "success", isOther: false },
+          { id: 2, sourceText: updatedJson.document_no || "-", field: "document_no", value: updatedJson.document_no || "-", confidence: 99, status: "success", isOther: false },
+          { id: 3, sourceText: updatedJson.document_date || "-", field: "document_date", value: updatedJson.document_date || "-", confidence: 99, status: "success", isOther: false },
+          { id: 4, sourceText: updatedJson.party_name || "-", field: "party_name", value: updatedJson.party_name || "-", confidence: 99, status: "success", isOther: false },
+          { id: 5, sourceText: updatedJson.source_file || fileName, field: "source_file", value: updatedJson.source_file || fileName, confidence: 100, status: "success", isOther: false },
+          { id: 6, sourceText: String(updatedJson.quantity ?? 1), field: "quantity", value: String(updatedJson.quantity ?? 1), confidence: 99, status: "success", isOther: false },
+          { id: 7, sourceText: String(updatedJson.total_amount ?? 0), field: "total_amount", value: String(updatedJson.total_amount ?? 0), confidence: 99, status: "success", isOther: false },
+        ];
+        Object.entries(otherObj).forEach(([k, v], idx) => {
+          if (k !== "storage_url") {
+            currentFields.push({
+              id: 8 + idx,
+              sourceText: String(v),
+              field: k,
+              value: String(v),
+              confidence: 95,
+              status: "success",
+              isOther: true,
+            });
+          }
+        });
+      }
+
+      await saveDocumentToFirebase(
+        {
+          id: activeDoc.id,
+          fileName: activeDoc.fileName,
+          fileSize: activeDoc.fileSize,
+          fileType: activeDoc.file?.type || "image/jpeg",
+          documentType: selectedType,
+          jsonSchema: jsonToSave,
+          fields: currentFields,
+          confidenceScores: activeDoc.confidenceScores,
+          overallConfidence: activeDoc.overallConfidence,
+          performance: activeDoc.performance ?? null,
+          reviewItems: activeDoc.reviewItems,
+          ocrText: activeDoc.ocrText,
+          spatialText: activeDoc.spatialText,
+          userEmail: userSession?.email || "guest@logiai.local",
+          userName: userSession?.name || "Guest User",
+        },
+        activeDoc.file
       );
 
-      // Auto-save to Firebase Firestore
-      try {
-        await saveDocumentToFirebase(
-          {
-            id: activeDoc.id,
-            fileName: activeDoc.fileName,
-            fileSize: activeDoc.fileSize,
-            fileType: activeDoc.file?.type || "image/jpeg",
-            documentType: selectedType,
-            jsonSchema: updatedJson,
-            fields: nextFields,
-            confidenceScores: activeDoc.confidenceScores,
-            overallConfidence: activeDoc.overallConfidence,
-            performance: activeDoc.performance ?? null,
-            reviewItems: activeDoc.reviewItems,
-            ocrText: activeDoc.ocrText,
-            spatialText: activeDoc.spatialText,
-            userEmail: userSession?.email || "guest@logiai.local",
-            userName: userSession?.name || "Guest User",
-          },
-          activeDoc.file
-        );
-        showToast("บันทึกการแก้ไข JSON Schema ลง Cloud Firestore เรียบร้อย");
-      } catch (err) {
-        console.warn("Cloud save warning after manual edit:", err);
-        showToast("บันทึกการแก้ไข JSON Schema เรียบร้อย");
-      }
-    } else {
-      showToast("บันทึกการแก้ไข JSON Schema เรียบร้อย");
+      const remainingCount = batchDocuments.length - 1;
+      const isLast = remainingCount <= 0;
+
+      setFirebaseSuccessModal({
+        isOpen: true,
+        fileName: activeDoc.fileName,
+        remainingCount,
+        isLast,
+      });
+    } catch (err) {
+      console.error("Firebase save error:", err);
+      showToast("บันทึกขึ้น Firebase ล้มเหลว กรุณาตรวจสอบการเชื่อมต่อ");
+    } finally {
+      setIsSavingToFirebase(false);
     }
   }
 
@@ -529,47 +556,20 @@ export function App() {
     showToast("รีเซ็ตเอกสารทั้งหมดเรียบร้อย");
   }
 
-  async function handleManualCloudSync() {
-    if (!activeDoc || !activeDoc.jsonOutput) {
-      showToast("ยังไม่มีข้อมูล JSON Schema ให้บันทึกขึ้น Cloud");
-      return;
+  function handleAdvanceAfterFirebaseSave() {
+    if (activeDoc?.previewUrl) {
+      URL.revokeObjectURL(activeDoc.previewUrl);
     }
-    showToast("กำลังบันทึกข้อมูลขึ้น Google Cloud Firebase...");
-    try {
-      const fbRecord = await saveDocumentToFirebase(
-        {
-          id: activeDoc.id,
-          fileName: activeDoc.fileName,
-          fileSize: activeDoc.fileSize,
-          fileType: activeDoc.file.type || "image/jpeg",
-          documentType: selectedType,
-          jsonSchema: activeDoc.jsonOutput,
-          fields: activeDoc.fields,
-          confidenceScores: activeDoc.confidenceScores,
-          overallConfidence: activeDoc.overallConfidence,
-          performance: activeDoc.performance ?? null,
-          reviewItems: activeDoc.reviewItems,
-          ocrText: activeDoc.ocrText,
-          spatialText: activeDoc.spatialText,
-          userEmail: userSession?.email || "guest@logiai.local",
-          userName: userSession?.name || "Guest User",
-        },
-        activeDoc.file
-      );
-
-      const nextList = [...batchDocuments];
-      nextList[activeDocIndex] = {
-        ...nextList[activeDocIndex],
-        cloudSyncStatus: "synced",
-        cloudRecordId: fbRecord.id,
-        storageUrl: fbRecord.storageUrl,
-      };
-      setBatchDocuments(nextList);
-      showToast(`บันทึกเอกสาร "${activeDoc.fileName}" ขึ้น Firebase เรียบร้อย`);
-    } catch (err) {
-      console.error(err);
-      showToast("บันทึกขึ้น Firebase ล้มเหลว กรุณาลองใหม่อีกครั้ง");
+    const nextDocs = batchDocuments.filter((_, idx) => idx !== activeDocIndex);
+    if (nextDocs.length > 0) {
+      setBatchDocuments(nextDocs);
+      setActiveDocIndex((prev) => Math.min(prev, nextDocs.length - 1));
+      showToast(`เปิดเอกสารชุดถัดไปแล้ว (เหลือ ${nextDocs.length} ฉบับในคิว)`);
+    } else {
+      handleResetDocument();
+      showToast("บันทึกเอกสารทั้งหมดเรียบร้อยแล้ว กลับสู่หน้าแทรกเอกสาร");
     }
+    setFirebaseSuccessModal(null);
   }
 
   function handleLoadFromCloud(record: FirebaseDocumentRecord) {
@@ -807,7 +807,9 @@ export function App() {
                 onExportAllJson={handleExportAllJson}
                 onCopyJson={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
                 onDownloadJson={() => createJsonDownload(jsonOutput)}
-                onSaveToFirebase={handleSaveJsonSchema}
+                onSaveToFirebase={handleSaveToFirebase}
+                onUpdateLocalJson={handleUpdateLocalJson}
+                isSavingToFirebase={isSavingToFirebase}
                 onMoveOtherToCore={handleMoveOtherToCore}
                 onShowToast={showToast}
                 onUpdateOcrLines={handleUpdateOcrLines}
@@ -825,6 +827,16 @@ export function App() {
         onLoadDocument={handleLoadFromCloud}
         onShowToast={showToast}
       />
+
+      {firebaseSuccessModal && (
+        <FirebaseSaveSuccessModal
+          isOpen={firebaseSuccessModal.isOpen}
+          fileName={firebaseSuccessModal.fileName}
+          remainingCount={firebaseSuccessModal.remainingCount}
+          isLast={firebaseSuccessModal.isLast}
+          onAdvance={handleAdvanceAfterFirebaseSave}
+        />
+      )}
 
       {reviewingItem ? (
         <ManualReviewModal

@@ -7,6 +7,7 @@ import {
   Check,
   CheckCircle2,
   Clipboard,
+  Cloud,
   Code2,
   Download,
   Edit3,
@@ -28,6 +29,7 @@ interface JSONOutputPanelProps {
   onDownload: () => void;
   onMoveOtherToCore?: (sourceOtherKey: string, targetCoreKey: string, removeFromOther: boolean) => void;
   onSaveJson?: (updatedJson: JsonSchemaOutput) => void;
+  onSaveToFirebase?: (json: JsonSchemaOutput) => void;
 }
 
 const tokenColors = {
@@ -43,6 +45,7 @@ export function JSONOutputPanel({
   onDownload,
   onMoveOtherToCore,
   onSaveJson,
+  onSaveToFirebase,
 }: JSONOutputPanelProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTab, setEditTab] = useState<"form" | "raw">("form");
@@ -307,6 +310,18 @@ export function JSONOutputPanel({
                 <BookmarkCheck className={`h-3.5 w-3.5 ${gtSavedSuccess ? "text-emerald-600" : "text-purple-600"}`} />
                 <span>{gtSavedSuccess ? "บันทึกเฉลยเรียบร้อย!" : isSavingGt ? "กำลังบันทึก..." : "บันทึกเป็น Ground Truth"}</span>
               </button>
+
+              {onSaveToFirebase && (
+                <button
+                  type="button"
+                  onClick={() => onSaveToFirebase(json)}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-1 text-xs font-extrabold text-white shadow-sm shadow-blue-500/20 hover:from-blue-700 hover:to-indigo-700 transition"
+                  title="บันทึกข้อมูลและ JSON Schema ชุดนี้ลง Cloud Firebase"
+                >
+                  <Cloud className="h-3.5 w-3.5" />
+                  <span>บันทึก Firebase</span>
+                </button>
+              )}
               {onMoveOtherToCore && otherKeys.length > 0 && (
                 <button
                   type="button"
