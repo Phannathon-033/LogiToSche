@@ -4,7 +4,6 @@ import {
   Layers,
   Maximize2,
   Minimize2,
-  Move,
   RotateCcw,
   Search,
   Sparkles,
@@ -617,19 +616,6 @@ export function DocumentPreview({
             </div>
           )}
         </div>
-
-        {/* Wheel zoom & pan hint */}
-        <div className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-slate-900/80 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm shadow-sm transition-opacity duration-200">
-          <span className="text-cyan-300">🖱️ ลูกกลิ้งเมาส์</span>
-          <span>ซูมเข้า-ออก</span>
-          {zoom > 1 && (
-            <>
-              <span className="text-slate-400">•</span>
-              <Move className="h-3 w-3 text-amber-300" />
-              <span>ลากเลื่อนภาพ</span>
-            </>
-          )}
-        </div>
       </div>
 
       {/* ========================================================================= */}
@@ -768,19 +754,6 @@ export function DocumentPreview({
                 </div>
               ) : (
                 <InvoiceMockup />
-              )}
-            </div>
-
-            {/* Wheel zoom & pan hint for Fullscreen */}
-            <div className="pointer-events-none absolute bottom-4 right-4 flex items-center gap-1.5 rounded-full bg-slate-950/85 border border-slate-700/80 px-3 py-1.5 text-[11px] font-bold text-slate-200 backdrop-blur-sm shadow-md">
-              <span className="text-cyan-400">🖱️ ลูกกลิ้งเมาส์</span>
-              <span>ซูมเข้า-ออก ({Math.round(zoom * 100)}%)</span>
-              {zoom > 1 && (
-                <>
-                  <span className="text-slate-500">•</span>
-                  <Move className="h-3.5 w-3.5 text-amber-400" />
-                  <span>ลากเลื่อนภาพ</span>
-                </>
               )}
             </div>
           </div>
