@@ -265,32 +265,89 @@ def parse_grounded_date(text: str) -> tuple[str, str]:
 
 
 def parse_grounded_doc_no(text: str) -> tuple[str, str]:
-    """Extract document/invoice number strictly from OCR text.
+    """Extract document/invoice number strictly from OCR text with high precision.
+    Enforces that valid document numbers must contain at least one digit or valid code syntax,
+    ignoring common English non-number words (e.g. 'need', 'crotts', 'box').
     Returns (doc_no, raw_snippet). Returns ('', '') if not found."""
     if not text:
         return "", ""
-    patterns = [
-        r'(?:ใบกำกับภาษีเลขที่|เลขที่เอกสาร|เลขที่ใบกำกับ|เลขที่|ใบแจ้งหนี้เลขที่)\s*[:\.\s#]*([A-Za-z0-9\-\/]{3,25})',
-        r'(?:invoice\s*(?:no|number|#|code)|invgice\s*(?:no|#)|our\s*invgice\s*no|inv\s*[:\.\s#]+)\s*[:\.\s#]*([A-Za-z0-9\-\/]{3,25})',
-        r'INVOICE\s*#\s*([A-Za-z0-9\-\/]{3,25})',
-        r'(?:statement\s*(?:no|#|id)|statenent|statement)\s*[:\.\s#]*([A-Za-z0-9\-\/]{3,25})',
-        r'(?:est\s*(?:nd|no|id)|estimate\s*(?:recap|no))\s*[:\.\s#]*([A-Za-z0-9\-\/_\(\)]{3,25})',
-        r'(?:b\/l\s*(?:no|#)|bill\s*of\s*lading)\s*[:\.\s#]*([A-Za-z0-9\-\/]{3,25})',
-        r'(?:dm\s*#|job\s*no[\.\s:]*)\s*([A-Za-z0-9\-\/]{2,20})',
-    ]
-    for pat in patterns:
-        m = re.search(pat, text, re.IGNORECASE)
-        if m:
-            val = m.group(1).strip(" .:#-_")
-            if len(val) >= 2 and not val.lower().startswith(("date", "page", "due", "tel", "tax", "total")):
-                if val in text:
-                    return val, m.group(0).strip()
 
-    m_stand = re.search(r'(?:no|number|#)[\s.:]*([A-Za-z0-9\-\/]{4,20})', text, re.IGNORECASE)
-    if m_stand:
-        val = m_stand.group(1).strip(" .:#-_")
-        if len(val) >= 3 and not val.lower().startswith(("date", "page", "due", "tel")):
-            return val, m_stand.group(0).strip()
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+
+    NON_DOC_WORDS = {
+        "date", "page", "due", "tel", "tax", "total", "subtotal", "amount",
+        "need", "crotts", "box", "please", "attn", "copy", "original",
+        "name", "address", "phone", "email", "bill", "ship", "sold", "item",
+        "code", "terms", "order", "status", "price", "unit", "discount", "thai",
+        "thailand", "same", "none", "null", "from", "invoice", "statement"
+    }
+
+    def is_valid_doc_num(s: str) -> bool:
+        clean = s.strip(" .:#-_/\\()[]{}")
+        if len(clean) < 2 or len(clean) > 30:
+            return False
+        # Must contain at least one digit (0-9) to avoid non-number words like "need", "Crotts", "box"
+        if not re.search(r'\d', clean):
+            return False
+        low = clean.lower()
+        if low in NON_DOC_WORDS:
+            return False
+        if any(low.startswith(w) for w in ["tel", "fax", "phone", "page", "tax", "date", "due"]):
+            return False
+        return True
+
+    # 1. Targeted High-Precision Prefix Patterns
+    prefix_patterns = [
+        r'(?:ใบกำกับภาษีเลขที่|เลขที่เอกสาร|เลขที่ใบกำกับ|เลขที่ใบเสร็จ|ใบเสร็จเลขที่|เลขที่ใบส่งของ|เลขที่ใบส่งสินค้า|ใบแจ้งหนี้เลขที่|เลขที่สั่งซื้อ|ใบสั่งซื้อเลขที่|เลขที่บิล|เลขที่)\s*[:\.\s#]*([A-Za-z0-9\-\/]{2,30})',
+        r'(?<!tax\s)(?<!tax\sid\s)(?<!vat\s)(?:invoice\s*(?:no|number|#|id|code)|inv\s*[:\.\s#]+|invgice\s*(?:no|#)|our\s*invgice\s*no)\s*[:\.\s#]*([A-Za-z0-9\-\/]{2,30})',
+        r'(?:document\s*(?:no|number|#|id)|doc\s*(?:no|number|#|id))\s*[:\.\s#]*([A-Za-z0-9\-\/]{2,30})',
+        r'(?:b\/l\s*(?:no|number|#)|bl\s*(?:no|number|#)|bill\s*of\s*lading\s*(?:no|#)?)\s*[:\.\s#]*([A-Za-z0-9\-\/]{2,30})',
+        r'(?:air\s*waybill\s*(?:no|#)|awb\s*(?:no|#)|waybill\s*(?:no|#))\s*[:\.\s#]*([A-Za-z0-9\-\/]{2,30})',
+        r'(?:purchase\s*order\s*(?:no|#|id)|p\.?o\.?\s*(?:no|number|#|id)|order\s*(?:no|number|#|id))\s*[:\.\s#]*([A-Za-z0-9\-\/]{2,30})',
+        r'(?:delivery\s*order\s*(?:no|#)|d\/o\s*(?:no|#)|do\s*(?:no|#))\s*[:\.\s#]*([A-Za-z0-9\-\/]{2,30})',
+        r'(?:statement\s*(?:no|number|#|id)|statenent)\s*[:\.\s#]*([A-Za-z0-9\-\/]{2,30})',
+        r'(?:receipt\s*(?:no|number|#|id)|tax\s*invoice\s*(?:no|#))\s*[:\.\s#]*([A-Za-z0-9\-\/]{2,30})',
+        r'(?:est\s*(?:nd|no|id)|estimate\s*(?:recap|no))\s*[:\.\s#]*([A-Za-z0-9\-\/_\(\)]{2,30})',
+        r'(?:dm\s*#|job\s*no[\.\s:]*)\s*([A-Za-z0-9\-\/]{2,25})',
+    ]
+
+    for pat in prefix_patterns:
+        for m in re.finditer(pat, text, re.IGNORECASE):
+            raw_cand = m.group(1).strip(" .:#-_/\\")
+            if is_valid_doc_num(raw_cand):
+                if raw_cand in text:
+                    return raw_cand, m.group(0).strip()
+
+    # 2. Check Multi-Line Table Headers (Line N = "INVOICE NO.", Line N+1 = "88062630")
+    header_keywords = [
+        "invoice no", "invoice number", "invoice #", "doc no", "document no",
+        "เลขที่เอกสาร", "เลขที่ใบกำกับ", "b/l no", "bill of lading", "po no", "p.o. no", "order no"
+    ]
+    for idx, line in enumerate(lines):
+        line_low = line.lower()
+        if any(kw in line_low for kw in header_keywords):
+            if idx + 1 < len(lines):
+                next_line = lines[idx + 1].strip()
+                tokens = next_line.split()
+                if tokens:
+                    first_tok = tokens[0].strip(" .:#-_/\\")
+                    if is_valid_doc_num(first_tok) and first_tok in text:
+                        return first_tok, f"{line} {first_tok}"
+
+    # 3. Fallback: Generic "No." or "#" with strict exclusion of Tel, Fax, Phone, Page, Tax, Item
+    generic_pat = r'(?<!tel\s)(?<!telephone\s)(?<!phone\s)(?<!fax\s)(?<!page\s)(?<!item\s)(?<!tax\s)(?<!vat\s)(?<!zip\s)(?<!box\s)(?:no|number|#)[\s.:#]*([A-Za-z0-9\-\/]{3,25})'
+    for m in re.finditer(generic_pat, text, re.IGNORECASE):
+        raw_cand = m.group(1).strip(" .:#-_/\\")
+        if is_valid_doc_num(raw_cand) and raw_cand in text:
+            return raw_cand, m.group(0).strip()
+
+    # 4. Fallback for tobacco/archive invoices: Standalone 7-10 digit numbers near the top (first 10 lines)
+    for line in lines[:10]:
+        cand_m = re.search(r'\b([0-9]{7,10})\b', line)
+        if cand_m:
+            cand = cand_m.group(1)
+            if not re.search(r'(tel|phone|fax|zip|p\.?o\.?\s*box)', line, re.IGNORECASE):
+                return cand, line
 
     return "", ""
 
