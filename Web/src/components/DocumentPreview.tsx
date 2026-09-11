@@ -63,6 +63,7 @@ export function DocumentPreview({
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const fullscreenContainerRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const isScanning = progress !== undefined && progress > 0 && progress < 100;
 
@@ -232,17 +233,66 @@ export function DocumentPreview({
 
   // Zoom controls
   function handleZoomIn() {
-    setZoom((prev) => Math.min(prev + 0.25, 3.5));
+    setZoom((prev) => Math.min(Number((prev + 0.25).toFixed(2)), 4.0));
   }
 
   function handleZoomOut() {
-    setZoom((prev) => Math.max(prev - 0.25, 0.5));
+    setZoom((prev) => Math.max(Number((prev - 0.25).toFixed(2)), 0.5));
   }
 
   function handleResetZoom() {
     setZoom(1);
     setPanPosition({ x: 0, y: 0 });
   }
+
+  // Mouse wheel zoom for main preview (scroll up = zoom in, scroll down = zoom out)
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const zoomStep = 0.15;
+      const direction = e.deltaY < 0 ? 1 : -1;
+      setZoom((prev) => {
+        const next = Math.min(Math.max(Number((prev + direction * zoomStep).toFixed(2)), 0.5), 4.0);
+        if (next <= 1) {
+          setPanPosition({ x: 0, y: 0 });
+        }
+        return next;
+      });
+    };
+
+    container.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
+
+  // Mouse wheel zoom for fullscreen modal (scroll up = zoom in, scroll down = zoom out)
+  useEffect(() => {
+    if (!isFullscreen) return;
+    const fsContainer = fullscreenContainerRef.current;
+    if (!fsContainer) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const zoomStep = 0.15;
+      const direction = e.deltaY < 0 ? 1 : -1;
+      setZoom((prev) => {
+        const next = Math.min(Math.max(Number((prev + direction * zoomStep).toFixed(2)), 0.5), 4.0);
+        if (next <= 1) {
+          setPanPosition({ x: 0, y: 0 });
+        }
+        return next;
+      });
+    };
+
+    fsContainer.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      fsContainer.removeEventListener("wheel", handleWheel);
+    };
+  }, [isFullscreen]);
 
   // Handle ESC key to exit fullscreen
   useEffect(() => {
@@ -338,7 +388,7 @@ export function DocumentPreview({
             onClick={handleZoomOut}
             disabled={zoom <= 0.5}
             className="flex h-6.5 w-6.5 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-xs transition hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40"
-            title="ย่อขนาด (-25%)"
+            title="ย่อขนาด (-25%) หรือเลื่อนลูกกลิ้งเมาส์ลง"
             aria-label="ย่อขนาด"
           >
             <ZoomOut className="h-3 w-3" />
@@ -358,9 +408,9 @@ export function DocumentPreview({
           <button
             type="button"
             onClick={handleZoomIn}
-            disabled={zoom >= 3.5}
+            disabled={zoom >= 4.0}
             className="flex h-6.5 w-6.5 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-xs transition hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40"
-            title="ขยายขนาด (+25%)"
+            title="ขยายขนาด (+25%) หรือเลื่อนลูกกลิ้งเมาส์ขึ้น"
             aria-label="ขยายขนาด"
           >
             <ZoomIn className="h-3 w-3" />
@@ -450,13 +500,18 @@ export function DocumentPreview({
           )}
         </div>
 
-        {/* Pan hint when zoomed */}
-        {zoom > 1 && (
-          <div className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-slate-900/80 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm flex items-center gap-1 shadow-sm">
-            <Move className="h-3 w-3" />
-            <span>คลิกค้างเพื่อเลื่อนภาพ (Pan)</span>
-          </div>
-        )}
+        {/* Wheel zoom & pan hint */}
+        <div className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-slate-900/80 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm shadow-sm transition-opacity duration-200">
+          <span className="text-cyan-300">🖱️ ลูกกลิ้งเมาส์</span>
+          <span>ซูมเข้า-ออก</span>
+          {zoom > 1 && (
+            <>
+              <span className="text-slate-400">•</span>
+              <Move className="h-3 w-3 text-amber-300" />
+              <span>ลากเลื่อนภาพ</span>
+            </>
+          )}
+        </div>
       </div>
 
       {/* ========================================================================= */}
@@ -509,7 +564,7 @@ export function DocumentPreview({
                 onClick={handleZoomOut}
                 disabled={zoom <= 0.5}
                 className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 disabled:opacity-40"
-                title="ย่อขนาด (-25%)"
+                title="ย่อขนาด (-25%) หรือเลื่อนลูกกลิ้งเมาส์ลง"
               >
                 <ZoomOut className="h-4 w-4" />
               </button>
@@ -526,9 +581,9 @@ export function DocumentPreview({
               <button
                 type="button"
                 onClick={handleZoomIn}
-                disabled={zoom >= 4}
+                disabled={zoom >= 4.0}
                 className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 disabled:opacity-40"
-                title="ขยายขนาด (+25%)"
+                title="ขยายขนาด (+25%) หรือเลื่อนลูกกลิ้งเมาส์ขึ้น"
               >
                 <ZoomIn className="h-4 w-4" />
               </button>
@@ -549,6 +604,7 @@ export function DocumentPreview({
 
           {/* Modal Image Viewer with Zoom & Pan */}
           <div
+            ref={fullscreenContainerRef}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
@@ -586,6 +642,19 @@ export function DocumentPreview({
                 </div>
               ) : (
                 <InvoiceMockup />
+              )}
+            </div>
+
+            {/* Wheel zoom & pan hint for Fullscreen */}
+            <div className="pointer-events-none absolute bottom-4 right-4 flex items-center gap-1.5 rounded-full bg-slate-950/85 border border-slate-700/80 px-3 py-1.5 text-[11px] font-bold text-slate-200 backdrop-blur-sm shadow-md">
+              <span className="text-cyan-400">🖱️ ลูกกลิ้งเมาส์</span>
+              <span>ซูมเข้า-ออก ({Math.round(zoom * 100)}%)</span>
+              {zoom > 1 && (
+                <>
+                  <span className="text-slate-500">•</span>
+                  <Move className="h-3.5 w-3.5 text-amber-400" />
+                  <span>ลากเลื่อนภาพ</span>
+                </>
               )}
             </div>
           </div>
