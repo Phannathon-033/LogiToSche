@@ -64,9 +64,6 @@ export function DocumentPreview({
   const [naturalSize, setNaturalSize] = useState<{ width: number; height: number } | null>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
 
-  // Laser scanning beam state (enabled by default with user toggle)
-  const [laserScanEnabled, setLaserScanEnabled] = useState<boolean>(true);
-
   const containerRef = useRef<HTMLDivElement>(null);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -78,9 +75,37 @@ export function DocumentPreview({
   const currentPanRef = useRef({ x: 0, y: 0 });
   const animFrameRef = useRef<number | null>(null);
 
+  // Manual laser scan trigger state (temporary 1-cycle 3s preview when clicked manually)
+  const [manualScanActive, setManualScanActive] = useState<boolean>(false);
+  const manualTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   const isAutoScanning =
     (progress !== undefined && progress > 0 && progress < 100) || Boolean(isProcessing);
-  const isLaserActive = laserScanEnabled || isAutoScanning;
+  const isLaserActive = isAutoScanning || manualScanActive;
+
+  function handleToggleManualScan() {
+    if (manualTimerRef.current) {
+      clearTimeout(manualTimerRef.current);
+      manualTimerRef.current = null;
+    }
+    if (manualScanActive) {
+      setManualScanActive(false);
+      onToast("ปิดเอฟเฟกต์สแกนเลเซอร์");
+    } else {
+      setManualScanActive(true);
+      onToast("จำลองเอฟเฟกต์สแกนขึ้น-ลง (จะหายไปอัตโนมัติเมื่อเสร็จสิ้นรอบ)");
+      manualTimerRef.current = setTimeout(() => {
+        setManualScanActive(false);
+        manualTimerRef.current = null;
+      }, 3000);
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      if (manualTimerRef.current) clearTimeout(manualTimerRef.current);
+    };
+  }, []);
 
   // Track image natural dimensions for SVG coordinate system
   const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -491,10 +516,7 @@ export function DocumentPreview({
           {/* Toggle Laser Scanner Effect */}
           <button
             type="button"
-            onClick={() => {
-              setLaserScanEnabled((prev) => !prev);
-              onToast(isLaserActive ? "ปิดเอฟเฟกต์เลเซอร์สแกน" : "เปิดเอฟเฟกต์เลเซอร์สแกนขึ้น-ลง");
-            }}
+            onClick={handleToggleManualScan}
             className={`flex h-6.5 items-center gap-1 rounded-lg border px-2 text-[10.5px] font-bold shadow-xs transition cursor-pointer ${
               isLaserActive
                 ? "border-cyan-300 bg-cyan-50 text-cyan-800 hover:bg-cyan-100"
@@ -502,17 +524,15 @@ export function DocumentPreview({
             }`}
             title={
               isLaserActive
-                ? "คลิกเพื่อปิดเอฟเฟกต์เลเซอร์สแกนขึ้น-ลง"
-                : "คลิกเพื่อเปิดเอฟเฟกต์เลเซอร์สแกนขึ้น-ลง"
+                ? "กำลังสแกนขึ้น-ลง (คลิกเพื่อหยุด)"
+                : "คลิกเพื่อจำลองเอฟเฟกต์สแกนเลเซอร์ขึ้น-ลง (จะหายไปอัตโนมัติเมื่อครบ 1 รอบ)"
             }
           >
             <Scan className={`h-3 w-3 text-cyan-600 ${isLaserActive ? "animate-pulse" : ""}`} />
             <span>สแกนเลเซอร์</span>
-            <span
-              className={`h-1.5 w-1.5 rounded-full ${
-                isLaserActive ? "bg-cyan-500 animate-ping" : "bg-slate-300"
-              }`}
-            />
+            {isLaserActive && (
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-500 animate-ping" />
+            )}
           </button>
 
           {/* Deselect Box Button */}
@@ -706,10 +726,7 @@ export function DocumentPreview({
               {/* Laser Scan Toggle in Fullscreen */}
               <button
                 type="button"
-                onClick={() => {
-                  setLaserScanEnabled((prev) => !prev);
-                  onToast(isLaserActive ? "ปิดเอฟเฟกต์เลเซอร์สแกน" : "เปิดเอฟเฟกต์เลเซอร์สแกนขึ้น-ลง");
-                }}
+                onClick={handleToggleManualScan}
                 className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition cursor-pointer ${
                   isLaserActive
                     ? "border-cyan-500/80 bg-cyan-950/60 text-cyan-300"
@@ -717,17 +734,15 @@ export function DocumentPreview({
                 }`}
                 title={
                   isLaserActive
-                    ? "คลิกเพื่อปิดเอฟเฟกต์เลเซอร์สแกนขึ้น-ลง"
-                    : "คลิกเพื่อเปิดเอฟเฟกต์เลเซอร์สแกนขึ้น-ลง"
+                    ? "กำลังสแกนขึ้น-ลง (คลิกเพื่อหยุด)"
+                    : "คลิกเพื่อจำลองเอฟเฟกต์สแกนเลเซอร์ขึ้น-ลง (จะหายไปอัตโนมัติเมื่อครบ 1 รอบ)"
                 }
               >
                 <Scan className={`h-3.5 w-3.5 text-cyan-400 ${isLaserActive ? "animate-pulse" : ""}`} />
                 <span>สแกนเลเซอร์</span>
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    isLaserActive ? "bg-cyan-400 animate-ping" : "bg-slate-500"
-                  }`}
-                />
+                {isLaserActive && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-ping" />
+                )}
               </button>
 
               {selectedBox && (
