@@ -407,7 +407,7 @@ export function App() {
         idx === activeDocIndex ? { ...doc, jsonOutput: nextJson, fields: nextFields } : doc,
       ),
     );
-    showToast(`ย้ายค่า "${sourceOtherKey}" ไปยัง 7 ฟิลด์หลัก "${targetCoreKey}" เรียบร้อยแล้ว`);
+    showToast(`ย้ายค่า "${sourceOtherKey}" ไปยัง 11 ฟิลด์หลัก "${targetCoreKey}" เรียบร้อยแล้ว`);
   }
 
   function handleDeleteCustomField(fieldKey: string, isOther?: boolean) {
@@ -433,20 +433,26 @@ export function App() {
   function handleUpdateLocalJson(updatedJson: JsonSchemaOutput) {
     if (!activeDoc) return;
     const otherObj = updatedJson.other || {};
+    const docNo = updatedJson.document_number || updatedJson.document_no || "-";
+    const sender = updatedJson.sender || updatedJson.party_name || "-";
     const nextFields: ExtractedField[] = [
       { id: 1, sourceText: updatedJson.document_type || "invoice", field: "document_type", value: updatedJson.document_type || "invoice", confidence: 99, status: "success", isOther: false },
-      { id: 2, sourceText: updatedJson.document_no || "-", field: "document_no", value: updatedJson.document_no || "-", confidence: 99, status: "success", isOther: false },
+      { id: 2, sourceText: docNo, field: "document_number", value: docNo, confidence: 99, status: "success", isOther: false },
       { id: 3, sourceText: updatedJson.document_date || "-", field: "document_date", value: updatedJson.document_date || "-", confidence: 99, status: "success", isOther: false },
-      { id: 4, sourceText: updatedJson.party_name || "-", field: "party_name", value: updatedJson.party_name || "-", confidence: 99, status: "success", isOther: false },
-      { id: 5, sourceText: updatedJson.source_file || fileName, field: "source_file", value: updatedJson.source_file || fileName, confidence: 100, status: "success", isOther: false },
-      { id: 6, sourceText: String(updatedJson.quantity ?? 1), field: "quantity", value: String(updatedJson.quantity ?? 1), confidence: 99, status: "success", isOther: false },
-      { id: 7, sourceText: String(updatedJson.total_amount ?? 0), field: "total_amount", value: String(updatedJson.total_amount ?? 0), confidence: 99, status: "success", isOther: false },
+      { id: 4, sourceText: sender, field: "sender", value: sender, confidence: 99, status: "success", isOther: false },
+      { id: 5, sourceText: updatedJson.receiver || "-", field: "receiver", value: updatedJson.receiver || "-", confidence: 99, status: "success", isOther: false },
+      { id: 6, sourceText: updatedJson.origin || "-", field: "origin", value: updatedJson.origin || "-", confidence: 99, status: "success", isOther: false },
+      { id: 7, sourceText: updatedJson.destination || "-", field: "destination", value: updatedJson.destination || "-", confidence: 99, status: "success", isOther: false },
+      { id: 8, sourceText: updatedJson.reference_number || "-", field: "reference_number", value: updatedJson.reference_number || "-", confidence: 99, status: "success", isOther: false },
+      { id: 9, sourceText: String(updatedJson.unit_price ?? 0), field: "unit_price", value: String(updatedJson.unit_price ?? 0), confidence: 99, status: "success", isOther: false },
+      { id: 10, sourceText: String(updatedJson.total_amount ?? 0), field: "total_amount", value: String(updatedJson.total_amount ?? 0), confidence: 99, status: "success", isOther: false },
+      { id: 11, sourceText: updatedJson.currency || "THB", field: "currency", value: updatedJson.currency || "THB", confidence: 99, status: "success", isOther: false },
     ];
 
     Object.entries(otherObj).forEach(([k, v], idx) => {
       if (k !== "storage_url") {
         nextFields.push({
-          id: 8 + idx,
+          id: 12 + idx,
           sourceText: String(v),
           field: k,
           value: String(v),
@@ -481,19 +487,25 @@ export function App() {
       let currentFields = activeDoc.fields;
       if (updatedJson) {
         const otherObj = updatedJson.other || {};
+        const docNo = updatedJson.document_number || updatedJson.document_no || "-";
+        const sender = updatedJson.sender || updatedJson.party_name || "-";
         currentFields = [
           { id: 1, sourceText: updatedJson.document_type || "invoice", field: "document_type", value: updatedJson.document_type || "invoice", confidence: 99, status: "success", isOther: false },
-          { id: 2, sourceText: updatedJson.document_no || "-", field: "document_no", value: updatedJson.document_no || "-", confidence: 99, status: "success", isOther: false },
+          { id: 2, sourceText: docNo, field: "document_number", value: docNo, confidence: 99, status: "success", isOther: false },
           { id: 3, sourceText: updatedJson.document_date || "-", field: "document_date", value: updatedJson.document_date || "-", confidence: 99, status: "success", isOther: false },
-          { id: 4, sourceText: updatedJson.party_name || "-", field: "party_name", value: updatedJson.party_name || "-", confidence: 99, status: "success", isOther: false },
-          { id: 5, sourceText: updatedJson.source_file || fileName, field: "source_file", value: updatedJson.source_file || fileName, confidence: 100, status: "success", isOther: false },
-          { id: 6, sourceText: String(updatedJson.quantity ?? 1), field: "quantity", value: String(updatedJson.quantity ?? 1), confidence: 99, status: "success", isOther: false },
-          { id: 7, sourceText: String(updatedJson.total_amount ?? 0), field: "total_amount", value: String(updatedJson.total_amount ?? 0), confidence: 99, status: "success", isOther: false },
+          { id: 4, sourceText: sender, field: "sender", value: sender, confidence: 99, status: "success", isOther: false },
+          { id: 5, sourceText: updatedJson.receiver || "-", field: "receiver", value: updatedJson.receiver || "-", confidence: 99, status: "success", isOther: false },
+          { id: 6, sourceText: updatedJson.origin || "-", field: "origin", value: updatedJson.origin || "-", confidence: 99, status: "success", isOther: false },
+          { id: 7, sourceText: updatedJson.destination || "-", field: "destination", value: updatedJson.destination || "-", confidence: 99, status: "success", isOther: false },
+          { id: 8, sourceText: updatedJson.reference_number || "-", field: "reference_number", value: updatedJson.reference_number || "-", confidence: 99, status: "success", isOther: false },
+          { id: 9, sourceText: String(updatedJson.unit_price ?? 0), field: "unit_price", value: String(updatedJson.unit_price ?? 0), confidence: 99, status: "success", isOther: false },
+          { id: 10, sourceText: String(updatedJson.total_amount ?? 0), field: "total_amount", value: String(updatedJson.total_amount ?? 0), confidence: 99, status: "success", isOther: false },
+          { id: 11, sourceText: updatedJson.currency || "THB", field: "currency", value: updatedJson.currency || "THB", confidence: 99, status: "success", isOther: false },
         ];
         Object.entries(otherObj).forEach(([k, v], idx) => {
           if (k !== "storage_url") {
             currentFields.push({
-              id: 8 + idx,
+              id: 12 + idx,
               sourceText: String(v),
               field: k,
               value: String(v),

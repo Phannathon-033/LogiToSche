@@ -121,10 +121,10 @@ export function SlmAccuracyCard({
             <div className="absolute -bottom-6 -right-6 h-16 w-16 rounded-full bg-indigo-500/10 blur-xl" />
           </div>
 
-          {/* 7 Core Fill Rate */}
+          {/* 11 Core Fill Rate */}
           <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-700/60 dark:bg-slate-800/80">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">ความครบถ้วน 7 ฟิลด์หลัก</span>
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">ความครบถ้วน 11 ฟิลด์หลัก</span>
               <FileCheck className="h-4 w-4 text-emerald-500" />
             </div>
             <div className="mt-2 flex items-baseline gap-1">
@@ -133,7 +133,7 @@ export function SlmAccuracyCard({
               </span>
             </div>
             <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-              สกัดข้อมูลลง Schema ครบ 7/7
+              สกัดข้อมูลลง Schema ครบ 11/11
             </div>
           </div>
 
@@ -169,13 +169,13 @@ export function SlmAccuracyCard({
           </div>
         </div>
 
-        {/* 7 Core Fields Accuracy Breakdown Table */}
+        {/* 11 Core Fields Accuracy Breakdown Table */}
         <div className="overflow-hidden rounded-xl border border-slate-200/90 bg-white shadow-sm dark:border-slate-700/80 dark:bg-slate-800/90">
           <div className="flex items-center justify-between border-b border-slate-200/80 bg-slate-50/70 px-4 py-2.5 dark:border-slate-700/60 dark:bg-slate-800/50">
             <div className="flex items-center gap-2">
               <Layers className="h-4 w-4 text-indigo-500" />
               <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                ผลการวิเคราะห์ความแม่นยำรายฟิลด์ 7 ฟิลด์หลัก (Field-by-Field Breakdown)
+                ผลการวิเคราะห์ความแม่นยำรายฟิลด์ 11 ฟิลด์มาตรฐาน (Field-by-Field Breakdown)
               </span>
             </div>
             <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">

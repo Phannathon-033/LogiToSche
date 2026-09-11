@@ -18,6 +18,7 @@ import {
   HelpCircle,
   Layers,
   Loader2,
+  MapPin,
   RefreshCw,
   Search,
   Sparkles,
@@ -703,94 +704,166 @@ export function FirebaseCloudHistoryModal({
                     )}
                   </div>
 
-                  {/* Right: 7 Core Fields Card Grid */}
-                  <div className="space-y-2">
-                    <p className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                      <FileCheck className="h-4 w-4 text-blue-600" />
-                      <span>ข้อมูล 7 ฟิลด์หลักที่สกัดได้ (Extracted Key-Values)</span>
-                    </p>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-                      {/* Field 1: Document Type */}
-                      <div className="rounded-xl border border-slate-200/90 bg-white p-3.5 shadow-2xs hover:border-blue-200 transition">
-                        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-slate-400 mb-1">
-                          <Tag className="h-3.5 w-3.5 text-blue-500" />
-                          <span>Document Type</span>
+                  {/* Right: 11 Core Standard Fields Card Grid */}
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <FileCheck className="h-4 w-4 text-blue-600" />
+                        <span>ข้อมูล 11 ฟิลด์มาตรฐานที่สกัดได้ (11 Core Logistics Fields)</span>
+                      </p>
+                      <span className="rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-[11px] font-bold text-blue-700">
+                        11 ฟิลด์หลัก
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+                      {/* 1. Document Type */}
+                      <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs hover:border-blue-200 transition">
+                        <div className="flex items-center gap-1 text-[10.5px] font-bold uppercase text-slate-400 mb-1">
+                          <Tag className="h-3 w-3 text-blue-500" />
+                          <span>1. Document Type</span>
                         </div>
-                        <p className="font-bold text-sm text-slate-900 capitalize">
+                        <p className="font-bold text-xs text-slate-900 capitalize truncate" title={extracted.docType}>
                           {extracted.docType}
                         </p>
                       </div>
 
-                      {/* Field 2: Document Number */}
-                      <div className="rounded-xl border border-slate-200/90 bg-white p-3.5 shadow-2xs hover:border-blue-200 transition">
-                        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-slate-400 mb-1">
-                          <Hash className="h-3.5 w-3.5 text-indigo-500" />
-                          <span>Document No</span>
+                      {/* 2. Document Number */}
+                      <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs hover:border-blue-200 transition">
+                        <div className="flex items-center gap-1 text-[10.5px] font-bold uppercase text-slate-400 mb-1">
+                          <Hash className="h-3 w-3 text-indigo-500" />
+                          <span>2. Document No.</span>
                         </div>
                         <p
-                          className="font-mono font-bold text-sm text-slate-900 truncate"
+                          className="font-mono font-bold text-xs text-slate-900 truncate"
                           title={extracted.docNo}
                         >
                           {extracted.docNo}
                         </p>
                       </div>
 
-                      {/* Field 3: Document Date */}
-                      <div className="rounded-xl border border-slate-200/90 bg-white p-3.5 shadow-2xs hover:border-blue-200 transition">
-                        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-slate-400 mb-1">
-                          <Calendar className="h-3.5 w-3.5 text-sky-500" />
-                          <span>Document Date</span>
+                      {/* 3. Document Date */}
+                      <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs hover:border-blue-200 transition">
+                        <div className="flex items-center gap-1 text-[10.5px] font-bold uppercase text-slate-400 mb-1">
+                          <Calendar className="h-3 w-3 text-sky-500" />
+                          <span>3. Document Date</span>
                         </div>
-                        <p className="font-mono font-bold text-sm text-slate-900">
+                        <p className="font-mono font-bold text-xs text-slate-900 truncate" title={extracted.docDate}>
                           {extracted.docDate}
                         </p>
                       </div>
 
-                      {/* Field 4: Sender / Vendor */}
-                      <div className="rounded-xl border border-slate-200/90 bg-white p-3.5 shadow-2xs hover:border-blue-200 transition">
-                        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-slate-400 mb-1">
-                          <Building2 className="h-3.5 w-3.5 text-amber-500" />
-                          <span>ผู้ส่ง / ผู้ออกบิล</span>
+                      {/* 4. Sender / Vendor */}
+                      <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs hover:border-blue-200 transition">
+                        <div className="flex items-center gap-1 text-[10.5px] font-bold uppercase text-slate-400 mb-1">
+                          <Building2 className="h-3 w-3 text-amber-500" />
+                          <span>4. ผู้ส่ง (Sender)</span>
                         </div>
                         <p
-                          className="font-bold text-sm text-slate-900 truncate"
+                          className="font-bold text-xs text-slate-900 truncate"
                           title={extracted.sender}
                         >
                           {extracted.sender}
                         </p>
                       </div>
 
-                      {/* Field 5: Receiver / Customer */}
-                      <div className="rounded-xl border border-slate-200/90 bg-white p-3.5 shadow-2xs hover:border-blue-200 transition">
-                        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-slate-400 mb-1">
-                          <Building2 className="h-3.5 w-3.5 text-cyan-500" />
-                          <span>ผู้รับ / ลูกค้า</span>
+                      {/* 5. Receiver / Buyer */}
+                      <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs hover:border-blue-200 transition">
+                        <div className="flex items-center gap-1 text-[10.5px] font-bold uppercase text-slate-400 mb-1">
+                          <Building2 className="h-3 w-3 text-cyan-500" />
+                          <span>5. ผู้รับ (Receiver)</span>
                         </div>
                         <p
-                          className="font-bold text-sm text-slate-900 truncate"
+                          className="font-bold text-xs text-slate-900 truncate"
                           title={extracted.receiver}
                         >
                           {extracted.receiver}
                         </p>
                       </div>
 
-                      {/* Field 6: Quantity */}
-                      <div className="rounded-xl border border-slate-200/90 bg-white p-3.5 shadow-2xs hover:border-blue-200 transition">
-                        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-slate-400 mb-1">
-                          <Layers className="h-3.5 w-3.5 text-purple-500" />
-                          <span>Quantity</span>
+                      {/* 6. Origin */}
+                      <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs hover:border-blue-200 transition">
+                        <div className="flex items-center gap-1 text-[10.5px] font-bold uppercase text-slate-400 mb-1">
+                          <MapPin className="h-3 w-3 text-emerald-500" />
+                          <span>6. ต้นทาง (Origin)</span>
                         </div>
-                        <p className="font-bold text-sm text-slate-900">
-                          {extracted.qty}
+                        <p
+                          className="font-bold text-xs text-slate-900 truncate"
+                          title={extracted.origin}
+                        >
+                          {extracted.origin}
                         </p>
                       </div>
 
-                      {/* Field 7: Total Amount (Hero Highlight) */}
+                      {/* 7. Destination */}
+                      <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs hover:border-blue-200 transition">
+                        <div className="flex items-center gap-1 text-[10.5px] font-bold uppercase text-slate-400 mb-1">
+                          <MapPin className="h-3 w-3 text-rose-500" />
+                          <span>7. ปลายทาง (Dest)</span>
+                        </div>
+                        <p
+                          className="font-bold text-xs text-slate-900 truncate"
+                          title={extracted.destination}
+                        >
+                          {extracted.destination}
+                        </p>
+                      </div>
+
+                      {/* 8. Reference Number */}
+                      <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs hover:border-blue-200 transition">
+                        <div className="flex items-center gap-1 text-[10.5px] font-bold uppercase text-slate-400 mb-1">
+                          <FileText className="h-3 w-3 text-purple-500" />
+                          <span>8. เลขที่อ้างอิง (Ref No.)</span>
+                        </div>
+                        <p
+                          className="font-mono font-bold text-xs text-slate-900 truncate"
+                          title={extracted.refNumber}
+                        >
+                          {extracted.refNumber}
+                        </p>
+                      </div>
+
+                      {/* 9. Unit Price */}
+                      <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs hover:border-blue-200 transition">
+                        <div className="flex items-center gap-1 text-[10.5px] font-bold uppercase text-slate-400 mb-1">
+                          <DollarSign className="h-3 w-3 text-teal-500" />
+                          <span>9. ราคาต่อหน่วย (Unit)</span>
+                        </div>
+                        <p className="font-mono font-bold text-xs text-slate-900 truncate">
+                          {extracted.unitPrice !== "-" ? `${extracted.currency} ${extracted.unitPrice}` : "-"}
+                        </p>
+                      </div>
+
+                      {/* 10. Currency */}
+                      <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs hover:border-blue-200 transition">
+                        <div className="flex items-center gap-1 text-[10.5px] font-bold uppercase text-slate-400 mb-1">
+                          <DollarSign className="h-3 w-3 text-blue-500" />
+                          <span>11. สกุลเงิน (Currency)</span>
+                        </div>
+                        <p className="font-mono font-bold text-xs text-slate-900">
+                          {extracted.currency}
+                        </p>
+                      </div>
+
+                      {/* Extra: Quantity if present */}
+                      {extracted.qty && (
+                        <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs hover:border-blue-200 transition">
+                          <div className="flex items-center gap-1 text-[10.5px] font-bold uppercase text-slate-400 mb-1">
+                            <Layers className="h-3 w-3 text-indigo-500" />
+                            <span>จำนวนสินค้า (Quantity)</span>
+                          </div>
+                          <p className="font-bold text-xs text-slate-900">
+                            {extracted.qty}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* 11. Total Amount (Hero Highlight) */}
                       <div className="col-span-2 sm:col-span-3 rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-50/90 via-teal-50/40 to-white p-4 shadow-2xs flex items-center justify-between">
                         <div>
                           <div className="flex items-center gap-1 text-xs font-bold uppercase text-emerald-800">
                             <DollarSign className="h-3.5 w-3.5" />
-                            <span>ยอดเงินรวมสุทธิ (Total Amount)</span>
+                            <span>10. ยอดเงินรวมสุทธิ (Total Amount)</span>
                           </div>
                           <p className="text-2xl font-black text-emerald-700 font-mono mt-0.5">
                             {extracted.total !== "-"
@@ -864,7 +937,7 @@ export function FirebaseCloudHistoryModal({
                 <Cloud className="mx-auto h-12 w-12 stroke-[1.4] text-slate-300 mb-2" />
                 <p className="text-sm font-bold text-slate-700">เลือกเอกสารจากรายการด้านซ้าย</p>
                 <p className="text-xs text-slate-400 mt-1 max-w-[280px]">
-                  เพื่อดูรายละเอียดการสกัดข้อมูล 7 ฟิลด์หลัก, ตัวอย่างรูปภาพ และ JSON Schema Payload
+                  เพื่อดูรายละเอียดการสกัดข้อมูล 11 ฟิลด์มาตรฐาน, ตัวอย่างรูปภาพ และ JSON Schema Payload
                 </p>
               </div>
             )}
@@ -947,15 +1020,25 @@ function getExtractedFieldValues(record: FirebaseDocumentRecord) {
   const docDate = schema.document_date || "-";
   const sender = schema.sender || (schema as any).party_name || "-";
   const receiver = schema.receiver || "-";
+  const origin = schema.origin || "-";
+  const destination = schema.destination || "-";
+  const refNumber = schema.reference_number || "-";
+  const unitPrice =
+    schema.unit_price !== undefined && schema.unit_price !== null && String(schema.unit_price) !== ""
+      ? Number(schema.unit_price).toLocaleString("th-TH", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      : "-";
   const total =
-    schema.total_amount !== undefined && schema.total_amount !== null
+    schema.total_amount !== undefined && schema.total_amount !== null && String(schema.total_amount) !== ""
       ? Number(schema.total_amount).toLocaleString("th-TH", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })
       : "-";
   const currency = schema.currency && schema.currency !== "-" ? schema.currency : "THB";
-  const qty = schema.other?.quantity ?? (schema as any).quantity ?? "-";
+  const qty = schema.other?.quantity ?? (schema as any).quantity ?? null;
   const vat =
     schema.other?.vat_amount !== undefined &&
     schema.other?.vat_amount !== null &&
@@ -965,7 +1048,21 @@ function getExtractedFieldValues(record: FirebaseDocumentRecord) {
         })
       : null;
 
-  return { docType, docNo, docDate, sender, receiver, total, currency, qty, vat };
+  return {
+    docType,
+    docNo,
+    docDate,
+    sender,
+    receiver,
+    origin,
+    destination,
+    refNumber,
+    unitPrice,
+    total,
+    currency,
+    qty,
+    vat,
+  };
 }
 
 /**
