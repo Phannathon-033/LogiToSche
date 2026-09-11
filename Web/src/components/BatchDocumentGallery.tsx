@@ -150,17 +150,22 @@ export function BatchDocumentGallery({
       </div>
 
       {/* Batch Overall Processing Status Bar */}
-      <div className="mt-4 rounded-xl border border-indigo-100 bg-gradient-to-r from-indigo-50/70 via-blue-50/40 to-slate-50/60 p-4 dark:border-indigo-900/40 dark:from-slate-800/80 dark:via-slate-800 dark:to-slate-800">
+      <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3.5 dark:border-slate-800 dark:bg-slate-800">
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-navy dark:text-white">
+            {batchPhase === "completed" ? (
+              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+            ) : isProcessing ? (
+              <Loader2 className="h-4 w-4 text-blue-600 animate-spin" />
+            ) : null}
+            <span className="font-semibold text-slate-900 dark:text-white">
               {batchPhase === "completed"
-                ? "🎉 ประมวลผลเสร็จสมบูรณ์ทุกเอกสารแล้ว"
+                ? "ประมวลผลเสร็จสมบูรณ์ทุกเอกสารแล้ว"
                 : isProcessing
-                ? "⚡ ระบบกำลังประมวลผลตามลำดับอัตโนมัติ"
+                ? "ระบบกำลังประมวลผลตามลำดับอัตโนมัติ"
                 : "พร้อมประมวลผล"}
             </span>
-            <span className="font-mono text-xs font-black text-primary">
+            <span className="font-mono text-xs font-bold text-blue-600">
               {totalProgressPct}%
             </span>
           </div>

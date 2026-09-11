@@ -61,9 +61,9 @@ export function LandingHeroConverter({
       <section className="grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-12">
         {/* Left Headline & Description */}
         <div className="flex flex-col items-start gap-4">
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900">
             Logistics Document{" "}
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-500 bg-clip-text text-transparent">
+            <span className="text-blue-600">
               Converter
             </span>
           </h1>

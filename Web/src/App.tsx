@@ -317,7 +317,7 @@ export function App() {
 
       setBatchPhase("completed");
       setSteps(nextStepState(initialSteps, 6));
-      showToast(`🎉 ประมวลผลแบทช์เสร็จสมบูรณ์ทั้งหมด ${allDocs.length} เอกสารแล้ว!`);
+      showToast(`ประมวลผลแบทช์เสร็จสมบูรณ์ทั้งหมด ${allDocs.length} เอกสารแล้ว`);
     } catch (batchErr) {
       console.error("Batch processing error:", batchErr);
       showToast("เกิดข้อผิดพลาดในการประมวลผลแบทช์");
@@ -506,13 +506,13 @@ export function App() {
           },
           activeDoc.file
         );
-        showToast("🎉 บันทึกการแก้ไข JSON Schema ลง Cloud Firestore เรียบร้อย!");
+        showToast("บันทึกการแก้ไข JSON Schema ลง Cloud Firestore เรียบร้อย");
       } catch (err) {
         console.warn("Cloud save warning after manual edit:", err);
-        showToast("💾 บันทึกการแก้ไข JSON Schema เรียบร้อย");
+        showToast("บันทึกการแก้ไข JSON Schema เรียบร้อย");
       }
     } else {
-      showToast("💾 บันทึกการแก้ไข JSON Schema เรียบร้อย");
+      showToast("บันทึกการแก้ไข JSON Schema เรียบร้อย");
     }
   }
 
@@ -534,7 +534,7 @@ export function App() {
       showToast("ยังไม่มีข้อมูล JSON Schema ให้บันทึกขึ้น Cloud");
       return;
     }
-    showToast("☁️ กำลังบันทึกข้อมูลขึ้น Google Cloud Firebase...");
+    showToast("กำลังบันทึกข้อมูลขึ้น Google Cloud Firebase...");
     try {
       const fbRecord = await saveDocumentToFirebase(
         {
@@ -565,7 +565,7 @@ export function App() {
         storageUrl: fbRecord.storageUrl,
       };
       setBatchDocuments(nextList);
-      showToast(`☁️ บันทึกเอกสาร "${activeDoc.fileName}" ขึ้น Firebase เรียบร้อย!`);
+      showToast(`บันทึกเอกสาร "${activeDoc.fileName}" ขึ้น Firebase เรียบร้อย`);
     } catch (err) {
       console.error(err);
       showToast("บันทึกขึ้น Firebase ล้มเหลว กรุณาลองใหม่อีกครั้ง");
@@ -603,7 +603,7 @@ export function App() {
     setActiveDocIndex(0);
     setWorkspaceTab("json");
     setSteps(nextStepState(initialSteps, 6));
-    showToast(`☁️ โหลดเอกสาร "${record.fileName}" จาก Firebase สำเร็จ!`);
+    showToast(`โหลดเอกสาร "${record.fileName}" จาก Firebase สำเร็จ`);
   }
 
   function handleStepClick(stepId: number) {
@@ -664,6 +664,85 @@ export function App() {
     showToast(`ยืนยันค่า ${item.field} แล้ว`);
   }
 
+  function handleUpdateOcrLines(updatedLines: any[]) {
+    if (!activeDoc) return;
+    const updatedOcrText = updatedLines.map((l: any) => l.text).join("\n");
+    setBatchDocuments((prev) =>
+      prev.map((doc, idx) =>
+        idx === activeDocIndex
+          ? {
+              ...doc,
+              ocrLines: updatedLines,
+              ocrText: updatedOcrText,
+            }
+          : doc,
+      ),
+    );
+  }
+
+  async function handleReRunSlmForActiveDoc() {
+    if (!activeDoc) return;
+    const docIdx = activeDocIndex;
+    const targetDoc = batchDocuments[docIdx];
+    if (!targetDoc) return;
+
+    showToast("กำลังส่ง OCR ที่แก้ไขแล้วให้ Qwen SLM วิเคราะห์โครงสร้างใหม่...");
+    setBatchDocuments((prev) =>
+      prev.map((doc, idx) =>
+        idx === docIdx
+          ? {
+              ...doc,
+              status: "slm_processing" as const,
+              statusLabel: "กำลังวิเคราะห์ Qwen SLM จาก OCR ที่แก้ไข...",
+            }
+          : doc,
+      ),
+    );
+
+    try {
+      const slm = await runSlmExtraction({
+        documentTypeHint: selectedType,
+        sourceFile: targetDoc.fileName,
+        ocrText: targetDoc.ocrText,
+        ocrLines: targetDoc.ocrLines,
+        imageFile: targetDoc.file,
+      });
+
+      setBatchDocuments((prev) =>
+        prev.map((doc, idx) =>
+          idx === docIdx
+            ? {
+                ...doc,
+                jsonOutput: slm.jsonOutput,
+                fields: slm.fields,
+                confidenceScores: slm.confidenceScores,
+                overallConfidence: slm.overallConfidence,
+                performance: slm.performance ?? null,
+                reviewItems: slm.reviewItems,
+                status: "completed" as const,
+                statusLabel: `เสร็จสมบูรณ์ (${slm.performance?.accuracy_pct ?? slm.overallConfidence}%)`,
+              }
+            : doc,
+        ),
+      );
+      showToast("วิเคราะห์โครงสร้าง JSON สำเร็จตามข้อความ OCR ที่แก้ไข");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "SLM Error";
+      setBatchDocuments((prev) =>
+        prev.map((doc, idx) =>
+          idx === docIdx
+            ? {
+                ...doc,
+                status: "completed" as const,
+                statusLabel: "SLM ผิดพลาด",
+              }
+            : doc,
+        ),
+      );
+      showToast(`เกิดข้อผิดพลาดในการวิเคราะห์ SLM: ${msg}`);
+    }
+  }
+
   if (!userSession) {
     if (authMode === "register") {
       return (
@@ -689,13 +768,13 @@ export function App() {
         onOpenGroundTruth={() => setShowGroundTruthModal(true)}
         onOpenCloudHistory={() => setShowCloudHistoryModal(true)}
       />
-      <main className="px-4 py-5 sm:px-6 lg:px-8">
-        <div className="mx-auto flex w-full max-w-[1720px] flex-col gap-5">
+      <main className="px-3 py-3.5 sm:px-5 lg:px-6">
+        <div className="mx-auto flex w-full max-w-[1420px] flex-col gap-4">
           {!hasDocument ? (
             /* ========================================================= */
             /* EMPTY STATE: WHITE THEME HERO CONVERTER & WORKFLOW        */
             /* ========================================================= */
-            <div className="mx-auto w-full max-w-[1320px]">
+            <div className="mx-auto w-full max-w-[1240px]">
               <LandingHeroConverter
                 language={ocrLanguage}
                 onLanguageChange={setOcrLanguage}
@@ -709,7 +788,7 @@ export function App() {
             /* ========================================================= */
             /* ACTIVE WORKSPACE: MATCHING UPLOADED REFERENCE UI (WHITE)  */
             /* ========================================================= */
-            <div className="mx-auto w-full max-w-[1520px]">
+            <div className="mx-auto w-full max-w-[1420px]">
               <UploadedWorkspaceView
                 activeDoc={activeDoc}
                 batchDocuments={batchDocuments}
@@ -731,6 +810,8 @@ export function App() {
                 onSaveToFirebase={handleSaveJsonSchema}
                 onMoveOtherToCore={handleMoveOtherToCore}
                 onShowToast={showToast}
+                onUpdateOcrLines={handleUpdateOcrLines}
+                onReRunSlmWithOcr={handleReRunSlmForActiveDoc}
                 isProcessing={isBatchProcessing}
               />
             </div>

@@ -34,10 +34,10 @@ export function SlmPromptAssistantPanel({
   const [copied, setCopied] = useState(false);
 
   const quickPresets = [
-    { id: "synonym_party", label: "🔍 วิเคราะห์คำความหมายเดียวกัน (คู่ค้า)", icon: Layers },
-    { id: "summarize_short", label: "📝 สรุปย่อ 1-2 ประโยค", icon: MessageSquareQuote },
-    { id: "validate_numbers", label: "🔢 ตรวจสอบผลรวมเงิน (Subtotal+VAT)", icon: ListChecks },
-    { id: "translate_format", label: "🌐 แปลและจัดฟอร์แมตสากล", icon: Languages },
+    { id: "synonym_party", label: "วิเคราะห์คำความหมายเดียวกัน (คู่ค้า)", icon: Layers },
+    { id: "summarize_short", label: "สรุปย่อ 1-2 ประโยค", icon: MessageSquareQuote },
+    { id: "validate_numbers", label: "ตรวจสอบผลรวมเงิน (Subtotal+VAT)", icon: ListChecks },
+    { id: "translate_format", label: "แปลและจัดฟอร์แมตสากล", icon: Languages },
   ];
 
   async function handleQuickRun(presetId: string) {

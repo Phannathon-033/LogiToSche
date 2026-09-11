@@ -24,25 +24,21 @@ const REASONING_STEPS = [
     id: 1,
     title: "1. อ่านพิกัด 2D Spatial OCR และรูปภาพต้นฉบับ",
     detail: "ตรวจสอบตำแหน่งข้อความ [y, x] และคุณลักษณะภาพ (Header / Stamps)",
-    icon: "🔍",
   },
   {
     id: 2,
     title: "2. Qwen2.5-1.5B SLM Multimodal Reasoning",
     detail: "วิเคราะห์จับคู่ 7 ฟิลด์หลัก (Document No, Date, Party, Total, Qty)",
-    icon: "🧠",
   },
   {
     id: 3,
     title: "3. ตรวจสอบความสอดคล้องทางคณิตศาสตร์ (Math Integrity)",
     detail: "Cross-check: Subtotal + VAT = Grand Total Amount",
-    icon: "⚡",
   },
   {
     id: 4,
     title: "4. สร้างโครงสร้าง JSON Schema และวิเคราะห์ 'other'",
     detail: "แปลงฟิลด์ทั้งหมดเป็น JSON Schema มาตรฐานพร้อมบันทึก Cloud",
-    icon: "✨",
   },
 ];
 

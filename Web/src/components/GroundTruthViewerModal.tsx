@@ -1,5 +1,6 @@
 import {
   AlertCircle,
+  Award,
   BookmarkCheck,
   CheckCircle2,
   Copy,
@@ -180,10 +181,10 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
     }
 
     const foldAccs = kfoldReport.folds.map((f) => `**${f.overall_accuracy_pct.toFixed(1)}%**`).join(" | ");
-    lines.push(`| **ความแม่นยำภาพรวม (Overall Accuracy)** | ${foldAccs} | 🏆 **${kfoldReport.metrics_summary.accuracy_display}** |`);
+    lines.push(`| **ความแม่นยำภาพรวม (Overall Accuracy)** | ${foldAccs} | **${kfoldReport.metrics_summary.accuracy_display}** |`);
 
     const foldF1s = kfoldReport.folds.map((f) => `${f.f1_score_pct.toFixed(1)}%`).join(" | ");
-    lines.push(`| **F1-Score รวม (Overall F1-Score)** | ${foldF1s} | 🏆 **${kfoldReport.metrics_summary.f1_display}** |`);
+    lines.push(`| **F1-Score รวม (Overall F1-Score)** | ${foldF1s} | **${kfoldReport.metrics_summary.f1_display}** |`);
 
     navigator.clipboard.writeText(lines.join("\n"));
     setCopySuccess(true);
@@ -324,7 +325,7 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
                       onClick={() => setSelectedDoc(doc)}
                       className={`w-full text-left p-3.5 transition-all ${
                         isSelected
-                          ? "bg-purple-50 border-l-4 border-l-purple-600 dark:bg-purple-950/60"
+                          ? "bg-purple-50/90 ring-1 ring-purple-400/40 dark:bg-purple-950/60"
                           : "hover:bg-slate-100/60 dark:hover:bg-slate-800/60"
                       }`}
                     >
@@ -493,19 +494,21 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
                               {f.overall_accuracy_pct.toFixed(1)}%
                             </td>
                           ))}
-                          <td className="p-3 text-center font-mono text-purple-900 bg-purple-100/70 font-black text-sm">
-                            🏆 {kfoldReport.metrics_summary.accuracy_display}
+                          <td className="p-3 text-center font-mono text-purple-900 bg-purple-100/70 font-bold text-sm">
+                            <Award className="inline h-3.5 w-3.5 mr-1 text-purple-700" />
+                            {kfoldReport.metrics_summary.accuracy_display}
                           </td>
                         </tr>
-                        <tr className="bg-indigo-50/40 font-black">
-                          <td className="p-3 text-indigo-950 font-extrabold">F1-Score รวม (Overall F1-Score)</td>
+                        <tr className="bg-indigo-50/40 font-bold">
+                          <td className="p-3 text-indigo-950 font-semibold">F1-Score รวม (Overall F1-Score)</td>
                           {kfoldReport.folds.map((f) => (
-                            <td key={f.fold} className="p-3 text-center font-mono text-indigo-700 font-black">
+                            <td key={f.fold} className="p-3 text-center font-mono text-indigo-700 font-bold">
                               {f.f1_score_pct.toFixed(1)}%
                             </td>
                           ))}
-                          <td className="p-3 text-center font-mono text-indigo-900 bg-indigo-100/70 font-black text-sm">
-                            🏆 {kfoldReport.metrics_summary.f1_display}
+                          <td className="p-3 text-center font-mono text-indigo-900 bg-indigo-100/70 font-bold text-sm">
+                            <Award className="inline h-3.5 w-3.5 mr-1 text-indigo-700" />
+                            {kfoldReport.metrics_summary.f1_display}
                           </td>
                         </tr>
                       </tbody>

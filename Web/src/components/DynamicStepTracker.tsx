@@ -78,19 +78,19 @@ export function DynamicStepTracker({ activeDoc, isProcessing = false }: DynamicS
 
   return (
     <section
-      className="rounded-2xl border border-slate-200 bg-white px-5 py-4 sm:px-8 sm:py-5 shadow-panel"
+      className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 sm:px-6 sm:py-3 shadow-panel"
       aria-label="ขั้นตอนการประมวลผล (Live Pipeline Step Tracker)"
     >
       <div className="relative flex items-center justify-between">
         {/* Connected Line Background */}
-        <div className="pointer-events-none absolute left-6 right-6 top-5 -translate-y-1/2 sm:left-10 sm:right-10">
+        <div className="pointer-events-none absolute left-6 right-6 top-4 -translate-y-1/2 sm:left-10 sm:right-10">
           <div className="h-0.5 w-full bg-slate-200" />
         </div>
 
         {/* Dynamic Connected Progress Line */}
-        <div className="pointer-events-none absolute left-6 right-6 top-5 -translate-y-1/2 sm:left-10 sm:right-10">
+        <div className="pointer-events-none absolute left-6 right-6 top-4 -translate-y-1/2 sm:left-10 sm:right-10">
           <div
-            className="h-0.5 bg-gradient-to-r from-emerald-500 via-blue-500 to-indigo-600 transition-all duration-700 ease-out"
+            className="h-0.5 bg-blue-600 transition-all duration-500 ease-out"
             style={{
               width:
                 step4State === "completed"
@@ -116,45 +116,45 @@ export function DynamicStepTracker({ activeDoc, isProcessing = false }: DynamicS
             >
               {/* Circular Number Node */}
               <div
-                className={`grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-full font-black text-sm transition-all duration-300 ${
+                className={`grid h-8 w-8 sm:h-8.5 sm:w-8.5 place-items-center rounded-full font-semibold text-xs transition-all duration-200 ${
                   isDone
-                    ? "bg-emerald-500 text-white shadow-sm ring-4 ring-emerald-100"
+                    ? "bg-emerald-600 text-white shadow-xs ring-2 ring-emerald-100"
                     : isActive
-                    ? "bg-blue-600 text-white shadow-md ring-4 ring-blue-100 scale-110 animate-pulse"
-                    : "border-2 border-slate-300 bg-white text-slate-400"
+                    ? "bg-blue-600 text-white shadow-sm ring-2 ring-blue-100 scale-105"
+                    : "border border-slate-300 bg-white text-slate-400"
                 }`}
               >
                 {isDone ? (
-                  <Check className="h-5 w-5 stroke-[3]" />
+                  <Check className="h-4 w-4 stroke-[2.5]" />
                 ) : isActive ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <span>{step.num}</span>
                 )}
               </div>
 
               {/* Step Labels Below */}
-              <div className="mt-2.5 flex flex-col items-center space-y-0.5">
+              <div className="mt-1 flex flex-col items-center space-y-0.5">
                 <p
-                  className={`text-xs font-black tracking-tight ${
+                  className={`text-xs font-semibold ${
                     isActive
-                      ? "text-blue-600 font-extrabold"
+                      ? "text-blue-600"
                       : isDone
-                      ? "text-slate-900"
+                      ? "text-slate-800"
                       : "text-slate-400"
                   }`}
                 >
                   {step.title}
                 </p>
-                <p className="text-[11px] font-medium text-slate-500 hidden sm:block">
+                <p className="text-[11px] font-normal text-slate-500 hidden sm:block">
                   {step.subtitle}
                 </p>
 
                 {/* Status Pill */}
                 <span
-                  className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[9px] font-black border transition ${
+                  className={`mt-0.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium border transition ${
                     isActive
-                      ? "bg-blue-50 text-blue-700 border-blue-200 animate-pulse"
+                      ? "bg-blue-50 text-blue-700 border-blue-200"
                       : isDone
                       ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                       : "bg-slate-50 text-slate-400 border-slate-200"

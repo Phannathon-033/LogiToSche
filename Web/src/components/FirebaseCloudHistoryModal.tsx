@@ -79,7 +79,7 @@ export function FirebaseCloudHistoryModal({
       }
       await loadDocuments();
       if (syncedCount > 0) {
-        onShowToast(`🎉 ซิงค์สำเร็จ ${syncedCount} เอกสารขึ้น Firebase เรียบร้อย!`);
+        onShowToast(`ซิงค์สำเร็จ ${syncedCount} เอกสารขึ้น Firebase เรียบร้อย`);
       } else {
         onShowToast("ยังไม่สามารถเชื่อมต่อ Cloud Firestore ได้ กรุณาตรวจสอบว่ากด 'Create database' ใน Firebase Console แล้ว");
         setShowSetupGuide(true);
@@ -211,7 +211,7 @@ export function FirebaseCloudHistoryModal({
                 <AlertCircle className="h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
                 <div className="space-y-1">
                   <p className="font-bold text-sm">
-                    🛠️ ขั้นตอนการเปิดสิทธิ์การบันทึกข้อมูลใน Firebase Console (ทำเพียง 10 วินาที):
+                    ขั้นตอนการเปิดสิทธิ์การบันทึกข้อมูลใน Firebase Console (ทำเพียง 10 วินาที):
                   </p>
                   <ol className="list-decimal pl-5 space-y-1.5 text-slate-700 dark:text-slate-300">
                     <li>

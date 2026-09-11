@@ -1,6 +1,6 @@
 export interface OcrPosition {
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
   width?: number;
   height?: number;
   region?: string;

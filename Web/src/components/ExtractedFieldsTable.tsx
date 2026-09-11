@@ -212,7 +212,7 @@ export function ExtractedFieldsTable({
                     key={`${field.field}-${field.id}`}
                     className={`border-b border-line transition-colors ${
                       isLowConfidence
-                        ? "bg-rose-50/85 hover:bg-rose-100/80 border-l-4 border-l-rose-500"
+                        ? "bg-rose-50/60 hover:bg-rose-100/60"
                         : "hover:bg-slate-50/50"
                     }`}
                   >
@@ -236,12 +236,14 @@ export function ExtractedFieldsTable({
                     </td>
                     <td className="px-3 py-2 text-center">
                       {isLowConfidence ? (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-rose-100 border border-rose-300 px-2 py-0.5 text-xs font-extrabold text-rose-800 ring-1 ring-rose-400/40 shadow-xs">
-                          🔴 {field.confidence}%
+                        <span className="inline-flex items-center gap-1.5 rounded-md bg-rose-50 border border-rose-200 px-2 py-0.5 text-xs font-semibold text-rose-800">
+                          <span className="h-1.5 w-1.5 rounded-full bg-rose-500 shrink-0" />
+                          {field.confidence}%
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-xs font-bold text-emerald-800">
-                          🟢 {field.confidence}%
+                        <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-xs font-medium text-emerald-800">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
+                          {field.confidence}%
                         </span>
                       )}
                     </td>

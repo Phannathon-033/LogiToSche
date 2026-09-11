@@ -276,7 +276,7 @@ export function JSONOutputPanel({
 
   return (
     <Card
-      title={isEditing ? "✏️ แก้ไข JSON Schema (Manual Edit Mode)" : "JSON Schema Output (11 ฟิลด์มาตรฐาน + Other)"}
+      title={isEditing ? "แก้ไข JSON Schema (Manual Edit Mode)" : "JSON Schema Output (11 ฟิลด์มาตรฐาน + Other)"}
       icon={<Braces className="h-5 w-5 text-primary" aria-hidden="true" />}
       actions={
         <div className="flex items-center gap-1.5">

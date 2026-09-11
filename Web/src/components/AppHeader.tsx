@@ -28,8 +28,8 @@ export function AppHeader({
   const role = user?.role || "ผู้ดูแลระบบ";
 
   return (
-    <header className="sticky top-0 z-30 h-16 border-b border-slate-200/90 bg-white/95 backdrop-blur-md shadow-xs">
-      <div className="mx-auto flex h-full max-w-[1720px] items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 h-13 sm:h-14 border-b border-slate-200/90 bg-white/95 backdrop-blur-md shadow-xs">
+      <div className="mx-auto flex h-full max-w-[1420px] items-center justify-between px-3 sm:px-5 lg:px-6">
         {/* Left: Brand Logo & Title */}
         <div className="flex items-center gap-3.5">
           <Logo theme="dark" size="sm" />

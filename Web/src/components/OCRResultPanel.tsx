@@ -10,11 +10,15 @@ import {
   Info,
   LayoutGrid,
   MapPin,
+  Pencil,
+  Plus,
   ScanText,
   Search,
   Sparkles,
   Table,
   TerminalSquare,
+  Trash2,
+  X,
   Zap,
 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -26,15 +30,59 @@ interface OCRResultPanelProps {
   spatialText?: string;
   lines?: OcrLine[];
   onCopy: () => void;
+  onUpdateLines?: (lines: OcrLine[]) => void;
 }
 
-export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRResultPanelProps) {
+export function OCRResultPanel({ text, spatialText, lines = [], onCopy, onUpdateLines }: OCRResultPanelProps) {
   const [viewMode, setViewMode] = useState<"table" | "json" | "raw">("table");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterConfidence, setFilterConfidence] = useState<"all" | "high" | "review">("all");
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editingText, setEditingText] = useState<string>("");
+  const [deletingIndex, setDeletingIndex] = useState<number | null>(null);
   const isLoading = text === "กำลังส่งไฟล์ไปยัง PaddleOCR Backend..." || text === "กำลังส่งไฟล์ไปยัง PaddleOCR GPU...";
+
+  function handleStartEdit(idx: number, currentText: string) {
+    setEditingIndex(idx);
+    setEditingText(currentText);
+    setDeletingIndex(null);
+  }
+
+  function handleSaveEdit(idx: number) {
+    const trimmed = editingText.trim();
+    if (!trimmed) return;
+    const updated = lines.map((l, i) => (i === idx ? { ...l, text: trimmed, confidence: 1.0, isEdited: true } : l));
+    onUpdateLines?.(updated);
+    setEditingIndex(null);
+    setEditingText("");
+  }
+
+  function handleCancelEdit() {
+    setEditingIndex(null);
+    setEditingText("");
+  }
+
+  function handleDelete(idx: number) {
+    const updated = lines.filter((_, i) => i !== idx);
+    if (editingIndex === idx) setEditingIndex(null);
+    setDeletingIndex(null);
+    onUpdateLines?.(updated);
+  }
+
+  function handleAddLine() {
+    const newLine: OcrLine = {
+      text: "ข้อความใหม่",
+      confidence: 1.0,
+      position: { x: 0, y: 0, region: "body" },
+      bounding_box: [],
+    };
+    const updated = [...lines, newLine];
+    onUpdateLines?.(updated);
+    setEditingIndex(updated.length - 1);
+    setEditingText("ข้อความใหม่");
+  }
 
   // Format exact standard OCR JSON structure with text, confidence, bounding_box
   const ocrJsonObjects = useMemo(() => {
@@ -51,15 +99,17 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
 
   // Filtered lines according to search and confidence filter
   const filteredLines = useMemo(() => {
-    return lines.filter((line) => {
-      const rawConf = line.confidence ?? 0.95;
-                    const conf = rawConf > 1.0 ? rawConf / 100.0 : rawConf;
-      const matchesSearch = !searchQuery.trim() || line.text.toLowerCase().includes(searchQuery.toLowerCase());
-      if (!matchesSearch) return false;
-      if (filterConfidence === "high") return conf >= 0.9;
-      if (filterConfidence === "review") return conf < 0.85;
-      return true;
-    });
+    return lines
+      .map((line, originalIndex) => ({ ...line, originalIndex }))
+      .filter((line) => {
+        const rawConf = line.confidence ?? 0.95;
+        const conf = rawConf > 1.0 ? rawConf / 100.0 : rawConf;
+        const matchesSearch = !searchQuery.trim() || line.text.toLowerCase().includes(searchQuery.toLowerCase());
+        if (!matchesSearch) return false;
+        if (filterConfidence === "high") return conf >= 0.9;
+        if (filterConfidence === "review") return conf < 0.85;
+        return true;
+      });
   }, [lines, searchQuery, filterConfidence]);
 
   // Overall OCR summary statistics
@@ -260,7 +310,7 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
                 ความมั่นใจเฉลี่ย: {stats.avgConf}%
               </span>
               <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                (🟢 สมบูรณ์ {stats.highCount} · 🔴 รอตรวจ {stats.reviewCount})
+                (สมบูรณ์ {stats.highCount} · ตรวจสอบ {stats.reviewCount})
               </span>
             </div>
 
@@ -277,15 +327,27 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
                 />
               </div>
 
-              <select
-                value={filterConfidence}
-                onChange={(e) => setFilterConfidence(e.target.value as "all" | "high" | "review")}
-                className="h-7 rounded-lg border border-slate-300 bg-white px-2 text-xs font-bold text-slate-700 transition focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
-              >
-                <option value="all">ความมั่นใจทั้งหมด</option>
-                <option value="high">🟢 สูงมาก (≥90%)</option>
-                <option value="review">🔴 ตรวจสอบ (&lt;85%)</option>
-              </select>
+              <div className="flex items-center gap-1.5">
+                <select
+                  value={filterConfidence}
+                  onChange={(e) => setFilterConfidence(e.target.value as "all" | "high" | "review")}
+                  className="h-7 rounded-lg border border-slate-300 bg-white px-2 text-xs font-medium text-slate-700 transition focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+                >
+                  <option value="all">ความมั่นใจทั้งหมด</option>
+                  <option value="high">มั่นใจสูง (≥90%)</option>
+                  <option value="review">ตรวจสอบ (&lt;85%)</option>
+                </select>
+
+                <button
+                  type="button"
+                  onClick={handleAddLine}
+                  className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white shadow-xs hover:bg-blue-700 transition"
+                  title="เพิ่มข้อความ OCR (Manual Add)"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  <span>เพิ่มข้อความ</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -297,15 +359,19 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
               <table className="w-full text-left text-xs">
                 <thead className="sticky top-0 border-b border-slate-200 bg-slate-50 font-extrabold text-navy dark:border-slate-800 dark:bg-slate-800 dark:text-white">
                   <tr>
-                    <th className="px-3 py-2.5">ลำดับ</th>
+                    <th className="px-3 py-2.5 w-12">ลำดับ</th>
                     <th className="px-3 py-2.5">ข้อความที่สกัดได้ (Text)</th>
-                    <th className="px-3 py-2.5 text-center">ความมั่นใจ (Confidence)</th>
-                    <th className="px-3 py-2.5">ตำแหน่ง (Region)</th>
+                    <th className="px-3 py-2.5 text-center w-28">ความมั่นใจ</th>
+                    <th className="px-3 py-2.5 w-24">ตำแหน่ง</th>
                     <th className="px-3 py-2.5">พิกัด Bounding Box</th>
+                    <th className="px-3 py-2.5 text-center w-20">การจัดการ</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-medium dark:divide-slate-800">
-                  {filteredLines.map((line, idx) => {
+                  {filteredLines.map((line: any) => {
+                    const lineIdx = line.originalIndex ?? 0;
+                    const isEditing = editingIndex === lineIdx;
+                    const isDeleting = deletingIndex === lineIdx;
                     const rawConf = line.confidence ?? 0.95;
                     const conf = rawConf > 1.0 ? rawConf / 100.0 : rawConf;
                     const confBadge = getConfidenceBadge(conf);
@@ -314,24 +380,77 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
 
                     return (
                       <tr
-                        key={idx}
+                        key={lineIdx}
                         className={`transition-colors ${
-                          confBadge.isLow
-                            ? "bg-rose-50/85 hover:bg-rose-100/80 border-l-4 border-l-rose-500 dark:bg-rose-950/50 dark:border-l-rose-500"
-                            : "hover:bg-blue-50/40 dark:hover:bg-slate-800/60"
+                          confBadge.isLow && !line.isEdited
+                            ? "bg-rose-50/70 hover:bg-rose-100/70 dark:bg-rose-950/40"
+                            : "hover:bg-slate-50 dark:hover:bg-slate-800/60"
                         }`}
                       >
-                        <td className="px-3 py-2.5 font-mono text-[11px] font-bold text-slate-500">#{idx + 1}</td>
-                        <td className={`px-3 py-2.5 font-bold ${confBadge.isLow ? "text-rose-900 dark:text-rose-200" : "text-navy dark:text-white"}`}>
-                          <div className="flex items-center gap-1.5">
-                            {confBadge.isLow && <span className="inline-block h-2 w-2 rounded-full bg-rose-500 animate-pulse" title="ต่ำกว่าเกณฑ์" />}
-                            <span>{line.text}</span>
-                          </div>
-                        </td>
+                        <td className="px-3 py-2.5 font-mono text-[11px] font-medium text-slate-500">#{lineIdx + 1}</td>
+                        {isEditing ? (
+                          <td className="px-3 py-2">
+                            <div className="flex items-center gap-1.5">
+                              <input
+                                type="text"
+                                value={editingText}
+                                onChange={(e) => setEditingText(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") handleSaveEdit(lineIdx);
+                                  if (e.key === "Escape") handleCancelEdit();
+                                }}
+                                autoFocus
+                                className="flex-1 rounded border border-blue-400 bg-white px-2 py-1 text-xs font-medium text-slate-900 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:text-white"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleSaveEdit(lineIdx)}
+                                className="rounded bg-blue-600 px-2 py-1 text-[11px] font-medium text-white shadow-xs hover:bg-blue-700 transition"
+                              >
+                                บันทึก
+                              </button>
+                              <button
+                                type="button"
+                                onClick={handleCancelEdit}
+                                className="rounded border border-slate-200 bg-white px-2 py-1 text-[11px] font-medium text-slate-600 hover:bg-slate-50 transition dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                              >
+                                ยกเลิก
+                              </button>
+                            </div>
+                          </td>
+                        ) : (
+                          <td
+                            className={`px-3 py-2.5 font-medium ${
+                              confBadge.isLow && !line.isEdited
+                                ? "text-rose-900 dark:text-rose-200 font-semibold"
+                                : "text-slate-900 dark:text-white"
+                            }`}
+                            onDoubleClick={() => handleStartEdit(lineIdx, line.text)}
+                          >
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              {confBadge.isLow && !line.isEdited && (
+                                <span className="inline-block h-1.5 w-1.5 rounded-full bg-rose-500 shrink-0" title="ต่ำกว่าเกณฑ์" />
+                              )}
+                              <span>{line.text}</span>
+                              {line.isEdited && (
+                                <span className="rounded bg-amber-50 border border-amber-200 px-1 py-0.2 text-[9.5px] font-bold text-amber-700 dark:bg-amber-950/60 dark:border-amber-800 dark:text-amber-300">
+                                  แก้ไขแล้ว
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                        )}
                         <td className="px-3 py-2.5 text-center">
-                          <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-black ${confBadge.badge}`}>
-                            {confBadge.isLow ? "🔴 " : ""}{confBadge.pct} ({confBadge.score})
-                          </span>
+                          {line.isEdited ? (
+                            <span className="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-semibold bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800">
+                              1.00 (100%)
+                            </span>
+                          ) : (
+                            <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-semibold ${confBadge.badge}`}>
+                              {confBadge.isLow && <span className="inline-block h-1.5 w-1.5 rounded-full bg-rose-500 shrink-0" />}
+                              {confBadge.pct} ({confBadge.score})
+                            </span>
+                          )}
                         </td>
                         <td className="px-3 py-2.5">
                           <span className={`inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[10px] font-bold ${regionInfo.color}`}>
@@ -340,6 +459,46 @@ export function OCRResultPanel({ text, spatialText, lines = [], onCopy }: OCRRes
                         </td>
                         <td className="px-3 py-2.5 font-mono text-[11px] text-slate-500">
                           {boxInfo.summary}
+                        </td>
+                        <td className="px-3 py-2 text-center">
+                          {isDeleting ? (
+                            <div className="flex items-center justify-center gap-1">
+                              <span className="text-[10px] text-rose-600 font-bold">ลบ?</span>
+                              <button
+                                type="button"
+                                onClick={() => handleDelete(lineIdx)}
+                                className="rounded bg-rose-600 px-1.5 py-0.5 text-[10px] font-bold text-white hover:bg-rose-700"
+                              >
+                                ลบ
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setDeletingIndex(null)}
+                                className="rounded border border-slate-200 px-1.5 py-0.5 text-[10px] text-slate-600 hover:bg-slate-50"
+                              >
+                                ยกเลิก
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() => handleStartEdit(lineIdx, line.text)}
+                                className="rounded p-1 text-slate-400 hover:bg-blue-50 hover:text-blue-600 transition"
+                                title="แก้ไขข้อความ"
+                              >
+                                <Pencil className="h-3.5 w-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setDeletingIndex(lineIdx)}
+                                className="rounded p-1 text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition"
+                                title="ลบข้อความ"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          )}
                         </td>
                       </tr>
                     );

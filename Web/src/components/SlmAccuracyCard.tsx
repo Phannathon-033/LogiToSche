@@ -88,8 +88,8 @@ export function SlmAccuracyCard({
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-rose-100 border border-rose-300 px-2.5 py-0.5 text-xs font-extrabold text-rose-800 ring-1 ring-inset ring-rose-400/40 shadow-xs dark:bg-rose-950 dark:text-rose-200">
-        <HelpCircle className="h-3.5 w-3.5 text-rose-600" /> 🔴 ต่ำกว่าเกณฑ์ ({pct.toFixed(1)}%)
+      <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 border border-rose-200 px-2.5 py-0.5 text-xs font-medium text-rose-800 dark:bg-rose-950 dark:text-rose-200">
+        <HelpCircle className="h-3.5 w-3.5 text-rose-600" /> ต่ำกว่าเกณฑ์ ({pct.toFixed(1)}%)
       </span>
     );
   }
