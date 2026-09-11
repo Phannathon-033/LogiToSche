@@ -1,7 +1,7 @@
 {
   "method": "5-Fold Cross-Validation",
   "dataset": "LogiSchema Multi-format Logistics Document Benchmark Ground Truth Dataset (11 Core Fields)",
-  "total_documents": 18,
+  "total_documents": 20,
   "k_splits": 5,
   "metrics_summary": {
     "mean_accuracy_pct": 100.0,
@@ -155,8 +155,8 @@
       "val_doc_ids": [
         "DOC-001",
         "DOC-002",
-        "DOC-006",
-        "DOC-009"
+        "DOC-016",
+        "DOC-018"
       ],
       "overall_accuracy_pct": 100.0,
       "avg_similarity_pct": 100.0,
@@ -182,9 +182,9 @@
       "val_samples_count": 4,
       "val_doc_ids": [
         "DOC-004",
-        "DOC-014",
-        "DOC-016",
-        "DOC-017"
+        "DOC-006",
+        "DOC-009",
+        "DOC-012"
       ],
       "overall_accuracy_pct": 100.0,
       "avg_similarity_pct": 100.0,
@@ -210,9 +210,9 @@
       "val_samples_count": 4,
       "val_doc_ids": [
         "DOC-003",
-        "DOC-010",
-        "DOC-012",
-        "DOC-018"
+        "DOC-014",
+        "DOC-017",
+        "DOC-019"
       ],
       "overall_accuracy_pct": 100.0,
       "avg_similarity_pct": 100.0,
@@ -235,11 +235,12 @@
     },
     {
       "fold": 4,
-      "val_samples_count": 3,
+      "val_samples_count": 4,
       "val_doc_ids": [
         "DOC-005",
-        "DOC-008",
-        "DOC-013"
+        "DOC-010",
+        "DOC-013",
+        "DOC-020"
       ],
       "overall_accuracy_pct": 100.0,
       "avg_similarity_pct": 100.0,
@@ -262,9 +263,10 @@
     },
     {
       "fold": 5,
-      "val_samples_count": 3,
+      "val_samples_count": 4,
       "val_doc_ids": [
         "DOC-007",
+        "DOC-008",
         "DOC-011",
         "DOC-015"
       ],

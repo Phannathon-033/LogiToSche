@@ -65,6 +65,13 @@ export function DocumentPreview({
   const containerRef = useRef<HTMLDivElement>(null);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+
+  // Smooth zooming & panning animation refs (60fps/120fps RAF lerp)
+  const targetZoomRef = useRef(1);
+  const currentZoomRef = useRef(1);
+  const targetPanRef = useRef({ x: 0, y: 0 });
+  const currentPanRef = useRef({ x: 0, y: 0 });
+  const animFrameRef = useRef<number | null>(null);
   const isScanning = progress !== undefined && progress > 0 && progress < 100;
 
   // Track image natural dimensions for SVG coordinate system
@@ -231,74 +238,175 @@ export function DocumentPreview({
     }
   }, [selectedBox, zoom, effectiveNaturalSize]);
 
-  // Zoom controls
+  // Smooth RAF interpolation loop (60fps/120fps buttery glide)
+  const startSmoothAnimation = () => {
+    if (animFrameRef.current !== null) return;
+
+    const tick = () => {
+      const curZ = currentZoomRef.current;
+      const tgtZ = targetZoomRef.current;
+      const diffZ = tgtZ - curZ;
+
+      const curP = currentPanRef.current;
+      const tgtP = targetPanRef.current;
+      const diffPx = tgtP.x - curP.x;
+      const diffPy = tgtP.y - curP.y;
+
+      const isZoomDone = Math.abs(diffZ) < 0.001;
+      const isPanDone = Math.abs(diffPx) < 0.3 && Math.abs(diffPy) < 0.3;
+
+      if (isZoomDone && isPanDone) {
+        currentZoomRef.current = tgtZ;
+        currentPanRef.current = { ...tgtP };
+        setZoom(Number(tgtZ.toFixed(2)));
+        setPanPosition({ x: Math.round(tgtP.x), y: Math.round(tgtP.y) });
+        animFrameRef.current = null;
+        return;
+      }
+
+      // Exponential damping factor: 0.20 provides rapid response with silky ease-out
+      const factor = 0.20;
+      const nextZ = curZ + diffZ * factor;
+      const nextPx = curP.x + diffPx * factor;
+      const nextPy = curP.y + diffPy * factor;
+
+      currentZoomRef.current = nextZ;
+      currentPanRef.current = { x: nextPx, y: nextPy };
+
+      setZoom(Number(nextZ.toFixed(3)));
+      setPanPosition({ x: nextPx, y: nextPy });
+
+      animFrameRef.current = requestAnimationFrame(tick);
+    };
+
+    animFrameRef.current = requestAnimationFrame(tick);
+  };
+
+  // Zoom controls (smooth glide)
   function handleZoomIn() {
-    setZoom((prev) => Math.min(Number((prev + 0.25).toFixed(2)), 4.0));
+    const next = Math.min(targetZoomRef.current + 0.25, 4.0);
+    targetZoomRef.current = Number(next.toFixed(2));
+    startSmoothAnimation();
   }
 
   function handleZoomOut() {
-    setZoom((prev) => Math.max(Number((prev - 0.25).toFixed(2)), 0.5));
+    const next = Math.max(targetZoomRef.current - 0.25, 0.5);
+    targetZoomRef.current = Number(next.toFixed(2));
+    if (next <= 1) {
+      targetPanRef.current = { x: 0, y: 0 };
+    }
+    startSmoothAnimation();
   }
 
   function handleResetZoom() {
-    setZoom(1);
-    setPanPosition({ x: 0, y: 0 });
+    targetZoomRef.current = 1;
+    targetPanRef.current = { x: 0, y: 0 };
+    startSmoothAnimation();
   }
 
-  // Mouse wheel zoom for main preview (scroll up = zoom in, scroll down = zoom out)
+  // Smooth mouse wheel zoom with Zoom-to-Cursor
+  const handleWheelZoom = (e: WheelEvent, container: HTMLDivElement, isFs: boolean = false) => {
+    e.preventDefault();
+
+    // Standardize delta across different mice & trackpads
+    let delta = e.deltaY;
+    if (e.deltaMode === 1) delta *= 25;
+    else if (e.deltaMode === 2) delta *= 400;
+
+    // Clamp single delta to avoid sudden leaps
+    delta = Math.max(-120, Math.min(120, delta));
+
+    // Continuous exponential zoom factor
+    const zoomFactor = Math.exp(-delta * 0.0018);
+
+    const oldTarget = targetZoomRef.current;
+    const newTarget = Math.min(Math.max(Number((oldTarget * zoomFactor).toFixed(3)), 0.5), 4.0);
+
+    if (Math.abs(newTarget - oldTarget) < 0.001) return;
+
+    targetZoomRef.current = newTarget;
+
+    // Zoom-to-cursor: keep mouse focus point stationary
+    if (newTarget <= 1) {
+      targetPanRef.current = { x: 0, y: 0 };
+    } else {
+      const rect = container.getBoundingClientRect();
+      const mouseX = e.clientX - (rect.left + rect.width / 2);
+      const mouseY = isFs
+        ? e.clientY - (rect.top + rect.height / 2)
+        : e.clientY - rect.top;
+
+      const currentPan = targetPanRef.current;
+      const scaleRatio = newTarget / oldTarget;
+
+      let nextPanX = mouseX - scaleRatio * (mouseX - currentPan.x);
+      let nextPanY = mouseY - scaleRatio * (mouseY - currentPan.y);
+
+      // Safe boundaries to prevent document from flying out of sight
+      const boundX = (rect.width * (newTarget - 1)) / 1.5 + 150;
+      const boundY = (rect.height * (newTarget - 1)) + 150;
+      nextPanX = Math.max(-boundX, Math.min(boundX, nextPanX));
+      nextPanY = isFs
+        ? Math.max(-boundY, Math.min(boundY, nextPanY))
+        : Math.max(-boundY, Math.min(120, nextPanY));
+
+      targetPanRef.current = { x: nextPanX, y: nextPanY };
+    }
+
+    startSmoothAnimation();
+  };
+
+  // Mouse wheel zoom for main preview
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      const zoomStep = 0.15;
-      const direction = e.deltaY < 0 ? 1 : -1;
-      setZoom((prev) => {
-        const next = Math.min(Math.max(Number((prev + direction * zoomStep).toFixed(2)), 0.5), 4.0);
-        if (next <= 1) {
-          setPanPosition({ x: 0, y: 0 });
-        }
-        return next;
-      });
+    const onWheel = (e: WheelEvent) => {
+      handleWheelZoom(e, container, false);
     };
 
-    container.addEventListener("wheel", handleWheel, { passive: false });
+    container.addEventListener("wheel", onWheel, { passive: false });
     return () => {
-      container.removeEventListener("wheel", handleWheel);
+      container.removeEventListener("wheel", onWheel);
     };
   }, []);
 
-  // Mouse wheel zoom for fullscreen modal (scroll up = zoom in, scroll down = zoom out)
+  // Mouse wheel zoom for fullscreen modal
   useEffect(() => {
     if (!isFullscreen) return;
     const fsContainer = fullscreenContainerRef.current;
     if (!fsContainer) return;
 
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      const zoomStep = 0.15;
-      const direction = e.deltaY < 0 ? 1 : -1;
-      setZoom((prev) => {
-        const next = Math.min(Math.max(Number((prev + direction * zoomStep).toFixed(2)), 0.5), 4.0);
-        if (next <= 1) {
-          setPanPosition({ x: 0, y: 0 });
-        }
-        return next;
-      });
+    const onWheel = (e: WheelEvent) => {
+      handleWheelZoom(e, fsContainer, true);
     };
 
-    fsContainer.addEventListener("wheel", handleWheel, { passive: false });
+    fsContainer.addEventListener("wheel", onWheel, { passive: false });
     return () => {
-      fsContainer.removeEventListener("wheel", handleWheel);
+      fsContainer.removeEventListener("wheel", onWheel);
     };
   }, [isFullscreen]);
+
+  // Cleanup animation frame on unmount
+  useEffect(() => {
+    return () => {
+      if (animFrameRef.current !== null) {
+        cancelAnimationFrame(animFrameRef.current);
+      }
+    };
+  }, []);
 
   // Handle ESC key to exit fullscreen
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape" && isFullscreen) {
         setIsFullscreen(false);
+        targetZoomRef.current = 1;
+        currentZoomRef.current = 1;
+        setZoom(1);
+        targetPanRef.current = { x: 0, y: 0 };
+        currentPanRef.current = { x: 0, y: 0 };
+        setPanPosition({ x: 0, y: 0 });
       }
     }
     window.addEventListener("keydown", handleKeyDown);
@@ -307,17 +415,22 @@ export function DocumentPreview({
 
   // Pan handlers when zoomed in
   function handleMouseDown(e: React.MouseEvent) {
-    if (zoom <= 1) return;
+    if (currentZoomRef.current <= 1) return;
+    if (animFrameRef.current !== null) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
     setIsPanning(true);
     setStartPos({ x: e.clientX - panPosition.x, y: e.clientY - panPosition.y });
   }
 
   function handleMouseMove(e: React.MouseEvent) {
-    if (!isPanning || zoom <= 1) return;
-    setPanPosition({
-      x: e.clientX - startPos.x,
-      y: e.clientY - startPos.y,
-    });
+    if (!isPanning || currentZoomRef.current <= 1) return;
+    const newX = e.clientX - startPos.x;
+    const newY = e.clientY - startPos.y;
+    setPanPosition({ x: newX, y: newY });
+    currentPanRef.current = { x: newX, y: newY };
+    targetPanRef.current = { x: newX, y: newY };
   }
 
   function handleMouseUp() {
@@ -423,7 +536,12 @@ export function DocumentPreview({
             type="button"
             onClick={() => {
               setIsFullscreen(true);
+              targetZoomRef.current = 1.25;
+              currentZoomRef.current = 1.25;
               setZoom(1.25);
+              targetPanRef.current = { x: 0, y: 0 };
+              currentPanRef.current = { x: 0, y: 0 };
+              setPanPosition({ x: 0, y: 0 });
             }}
             className="flex h-6.5 items-center gap-1 rounded-lg border border-indigo-200 bg-indigo-50/80 px-2 text-[11px] font-bold text-indigo-700 shadow-xs transition hover:bg-indigo-100 hover:border-indigo-300"
             title="เปิดโหมดเต็มจอภาพขนาดใหญ่ (Fullscreen)"
@@ -447,7 +565,7 @@ export function DocumentPreview({
         }`}
       >
         <div
-          className="mx-auto flex items-center justify-center transition-transform duration-150 ease-out origin-top"
+          className="mx-auto flex items-center justify-center origin-top will-change-transform"
           style={{
             transform: `scale(${zoom}) translate(${panPosition.x / zoom}px, ${panPosition.y / zoom}px)`,
           }}
@@ -592,7 +710,15 @@ export function DocumentPreview({
 
               <button
                 type="button"
-                onClick={() => setIsFullscreen(false)}
+                onClick={() => {
+                  setIsFullscreen(false);
+                  targetZoomRef.current = 1;
+                  currentZoomRef.current = 1;
+                  setZoom(1);
+                  targetPanRef.current = { x: 0, y: 0 };
+                  currentPanRef.current = { x: 0, y: 0 };
+                  setPanPosition({ x: 0, y: 0 });
+                }}
                 className="flex h-8 items-center gap-1.5 rounded-lg bg-rose-600/90 hover:bg-rose-600 px-3 text-xs font-black text-white transition shadow-sm"
                 title="ปิดโหมดเต็มจอ (ESC)"
               >
@@ -611,7 +737,7 @@ export function DocumentPreview({
             className="relative flex-1 overflow-auto rounded-2xl border border-slate-800 bg-slate-900/70 p-6 flex items-center justify-center cursor-grab active:cursor-grabbing"
           >
             <div
-              className="transition-transform duration-150 ease-out"
+              className="will-change-transform"
               style={{
                 transform: `scale(${zoom}) translate(${panPosition.x / zoom}px, ${panPosition.y / zoom}px)`,
               }}
