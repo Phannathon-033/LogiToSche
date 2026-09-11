@@ -25,6 +25,7 @@ import {
   Info,
   LayoutGrid,
   Layers,
+  Loader2,
   MapPin,
   Maximize2,
   Minimize2,
@@ -537,7 +538,7 @@ export function UploadedWorkspaceView({
             <DocumentPreview
               previewUrl={activeDoc.previewUrl}
               previewName={fileName}
-              progress={100}
+              progress={activeDoc.status === "ocr_processing" ? 50 : 100}
               ocrLines={ocrLines}
               selectedOcrIndex={selectedOcrIndex}
               onSelectOcrIndex={(idx) => {
@@ -965,18 +966,19 @@ export function UploadedWorkspaceView({
           {activeDoc.status === "ocr_processing" ? (
             /* State 1: OCR running, SLM waiting */
             <div className="flex min-h-[260px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/70 p-6 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-500 shadow-xs mb-2.5 border border-indigo-100">
-                <BrainCircuit className="h-6 w-6 opacity-80 animate-pulse" />
+              <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 shadow-xs mb-3 border border-indigo-100">
+                <Loader2 className="absolute h-9 w-9 animate-spin-fast text-indigo-500/80" />
+                <BrainCircuit className="h-5 w-5 opacity-90 text-indigo-700 animate-pulse" />
               </div>
-              <h4 className="text-sm font-semibold text-slate-800">
-                รอรับข้อมูลจาก PaddleOCR (Waiting for OCR)
+              <h4 className="text-sm font-bold text-slate-800">
+                กำลังรอรับข้อมูลจาก PaddleOCR GPU...
               </h4>
               <p className="mt-1 text-xs text-slate-500 max-w-md leading-relaxed">
                 ระบบกำลังสแกนข้อความ OCR ในเอกสารด้านบน เมื่อเสร็จสิ้น โมเดล Qwen SLM (GPU) จะเริ่มสกัด 11 ฟิลด์มาตรฐานโดยอัตโนมัติ
               </p>
-              <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-slate-200/80 px-3 py-1 text-[11px] font-medium text-slate-700 border border-slate-300/60">
-                <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
-                <span>สเต็ปถัดไป: สกัด 11 ฟิลด์หลักด้วย Qwen SLM</span>
+              <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-[11px] font-bold text-indigo-700 border border-indigo-200/80 shadow-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-ping" />
+                <span>ขั้นตอนถัดไป: สกัด 11 ฟิลด์หลักด้วย Qwen SLM (GPU)</span>
               </div>
             </div>
           ) : activeDoc.status === "slm_processing" || (!activeDoc.jsonOutput && isProcessing) ? (

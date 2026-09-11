@@ -25,26 +25,28 @@ export function OcrProcessingAnimation({
 
   return (
     <div className="flex h-full min-h-[440px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-b from-blue-50/40 via-white to-slate-50/80 p-8 shadow-inner text-center">
-      {/* Outer Glowing Pulsing Circle with Dual Rotating Rings & Icon */}
+      {/* Outer Glowing Pulsing Circle with Dual Guaranteed Rotating Rings & Icon */}
       <div className="relative mb-6 flex items-center justify-center">
         {/* Soft Ambient Glow */}
-        <div className="absolute h-32 w-32 rounded-full bg-blue-500/15 blur-2xl animate-pulse" />
+        <div className="absolute h-36 w-36 rounded-full bg-blue-500/15 blur-2xl animate-pulse" />
 
-        {/* Outer Dotted Rotating Ring */}
+        {/* Outer Dotted Counter-Rotating Ring */}
         <div
-          className="absolute h-24 w-24 rounded-full border-2 border-dashed border-blue-300 dark:border-blue-700 animate-spin"
-          style={{ animationDuration: "12s" }}
+          className="absolute h-28 w-28 rounded-full border-2 border-dashed border-blue-300 dark:border-blue-700 animate-spin-reverse-custom pointer-events-none"
         />
 
-        {/* Middle Smooth Spinning Gradient Ring */}
+        {/* Middle Vibrant Smooth Spinning Ring */}
         <div
-          className="absolute h-20 w-20 rounded-full border-3 border-transparent border-t-blue-600 border-r-cyan-400 animate-spin"
-          style={{ animationDuration: "1.8s" }}
+          className="absolute h-22 w-22 rounded-full border-4 border-slate-100 border-t-blue-600 border-r-cyan-500 animate-spin-fast shadow-md shadow-blue-500/10 pointer-events-none"
         />
 
-        {/* Center Solid Icon Badge */}
+        {/* Center Solid Icon Badge with Orbiting Indicator */}
         <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30">
           <Scan className="h-7 w-7 animate-pulse" />
+          {/* Orbiting glowing dot */}
+          <div className="absolute -inset-1 rounded-2xl border border-cyan-400/40 animate-spin-fast pointer-events-none">
+            <span className="absolute -top-1 left-1/2 -translate-x-1/2 h-2.5 w-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+          </div>
         </div>
 
         {/* Small floating sparkles icon */}
@@ -67,11 +69,18 @@ export function OcrProcessingAnimation({
         <span className="truncate">{fileName}</span>
       </div>
 
-      {/* Clean Loading Spinner & Elapsed Time */}
-      <div className="mt-4 flex items-center gap-2 text-xs text-slate-500 font-medium">
-        <Loader2 className="h-4 w-4 animate-spin text-primary" />
-        <span>ระบบกำลังประมวลผล OCR...</span>
-        <span className="font-mono text-slate-400">({seconds}s)</span>
+      {/* Live Spinning Indicator & Elapsed Time */}
+      <div className="mt-4 flex items-center gap-2 text-xs text-slate-600 font-medium">
+        <Loader2 className="h-4 w-4 animate-spin-fast text-blue-600 shrink-0" />
+        <span>ระบบกำลังประมวลผล OCR (PaddleOCR)...</span>
+        <span className="font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200/80">
+          {seconds}s
+        </span>
+      </div>
+
+      {/* Smooth Shimmer Progress Bar */}
+      <div className="mt-3.5 w-56 h-1.5 rounded-full bg-slate-100 overflow-hidden border border-slate-200/80">
+        <div className="h-full w-2/5 rounded-full bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 animate-shimmer" />
       </div>
 
       {/* Bottom Subtitle / Technology Pill */}
