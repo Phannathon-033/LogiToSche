@@ -215,7 +215,7 @@ export async function saveDocumentToFirebase(
     }
   }
 
-  // 4. Extract standard 11 core fields + other for Firestore
+  // 4. Extract strictly the 11 core logistics fields + other for Firestore
   const schema = record.jsonSchema || {};
   const docType = String(schema.document_type || record.documentType || "invoice").toLowerCase();
   const docNumber = String(schema.document_number || schema.document_no || "-");
@@ -228,18 +228,11 @@ export async function saveDocumentToFirebase(
   const unitPrice = typeof schema.unit_price === "number" ? schema.unit_price : (Number(schema.unit_price) || 0);
   const totalAmount = typeof schema.total_amount === "number" ? schema.total_amount : (Number(schema.total_amount) || 0);
   const currency = String(schema.currency || "THB");
-  const srcFile = String(schema.source_file || record.fileName || "document");
-  const qty = typeof schema.quantity === "number" ? schema.quantity : (Number(schema.quantity) || 1);
   const otherObj = schema.other && typeof schema.other === "object" ? { ...schema.other } : {};
+  delete (otherObj as any).storage_url;
 
-  // If storageUrl exists, store it safely inside other
-  if (storageUrl && !otherObj.storage_url) {
-    otherObj.storage_url = storageUrl;
-  }
-
-  // Complete 11 Core Logistics Schema + Compatibility & Metadata
+  // Pure 11 Core Logistics Fields + other object ONLY
   const dataToSave = sanitizeForFirestore({
-    // Standard 11 Core Logistics Fields
     document_type: docType,
     document_number: docNumber,
     document_date: docDate,
@@ -251,27 +244,7 @@ export async function saveDocumentToFirebase(
     unit_price: unitPrice,
     total_amount: totalAmount,
     currency: currency,
-
-    // Compatibility fields
-    document_no: docNumber,
-    party_name: sender,
-    quantity: qty,
-
-    // File and Extraction Telemetry
-    source_file: srcFile,
-    file_name: record.fileName || srcFile,
-    file_size: record.fileSize || "0 MB",
-    file_type: record.fileType || "image/jpeg",
-    storage_url: storageUrl || "",
-    storage_path: storagePath || "",
-    overall_confidence: record.overallConfidence || 95,
-    confidence_scores: record.confidenceScores || [],
-    ocr_text: record.ocrText || "",
-    spatial_text: record.spatialText || "",
-    user_email: record.userEmail || "guest@logiai.local",
-    user_name: record.userName || "Guest User",
     other: otherObj,
-    created_at: new Date().toISOString(),
   });
 
   try {
