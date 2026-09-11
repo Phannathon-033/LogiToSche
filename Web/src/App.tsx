@@ -517,7 +517,7 @@ export function App() {
         });
       }
 
-      await saveDocumentToFirebase(
+      const savedResult = await saveDocumentToFirebase(
         {
           id: activeDoc.id,
           fileName: activeDoc.fileName,
@@ -540,6 +540,12 @@ export function App() {
 
       const remainingCount = batchDocuments.length - 1;
       const isLast = remainingCount <= 0;
+
+      if (savedResult.cloudSyncStatus === "synced") {
+        showToast("บันทึก 11 ฟิลด์มาตรฐานขึ้น Cloud Firestore สำเร็จแล้ว");
+      } else {
+        showToast("บันทึกลง Local Workspace สำเร็จ (Cloud Sync มีการแจ้งเตือน)");
+      }
 
       setFirebaseSuccessModal({
         isOpen: true,

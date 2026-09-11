@@ -1120,8 +1120,7 @@ export function UploadedWorkspaceView({
                   onCopy={onCopyJson}
                   onDownload={onDownloadJson}
                   onMoveOtherToCore={onMoveOtherToCore}
-                  onSaveJson={onUpdateLocalJson || onSaveToFirebase}
-                  onSaveToFirebase={onSaveToFirebase}
+                  onSaveJson={onUpdateLocalJson}
                 />
               </div>
             </div>
