@@ -74,7 +74,7 @@ code {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *:not(.force-spin):not(.animate-spin-fast):not(.animate-spin-smooth):not(.animate-spin-reverse-custom):not([class*="animate-spin"]):not([class*="spin"]) {
+  *:not(.force-spin):not(.animate-spin-fast):not(.animate-spin-smooth):not(.animate-spin-reverse-custom):not(.animate-scan-line):not(.animate-scan-up-down):not([class*="animate-spin"]):not([class*="spin"]):not([class*="scan"]) {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
@@ -83,6 +83,21 @@ code {
 }
 
 /* Custom Animation Keyframes for Scanning Effect */
+@keyframes scan-up-down {
+  0% {
+    top: 0%;
+    opacity: 0.85;
+  }
+  50% {
+    top: 97%;
+    opacity: 1;
+  }
+  100% {
+    top: 0%;
+    opacity: 0.85;
+  }
+}
+
 @keyframes scan-line {
   0% { top: 0%; opacity: 0; }
   10% { opacity: 1; }
@@ -117,6 +132,10 @@ code {
 
 .animate-scan-line {
   animation: scan-line 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-scan-up-down {
+  animation: scan-up-down 3s ease-in-out infinite !important;
 }
 
 .animate-pulse-slow {

@@ -5,6 +5,7 @@ import {
   Maximize2,
   Minimize2,
   RotateCcw,
+  Scan,
   Search,
   Sparkles,
   Target,
@@ -34,6 +35,7 @@ interface DocumentPreviewProps {
   previewUrl: string | null;
   previewName: string;
   progress?: number;
+  isProcessing?: boolean;
   ocrLines?: any[];
   selectedOcrIndex?: number | null;
   onSelectOcrIndex?: (index: number | null) => void;
@@ -46,6 +48,7 @@ export function DocumentPreview({
   previewUrl,
   previewName,
   progress,
+  isProcessing = false,
   ocrLines = [],
   selectedOcrIndex = null,
   onSelectOcrIndex,
@@ -61,6 +64,9 @@ export function DocumentPreview({
   const [naturalSize, setNaturalSize] = useState<{ width: number; height: number } | null>(null);
   const [hoveredBoxIndex, setHoveredBoxIndex] = useState<number | null>(null);
 
+  // Laser scanning beam state (enabled by default with user toggle)
+  const [laserScanEnabled, setLaserScanEnabled] = useState<boolean>(true);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -71,7 +77,10 @@ export function DocumentPreview({
   const targetPanRef = useRef({ x: 0, y: 0 });
   const currentPanRef = useRef({ x: 0, y: 0 });
   const animFrameRef = useRef<number | null>(null);
-  const isScanning = progress !== undefined && progress > 0 && progress < 100;
+
+  const isAutoScanning =
+    (progress !== undefined && progress > 0 && progress < 100) || Boolean(isProcessing);
+  const isLaserActive = laserScanEnabled || isAutoScanning;
 
   // Track image natural dimensions for SVG coordinate system
   const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -479,6 +488,33 @@ export function DocumentPreview({
             </button>
           )}
 
+          {/* Toggle Laser Scanner Effect */}
+          <button
+            type="button"
+            onClick={() => {
+              setLaserScanEnabled((prev) => !prev);
+              onToast(isLaserActive ? "ปิดเอฟเฟกต์เลเซอร์สแกน" : "เปิดเอฟเฟกต์เลเซอร์สแกนขึ้น-ลง");
+            }}
+            className={`flex h-6.5 items-center gap-1 rounded-lg border px-2 text-[10.5px] font-bold shadow-xs transition cursor-pointer ${
+              isLaserActive
+                ? "border-cyan-300 bg-cyan-50 text-cyan-800 hover:bg-cyan-100"
+                : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+            }`}
+            title={
+              isLaserActive
+                ? "คลิกเพื่อปิดเอฟเฟกต์เลเซอร์สแกนขึ้น-ลง"
+                : "คลิกเพื่อเปิดเอฟเฟกต์เลเซอร์สแกนขึ้น-ลง"
+            }
+          >
+            <Scan className={`h-3 w-3 text-cyan-600 ${isLaserActive ? "animate-pulse" : ""}`} />
+            <span>สแกนเลเซอร์</span>
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                isLaserActive ? "bg-cyan-500 animate-ping" : "bg-slate-300"
+              }`}
+            />
+          </button>
+
           {/* Deselect Box Button */}
           {selectedBox && (
             <button
@@ -570,7 +606,7 @@ export function DocumentPreview({
           }}
         >
           {previewUrl ? (
-            <div className="relative inline-block select-none overflow-visible rounded-lg border border-slate-200 shadow-md bg-white">
+            <div className="relative inline-block select-none overflow-hidden rounded-lg border border-slate-200 shadow-md bg-white">
               <img
                 ref={imgRef}
                 src={previewUrl}
@@ -593,25 +629,40 @@ export function DocumentPreview({
                   naturalSize={effectiveNaturalSize}
                 />
               )}
-            </div>
-          ) : (
-            <InvoiceMockup />
-          )}
 
-          {/* Scanning Animation Overlay */}
-          {isScanning && (
-            <div className="absolute inset-0 z-10 overflow-hidden rounded-lg bg-blue-900/10 backdrop-blur-[1px]">
-              <div className="animate-scan-line absolute left-0 right-0 h-1 bg-blue-600 shadow-[0_0_12px_2px_rgba(37,99,235,0.7)]" />
-              <div className="absolute inset-0 grid place-items-center opacity-90">
-                <div className="flex animate-pulse-slow flex-col items-center gap-2 rounded-2xl bg-white/95 px-6 py-5 shadow-xl ring-1 ring-black/5 backdrop-blur-sm">
-                  <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                    <Search className="h-7 w-7 animate-bounce-slight" />
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm font-black text-slate-900">กำลังสแกนและวิเคราะห์...</p>
-                    <p className="text-xs font-bold text-blue-600">{progress}%</p>
+              {/* Laser Scanning Effect (Up and Down) directly over the document */}
+              {isLaserActive && (
+                <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+                  <div className="animate-scan-up-down absolute left-0 right-0 pointer-events-none">
+                    {/* Laser Light Gradient Trail */}
+                    <div className="h-16 w-full bg-gradient-to-b from-cyan-400/25 via-blue-500/10 to-transparent" />
+                    {/* Sharp Glowing Laser Beam Line */}
+                    <div className="h-[2.5px] w-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_16px_3px_#22d3ee]" />
                   </div>
                 </div>
+              )}
+            </div>
+          ) : (
+            <div className="relative inline-block select-none overflow-hidden rounded-lg border border-slate-200 shadow-md bg-white">
+              <InvoiceMockup />
+              {isLaserActive && (
+                <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+                  <div className="animate-scan-up-down absolute left-0 right-0 pointer-events-none">
+                    <div className="h-16 w-full bg-gradient-to-b from-cyan-400/25 via-blue-500/10 to-transparent" />
+                    <div className="h-[2.5px] w-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_16px_3px_#22d3ee]" />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Subtle Live Scanning Status Badge when processing */}
+          {isAutoScanning && (
+            <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 z-30">
+              <div className="flex items-center gap-2 rounded-full bg-slate-900/90 px-3.5 py-1.5 text-xs font-bold text-white shadow-xl backdrop-blur-md border border-cyan-500/40">
+                <Scan className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+                <span>กำลังสแกนวิเคราะห์เอกสาร...</span>
+                <span className="font-mono text-cyan-300">{progress ?? 50}%</span>
               </div>
             </div>
           )}
@@ -651,6 +702,33 @@ export function DocumentPreview({
                   <span>กรอบ OCR ({validBoxesCount})</span>
                 </button>
               )}
+
+              {/* Laser Scan Toggle in Fullscreen */}
+              <button
+                type="button"
+                onClick={() => {
+                  setLaserScanEnabled((prev) => !prev);
+                  onToast(isLaserActive ? "ปิดเอฟเฟกต์เลเซอร์สแกน" : "เปิดเอฟเฟกต์เลเซอร์สแกนขึ้น-ลง");
+                }}
+                className={`flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition cursor-pointer ${
+                  isLaserActive
+                    ? "border-cyan-500/80 bg-cyan-950/60 text-cyan-300"
+                    : "border-slate-700 bg-slate-800 text-slate-400 hover:text-white"
+                }`}
+                title={
+                  isLaserActive
+                    ? "คลิกเพื่อปิดเอฟเฟกต์เลเซอร์สแกนขึ้น-ลง"
+                    : "คลิกเพื่อเปิดเอฟเฟกต์เลเซอร์สแกนขึ้น-ลง"
+                }
+              >
+                <Scan className={`h-3.5 w-3.5 text-cyan-400 ${isLaserActive ? "animate-pulse" : ""}`} />
+                <span>สแกนเลเซอร์</span>
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    isLaserActive ? "bg-cyan-400 animate-ping" : "bg-slate-500"
+                  }`}
+                />
+              </button>
 
               {selectedBox && (
                 <button
@@ -729,7 +807,7 @@ export function DocumentPreview({
               }}
             >
               {previewUrl ? (
-                <div className="relative inline-block select-none overflow-visible rounded-xl shadow-2xl bg-white border border-slate-700">
+                <div className="relative inline-block select-none overflow-hidden rounded-xl shadow-2xl bg-white border border-slate-700">
                   <img
                     src={previewUrl}
                     alt={`เต็มจอ ${previewName}`}
@@ -751,9 +829,31 @@ export function DocumentPreview({
                       naturalSize={effectiveNaturalSize}
                     />
                   )}
+
+                  {/* Laser Scanning Effect (Up and Down) in Fullscreen */}
+                  {isLaserActive && (
+                    <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+                      <div className="animate-scan-up-down absolute left-0 right-0 pointer-events-none">
+                        {/* Laser Light Gradient Trail */}
+                        <div className="h-16 w-full bg-gradient-to-b from-cyan-400/25 via-blue-500/10 to-transparent" />
+                        {/* Sharp Glowing Laser Beam Line */}
+                        <div className="h-[2.5px] w-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_16px_3px_#22d3ee]" />
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
-                <InvoiceMockup />
+                <div className="relative inline-block select-none overflow-hidden rounded-xl shadow-2xl bg-white border border-slate-700">
+                  <InvoiceMockup />
+                  {isLaserActive && (
+                    <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+                      <div className="animate-scan-up-down absolute left-0 right-0 pointer-events-none">
+                        <div className="h-16 w-full bg-gradient-to-b from-cyan-400/25 via-blue-500/10 to-transparent" />
+                        <div className="h-[2.5px] w-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_16px_3px_#22d3ee]" />
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </div>

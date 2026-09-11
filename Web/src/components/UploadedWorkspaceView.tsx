@@ -568,6 +568,7 @@ export function UploadedWorkspaceView({
               previewUrl={activeDoc.previewUrl}
               previewName={fileName}
               progress={activeDoc.status === "ocr_processing" ? 50 : 100}
+              isProcessing={activeDoc.status === "ocr_processing" || activeDoc.status === "slm_processing" || isProcessing}
               ocrLines={ocrLines}
               selectedOcrIndex={selectedOcrIndex}
               onSelectOcrIndex={(idx) => {
