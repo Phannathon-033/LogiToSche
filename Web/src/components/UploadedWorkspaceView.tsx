@@ -1047,10 +1047,14 @@ export function UploadedWorkspaceView({
         <div className="flex-1 min-w-0 flex flex-col">
           {activeDoc.status === "ocr_processing" ? (
             /* State 1: OCR running, SLM waiting */
-            <div className="flex min-h-[260px] flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/70 p-6 text-center">
-              <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 shadow-xs mb-3 border border-indigo-100">
-                <Loader2 className="absolute h-9 w-9 animate-spin-fast text-indigo-500/80" />
-                <BrainCircuit className="h-5 w-5 opacity-90 text-indigo-700 animate-pulse" />
+            <div className="flex min-h-[320px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-indigo-200/80 bg-gradient-to-b from-indigo-50/30 via-white to-slate-50/60 p-6 text-center">
+              <div className="relative mb-4 flex items-center justify-center">
+                <div className="absolute h-24 w-24 rounded-full bg-indigo-500/10 blur-xl animate-pulse" />
+                <div className="absolute h-20 w-20 rounded-full border-2 border-dashed border-indigo-200 animate-spin-reverse-custom pointer-events-none" />
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 shadow-sm border border-indigo-100">
+                  <Loader2 className="absolute h-8 w-8 animate-spin-fast text-indigo-500/70" />
+                  <BrainCircuit className="h-5 w-5 opacity-90 text-indigo-700 animate-pulse" />
+                </div>
               </div>
               <h4 className="text-sm font-bold text-slate-800">
                 กำลังรอรับข้อมูลจาก PaddleOCR GPU...
