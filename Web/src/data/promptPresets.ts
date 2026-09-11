@@ -18,7 +18,7 @@ export const PROMPT_PRESETS: SlmPromptPreset[] = [
     badge: "เลขที่อ้างอิง",
     title: "จำแนกเลขที่เอกสาร & เลขที่ใบสั่งซื้อ (Invoice No, PO No, Tax ID)",
     description: "ตรวจสอบคำระบุเลขที่เอกสาร เช่น เลขที่, Tax Inv, Inv No, Reference No, P.O., Purchase Order, AWB No. และจัดคู่ค่าที่ถูกต้องลงในฟิลด์",
-    prompt: "ตรวจสอบคำระบุเลขที่เอกสาร เช่น เลขที่, Tax Inv, Inv No, Reference No, P.O., Purchase Order, Tax ID และจัดคู่ค่าที่ถูกต้องลงในฟิลด์ 7 ฟิลด์หลักและ other",
+    prompt: "ตรวจสอบคำระบุเลขที่เอกสาร เช่น เลขที่, Tax Inv, Inv No, Reference No, P.O., Purchase Order, Tax ID และจัดคู่ค่าที่ถูกต้องลงในฟิลด์ 11 ฟิลด์หลักและ other",
   },
   {
     id: "synonym_vehicle",
@@ -74,9 +74,9 @@ export const PROMPT_PRESETS: SlmPromptPreset[] = [
     category: "validation",
     categoryLabel: "ตรวจสอบความถูกต้อง",
     badge: "ความสมบูรณ์ของฟิลด์",
-    title: "ตรวจสอบความครบถ้วนของ 7 ฟิลด์หลัก (Core 7 Fields Quality Check)",
-    description: "ตรวจสอบว่าเอกสารนี้มีข้อมูลครบทั้ง 7 ฟิลด์หลักหรือไม่ และแนะนำข้อความใน OCR ที่สามารถนำมาเติมในฟิลด์ที่ขาดได้",
-    prompt: "ตรวจสอบว่าเอกสารนี้มีข้อมูลครบทั้ง 7 ฟิลด์หลักหรือไม่ (document_type, document_no, document_date, party_name, source_file, quantity, total_amount) หากฟิลด์ไหนขาดหายไป ให้แนะนำข้อความที่น่าจะเป็นไปได้จาก OCR Text",
+    title: "ตรวจสอบความครบถ้วนของ 11 ฟิลด์หลัก (Core 11 Fields Quality Check)",
+    description: "ตรวจสอบว่าเอกสารนี้มีข้อมูลครบทั้ง 11 ฟิลด์หลักหรือไม่ และแนะนำข้อความใน OCR ที่สามารถนำมาเติมในฟิลด์ที่ขาดได้",
+    prompt: "ตรวจสอบว่าเอกสารนี้มีข้อมูลครบทั้ง 11 ฟิลด์หลักหรือไม่ (document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, currency) หากฟิลด์ไหนขาดหายไป ให้แนะนำข้อความที่น่าจะเป็นไปได้จาก OCR Text",
   },
 
   // 4. Translation & Formatting

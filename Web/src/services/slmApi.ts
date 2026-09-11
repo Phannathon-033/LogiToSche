@@ -139,7 +139,7 @@ export async function runSlmExtraction({
     confidenceScores: [
       { label: "การอ่านข้อความ (OCR)", value: data.confidence.ocr, tone: "green" },
       { label: "การทำความเข้าใจ (SLM)", value: data.confidence.slm, tone: "blue" },
-      { label: "การแมปฟิลด์หลัก 7 ฟิลด์", value: data.confidence.mapping, tone: "blue" },
+      { label: "การแมปฟิลด์หลัก 11 ฟิลด์", value: data.confidence.mapping, tone: "blue" },
       { label: "ความครบถ้วนข้อมูล & Other", value: data.confidence.completeness, tone: "blue" },
     ],
     overallConfidence: data.confidence.overall,

@@ -69,8 +69,8 @@ interface UploadedWorkspaceViewProps {
   isSavingToFirebase?: boolean;
   onMoveOtherToCore?: (sourceOtherKey: string, targetCoreKey: string, removeFromOther: boolean) => void;
   onShowToast: (msg: string) => void;
-  onUpdateOcrLines?: (updatedLines: any[]) => void;
-  onReRunSlmWithOcr?: () => void;
+  onUpdateOcrLines?: (updatedLines: any[], autoTriggerSlm?: boolean) => void;
+  onReRunSlmWithOcr?: (overrideLines?: any[], overrideText?: string) => void;
   isProcessing?: boolean;
 }
 
@@ -106,6 +106,10 @@ export function UploadedWorkspaceView({
   const [editingText, setEditingText] = useState<string>("");
   const [deletingIndex, setDeletingIndex] = useState<number | null>(null);
   const [lastDeletedItem, setLastDeletedItem] = useState<{ line: any; index: number } | null>(null);
+
+  // Raw OCR Editing State
+  const [isEditingRaw, setIsEditingRaw] = useState<boolean>(false);
+  const [rawTextDraft, setRawTextDraft] = useState<string>("");
 
   if (!activeDoc) return null;
 
@@ -186,10 +190,9 @@ export function UploadedWorkspaceView({
       }
       return l;
     });
-    onUpdateOcrLines?.(updated);
     setEditingIndex(null);
     setEditingText("");
-    onShowToast(`แก้ไขข้อความ #${lineIdx + 1} เป็น "${trimmed}" สำเร็จ`);
+    onUpdateOcrLines?.(updated, true);
   }
 
   function handleCancelEdit() {
@@ -215,8 +218,7 @@ export function UploadedWorkspaceView({
       setEditingIndex(null);
     }
     setDeletingIndex(null);
-    onUpdateOcrLines?.(updated);
-    onShowToast(`ลบข้อความ "${textDeleted}" เรียบร้อยแล้ว`);
+    onUpdateOcrLines?.(updated, true);
   }
 
   function handleUndoDelete() {
@@ -229,8 +231,7 @@ export function UploadedWorkspaceView({
       updated.push(line);
     }
     setLastDeletedItem(null);
-    onUpdateOcrLines?.(updated);
-    onShowToast(`กู้คืนข้อความ "${line.text}" เรียบร้อยแล้ว`);
+    onUpdateOcrLines?.(updated, true);
   }
 
   function handleAddNewLine() {
@@ -244,15 +245,42 @@ export function UploadedWorkspaceView({
     };
     const updated = [...ocrLines, newLine];
     const newIdx = updated.length - 1;
-    onUpdateOcrLines?.(updated);
+    onUpdateOcrLines?.(updated, false);
     setEditingIndex(newIdx);
     setEditingText("ข้อความใหม่");
     setDeletingIndex(null);
-    onShowToast("เพิ่มข้อความใหม่แล้ว สามารถพิมพ์แก้ไขและกดบันทึกได้ทันที");
+    onShowToast("เพิ่มข้อความใหม่แล้ว สามารถพิมพ์ข้อความจริงและกดบันทึกเพื่อให้ SLM วิเคราะห์ได้ทันที");
     setTimeout(() => {
       const el = document.getElementById(`ocr-row-${newIdx}`);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }, 80);
+  }
+
+  function handleSaveRawText() {
+    const trimmedLines = rawTextDraft
+      .split("\n")
+      .map((t) => t.trim())
+      .filter((t) => t.length > 0);
+
+    if (trimmedLines.length === 0) {
+      onShowToast("ข้อความต้องไม่ว่างเปล่า");
+      return;
+    }
+
+    const updated = trimmedLines.map((txt, idx) => {
+      const existing = ocrLines[idx];
+      return {
+        text: txt,
+        confidence: 1.0,
+        position: existing?.position || { region: "body" },
+        bounding_box: existing?.bounding_box || existing?.box || [],
+        isManual: true,
+        isEdited: true,
+      };
+    });
+
+    setIsEditingRaw(false);
+    onUpdateOcrLines?.(updated, true);
   }
 
   // Core 11 Fields extraction summary
@@ -474,12 +502,13 @@ export function UploadedWorkspaceView({
             {hasEditedLines && onReRunSlmWithOcr && (
               <button
                 type="button"
-                onClick={onReRunSlmWithOcr}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-300 bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-800 shadow-xs hover:bg-indigo-100 transition"
+                onClick={() => onReRunSlmWithOcr()}
+                disabled={activeDoc.status === "slm_processing"}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-300 bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-800 shadow-xs hover:bg-indigo-100 transition disabled:opacity-50"
                 title="ส่งข้อความ OCR ที่แก้ไขแล้วให้โมเดล Qwen SLM สกัดโครงสร้าง JSON อีกครั้ง"
               >
-                <BrainCircuit className="h-3.5 w-3.5 text-indigo-600" />
-                <span>วิเคราะห์ SLM ใหม่อีกครั้ง</span>
+                <BrainCircuit className={`h-3.5 w-3.5 text-indigo-600 ${activeDoc.status === "slm_processing" ? "animate-spin" : ""}`} />
+                <span>{activeDoc.status === "slm_processing" ? "กำลังวิเคราะห์ SLM..." : "วิเคราะห์ SLM ใหม่อีกครั้ง"}</span>
               </button>
             )}
 
@@ -864,8 +893,61 @@ export function UploadedWorkspaceView({
                 )}
 
                 {ocrSubView === "raw" && (
-                  <div className="flex-1 min-h-[360px] lg:min-h-[400px] xl:min-h-[440px] max-h-[540px] overflow-y-auto rounded-lg bg-slate-50 p-3 font-mono text-xs text-slate-800 whitespace-pre-wrap border border-slate-200 leading-relaxed shadow-inner">
-                    {activeDoc.spatialText || activeDoc.ocrText || "กำลังประมวลผลข้อความ OCR..."}
+                  <div className="flex flex-col flex-1 min-h-[360px] lg:min-h-[400px] xl:min-h-[440px] max-h-[540px] rounded-lg border border-slate-200 bg-white overflow-hidden shadow-inner">
+                    <div className="flex items-center justify-between bg-slate-50 px-3 py-1.5 border-b border-slate-200 text-xs font-semibold text-slate-700">
+                      <span className="flex items-center gap-1.5">
+                        <AlignLeft className="h-3.5 w-3.5 text-slate-500" />
+                        <span>Raw OCR Text (ข้อความดิบ)</span>
+                      </span>
+                      {isEditingRaw ? (
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={handleSaveRawText}
+                            className="inline-flex items-center gap-1 rounded bg-blue-600 px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
+                          >
+                            <Check className="h-3 w-3" />
+                            <span>บันทึก & SLM วิเคราะห์ใหม่</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setIsEditingRaw(false)}
+                            className="inline-flex items-center gap-1 rounded border border-slate-300 bg-white px-2 py-1 text-[11px] font-medium text-slate-600 hover:bg-slate-50 transition cursor-pointer"
+                          >
+                            <X className="h-3 w-3" />
+                            <span>ยกเลิก</span>
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setRawTextDraft(
+                              activeDoc.spatialText ||
+                                activeDoc.ocrText ||
+                                ocrLines.map((l: any) => l.text).join("\n"),
+                            );
+                            setIsEditingRaw(true);
+                          }}
+                          className="inline-flex items-center gap-1 rounded border border-slate-300 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-50 transition shadow-xs cursor-pointer"
+                        >
+                          <Pencil className="h-3 w-3 text-slate-500" />
+                          <span>แก้ไขข้อความดิบ</span>
+                        </button>
+                      )}
+                    </div>
+                    {isEditingRaw ? (
+                      <textarea
+                        value={rawTextDraft}
+                        onChange={(e) => setRawTextDraft(e.target.value)}
+                        className="flex-1 w-full p-3 font-mono text-xs text-slate-800 focus:outline-none resize-none leading-relaxed bg-slate-50 min-h-[300px]"
+                        placeholder="พิมพ์หรือแก้ไขข้อความ OCR ที่นี่..."
+                      />
+                    ) : (
+                      <div className="flex-1 p-3 font-mono text-xs text-slate-800 whitespace-pre-wrap overflow-y-auto leading-relaxed bg-slate-50">
+                        {activeDoc.spatialText || activeDoc.ocrText || "กำลังประมวลผลข้อความ OCR..."}
+                      </div>
+                    )}
                   </div>
                 )}
 

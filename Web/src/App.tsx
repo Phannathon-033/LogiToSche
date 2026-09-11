@@ -682,34 +682,25 @@ export function App() {
     showToast(`ยืนยันค่า ${item.field} แล้ว`);
   }
 
-  function handleUpdateOcrLines(updatedLines: any[]) {
-    if (!activeDoc) return;
-    const updatedOcrText = updatedLines.map((l: any) => l.text).join("\n");
-    setBatchDocuments((prev) =>
-      prev.map((doc, idx) =>
-        idx === activeDocIndex
-          ? {
-              ...doc,
-              ocrLines: updatedLines,
-              ocrText: updatedOcrText,
-            }
-          : doc,
-      ),
-    );
-  }
-
-  async function handleReRunSlmForActiveDoc() {
+  async function handleReRunSlmForActiveDoc(overrideLines?: any[], overrideText?: string) {
     if (!activeDoc) return;
     const docIdx = activeDocIndex;
     const targetDoc = batchDocuments[docIdx];
     if (!targetDoc) return;
 
-    showToast("กำลังส่ง OCR ที่แก้ไขแล้วให้ Qwen SLM วิเคราะห์โครงสร้างใหม่...");
+    const linesToUse = overrideLines ?? targetDoc.ocrLines ?? [];
+    const textToUse =
+      overrideText ??
+      (overrideLines ? overrideLines.map((l: any) => l.text).join("\n") : targetDoc.ocrText ?? "");
+
+    showToast("บันทึกการแก้ไข OCR เรียบร้อย · กำลังให้ Qwen SLM วิเคราะห์โครงสร้าง 11 ฟิลด์ใหม่...");
     setBatchDocuments((prev) =>
       prev.map((doc, idx) =>
         idx === docIdx
           ? {
               ...doc,
+              ocrLines: linesToUse,
+              ocrText: textToUse,
               status: "slm_processing" as const,
               statusLabel: "กำลังวิเคราะห์ Qwen SLM จาก OCR ที่แก้ไข...",
             }
@@ -721,8 +712,8 @@ export function App() {
       const slm = await runSlmExtraction({
         documentTypeHint: selectedType,
         sourceFile: targetDoc.fileName,
-        ocrText: targetDoc.ocrText,
-        ocrLines: targetDoc.ocrLines,
+        ocrText: textToUse,
+        ocrLines: linesToUse,
         imageFile: targetDoc.file,
       });
 
@@ -731,6 +722,8 @@ export function App() {
           idx === docIdx
             ? {
                 ...doc,
+                ocrLines: linesToUse,
+                ocrText: textToUse,
                 jsonOutput: slm.jsonOutput,
                 fields: slm.fields,
                 confidenceScores: slm.confidenceScores,
@@ -743,7 +736,7 @@ export function App() {
             : doc,
         ),
       );
-      showToast("วิเคราะห์โครงสร้าง JSON สำเร็จตามข้อความ OCR ที่แก้ไข");
+      showToast("Qwen SLM วิเคราะห์โครงสร้าง JSON 11 ฟิลด์หลักสำเร็จตาม OCR ที่แก้ไข");
     } catch (err) {
       const msg = err instanceof Error ? err.message : "SLM Error";
       setBatchDocuments((prev) =>
@@ -758,6 +751,29 @@ export function App() {
         ),
       );
       showToast(`เกิดข้อผิดพลาดในการวิเคราะห์ SLM: ${msg}`);
+    }
+  }
+
+  function handleUpdateOcrLines(updatedLines: any[], autoTriggerSlm: boolean = true) {
+    if (!activeDoc) return;
+    const docIdx = activeDocIndex;
+    const updatedOcrText = updatedLines.map((l: any) => l.text).join("\n");
+
+    if (autoTriggerSlm) {
+      // Re-run SLM immediately using fresh lines & text to avoid state closure race conditions
+      handleReRunSlmForActiveDoc(updatedLines, updatedOcrText);
+    } else {
+      setBatchDocuments((prev) =>
+        prev.map((doc, idx) =>
+          idx === docIdx
+            ? {
+                ...doc,
+                ocrLines: updatedLines,
+                ocrText: updatedOcrText,
+              }
+            : doc,
+        ),
+      );
     }
   }
 

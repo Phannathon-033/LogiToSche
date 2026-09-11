@@ -273,7 +273,7 @@ export function SlmPromptAssistantModal({
 
         {/* Footer */}
         <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-6 py-3 text-xs text-slate-500">
-          <span>พร้อมใช้งานร่วมกับเอกสาร OCR และ 7 ฟิลด์หลัก</span>
+          <span>พร้อมใช้งานร่วมกับเอกสาร OCR และ 11 ฟิลด์หลัก</span>
           <button
             type="button"
             onClick={onClose}

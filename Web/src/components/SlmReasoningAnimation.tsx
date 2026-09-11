@@ -28,7 +28,7 @@ const REASONING_STEPS = [
   {
     id: 2,
     title: "2. Qwen2.5-1.5B SLM Multimodal Reasoning",
-    detail: "วิเคราะห์จับคู่ 7 ฟิลด์หลัก (Document No, Date, Party, Total, Qty)",
+    detail: "วิเคราะห์จับคู่ 11 ฟิลด์หลัก (Type, No, Date, Parties, Route, Price, Total, Currency)",
   },
   {
     id: 3,
@@ -38,15 +38,15 @@ const REASONING_STEPS = [
   {
     id: 4,
     title: "4. สร้างโครงสร้าง JSON Schema และวิเคราะห์ 'other'",
-    detail: "แปลงฟิลด์ทั้งหมดเป็น JSON Schema มาตรฐานพร้อมบันทึก Cloud",
+    detail: "แปลงฟิลด์ทั้งหมดเป็น 11 ฟิลด์หลักและ other มาตรฐานพร้อมบันทึก Cloud",
   },
 ];
 
 const CODE_SNIPPETS = [
   '{\n  "document_type": "invoice",',
-  '{\n  "document_type": "invoice",\n  "document_no": "INV-2026-088",',
-  '{\n  "document_type": "invoice",\n  "document_no": "INV-2026-088",\n  "party_name": "PHILIP MORRIS COMPANIES, INC.",',
-  '{\n  "document_type": "invoice",\n  "document_no": "INV-2026-088",\n  "party_name": "PHILIP MORRIS COMPANIES, INC.",\n  "total_amount": 1973.40,\n  "quantity": 1,\n  "other": { "sender_name": "BAKER & CALDWELL" }\n}',
+  '{\n  "document_type": "invoice",\n  "document_number": "INV-2026-088",\n  "document_date": "2026-08-15",',
+  '{\n  "document_type": "invoice",\n  "document_number": "INV-2026-088",\n  "sender": "PHILIP MORRIS INC.",\n  "receiver": "GLOBAL LOGISTICS",',
+  '{\n  "document_type": "invoice",\n  "document_number": "INV-2026-088",\n  "sender": "PHILIP MORRIS INC.",\n  "receiver": "GLOBAL LOGISTICS",\n  "total_amount": 1973.40,\n  "currency": "USD",\n  "other": { "quantity": 1 }\n}',
 ];
 
 export function SlmReasoningAnimation({
