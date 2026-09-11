@@ -99,7 +99,9 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
     setLoading(true);
     try {
       // 1. Fetch Ground Truth Dataset
-      const gtResp = await fetch("http://127.0.0.1:8001/api/benchmark/ground-truth");
+      const gtResp = await fetch("/api/benchmark/ground-truth").catch(() =>
+        fetch("http://127.0.0.1:8001/api/benchmark/ground-truth")
+      );
       if (gtResp.ok) {
         const data = await gtResp.json();
         const docs = data.documents || [];
@@ -110,7 +112,9 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
       }
 
       // 2. Fetch K-Fold Report
-      const kfResp = await fetch("http://127.0.0.1:8001/api/benchmark/kfold");
+      const kfResp = await fetch("/api/benchmark/kfold").catch(() =>
+        fetch("http://127.0.0.1:8001/api/benchmark/kfold")
+      );
       if (kfResp.ok) {
         const kfData = await kfResp.json();
         setKfoldReport(kfData);
@@ -125,7 +129,9 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
   async function handleRerunKFold() {
     setIsRerunningKFold(true);
     try {
-      const resp = await fetch("http://127.0.0.1:8001/api/benchmark/kfold?rerun=true");
+      const resp = await fetch("/api/benchmark/kfold?rerun=true").catch(() =>
+        fetch("http://127.0.0.1:8001/api/benchmark/kfold?rerun=true")
+      );
       if (resp.ok) {
         const data = await resp.json();
         setKfoldReport(data);

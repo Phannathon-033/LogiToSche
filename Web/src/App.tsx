@@ -862,6 +862,11 @@ export function App() {
         onShowToast={showToast}
       />
 
+      <GroundTruthViewerModal
+        isOpen={showGroundTruthModal}
+        onClose={() => setShowGroundTruthModal(false)}
+      />
+
       {firebaseSuccessModal && (
         <FirebaseSaveSuccessModal
           isOpen={firebaseSuccessModal.isOpen}
