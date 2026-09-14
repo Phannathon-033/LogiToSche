@@ -6,8 +6,11 @@ import tempfile
 import os
 import sys
 import types
+import io
+import base64
 from pathlib import Path
 from typing import Any
+from PIL import Image
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -219,6 +222,79 @@ def health() -> dict[str, str]:
     return {"status": status, "engine": "PaddleOCR", "languages": "th,en", "device": OCR_DEVICE if cuda else "cpu", "cuda": str(cuda).lower(), "slm": SLM_MODEL_ID}
 
 
+def convert_pdf_to_image(pdf_bytes: bytes, page_num: int = 0) -> tuple[Image.Image, int]:
+    """Convert page of PDF bytes to RGB PIL Image using pypdfium2 or fitz."""
+    try:
+        import pypdfium2 as pdfium
+        pdf = pdfium.PdfDocument(pdf_bytes)
+        page_count = len(pdf)
+        if page_num >= page_count:
+            page_num = 0
+        page = pdf[page_num]
+        pil_image = page.render(scale=2.0).to_pil().convert("RGB")
+        return pil_image, page_count
+    except Exception:
+        pass
+
+    try:
+        import fitz  # PyMuPDF
+        doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+        page_count = len(doc)
+        page = doc[page_num if page_num < page_count else 0]
+        pix = page.get_pixmap(dpi=150)
+        pil_image = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        return pil_image, page_count
+    except Exception as exc:
+        raise ValueError(f"Failed to render PDF: {exc}")
+
+
+def convert_tiff_to_image(tiff_bytes: bytes) -> Image.Image:
+    """Convert TIFF bytes to RGB PIL Image."""
+    img = Image.open(io.BytesIO(tiff_bytes))
+    return img.convert("RGB")
+
+
+def image_to_data_url(image: Image.Image, max_dimension: int = 1800) -> str:
+    """Convert PIL image to base64 Data URL (data:image/png;base64,...)."""
+    img = image.copy()
+    if max(img.size) > max_dimension:
+        img.thumbnail((max_dimension, max_dimension), Image.Resampling.LANCZOS)
+    buf = io.BytesIO()
+    img.save(buf, format="PNG", optimize=True)
+    b64_str = base64.b64encode(buf.getvalue()).decode("utf-8")
+    return f"data:image/png;base64,{b64_str}"
+
+
+@app.post("/api/render-pdf-preview")
+async def render_pdf_preview(file: UploadFile = File(...)) -> dict[str, Any]:
+    payload = await file.read()
+    if not payload:
+        raise HTTPException(status_code=400, detail="ไฟล์ว่าง")
+
+    suffix = Path(file.filename or "doc").suffix.lower()
+    if suffix == ".pdf":
+        try:
+            pil_image, page_count = convert_pdf_to_image(payload, page_num=0)
+            data_url = image_to_data_url(pil_image)
+            return {"image_preview": data_url, "page_count": page_count, "format": "pdf"}
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail=f"Failed to render PDF: {exc}")
+    elif suffix in {".tif", ".tiff"}:
+        try:
+            pil_image = convert_tiff_to_image(payload)
+            data_url = image_to_data_url(pil_image)
+            return {"image_preview": data_url, "page_count": 1, "format": "tiff"}
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail=f"Failed to render TIFF: {exc}")
+    else:
+        try:
+            pil_image = Image.open(io.BytesIO(payload)).convert("RGB")
+            data_url = image_to_data_url(pil_image)
+            return {"image_preview": data_url, "page_count": 1, "format": "image"}
+        except Exception:
+            return {"image_preview": "", "page_count": 1, "format": "unknown"}
+
+
 @app.post("/api/ocr")
 async def ocr_document(file: UploadFile = File(...), lang: str = Form("th")) -> dict[str, Any]:
     lang = lang.lower().strip()
@@ -231,10 +307,37 @@ async def ocr_document(file: UploadFile = File(...), lang: str = Form("th")) -> 
         raise HTTPException(status_code=400, detail="ไฟล์ว่าง")
 
     engine = get_engine(lang)
+    page_count = 1
+    image_preview = ""
+    preview_img: Image.Image | None = None
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-        tmp.write(payload)
-        tmp_path = Path(tmp.name)
+    if suffix == ".pdf":
+        try:
+            preview_img, page_count = convert_pdf_to_image(payload, page_num=0)
+            image_preview = image_to_data_url(preview_img)
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp:
+                preview_img.save(tmp.name, format="PNG")
+                tmp_path = Path(tmp.name)
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail=f"ไม่สามารถอ่านหรือแปลงไฟล์ PDF ได้: {exc}")
+    elif suffix in {".tif", ".tiff"}:
+        try:
+            preview_img = convert_tiff_to_image(payload)
+            image_preview = image_to_data_url(preview_img)
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp:
+                preview_img.save(tmp.name, format="PNG")
+                tmp_path = Path(tmp.name)
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail=f"ไม่สามารถอ่านหรือแปลงไฟล์ TIFF ได้: {exc}")
+    else:
+        try:
+            preview_img = Image.open(io.BytesIO(payload)).convert("RGB")
+            image_preview = image_to_data_url(preview_img)
+        except Exception:
+            pass
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            tmp.write(payload)
+            tmp_path = Path(tmp.name)
 
     try:
         raw_result = predict(engine, tmp_path)
@@ -252,6 +355,8 @@ async def ocr_document(file: UploadFile = File(...), lang: str = Form("th")) -> 
             "lines": lines,
             "engine": "PaddleOCR",
             "language": lang,
+            "image_preview": image_preview,
+            "page_count": page_count,
         }
     finally:
         tmp_path.unlink(missing_ok=True)

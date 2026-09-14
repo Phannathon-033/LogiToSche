@@ -25,7 +25,7 @@ import { WorkflowStepper } from "./components/WorkflowStepper";
 import { initialJson, initialSteps, ocrText } from "./data/mockData";
 import { saveDocumentToFirebase, type FirebaseDocumentRecord } from "./services/firebase";
 import { createJsonDownload, nextStepState } from "./services/mockProcessingService";
-import { runPaddleOcr, type OcrLanguage } from "./services/ocrApi";
+import { runPaddleOcr, renderPdfPreview, type OcrLanguage } from "./services/ocrApi";
 import { runSlmExtraction } from "./services/slmApi";
 import type {
   BatchDocumentItem,
@@ -128,25 +128,44 @@ export function App() {
     if (!files || files.length === 0) return;
 
     const startIndex = batchDocuments.length;
-    const newItems: BatchDocumentItem[] = files.map((file, i) => ({
-      id: `${Date.now()}_${startIndex + i}_${file.name}`,
-      file,
-      fileName: file.name,
-      fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
-      previewUrl: file.type.startsWith("image/") || file.name.match(/\.(tif|tiff|png|jpg|jpeg)$/i) ? URL.createObjectURL(file) : null,
-      status: "queued",
-      statusLabel: "รอคิวประมวลผล",
-      ocrProgress: 0,
-      ocrText: "",
-      ocrLines: [],
-      jsonOutput: null,
-      fields: [],
-      confidenceScores: [],
-      overallConfidence: 0,
-      performance: null,
-      reviewItems: [],
-      startedAt: new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }),
-    }));
+    const newItems: BatchDocumentItem[] = files.map((file, i) => {
+      const isDirectImage = file.type.startsWith("image/") || file.name.match(/\.(tif|tiff|png|jpg|jpeg)$/i);
+      return {
+        id: `${Date.now()}_${startIndex + i}_${file.name}`,
+        file,
+        fileName: file.name,
+        fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+        previewUrl: isDirectImage ? URL.createObjectURL(file) : null,
+        status: "queued",
+        statusLabel: "รอคิวประมวลผล",
+        ocrProgress: 0,
+        ocrText: "",
+        ocrLines: [],
+        jsonOutput: null,
+        fields: [],
+        confidenceScores: [],
+        overallConfidence: 0,
+        performance: null,
+        reviewItems: [],
+        startedAt: new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }),
+      };
+    });
+
+    // Generate fast preview for PDF files immediately
+    newItems.forEach((item) => {
+      const isPdf = item.file.type === "application/pdf" || item.file.name.toLowerCase().endsWith(".pdf");
+      if (isPdf) {
+        renderPdfPreview(item.file)
+          .then((previewDataUrl) => {
+            if (previewDataUrl) {
+              setBatchDocuments((prev) =>
+                prev.map((d) => (d.id === item.id ? { ...d, previewUrl: previewDataUrl } : d)),
+              );
+            }
+          })
+          .catch((err) => console.warn("PDF preview render error:", err));
+      }
+    });
 
     const allDocs = [...batchDocuments, ...newItems];
     setBatchDocuments(allDocs);
@@ -194,11 +213,13 @@ export function App() {
         try {
           const ocr = await runPaddleOcr(allDocs[i].file, ocrLanguage);
           const text = ocr.text || "PaddleOCR ไม่พบข้อความในไฟล์นี้";
+          const updatedPreview = ocr.image_preview || allDocs[i].previewUrl;
           allDocs[i] = {
             ...allDocs[i],
             ocrText: text,
             spatialText: ocr.spatial_text,
             ocrLines: ocr.lines,
+            previewUrl: updatedPreview,
             status: "ocr_completed",
             statusLabel: `OCR สำเร็จ (${i + 1}/${allDocs.length})`,
           };
@@ -253,6 +274,7 @@ export function App() {
             ocrText: allDocs[i].ocrText,
             ocrLines: allDocs[i].ocrLines,
             imageFile: allDocs[i].file,
+            imageBase64: allDocs[i].previewUrl?.startsWith("data:image/") ? allDocs[i].previewUrl : undefined,
           });
 
           allDocs[i] = {
@@ -314,7 +336,7 @@ export function App() {
 
   function handleRemoveBatchDoc(index: number) {
     const docToRemove = batchDocuments[index];
-    if (docToRemove?.previewUrl) {
+    if (docToRemove?.previewUrl && docToRemove.previewUrl.startsWith("blob:")) {
       URL.revokeObjectURL(docToRemove.previewUrl);
     }
     const nextList = batchDocuments.filter((_, idx) => idx !== index);
@@ -563,7 +585,7 @@ export function App() {
 
   function handleResetDocument() {
     batchDocuments.forEach((doc) => {
-      if (doc.previewUrl) URL.revokeObjectURL(doc.previewUrl);
+      if (doc.previewUrl && doc.previewUrl.startsWith("blob:")) URL.revokeObjectURL(doc.previewUrl);
     });
     setBatchDocuments([]);
     setActiveDocIndex(0);
@@ -575,7 +597,7 @@ export function App() {
   }
 
   function handleAdvanceAfterFirebaseSave() {
-    if (activeDoc?.previewUrl) {
+    if (activeDoc?.previewUrl && activeDoc.previewUrl.startsWith("blob:")) {
       URL.revokeObjectURL(activeDoc.previewUrl);
     }
     const nextDocs = batchDocuments.filter((_, idx) => idx !== activeDocIndex);

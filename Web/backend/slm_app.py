@@ -290,6 +290,18 @@ def slm_extract(payload: SlmExtractRequest) -> dict[str, Any]:
             import requests
             raw_b64 = payload.image_base64.split(",")[-1] if "," in payload.image_base64 else payload.image_base64
             img_bytes = base64.b64decode(raw_b64)
+
+            # If input is a PDF, render first page to PNG bytes
+            if img_bytes.startswith(b"%PDF"):
+                import pypdfium2 as pdfium
+                import io
+                pdf = pdfium.PdfDocument(img_bytes)
+                page = pdf[0]
+                pil_img = page.render(scale=2.0).to_pil().convert("RGB")
+                buf = io.BytesIO()
+                pil_img.save(buf, format="PNG")
+                img_bytes = buf.getvalue()
+
             ocr_resp = requests.post(
                 "http://127.0.0.1:8000/api/ocr",
                 files={"file": ("doc_visual.png", img_bytes, "image/png")},

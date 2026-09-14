@@ -21,6 +21,8 @@ export interface OcrApiResponse {
   lines: OcrLine[];
   engine: string;
   language: OcrLanguage;
+  image_preview?: string;
+  page_count?: number;
 }
 
 export type OcrLanguage = "th" | "en";
@@ -41,4 +43,22 @@ export async function runPaddleOcr(file: File, language: OcrLanguage): Promise<O
   }
 
   return (await response.json()) as OcrApiResponse;
+}
+
+export async function renderPdfPreview(file: File): Promise<string | null> {
+  try {
+    const body = new FormData();
+    body.append("file", file);
+    const response = await fetch("/api/render-pdf-preview", {
+      method: "POST",
+      body,
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data.image_preview || null;
+    }
+  } catch (err) {
+    console.warn("Failed to render PDF preview:", err);
+  }
+  return null;
 }

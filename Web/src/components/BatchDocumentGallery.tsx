@@ -239,11 +239,11 @@ export function BatchDocumentGallery({
 
               {/* Card Middle: Preview Thumbnail / Icon & File Title */}
               <div className="my-2.5 flex items-center gap-2.5">
-                {doc.previewUrl && !isPdf ? (
+                {doc.previewUrl ? (
                   <img
                     src={doc.previewUrl}
                     alt={doc.fileName}
-                    className="h-12 w-12 rounded-lg border border-slate-200 object-cover dark:border-slate-700"
+                    className="h-12 w-12 rounded-lg border border-slate-200 object-cover shadow-sm dark:border-slate-700"
                   />
                 ) : (
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 dark:border-red-900/50 dark:bg-red-950/30">

@@ -16,6 +16,7 @@ interface SlmExtractRequest {
   ocrText: string;
   ocrLines: OcrLine[];
   imageFile?: File | Blob;
+  imageBase64?: string;
 }
 
 function fileToBase64(file: File | Blob): Promise<string> {
@@ -39,15 +40,7 @@ interface SlmApiField {
   isOther?: boolean;
 }
 
-interface SlmApiConfidence {
-  overall: number;
-  ocr: number;
-  slm: number;
-  mapping: number;
-  completeness: number;
-}
-
-interface SlmApiReviewItem {
+interface SlmReviewItem {
   field: string;
   ocrValue: string;
   slmValue: string;
@@ -59,11 +52,17 @@ interface SlmApiReviewItem {
 interface SlmApiResponse {
   json_schema: JsonSchemaOutput;
   fields: SlmApiField[];
-  confidence: SlmApiConfidence;
-  review_items: SlmApiReviewItem[];
-  performance?: SlmPerformanceMetrics;
-  model: string;
-  device: string;
+  confidence: {
+    overall: number;
+    ocr: number;
+    slm: number;
+    mapping: number;
+    completeness: number;
+  };
+  review_items?: SlmReviewItem[];
+  performance?: Record<string, any>;
+  model?: string;
+  device?: string;
 }
 
 export interface SlmExtractionResult {
@@ -97,9 +96,10 @@ export async function runSlmExtraction({
   ocrText,
   ocrLines,
   imageFile,
+  imageBase64: providedBase64,
 }: SlmExtractRequest): Promise<SlmExtractionResult> {
-  let imageBase64: string | undefined;
-  if (imageFile) {
+  let imageBase64: string | undefined = providedBase64;
+  if (!imageBase64 && imageFile) {
     try {
       imageBase64 = await fileToBase64(imageFile);
     } catch (err) {
