@@ -18,19 +18,19 @@ const DEMO_ACCOUNTS: UserSession[] = [
   {
     username: "somchai.w",
     name: "สมชาย วงศ์สวัสดิ์",
-    role: "Admin",
+    role: "ผู้ดูแลระบบ (Admin)",
     email: "somchai.w@logiai.co.th",
   },
   {
     username: "operator.a",
     name: "อนันต์ สุขใจ",
-    role: "User",
+    role: "เจ้าหน้าที่คีย์ข้อมูล",
     email: "anan.s@logiai.co.th",
   },
   {
     username: "manager.p",
     name: "พิมลพรรณ สายชล",
-    role: "User",
+    role: "ผู้จัดการคลังสินค้า",
     email: "pimonpan.p@logiai.co.th",
   },
 ];
@@ -66,7 +66,7 @@ export function LoginPage({ onLogin, onSwitchToRegister }: LoginPageProps) {
       const session: UserSession = matched || {
         username: username.split("@")[0],
         name: username.split("@")[0].toUpperCase(),
-        role: "User",
+        role: "เจ้าหน้าที่โลจิสติกส์",
         email: username.includes("@") ? username : `${username}@logiai.co.th`,
       };
 

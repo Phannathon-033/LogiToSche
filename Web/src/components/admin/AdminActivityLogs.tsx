@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Search, ShieldAlert, Cpu, Terminal, RefreshCw, Key, FileEdit } from "lucide-react";
+import { Search } from "lucide-react";
 
 export function AdminActivityLogs() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
 
-  const [logs, setLogs] = useState([
+  const [logs] = useState([
     {
       id: "log-1",
       timestamp: "26 ส.ค. 2025 14:30",

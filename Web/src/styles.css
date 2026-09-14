@@ -15,6 +15,7 @@
 }
 
 html {
+  font-size: 14px;
   background: #f8fafc;
 }
 
@@ -73,9 +74,7 @@ code {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *:not(.force-spin):not(.animate-spin-fast):not(.animate-spin-smooth):not(.animate-spin-reverse-custom):not(.animate-scan-line):not(.animate-scan-up-down):not([class*="animate-spin"]):not([class*="spin"]):not([class*="scan"]) {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
@@ -84,6 +83,21 @@ code {
 }
 
 /* Custom Animation Keyframes for Scanning Effect */
+@keyframes scan-up-down {
+  0% {
+    top: 0%;
+    opacity: 0.85;
+  }
+  50% {
+    top: 97%;
+    opacity: 1;
+  }
+  100% {
+    top: 0%;
+    opacity: 0.85;
+  }
+}
+
 @keyframes scan-line {
   0% { top: 0%; opacity: 0; }
   10% { opacity: 1; }
@@ -101,8 +115,27 @@ code {
   50% { transform: translateY(5%); }
 }
 
+@keyframes spin-clockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-counter {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes shimmer-move {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
 .animate-scan-line {
   animation: scan-line 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-scan-up-down {
+  animation: scan-up-down 3s ease-in-out infinite !important;
 }
 
 .animate-pulse-slow {
@@ -111,4 +144,20 @@ code {
 
 .animate-bounce-slight {
   animation: bounce-slight 2s ease-in-out infinite;
+}
+
+.animate-spin-fast {
+  animation: spin-clockwise 0.85s linear infinite !important;
+}
+
+.animate-spin-smooth {
+  animation: spin-clockwise 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+}
+
+.animate-spin-reverse-custom {
+  animation: spin-counter 2.5s linear infinite !important;
+}
+
+.animate-shimmer {
+  animation: shimmer-move 1.6s ease-in-out infinite !important;
 }
