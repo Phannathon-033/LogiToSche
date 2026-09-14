@@ -1,18 +1,18 @@
 {
-  "method": "5-Fold Cross-Validation",
-  "dataset": null,
+  "method": "Standard 5-Fold Cross-Validation",
+  "dataset": "Logistics Invoice Benchmark Dataset (300 Documents)",
   "total_documents": 300,
   "k_splits": 5,
   "metrics_summary": {
-    "mean_accuracy_pct": 100.0,
-    "accuracy_std_dev": 0.0,
-    "accuracy_display": "100.0% ± 0.0%",
-    "mean_f1_score_pct": 100.0,
-    "f1_std_dev": 0.0,
-    "f1_display": "100.0% ± 0.0%",
-    "mean_similarity_pct": 100.0,
-    "similarity_std_dev": 0.0,
-    "similarity_display": "100.0% ± 0.0%"
+    "mean_accuracy_pct": 84.33,
+    "accuracy_std_dev": 1.11,
+    "accuracy_display": "84.33% ± 1.11%",
+    "mean_f1_score_pct": 91.5,
+    "f1_std_dev": 0.64,
+    "f1_display": "91.5% ± 0.64%",
+    "mean_similarity_pct": 84.33,
+    "similarity_std_dev": 1.11,
+    "similarity_display": "84.33% ± 1.11%"
   },
   "field_performance": {
     "document_type": {
@@ -28,15 +28,15 @@
       ]
     },
     "document_number": {
-      "mean_accuracy_pct": 100.0,
-      "std_dev": 0.0,
-      "display": "100.0% ± 0.0%",
+      "mean_accuracy_pct": 90.0,
+      "std_dev": 3.34,
+      "display": "90.0% ± 3.34%",
       "scores_per_fold": [
-        100.0,
-        100.0,
-        100.0,
-        100.0,
-        100.0
+        88.33,
+        96.67,
+        88.33,
+        88.33,
+        88.33
       ]
     },
     "document_date": {
@@ -52,63 +52,63 @@
       ]
     },
     "sender": {
-      "mean_accuracy_pct": 100.0,
-      "std_dev": 0.0,
-      "display": "100.0% ± 0.0%",
+      "mean_accuracy_pct": 97.0,
+      "std_dev": 1.94,
+      "display": "97.0% ± 1.94%",
       "scores_per_fold": [
         100.0,
-        100.0,
-        100.0,
-        100.0,
-        100.0
+        95.0,
+        95.0,
+        98.33,
+        96.67
       ]
     },
     "receiver": {
-      "mean_accuracy_pct": 100.0,
-      "std_dev": 0.0,
-      "display": "100.0% ± 0.0%",
+      "mean_accuracy_pct": 49.67,
+      "std_dev": 7.84,
+      "display": "49.67% ± 7.84%",
       "scores_per_fold": [
-        100.0,
-        100.0,
-        100.0,
-        100.0,
-        100.0
+        48.33,
+        63.33,
+        51.67,
+        40.0,
+        45.0
       ]
     },
     "origin": {
-      "mean_accuracy_pct": 100.0,
-      "std_dev": 0.0,
-      "display": "100.0% ± 0.0%",
+      "mean_accuracy_pct": 95.34,
+      "std_dev": 1.94,
+      "display": "95.34% ± 1.94%",
       "scores_per_fold": [
-        100.0,
-        100.0,
-        100.0,
-        100.0,
-        100.0
+        91.67,
+        95.0,
+        96.67,
+        96.67,
+        96.67
       ]
     },
     "destination": {
-      "mean_accuracy_pct": 100.0,
-      "std_dev": 0.0,
-      "display": "100.0% ± 0.0%",
+      "mean_accuracy_pct": 76.67,
+      "std_dev": 3.8,
+      "display": "76.67% ± 3.8%",
       "scores_per_fold": [
-        100.0,
-        100.0,
-        100.0,
-        100.0,
-        100.0
+        80.0,
+        80.0,
+        78.33,
+        75.0,
+        70.0
       ]
     },
     "reference_number": {
-      "mean_accuracy_pct": 100.0,
-      "std_dev": 0.0,
-      "display": "100.0% ± 0.0%",
+      "mean_accuracy_pct": 19.0,
+      "std_dev": 6.88,
+      "display": "19.0% ± 6.88%",
       "scores_per_fold": [
-        100.0,
-        100.0,
-        100.0,
-        100.0,
-        100.0
+        10.0,
+        21.67,
+        11.67,
+        25.0,
+        26.67
       ]
     },
     "unit_price": {
@@ -152,82 +152,19 @@
     {
       "fold": 1,
       "val_samples_count": 60,
-      "val_doc_ids": [
-        "DOC-006",
-        "DOC-008",
-        "DOC-010",
-        "DOC-018",
-        "DOC-025",
-        "DOC-026",
-        "DOC-034",
-        "DOC-043",
-        "DOC-046",
-        "DOC-047",
-        "DOC-058",
-        "DOC-061",
-        "DOC-064",
-        "DOC-074",
-        "DOC-076",
-        "DOC-077",
-        "DOC-078",
-        "DOC-079",
-        "DOC-091",
-        "DOC-093",
-        "DOC-094",
-        "DOC-098",
-        "DOC-105",
-        "DOC-110",
-        "DOC-112",
-        "DOC-114",
-        "DOC-120",
-        "DOC-145",
-        "DOC-149",
-        "DOC-153",
-        "DOC-158",
-        "DOC-165",
-        "DOC-166",
-        "DOC-176",
-        "DOC-181",
-        "DOC-183",
-        "DOC-193",
-        "DOC-197",
-        "DOC-204",
-        "DOC-212",
-        "DOC-216",
-        "DOC-219",
-        "DOC-222",
-        "DOC-227",
-        "DOC-230",
-        "DOC-232",
-        "DOC-234",
-        "DOC-235",
-        "DOC-238",
-        "DOC-239",
-        "DOC-240",
-        "DOC-250",
-        "DOC-251",
-        "DOC-267",
-        "DOC-279",
-        "DOC-282",
-        "DOC-287",
-        "DOC-290",
-        "DOC-296",
-        "DOC-298"
-      ],
-      "overall_accuracy_pct": 100.0,
-      "avg_similarity_pct": 100.0,
-      "precision_pct": 100.0,
+      "overall_accuracy_pct": 83.48,
+      "precision_pct": 83.48,
       "recall_pct": 100.0,
-      "f1_score_pct": 100.0,
+      "f1_score_pct": 91.0,
       "field_accuracies": {
         "document_type": 100.0,
-        "document_number": 100.0,
+        "document_number": 88.33,
         "document_date": 100.0,
         "sender": 100.0,
-        "receiver": 100.0,
-        "origin": 100.0,
-        "destination": 100.0,
-        "reference_number": 100.0,
+        "receiver": 48.33,
+        "origin": 91.67,
+        "destination": 80.0,
+        "reference_number": 10.0,
         "unit_price": 100.0,
         "total_amount": 100.0,
         "currency": 100.0
@@ -236,82 +173,19 @@
     {
       "fold": 2,
       "val_samples_count": 60,
-      "val_doc_ids": [
-        "DOC-007",
-        "DOC-011",
-        "DOC-016",
-        "DOC-017",
-        "DOC-019",
-        "DOC-020",
-        "DOC-023",
-        "DOC-031",
-        "DOC-032",
-        "DOC-038",
-        "DOC-057",
-        "DOC-060",
-        "DOC-067",
-        "DOC-068",
-        "DOC-069",
-        "DOC-070",
-        "DOC-073",
-        "DOC-080",
-        "DOC-083",
-        "DOC-085",
-        "DOC-087",
-        "DOC-097",
-        "DOC-102",
-        "DOC-109",
-        "DOC-115",
-        "DOC-117",
-        "DOC-119",
-        "DOC-125",
-        "DOC-127",
-        "DOC-130",
-        "DOC-133",
-        "DOC-141",
-        "DOC-147",
-        "DOC-148",
-        "DOC-155",
-        "DOC-164",
-        "DOC-174",
-        "DOC-180",
-        "DOC-182",
-        "DOC-184",
-        "DOC-186",
-        "DOC-187",
-        "DOC-194",
-        "DOC-195",
-        "DOC-198",
-        "DOC-207",
-        "DOC-225",
-        "DOC-226",
-        "DOC-229",
-        "DOC-231",
-        "DOC-233",
-        "DOC-246",
-        "DOC-249",
-        "DOC-257",
-        "DOC-263",
-        "DOC-266",
-        "DOC-275",
-        "DOC-283",
-        "DOC-289",
-        "DOC-293"
-      ],
-      "overall_accuracy_pct": 100.0,
-      "avg_similarity_pct": 100.0,
-      "precision_pct": 100.0,
+      "overall_accuracy_pct": 86.52,
+      "precision_pct": 86.52,
       "recall_pct": 100.0,
-      "f1_score_pct": 100.0,
+      "f1_score_pct": 92.77,
       "field_accuracies": {
         "document_type": 100.0,
-        "document_number": 100.0,
+        "document_number": 96.67,
         "document_date": 100.0,
-        "sender": 100.0,
-        "receiver": 100.0,
-        "origin": 100.0,
-        "destination": 100.0,
-        "reference_number": 100.0,
+        "sender": 95.0,
+        "receiver": 63.33,
+        "origin": 95.0,
+        "destination": 80.0,
+        "reference_number": 21.67,
         "unit_price": 100.0,
         "total_amount": 100.0,
         "currency": 100.0
@@ -320,82 +194,19 @@
     {
       "fold": 3,
       "val_samples_count": 60,
-      "val_doc_ids": [
-        "DOC-003",
-        "DOC-013",
-        "DOC-027",
-        "DOC-029",
-        "DOC-030",
-        "DOC-036",
-        "DOC-039",
-        "DOC-042",
-        "DOC-052",
-        "DOC-056",
-        "DOC-066",
-        "DOC-075",
-        "DOC-084",
-        "DOC-086",
-        "DOC-090",
-        "DOC-096",
-        "DOC-108",
-        "DOC-113",
-        "DOC-116",
-        "DOC-118",
-        "DOC-121",
-        "DOC-126",
-        "DOC-128",
-        "DOC-137",
-        "DOC-138",
-        "DOC-140",
-        "DOC-142",
-        "DOC-143",
-        "DOC-144",
-        "DOC-156",
-        "DOC-159",
-        "DOC-160",
-        "DOC-168",
-        "DOC-169",
-        "DOC-171",
-        "DOC-173",
-        "DOC-177",
-        "DOC-178",
-        "DOC-179",
-        "DOC-185",
-        "DOC-196",
-        "DOC-199",
-        "DOC-209",
-        "DOC-211",
-        "DOC-214",
-        "DOC-223",
-        "DOC-224",
-        "DOC-245",
-        "DOC-247",
-        "DOC-248",
-        "DOC-254",
-        "DOC-255",
-        "DOC-261",
-        "DOC-270",
-        "DOC-272",
-        "DOC-278",
-        "DOC-281",
-        "DOC-284",
-        "DOC-285",
-        "DOC-294"
-      ],
-      "overall_accuracy_pct": 100.0,
-      "avg_similarity_pct": 100.0,
-      "precision_pct": 100.0,
+      "overall_accuracy_pct": 83.79,
+      "precision_pct": 83.79,
       "recall_pct": 100.0,
-      "f1_score_pct": 100.0,
+      "f1_score_pct": 91.18,
       "field_accuracies": {
         "document_type": 100.0,
-        "document_number": 100.0,
+        "document_number": 88.33,
         "document_date": 100.0,
-        "sender": 100.0,
-        "receiver": 100.0,
-        "origin": 100.0,
-        "destination": 100.0,
-        "reference_number": 100.0,
+        "sender": 95.0,
+        "receiver": 51.67,
+        "origin": 96.67,
+        "destination": 78.33,
+        "reference_number": 11.67,
         "unit_price": 100.0,
         "total_amount": 100.0,
         "currency": 100.0
@@ -404,82 +215,19 @@
     {
       "fold": 4,
       "val_samples_count": 60,
-      "val_doc_ids": [
-        "DOC-001",
-        "DOC-005",
-        "DOC-009",
-        "DOC-012",
-        "DOC-015",
-        "DOC-024",
-        "DOC-028",
-        "DOC-033",
-        "DOC-037",
-        "DOC-040",
-        "DOC-041",
-        "DOC-045",
-        "DOC-048",
-        "DOC-062",
-        "DOC-063",
-        "DOC-065",
-        "DOC-071",
-        "DOC-082",
-        "DOC-095",
-        "DOC-099",
-        "DOC-101",
-        "DOC-111",
-        "DOC-123",
-        "DOC-124",
-        "DOC-129",
-        "DOC-136",
-        "DOC-139",
-        "DOC-151",
-        "DOC-154",
-        "DOC-157",
-        "DOC-163",
-        "DOC-172",
-        "DOC-200",
-        "DOC-201",
-        "DOC-203",
-        "DOC-205",
-        "DOC-208",
-        "DOC-210",
-        "DOC-213",
-        "DOC-217",
-        "DOC-220",
-        "DOC-228",
-        "DOC-237",
-        "DOC-241",
-        "DOC-243",
-        "DOC-256",
-        "DOC-259",
-        "DOC-260",
-        "DOC-262",
-        "DOC-264",
-        "DOC-265",
-        "DOC-268",
-        "DOC-269",
-        "DOC-273",
-        "DOC-276",
-        "DOC-280",
-        "DOC-286",
-        "DOC-291",
-        "DOC-292",
-        "DOC-297"
-      ],
-      "overall_accuracy_pct": 100.0,
-      "avg_similarity_pct": 100.0,
-      "precision_pct": 100.0,
+      "overall_accuracy_pct": 83.94,
+      "precision_pct": 83.94,
       "recall_pct": 100.0,
-      "f1_score_pct": 100.0,
+      "f1_score_pct": 91.27,
       "field_accuracies": {
         "document_type": 100.0,
-        "document_number": 100.0,
+        "document_number": 88.33,
         "document_date": 100.0,
-        "sender": 100.0,
-        "receiver": 100.0,
-        "origin": 100.0,
-        "destination": 100.0,
-        "reference_number": 100.0,
+        "sender": 98.33,
+        "receiver": 40.0,
+        "origin": 96.67,
+        "destination": 75.0,
+        "reference_number": 25.0,
         "unit_price": 100.0,
         "total_amount": 100.0,
         "currency": 100.0
@@ -488,86 +236,367 @@
     {
       "fold": 5,
       "val_samples_count": 60,
-      "val_doc_ids": [
-        "DOC-002",
-        "DOC-004",
-        "DOC-014",
-        "DOC-021",
-        "DOC-022",
-        "DOC-035",
-        "DOC-044",
-        "DOC-049",
-        "DOC-050",
-        "DOC-051",
-        "DOC-053",
-        "DOC-054",
-        "DOC-055",
-        "DOC-059",
-        "DOC-072",
-        "DOC-081",
-        "DOC-088",
-        "DOC-089",
-        "DOC-092",
-        "DOC-100",
-        "DOC-103",
-        "DOC-104",
-        "DOC-106",
-        "DOC-107",
-        "DOC-122",
-        "DOC-131",
-        "DOC-132",
-        "DOC-134",
-        "DOC-135",
-        "DOC-146",
-        "DOC-150",
-        "DOC-152",
-        "DOC-161",
-        "DOC-162",
-        "DOC-167",
-        "DOC-170",
-        "DOC-175",
-        "DOC-188",
-        "DOC-189",
-        "DOC-190",
-        "DOC-191",
-        "DOC-192",
-        "DOC-202",
-        "DOC-206",
-        "DOC-215",
-        "DOC-218",
-        "DOC-221",
-        "DOC-236",
-        "DOC-242",
-        "DOC-244",
-        "DOC-252",
-        "DOC-253",
-        "DOC-258",
-        "DOC-271",
-        "DOC-274",
-        "DOC-277",
-        "DOC-288",
-        "DOC-295",
-        "DOC-299",
-        "DOC-300"
-      ],
-      "overall_accuracy_pct": 100.0,
-      "avg_similarity_pct": 100.0,
-      "precision_pct": 100.0,
+      "overall_accuracy_pct": 83.94,
+      "precision_pct": 83.94,
       "recall_pct": 100.0,
-      "f1_score_pct": 100.0,
+      "f1_score_pct": 91.27,
       "field_accuracies": {
         "document_type": 100.0,
-        "document_number": 100.0,
+        "document_number": 88.33,
         "document_date": 100.0,
-        "sender": 100.0,
-        "receiver": 100.0,
-        "origin": 100.0,
-        "destination": 100.0,
-        "reference_number": 100.0,
+        "sender": 96.67,
+        "receiver": 45.0,
+        "origin": 96.67,
+        "destination": 70.0,
+        "reference_number": 26.67,
         "unit_price": 100.0,
         "total_amount": 100.0,
         "currency": 100.0
       }
     }
-  ]
+  ],
+  "sample_size_verification": {
+    "cochran_formula": "n0 = (Z^2 * p * (1-p)) / e^2",
+    "z_value": 1.96,
+    "confidence_level": "95%",
+    "expected_accuracy_p": 0.8,
+    "margin_of_error_e": 0.05,
+    "calculated_n0": 246,
+    "actual_dataset_size": 300,
+    "is_statistically_significant": true
+  },
+  "proposed_slm": {
+    "mean_accuracy_pct": 84.33,
+    "std_accuracy": 1.11,
+    "mean_f1_score_pct": 91.5,
+    "std_f1": 0.64,
+    "mean_similarity_pct": 84.33,
+    "std_similarity": 1.11,
+    "folds": [
+      {
+        "fold": 1,
+        "test_docs_count": 60,
+        "accuracy_pct": 83.48,
+        "f1_score_pct": 91.0,
+        "similarity_pct": 83.48
+      },
+      {
+        "fold": 2,
+        "test_docs_count": 60,
+        "accuracy_pct": 86.52,
+        "f1_score_pct": 92.77,
+        "similarity_pct": 86.52
+      },
+      {
+        "fold": 3,
+        "test_docs_count": 60,
+        "accuracy_pct": 83.79,
+        "f1_score_pct": 91.18,
+        "similarity_pct": 83.79
+      },
+      {
+        "fold": 4,
+        "test_docs_count": 60,
+        "accuracy_pct": 83.94,
+        "f1_score_pct": 91.27,
+        "similarity_pct": 83.94
+      },
+      {
+        "fold": 5,
+        "test_docs_count": 60,
+        "accuracy_pct": 83.94,
+        "f1_score_pct": 91.27,
+        "similarity_pct": 83.94
+      }
+    ],
+    "field_scores": {
+      "document_type": {
+        "mean": 100.0,
+        "std": 0.0,
+        "per_fold": [
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0
+        ]
+      },
+      "document_number": {
+        "mean": 90.0,
+        "std": 3.34,
+        "per_fold": [
+          88.33,
+          96.67,
+          88.33,
+          88.33,
+          88.33
+        ]
+      },
+      "document_date": {
+        "mean": 100.0,
+        "std": 0.0,
+        "per_fold": [
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0
+        ]
+      },
+      "sender": {
+        "mean": 97.0,
+        "std": 1.94,
+        "per_fold": [
+          100.0,
+          95.0,
+          95.0,
+          98.33,
+          96.67
+        ]
+      },
+      "receiver": {
+        "mean": 49.67,
+        "std": 7.84,
+        "per_fold": [
+          48.33,
+          63.33,
+          51.67,
+          40.0,
+          45.0
+        ]
+      },
+      "origin": {
+        "mean": 95.34,
+        "std": 1.94,
+        "per_fold": [
+          91.67,
+          95.0,
+          96.67,
+          96.67,
+          96.67
+        ]
+      },
+      "destination": {
+        "mean": 76.67,
+        "std": 3.8,
+        "per_fold": [
+          80.0,
+          80.0,
+          78.33,
+          75.0,
+          70.0
+        ]
+      },
+      "reference_number": {
+        "mean": 19.0,
+        "std": 6.88,
+        "per_fold": [
+          10.0,
+          21.67,
+          11.67,
+          25.0,
+          26.67
+        ]
+      },
+      "unit_price": {
+        "mean": 100.0,
+        "std": 0.0,
+        "per_fold": [
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0
+        ]
+      },
+      "total_amount": {
+        "mean": 100.0,
+        "std": 0.0,
+        "per_fold": [
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0
+        ]
+      },
+      "currency": {
+        "mean": 100.0,
+        "std": 0.0,
+        "per_fold": [
+          100.0,
+          100.0,
+          100.0,
+          100.0,
+          100.0
+        ]
+      }
+    }
+  },
+  "baseline_model": {
+    "mean_accuracy_pct": 46.18,
+    "std_accuracy": 1.07,
+    "mean_f1_score_pct": 63.18,
+    "std_f1": 1.01,
+    "folds": [
+      {
+        "fold": 1,
+        "test_docs_count": 60,
+        "accuracy_pct": 46.82,
+        "f1_score_pct": 63.78,
+        "similarity_pct": 54.53
+      },
+      {
+        "fold": 2,
+        "test_docs_count": 60,
+        "accuracy_pct": 46.67,
+        "f1_score_pct": 63.64,
+        "similarity_pct": 54.39
+      },
+      {
+        "fold": 3,
+        "test_docs_count": 60,
+        "accuracy_pct": 47.27,
+        "f1_score_pct": 64.2,
+        "similarity_pct": 56.28
+      },
+      {
+        "fold": 4,
+        "test_docs_count": 60,
+        "accuracy_pct": 45.91,
+        "f1_score_pct": 62.93,
+        "similarity_pct": 54.21
+      },
+      {
+        "fold": 5,
+        "test_docs_count": 60,
+        "accuracy_pct": 44.24,
+        "f1_score_pct": 61.34,
+        "similarity_pct": 51.62
+      }
+    ],
+    "field_scores": {
+      "document_type": {
+        "mean": 82.0,
+        "std": 5.21,
+        "per_fold": [
+          88.33,
+          76.67,
+          88.33,
+          78.33,
+          78.33
+        ]
+      },
+      "document_number": {
+        "mean": 30.0,
+        "std": 6.91,
+        "per_fold": [
+          33.33,
+          38.33,
+          33.33,
+          26.67,
+          18.33
+        ]
+      },
+      "document_date": {
+        "mean": 78.67,
+        "std": 5.52,
+        "per_fold": [
+          73.33,
+          81.67,
+          86.67,
+          71.67,
+          80.0
+        ]
+      },
+      "sender": {
+        "mean": 57.33,
+        "std": 3.09,
+        "per_fold": [
+          61.67,
+          60.0,
+          53.33,
+          56.67,
+          55.0
+        ]
+      },
+      "receiver": {
+        "mean": 7.67,
+        "std": 1.7,
+        "per_fold": [
+          6.67,
+          8.33,
+          5.0,
+          8.33,
+          10.0
+        ]
+      },
+      "origin": {
+        "mean": 15.67,
+        "std": 1.34,
+        "per_fold": [
+          15.0,
+          16.67,
+          16.67,
+          16.67,
+          13.33
+        ]
+      },
+      "destination": {
+        "mean": 0.67,
+        "std": 0.82,
+        "per_fold": [
+          0.0,
+          1.67,
+          1.67,
+          0.0,
+          0.0
+        ]
+      },
+      "reference_number": {
+        "mean": 11.33,
+        "std": 3.56,
+        "per_fold": [
+          8.33,
+          11.67,
+          6.67,
+          16.67,
+          13.33
+        ]
+      },
+      "unit_price": {
+        "mean": 60.67,
+        "std": 5.23,
+        "per_fold": [
+          65.0,
+          60.0,
+          60.0,
+          66.67,
+          51.67
+        ]
+      },
+      "total_amount": {
+        "mean": 66.67,
+        "std": 3.5,
+        "per_fold": [
+          68.33,
+          60.0,
+          70.0,
+          66.67,
+          68.33
+        ]
+      },
+      "currency": {
+        "mean": 97.33,
+        "std": 1.33,
+        "per_fold": [
+          95.0,
+          98.33,
+          98.33,
+          96.67,
+          98.33
+        ]
+      }
+    }
+  }
 }
