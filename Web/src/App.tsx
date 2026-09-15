@@ -10,6 +10,8 @@ import { RegisterPage } from "./components/RegisterPage";
 import { Toast } from "./components/Toast";
 import { UploadedWorkspaceView } from "./components/UploadedWorkspaceView";
 import { FirebaseSaveSuccessModal } from "./components/FirebaseSaveSuccessModal";
+import { SlmPromptAssistantModal } from "./components/SlmPromptAssistantModal";
+import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
 import { initialJson, recentJobs } from "./data/mockData";
 import { saveDocumentToFirebase, type FirebaseDocumentRecord } from "./services/firebase";
 import { createJsonDownload } from "./services/mockProcessingService";
@@ -44,6 +46,7 @@ export function App() {
   const [viewMode, setViewMode] = useState<"user" | "admin">("user");
   const [showCloudHistoryModal, setShowCloudHistoryModal] = useState(false);
   const [showGroundTruthModal, setShowGroundTruthModal] = useState(false);
+  const [showPromptAssistantModal, setShowPromptAssistantModal] = useState(false);
   const [firebaseSuccessModal, setFirebaseSuccessModal] = useState<{
     isOpen: boolean;
     fileName: string;
@@ -309,7 +312,7 @@ export function App() {
     }
 
     let parsedVal: string | number;
-    if (targetCoreKey === "quantity" || targetCoreKey === "total_amount") {
+    if (targetCoreKey === "unit_price" || targetCoreKey === "total_amount") {
       const num = Number(String(rawVal).replace(/,/g, "").trim());
       parsedVal = Number.isNaN(num) ? 0 : num;
     } else {
@@ -784,6 +787,14 @@ export function App() {
                 onReRunSlmWithOcr={handleReRunSlmForActiveDoc}
                 isProcessing={isBatchProcessing}
               />
+              <div className="mt-4">
+                <SlmPromptAssistantPanel
+                  ocrText={activeDoc?.ocrText || ""}
+                  jsonSchema={jsonOutput}
+                  onOpenFullAssistant={() => setShowPromptAssistantModal(true)}
+                  onShowToast={showToast}
+                />
+              </div>
             </div>
           )}
         </div>
@@ -818,6 +829,15 @@ export function App() {
           onConfirm={handleConfirmReview}
         />
       ) : null}
+      {activeDoc && (
+        <SlmPromptAssistantModal
+          isOpen={showPromptAssistantModal}
+          onClose={() => setShowPromptAssistantModal(false)}
+          ocrText={activeDoc.ocrText}
+          jsonSchema={jsonOutput}
+          onShowToast={showToast}
+        />
+      )}
       {toast ? <Toast message={toast} onClose={() => setToast("")} /> : null}
     </div>
   );

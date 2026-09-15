@@ -62,7 +62,7 @@ export function AdminJobsHistory({
     setDraftJson((current) => {
       if (!current) return current;
       const nextValue =
-        field === "gross_weight_kg" || field === "quantity" || field === "total_amount" ? Number(value || 0) : value;
+        field === "unit_price" || field === "total_amount" ? Number(value || 0) : value;
       return { ...current, [field]: nextValue };
     });
   }
@@ -261,13 +261,16 @@ export function AdminJobsHistory({
               {(
                 [
                   "document_type",
-                  "invoice_no",
+                  "document_number",
                   "document_date",
-                  "receiver_name",
-                  "truck_plate",
-                  "gross_weight_kg",
-                  "quantity",
+                  "sender",
+                  "receiver",
+                  "origin",
+                  "destination",
+                  "reference_number",
+                  "unit_price",
                   "total_amount",
+                  "currency",
                 ] as Array<keyof JsonSchemaOutput>
               ).map((field) => (
                 <label key={field} className="block">

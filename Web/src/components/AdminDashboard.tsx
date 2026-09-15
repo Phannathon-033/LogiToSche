@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Activity,
   Bell,
@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import type { AdminDocumentRecord, AdminPromptLabState, DocumentJob, JsonSchemaOutput } from "../types";
+import { getSlmPromptConfig, saveSlmPromptConfig } from "../services/slmApi";
 import {
   mockAdminAnalytics,
   mockAdminDocuments,
@@ -39,6 +40,40 @@ export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDas
   const [documents, setDocuments] = useState<AdminDocumentRecord[]>(mockAdminDocuments);
   const [selectedDocumentId, setSelectedDocumentId] = useState<string>(mockAdminDocuments[0]?.id ?? "");
   const [promptLab, setPromptLab] = useState<AdminPromptLabState>(mockPromptLabState);
+  const [promptConfigLoading, setPromptConfigLoading] = useState(true);
+  const [promptConfigSaving, setPromptConfigSaving] = useState(false);
+  const showToastRef = useRef(showToast);
+  showToastRef.current = showToast;
+
+  useEffect(() => {
+    let active = true;
+    getSlmPromptConfig()
+      .then((config) => {
+        if (active) setPromptLab((current) => ({ ...current, ...config }));
+      })
+      .catch(() => {
+        if (active) showToastRef.current("ไม่สามารถโหลดการตั้งค่า Prompt จาก backend ได้ ใช้ค่าเริ่มต้นแทน");
+      })
+      .finally(() => {
+        if (active) setPromptConfigLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  async function handleSavePromptConfig() {
+    setPromptConfigSaving(true);
+    try {
+      const saved = await saveSlmPromptConfig(promptLab);
+      setPromptLab((current) => ({ ...current, ...saved }));
+      showToast("บันทึก Prompt Lab สำเร็จ");
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "ไม่สามารถบันทึกการตั้งค่า Prompt ได้");
+    } finally {
+      setPromptConfigSaving(false);
+    }
+  }
 
   function openDocument(documentId: string) {
     setSelectedDocumentId(documentId);
@@ -140,9 +175,9 @@ export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDas
             value={promptLab}
             documents={documents}
             onChange={setPromptLab}
-            onSave={() => {
-              showToast("บันทึก Prompt Lab ในโหมด mock แล้ว");
-            }}
+            onSave={handleSavePromptConfig}
+            loading={promptConfigLoading}
+            saving={promptConfigSaving}
           />
         );
     }

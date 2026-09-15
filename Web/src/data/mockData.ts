@@ -86,12 +86,12 @@ export const initialJson: JsonSchemaOutput = {
   unit_price: 406.25,
   total_amount: 48750,
   currency: "THB",
-  invoice_no: "INV-2024-001",
-  receiver_name: "XYZ Importer Co., Ltd.",
-  truck_plate: "70-1234",
-  gross_weight_kg: 25000,
-  quantity: 120,
-  other: {},
+  other: {
+    source_file: "Invoice_INV-2024-001.pdf",
+    truck_plate: "70-1234",
+    gross_weight_kg: 25000,
+    quantity: 120,
+  },
 };
 
 export const initialFields: ExtractedField[] = [
@@ -268,12 +268,12 @@ export const mockAdminDocuments: AdminDocumentRecord[] = [
       unit_price: 406.25,
       total_amount: 48750,
       currency: "THB",
-      invoice_no: "INV-2024-001",
-      receiver_name: "XYZ Warehouse",
-      truck_plate: "70-1234",
-      gross_weight_kg: 25000,
-      quantity: 120,
-      other: { due_date: "2024-05-30" },
+      other: {
+        due_date: "2024-05-30",
+        truck_plate: "70-1234",
+        gross_weight_kg: 25000,
+        quantity: 120,
+      },
     },
     extractedFields: initialFields.map((field) =>
       field.field === "truck_plate" || field.field === "gross_weight_kg" ? field : { ...field, status: "success" },
@@ -282,7 +282,7 @@ export const mockAdminDocuments: AdminDocumentRecord[] = [
     correctionHistory: [
       {
         id: "corr-1",
-        field: "receiver_name",
+        field: "receiver",
         previousValue: "ABC Logistics Co., Ltd.",
         nextValue: "XYZ Warehouse",
         reason: "ปลายทางอยู่ใน block Ship To ไม่ใช่ชื่อผู้ส่งเอกสาร",
@@ -294,7 +294,7 @@ export const mockAdminDocuments: AdminDocumentRecord[] = [
       {
         id: "signal-1",
         title: "แยก Ship To กับ Bill To ให้ชัด",
-        detail: "Invoice กลุ่มนี้มีทั้ง Bill To และ Ship To ในหน้าเดียว ทำให้ field receiver_name หลุดไปหา sender บ่อย",
+        detail: "Invoice กลุ่มนี้มีทั้ง Bill To และ Ship To ในหน้าเดียว ทำให้ field receiver หลุดไปหา sender บ่อย",
         severity: "high",
       },
       {
@@ -330,7 +330,7 @@ export const mockAdminDocuments: AdminDocumentRecord[] = [
     result: "-",
     overallConfidence: 0,
     queueReasons: ["กำลังรอผล SLM", "OCR line confidence ต่ำ"],
-    missingFields: ["receiver_name"],
+    missingFields: ["receiver"],
     conflictingFields: ["document_date"],
     errorTags: ["missing_receiver", "date_format_conflict"],
     reviewNotes: ["ต้นฉบับสแกนเอียง ทำให้ OCR line ปลายหน้าขาดหาย"],
@@ -354,24 +354,22 @@ Port of Discharge: Singapore`,
       unit_price: 0,
       total_amount: 0,
       currency: "",
-      invoice_no: "BL-2025-018",
-      receiver_name: "",
-      truck_plate: "",
-      gross_weight_kg: 0,
-      quantity: 0,
       other: {
         carrier_company: "Meridian Shipping",
         port_of_loading: "Laem Chabang",
         port_of_discharge: "Singapore",
+        truck_plate: "",
+        gross_weight_kg: 0,
+        quantity: 0,
       },
     },
     extractedFields: [
-      { id: 1, sourceText: "B/L No: BL-2025-018", field: "invoice_no", value: "BL-2025-018", confidence: 96, status: "success" },
+      { id: 1, sourceText: "B/L No: BL-2025-018", field: "document_number", value: "BL-2025-018", confidence: 96, status: "success" },
       { id: 2, sourceText: "Date: 2025/08/25", field: "document_date", value: "2025/08/25", confidence: 72, status: "review" },
-      { id: 3, sourceText: "Consignee: Siam Port Services", field: "receiver_name", value: "", confidence: 48, status: "error" },
+      { id: 3, sourceText: "Consignee: Siam Port Services", field: "receiver", value: "", confidence: 48, status: "error" },
     ],
     reviewItems: [
-      { id: "receiver_name", field: "receiver_name", ocrValue: "Consignee: Siam Port Services", slmValue: "", confidence: 48, status: "review" },
+      { id: "receiver", field: "receiver", ocrValue: "Consignee: Siam Port Services", slmValue: "", confidence: 48, status: "review" },
       { id: "document_date", field: "document_date", ocrValue: "2025/08/25", slmValue: "2025/08/25", confidence: 72, status: "review" },
     ],
     correctionHistory: [],
@@ -379,7 +377,7 @@ Port of Discharge: Singapore`,
       {
         id: "signal-3",
         title: "เพิ่ม synonym ของ receiver",
-        detail: "Bill of Lading มักใช้ Consignee แทน receiver_name ต้องย้ำใน prompt mapping",
+        detail: "Bill of Lading มักใช้ Consignee แทน receiver ต้องย้ำใน prompt mapping",
         severity: "high",
       },
       {
@@ -416,7 +414,7 @@ Port of Discharge: Singapore`,
     overallConfidence: 62,
     queueReasons: ["OCR อ่านผิดหลายบรรทัด", "ข้อมูลสำคัญไม่ครบ"],
     missingFields: [],
-    conflictingFields: ["receiver_name", "total_amount"],
+    conflictingFields: ["receiver", "total_amount"],
     errorTags: ["ocr_noise", "missing_amount"],
     reviewNotes: ["ภาพเบลอและมีเงาซ้อน ทำให้ OCR หลายบรรทัดคลาดเคลื่อน"],
     ocrText: `PACKING LIST
@@ -436,21 +434,20 @@ Total Amount: unreadable`,
       unit_price: 0,
       total_amount: 0,
       currency: "",
-      invoice_no: "PK-2025-003",
-      receiver_name: "",
-      truck_plate: "",
-      gross_weight_kg: 0,
-      quantity: 0,
-      other: {},
+      other: {
+        truck_plate: "",
+        gross_weight_kg: 0,
+        quantity: 0,
+      },
     },
     extractedFields: [
-      { id: 1, sourceText: "Reference: PK-2025-003", field: "invoice_no", value: "PK-2025-003", confidence: 85, status: "success" },
-      { id: 2, sourceText: "Receiver: ...", field: "receiver_name", value: "", confidence: 32, status: "error" },
+      { id: 1, sourceText: "Reference: PK-2025-003", field: "document_number", value: "PK-2025-003", confidence: 85, status: "success" },
+      { id: 2, sourceText: "Receiver: ...", field: "receiver", value: "", confidence: 32, status: "error" },
       { id: 3, sourceText: "Gross Weight: 1?5? KG", field: "gross_weight_kg", value: "0", confidence: 41, status: "review" },
       { id: 4, sourceText: "Total Amount: unreadable", field: "total_amount", value: "0", confidence: 18, status: "error" },
     ],
     reviewItems: [
-      { id: "receiver_name", field: "receiver_name", ocrValue: "...", slmValue: "", confidence: 32, status: "review" },
+      { id: "receiver", field: "receiver", ocrValue: "...", slmValue: "", confidence: 32, status: "review" },
       { id: "total_amount", field: "total_amount", ocrValue: "unreadable", slmValue: "0", confidence: 18, status: "review" },
     ],
     correctionHistory: [],
@@ -481,7 +478,7 @@ Total Amount: unreadable`,
 export const mockAdminAnalytics: AdminAnalyticsPoint[] = [
   { label: "เอกสารในคิวตรวจ", value: 12, hint: "รวมเคส confidence ต่ำและ field ตกหล่น" },
   { label: "เคสที่แก้แล้วสัปดาห์นี้", value: 27, hint: "แก้ไขโดย admin เพื่อนำไปปรับ prompt" },
-  { label: "field ที่พลาดบ่อย", value: 4, hint: "receiver_name, total_amount, truck_plate, document_date" },
+  { label: "field ที่พลาดบ่อย", value: 4, hint: "receiver, total_amount, document_number, document_date" },
   { label: "baseline docs", value: 9, hint: "ใช้เป็นตัวอย่างอ้างอิงสำหรับ prompt lab" },
 ];
 
@@ -495,7 +492,7 @@ export const mockAdminErrorClusters: AdminErrorCluster[] = [
   },
   {
     id: "cluster-2",
-    title: "receiver_name หายเมื่อเอกสารใช้คำว่า Consignee",
+    title: "receiver หายเมื่อเอกสารใช้คำว่า Consignee",
     count: 8,
     documents: 5,
     recommendation: "เพิ่ม synonym mapping สำหรับ Bill of Lading และ Packing List",
@@ -516,10 +513,10 @@ export const mockPromptLabState: AdminPromptLabState = {
     "คุณคือผู้ช่วยดึงข้อมูลโลจิสติกส์จาก OCR text ให้ map ข้อมูลเข้าสู่ JSON schema อย่างเคร่งครัด แยก sender, receiver, total amount และ document number ให้ชัดเจน พร้อมระบุ field ที่ไม่มั่นใจลง review_items",
   fallbackRules: [
     "ถ้าเจอทั้ง Subtotal และ Total Amount ให้เลือก Total Amount",
-    "Consignee, Ship To, Deliver To ให้ตีความเป็น receiver_name ตามบริบทเอกสาร",
+    "Consignee, Ship To, Deliver To ให้ตีความเป็น receiver ตามบริบทเอกสาร",
     "วันที่ต้อง normalize เป็น YYYY-MM-DD ถ้าตีความได้ชัดเจน",
   ],
-  monitoredFields: ["invoice_no", "document_date", "receiver_name", "total_amount"],
+  monitoredFields: ["document_number", "document_date", "receiver", "total_amount"],
   fewShotExamples: [],
 };
 
@@ -553,13 +550,13 @@ export const mockPromptExamples: AdminFewShotExample[] = [
     title: "Invoice Standard",
     input: "Invoice No. INV-2024-001\nInvoice Date 15/05/2024\nShip To: XYZ Warehouse\nTotal Amount 52,162.50",
     expectedOutput:
-      '{\n  "document_type": "invoice",\n  "invoice_no": "INV-2024-001",\n  "document_date": "2024-05-15",\n  "receiver_name": "XYZ Warehouse",\n  "total_amount": 52162.5\n}',
+      '{\n  "document_type": "invoice",\n  "document_number": "INV-2024-001",\n  "document_date": "2024-05-15",\n  "receiver": "XYZ Warehouse",\n  "total_amount": 52162.5\n}',
   },
   {
     id: "fewshot-2",
     title: "Bill of Lading Consignee Mapping",
     input: "B/L No: BL-2025-018\nDate: 2025/08/25\nConsignee: Siam Port Services",
     expectedOutput:
-      '{\n  "document_type": "bill_of_lading",\n  "invoice_no": "BL-2025-018",\n  "document_date": "2025-08-25",\n  "receiver_name": "Siam Port Services"\n}',
+      '{\n  "document_type": "bill_of_lading",\n  "document_number": "BL-2025-018",\n  "document_date": "2025-08-25",\n  "receiver": "Siam Port Services"\n}',
   },
 ];

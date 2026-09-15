@@ -5,6 +5,8 @@ import type {
   JsonSchemaOutput,
   ReviewItem,
   SlmPerformanceMetrics,
+  SlmPromptConfig,
+  SlmPromptPresetResponse,
   SlmPromptRequest,
   SlmPromptResponse,
 } from "../types";
@@ -158,6 +160,63 @@ export async function runSlmExtraction({
   };
 }
 
+export async function getSlmPromptConfig(): Promise<SlmPromptConfig> {
+  const response = await fetch("/api/slm/prompt-config");
+  if (!response.ok) throw new Error("ไม่สามารถโหลดการตั้งค่า Prompt ได้");
+  const data = (await response.json()) as {
+    system_prompt: string;
+    fallback_rules: string[];
+    confidence_threshold: number;
+    selected_model: string;
+    monitored_fields: SlmPromptConfig["monitoredFields"];
+  };
+  return {
+    systemPrompt: data.system_prompt,
+    fallbackRules: data.fallback_rules,
+    confidenceThreshold: data.confidence_threshold,
+    selectedModel: data.selected_model,
+    monitoredFields: data.monitored_fields,
+  };
+}
+
+export async function saveSlmPromptConfig(config: SlmPromptConfig): Promise<SlmPromptConfig> {
+  const response = await fetch("/api/slm/prompt-config", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      system_prompt: config.systemPrompt,
+      fallback_rules: config.fallbackRules,
+      confidence_threshold: config.confidenceThreshold,
+      selected_model: config.selectedModel,
+      monitored_fields: config.monitoredFields,
+    }),
+  });
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(detail || `ไม่สามารถบันทึกการตั้งค่า Prompt ได้ (${response.status})`);
+  }
+  const data = (await response.json()) as {
+    system_prompt: string;
+    fallback_rules: string[];
+    confidence_threshold: number;
+    selected_model: string;
+    monitored_fields: SlmPromptConfig["monitoredFields"];
+  };
+  return {
+    systemPrompt: data.system_prompt,
+    fallbackRules: data.fallback_rules,
+    confidenceThreshold: data.confidence_threshold,
+    selectedModel: data.selected_model,
+    monitoredFields: data.monitored_fields,
+  };
+}
+
+export async function getSlmPrompts(): Promise<SlmPromptPresetResponse[]> {
+  const response = await fetch("/api/slm/prompts");
+  if (!response.ok) throw new Error("ไม่สามารถโหลด Prompt สำเร็จรูปได้");
+  return (await response.json()) as SlmPromptPresetResponse[];
+}
+
 export async function executeSlmPrompt({
   promptTemplateId,
   userInstruction,
@@ -169,7 +228,7 @@ export async function executeSlmPrompt({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       prompt_template_id: promptTemplateId,
-      user_instruction: userInstruction,
+      user_instruction: userInstruction || "",
       ocr_text: ocrText || "",
       json_schema: jsonSchema || {},
     }),

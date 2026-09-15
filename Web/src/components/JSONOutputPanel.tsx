@@ -53,7 +53,7 @@ export function JSONOutputPanel({
   async function handleSaveAsGroundTruth() {
     setIsSavingGt(true);
     try {
-      const fileName = json.source_file && json.source_file !== "document" ? json.source_file : `document_${Date.now()}.png`;
+      const fileName = json.other?.source_file && json.other.source_file !== "document" ? String(json.other.source_file) : `document_${Date.now()}.png`;
       const payload = {
         file_name: fileName,
         category: formDocType || json.document_type || "invoice",

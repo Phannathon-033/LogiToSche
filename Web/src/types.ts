@@ -101,16 +101,30 @@ export interface SlmPromptPreset {
   categoryLabel: string;
   title: string;
   description: string;
-  prompt: string;
+  prompt?: string;
   badge: string;
 }
 
 export interface SlmPromptRequest {
   promptTemplateId: string;
-  userInstruction: string;
+  userInstruction?: string;
   ocrText?: string;
   jsonSchema?: JsonSchemaOutput;
 }
+
+export interface SlmPromptConfig {
+  confidenceThreshold: number;
+  selectedModel: string;
+  systemPrompt: string;
+  fallbackRules: string[];
+  monitoredFields: Array<keyof JsonSchemaOutput>;
+}
+
+export interface SlmPromptPresetResponse extends SlmPromptPreset {
+  prompt: string;
+}
+
+export type SlmPromptConfigResponse = SlmPromptConfig;
 
 export interface SlmPromptResponse {
   resultText: string;

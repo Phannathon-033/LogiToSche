@@ -317,7 +317,7 @@ export function AdminOverview({
                 <p className="text-xs font-black text-slate-900">Field Watchlist</p>
               </div>
               <div className="mt-3 space-y-2">
-                {["receiver_name", "total_amount", "document_date", "truck_plate"].map((field) => (
+                {["receiver", "total_amount", "document_date", "document_number"].map((field) => (
                   <div key={field} className="flex items-center justify-between text-[11px]">
                     <span className="font-mono font-bold text-slate-700">{field}</span>
                     <span className="font-bold text-slate-400">monitor</span>

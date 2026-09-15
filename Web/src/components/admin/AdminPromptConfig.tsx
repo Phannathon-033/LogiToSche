@@ -1,4 +1,5 @@
-import { BrainCircuit, Save, Settings } from "lucide-react";
+import { BrainCircuit, LoaderCircle, Save, Settings } from "lucide-react";
+import { CORE_FIELDS_DEF } from "../../types";
 import type { AdminDocumentRecord, AdminPromptLabState } from "../../types";
 
 interface AdminPromptConfigProps {
@@ -6,9 +7,11 @@ interface AdminPromptConfigProps {
   documents: AdminDocumentRecord[];
   onChange: (nextState: AdminPromptLabState) => void;
   onSave: () => void;
+  loading?: boolean;
+  saving?: boolean;
 }
 
-export function AdminPromptConfig({ value, documents, onChange, onSave }: AdminPromptConfigProps) {
+export function AdminPromptConfig({ value, documents, onChange, onSave, loading = false, saving = false }: AdminPromptConfigProps) {
   const promptSignals = documents
     .filter((document) => document.status !== "success")
     .flatMap((document) =>
@@ -65,7 +68,10 @@ export function AdminPromptConfig({ value, documents, onChange, onSave }: AdminP
           </div>
 
           <div className="space-y-2 pt-2">
-            <p className="text-xs font-bold text-slate-600">Fallback Rules</p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-bold text-slate-600">Fallback Rules</p>
+              <span className="text-[10px] text-slate-400">ใช้เป็น guidance ของ SLM</span>
+            </div>
             {value.fallbackRules.map((rule, index) => (
               <textarea
                 key={`rule-${index}`}
@@ -77,13 +83,42 @@ export function AdminPromptConfig({ value, documents, onChange, onSave }: AdminP
             ))}
           </div>
 
+          <div className="space-y-2 pt-2">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-bold text-slate-600">Monitored Fields</p>
+              <span className="text-[10px] text-slate-400">ต่ำกว่า threshold จะเข้าคิวตรวจ</span>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {CORE_FIELDS_DEF.map((field) => {
+                const checked = value.monitoredFields.includes(field.key);
+                return (
+                  <label key={field.key} className="flex items-center gap-2 rounded-lg border border-slate-200 px-2.5 py-2 text-[11px] font-semibold text-slate-600">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(event) => {
+                        const monitoredFields = event.target.checked
+                          ? [...value.monitoredFields, field.key]
+                          : value.monitoredFields.filter((item) => item !== field.key);
+                        onChange({ ...value, monitoredFields });
+                      }}
+                      className="h-3.5 w-3.5 accent-blue-600"
+                    />
+                    <span>{field.label}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+
           <button
             type="button"
             onClick={onSave}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow transition hover:bg-blue-500"
+            disabled={loading || saving}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <Save className="h-4 w-4" />
-            บันทึกการตั้งค่า
+            {saving ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+            {loading ? "กำลังโหลด..." : saving ? "กำลังบันทึก..." : "บันทึกการตั้งค่า"}
           </button>
         </div>
       </div>
@@ -131,10 +166,11 @@ export function AdminPromptConfig({ value, documents, onChange, onSave }: AdminP
         <button
           type="button"
           onClick={onSave}
-          className="mt-4 inline-flex items-center gap-1.5 self-start rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow transition hover:bg-blue-500"
+          disabled={loading || saving}
+          className="mt-4 inline-flex items-center gap-1.5 self-start rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <Save className="h-4 w-4" />
-          บันทึก System Prompt
+          {saving ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          {loading ? "กำลังโหลด..." : saving ? "กำลังบันทึก..." : "บันทึก System Prompt"}
         </button>
       </div>
     </div>

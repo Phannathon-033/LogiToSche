@@ -9,10 +9,9 @@ import {
   MessageSquareQuote,
   Sparkles,
 } from "lucide-react";
-import { useState } from "react";
-import { PROMPT_PRESETS } from "../data/promptPresets";
-import { executeSlmPrompt } from "../services/slmApi";
-import type { JsonSchemaOutput } from "../types";
+import { useEffect, useState } from "react";
+import { executeSlmPrompt, getSlmPrompts } from "../services/slmApi";
+import type { JsonSchemaOutput, SlmPromptPresetResponse } from "../types";
 import { Card } from "./Card";
 
 interface SlmPromptAssistantPanelProps {
@@ -32,17 +31,29 @@ export function SlmPromptAssistantPanel({
   const [loading, setLoading] = useState(false);
   const [resultText, setResultText] = useState<string>("");
   const [copied, setCopied] = useState(false);
+  const [backendPresets, setBackendPresets] = useState<SlmPromptPresetResponse[]>([]);
+  const [presetsLoading, setPresetsLoading] = useState(true);
+  const [presetsError, setPresetsError] = useState(false);
+
+  useEffect(() => {
+    getSlmPrompts()
+      .then(setBackendPresets)
+      .catch(() => setPresetsError(true))
+      .finally(() => setPresetsLoading(false));
+  }, []);
 
   const quickPresets = [
-    { id: "synonym_party", label: "วิเคราะห์คำความหมายเดียวกัน (คู่ค้า)", icon: Layers },
-    { id: "summarize_short", label: "สรุปย่อ 1-2 ประโยค", icon: MessageSquareQuote },
-    { id: "validate_numbers", label: "ตรวจสอบผลรวมเงิน (Subtotal+VAT)", icon: ListChecks },
-    { id: "translate_format", label: "แปลและจัดฟอร์แมตสากล", icon: Languages },
+    { id: "synonym_party", icon: Layers },
+    { id: "summarize_short", icon: MessageSquareQuote },
+    { id: "validate_numbers", icon: ListChecks },
+    { id: "translate_format", icon: Languages },
   ];
+
+  const getPreset = (presetId: string) => backendPresets.find((preset) => preset.id === presetId);
 
   async function handleQuickRun(presetId: string) {
     setActivePromptId(presetId);
-    const preset = PROMPT_PRESETS.find((p) => p.id === presetId);
+    const preset = getPreset(presetId);
     if (!preset) return;
 
     setLoading(true);
@@ -50,7 +61,7 @@ export function SlmPromptAssistantPanel({
     try {
       const res = await executeSlmPrompt({
         promptTemplateId: presetId,
-        userInstruction: preset.prompt,
+        userInstruction: undefined,
         ocrText,
         jsonSchema,
       });
@@ -106,7 +117,7 @@ export function SlmPromptAssistantPanel({
               <button
                 key={qp.id}
                 type="button"
-                disabled={loading}
+                disabled={loading || presetsLoading || presetsError}
                 onClick={() => handleQuickRun(qp.id)}
                 className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all ${
                   isSelected
@@ -115,7 +126,7 @@ export function SlmPromptAssistantPanel({
                 } disabled:opacity-50`}
               >
                 <Icon className="h-3.5 w-3.5" />
-                <span>{qp.label}</span>
+                <span>{getPreset(qp.id)?.title || "กำลังโหลด..."}</span>
               </button>
             );
           })}
@@ -155,8 +166,14 @@ export function SlmPromptAssistantPanel({
         {!resultText && !loading && (
           <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/60 p-6 text-center">
             <Bot className="h-8 w-8 text-slate-400 mb-2" />
-            <span className="text-xs font-bold text-slate-600">กดปุ่มคำสั่งลัดด้านบน หรือเปิดระบบ Prompt เต็มรูปแบบ</span>
-            <span className="text-[11px] text-slate-400 mt-0.5">SLM พร้อมประมวลผลต่อยอดทันทีด้วยโมเดล Qwen2.5-1.5B</span>
+            <span className="text-xs font-bold text-slate-600">
+              {presetsLoading
+                ? "กำลังโหลด Prompt จาก backend..."
+                : presetsError
+                  ? "ไม่สามารถโหลด Prompt จาก backend ได้"
+                  : "กดปุ่มคำสั่งลัดด้านบน หรือเปิดระบบ Prompt เต็มรูปแบบ"}
+            </span>
+            <span className="text-[11px] text-slate-400 mt-0.5">SLM พร้อมประมวลผลต่อยอดทันทีด้วยโมเดลที่กำหนดใน backend</span>
             <button
               type="button"
               onClick={onOpenFullAssistant}
