@@ -703,9 +703,6 @@ export function App() {
       <AppHeader
         user={userSession}
         onLogout={handleLogout}
-        onOpenFeatures={() => showToast("ฟีเจอร์: PaddleOCR GPU + Qwen2.5 SLM Multimodal + Firebase Cloud")}
-        onOpenWorkflow={() => showToast("กระบวนการ: Upload -> OCR -> AI Reasoning -> JSON Schema")}
-        onOpenPricing={() => showToast("แพ็กเกจ: ใช้งานฟรีสำหรับนักศึกษาและทดสอบระบบ")}
       />
       <main className="px-3 py-3.5 sm:px-5 lg:px-6">
         <div className="mx-auto flex w-full max-w-[1420px] flex-col gap-4">

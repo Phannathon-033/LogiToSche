@@ -1,4 +1,14 @@
-import { Activity, BarChart3, BrainCircuit, FileImage, FileText, ShieldAlert } from "lucide-react";
+import {
+  Activity,
+  AlertCircle,
+  ArrowRight,
+  BrainCircuit,
+  CheckCircle2,
+  Cpu,
+  FileImage,
+  FileText,
+  ShieldAlert,
+} from "lucide-react";
 import type { AdminAnalyticsPoint, AdminDocumentRecord } from "../../types";
 import { StatusBadge } from "../StatusBadge";
 
@@ -15,318 +25,265 @@ export function AdminOverview({
   onOpenDocument,
   onOpenPromptLab,
 }: AdminOverviewProps) {
-  const totalDocs = documents.length + 112;
-  const successDocs = documents.filter((document) => document.status === "success").length + 104;
-  const reviewDocs = documents.filter((document) => document.status === "review" || document.status === "error").length + 5;
-  const successRate = ((successDocs / totalDocs) * 100).toFixed(1);
+  const totalDocs = documents.length;
+  const successDocs = documents.filter((document) => document.status === "success").length;
+  const errorDocs = documents.filter((document) => document.status === "error").length;
+  const reviewDocs = documents.filter((document) => document.status === "review").length;
+  const processingDocs = documents.filter((document) => document.status === "processing").length;
   const promptSignalCount = documents.reduce((count, document) => count + document.promptSignals.length, 0);
+  const successRate = totalDocs === 0 ? 0 : (successDocs / totalDocs) * 100;
+  const errorRate = totalDocs === 0 ? 0 : (errorDocs / totalDocs) * 100;
+  const actionableDocuments = [...documents].sort((a, b) => {
+    const priority = { error: 0, review: 1, processing: 2, success: 3 };
+    return priority[a.status] - priority[b.status];
+  });
+  const recentDocuments = actionableDocuments.slice(0, 5);
 
   return (
-    <div className="space-y-8">
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="flex min-h-[125px] flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 shadow-panel">
-          <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">เอกสารทั้งหมด</span>
-            <h3 className="mt-1 text-3xl font-black text-slate-900">
-              {totalDocs} <span className="text-xs font-medium text-slate-400">เอกสาร</span>
-            </h3>
+    <div className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col gap-1">
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">Admin Console</p>
+        <h3 className="text-xl font-black tracking-tight text-slate-900 sm:text-2xl">ภาพรวมการประมวลผลเอกสาร</h3>
+        <p className="text-xs font-semibold text-slate-500">ติดตามสถานะเอกสาร อุปกรณ์ และผลการทำงานของระบบในหน้าเดียว</p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-panel">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">เอกสารทั้งหมด</p>
+              <p className="mt-2 text-3xl font-black text-slate-900">{totalDocs}</p>
+            </div>
+            <div className="rounded-xl bg-blue-50 p-2.5 text-blue-600">
+              <FileText className="h-5 w-5" />
+            </div>
           </div>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="text-[11px] font-bold text-emerald-600">รวม baseline และคิวตรวจล่าสุด</span>
-            <svg className="h-6 w-16 text-emerald-500" viewBox="0 0 100 30" fill="none">
-              <path d="M0,25 Q15,5 30,20 T60,10 T90,5 T100,15" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-            </svg>
-          </div>
+          <p className="mt-4 text-[11px] font-semibold text-slate-500">เอกสารที่อยู่ในคิว Admin ตอนนี้</p>
         </div>
 
-        <div className="flex min-h-[125px] flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 shadow-panel">
-          <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">อัตราแปลงสำเร็จ</span>
-            <h3 className="mt-1 text-3xl font-black text-emerald-600">{successRate}%</h3>
+        <div className="rounded-2xl border border-emerald-200/80 bg-white p-5 shadow-panel">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">สถานะอุปกรณ์ที่ทำงานอยู่</p>
+              <p className="mt-2 text-3xl font-black text-emerald-600">3 / 3</p>
+            </div>
+            <div className="rounded-xl bg-emerald-50 p-2.5 text-emerald-600">
+              <Cpu className="h-5 w-5" />
+            </div>
           </div>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500">เคสที่ admin แก้แล้วนับเป็น success</span>
-            <svg className="h-6 w-16 text-emerald-500" viewBox="0 0 100 30" fill="none">
-              <path d="M0,15 Q20,5 40,25 T80,10 T100,5" stroke="currentColor" strokeWidth="2.5" />
-            </svg>
-          </div>
+          <p className="mt-4 flex items-center gap-1.5 text-[11px] font-bold text-emerald-700">
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            Active: GPU, OCR และ SLM
+          </p>
         </div>
 
-        <div className="flex min-h-[125px] flex-col justify-between rounded-2xl border border-slate-200/85 bg-white p-5 shadow-panel">
-          <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">รายการรอตรวจสอบ</span>
-            <h3 className="mt-1 text-3xl font-black text-orange-600">
-              {reviewDocs} <span className="text-xs font-normal text-slate-400">รายการ</span>
-            </h3>
+        <div className="rounded-2xl border border-emerald-200/80 bg-white p-5 shadow-panel">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">อัตราที่สำเร็จ</p>
+              <p className="mt-2 text-3xl font-black text-emerald-600">{successRate.toFixed(1)}%</p>
+            </div>
+            <div className="rounded-xl bg-emerald-50 p-2.5 text-emerald-600">
+              <CheckCircle2 className="h-5 w-5" />
+            </div>
           </div>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="rounded-lg border border-orange-200 bg-orange-50 px-2 py-0.5 text-[11px] font-extrabold text-orange-600">
-              ต้องใช้ workspace ตรวจ
-            </span>
-            <span className="text-[10px] font-bold text-slate-400">ค้างอยู่ในคิว</span>
-          </div>
+          <p className="mt-4 text-[11px] font-semibold text-slate-500">สำเร็จ {successDocs} / {totalDocs} เอกสาร</p>
         </div>
 
-        <div className="flex min-h-[125px] flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 shadow-panel">
-          <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">สัญญาณปรับ prompt</span>
-            <h3 className="mt-1 text-3xl font-black text-purple-600">{promptSignalCount}</h3>
+        <div className="rounded-2xl border border-red-200/80 bg-white p-5 shadow-panel">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">ผิดพลาด</p>
+              <p className="mt-2 text-3xl font-black text-red-600">{errorDocs}</p>
+            </div>
+            <div className="rounded-xl bg-red-50 p-2.5 text-red-600">
+              <AlertCircle className="h-5 w-5" />
+            </div>
           </div>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500">เคสที่ควรย้ายไป Prompt Configuration</span>
-            <svg className="h-6 w-16 text-purple-500" viewBox="0 0 100 30" fill="none">
-              <path d="M0,20 Q30,5 60,25 T100,10" stroke="currentColor" strokeWidth="2.5" />
-            </svg>
-          </div>
+          <p className="mt-4 text-[11px] font-semibold text-slate-500">{errorRate.toFixed(1)}% ของเอกสารทั้งหมด</p>
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-panel">
-            <div className="mb-6 flex items-center justify-between">
-              <h4 className="text-xs font-black uppercase tracking-wider text-slate-900">สถิติตามเป้าหมายงาน admin</h4>
-              <select className="rounded-lg border border-slate-200 bg-slate-50 p-1.5 text-[10px] font-bold text-slate-600 focus:outline-none">
-                <option>7 วันที่ผ่านมา</option>
-                <option>30 วันที่ผ่านมา</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col items-center justify-center gap-4">
-              <div className="relative flex h-28 w-28 items-center justify-center">
-                <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 42 42">
-                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#E2E8F0" strokeWidth="4" />
-                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#2563EB" strokeWidth="4.5" strokeDasharray="40 60" />
-                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#10B981" strokeWidth="4.5" strokeDasharray="20 80" strokeDashoffset="-40" />
-                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#F59E0B" strokeWidth="4.5" strokeDasharray="25 75" strokeDashoffset="-60" />
-                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#8B5CF6" strokeWidth="4.5" strokeDasharray="15 85" strokeDashoffset="-85" />
-                </svg>
-                <div className="absolute flex flex-col items-center justify-center text-center">
-                  <span className="text-xl font-black text-slate-900">{analytics.reduce((sum, item) => sum + item.value, 0)}</span>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">signals</span>
-                </div>
-              </div>
-
-              <div className="mt-2 w-full space-y-2">
-                {analytics.map((item, index) => (
-                  <div key={item.label} className="flex items-center justify-between text-xs font-semibold text-slate-600">
-                    <div className="flex items-center gap-2">
-                      <span className={`h-2.5 w-2.5 rounded-full ${index === 0 ? "bg-blue-600" : index === 1 ? "bg-emerald-500" : index === 2 ? "bg-orange-500" : "bg-purple-500"}`} />
-                      <span>{item.label}</span>
-                    </div>
-                    <span className="font-bold">{item.value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-panel">
-            <div className="mb-6 flex items-center justify-between">
-              <h4 className="text-xs font-black uppercase tracking-wider text-slate-900">แนวโน้มการปรับแก้</h4>
-              <select className="rounded-lg border border-slate-200 bg-slate-50 p-1.5 text-[10px] font-bold text-slate-600 focus:outline-none">
-                <option>7 วันที่ผ่านมา</option>
-              </select>
-            </div>
-
-            <div className="relative mt-4 flex h-32 w-full items-end justify-between px-2">
-              <div className="pointer-events-none absolute inset-0 flex flex-col justify-between">
-                <div className="w-full border-t border-slate-100" />
-                <div className="w-full border-t border-slate-100" />
-                <div className="w-full border-t border-slate-100" />
-              </div>
-
-              <svg className="absolute inset-0 h-full w-full" viewBox="0 0 200 120" preserveAspectRatio="none" fill="none">
-                <path d="M0,88 L33,74 L66,62 L100,48 L133,38 L166,22 L200,18" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M0,48 L33,52 L66,34 L100,42 L133,28 L166,36 L200,24" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 3" />
-              </svg>
-
-              <div className="absolute -bottom-6 flex w-full justify-between px-1 text-[9px] font-bold text-slate-400">
-                <span>20 ส.ค.</span>
-                <span>22 ส.ค.</span>
-                <span>24 ส.ค.</span>
-                <span>26 ส.ค.</span>
-              </div>
-            </div>
-
-            <div className="mt-9 flex justify-center gap-5 text-xs font-bold">
-              <span className="flex items-center gap-1.5 text-emerald-700">
-                <span className="h-2 w-4 rounded bg-emerald-500" />
-                แก้เอกสารสำเร็จ
-              </span>
-              <span className="flex items-center gap-1.5 text-orange-700">
-                <span className="h-2 w-4 rounded border border-dashed bg-orange-500" />
-                ส่งเป็น prompt signal
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-6 shadow-panel">
+      <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-panel sm:p-6">
+        <div className="mb-5 flex items-center justify-between gap-3">
           <div>
-            <h4 className="mb-4 flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-slate-900">
-              <Activity className="h-4 w-4 text-blue-600" /> สถานะทรัพยากรระบบ
-            </h4>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                <div>
-                  <span className="block text-[10px] font-bold uppercase text-slate-400">GPU Engine</span>
-                  <span className="text-xs font-bold text-slate-900">NVIDIA CUDA 12.6</span>
-                </div>
-                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest text-emerald-700">
-                  ACTIVE
-                </span>
-              </div>
-
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-xs font-bold">
-                  <span className="text-slate-500">VRAM Usage</span>
-                  <span className="text-slate-900">4.8 GB / 8.0 GB (60%)</span>
-                </div>
-                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
-                  <div className="h-full w-[60%] rounded-full bg-blue-600" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 pt-2 text-xs font-semibold">
-                <div className="rounded-xl border border-slate-100 bg-slate-50 p-2.5">
-                  <span className="block text-[9px] font-black uppercase text-slate-400">โมเดลที่ใช้งาน</span>
-                  <span className="mt-0.5 block text-[11px] font-extrabold text-slate-900">Qwen2.5-1.5B (FP16)</span>
-                </div>
-                <div className="rounded-xl border border-slate-100 bg-slate-50 p-2.5">
-                  <span className="block text-[9px] font-black uppercase text-slate-400">OCR Engine</span>
-                  <span className="mt-0.5 block text-[11px] font-extrabold text-slate-900">PaddleOCR v4 (GPU)</span>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-amber-200 bg-amber-50 p-3.5">
-                <div className="flex gap-2.5">
-                  <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
-                  <p className="text-[10px] font-semibold leading-relaxed text-amber-800">
-                    งานของ admin โหมดนี้เน้นตรวจข้อมูลตกหล่นและเก็บ feedback จากเคสผิดพลาดเพื่อส่งต่อไปยัง Prompt Lab
-                  </p>
-                </div>
-              </div>
-            </div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-orange-600">Action Required</p>
+            <h4 className="mt-1 text-sm font-black text-slate-900">งานที่ต้องจัดการ</h4>
           </div>
-
-          <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4 text-xs">
-            <span className="font-semibold text-slate-500">System Uptime</span>
-            <span className="font-extrabold text-slate-900">2 วัน 14 ชม. 32 นาที</span>
-          </div>
+          <button
+            type="button"
+            onClick={() => onOpenDocument(recentDocuments.find((document) => document.status === "error" || document.status === "review")?.id || recentDocuments[0]?.id || "")}
+            disabled={reviewDocs + errorDocs === 0}
+            className="inline-flex items-center gap-1 text-[11px] font-black text-blue-600 transition hover:text-blue-800 disabled:pointer-events-none disabled:text-slate-300"
+          >
+            เปิดคิวตรวจ <ArrowRight className="h-3.5 w-3.5" />
+          </button>
         </div>
-      </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="flex items-center justify-between rounded-xl border border-orange-200 bg-orange-50/70 p-3.5">
+            <div>
+              <p className="text-xs font-black text-orange-900">รอตรวจสอบ</p>
+              <p className="mt-1 text-[11px] font-semibold text-orange-700">เปิด Document Detail เพื่อตรวจและแก้</p>
+            </div>
+            <span className="text-2xl font-black text-orange-600">{reviewDocs}</span>
+          </div>
+          <div className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50/70 p-3.5">
+            <div>
+              <p className="text-xs font-black text-red-900">ผิดพลาด</p>
+              <p className="mt-1 text-[11px] font-semibold text-red-700">ต้องตรวจผล OCR หรือ SLM</p>
+            </div>
+            <span className="text-2xl font-black text-red-600">{errorDocs}</span>
+          </div>
+          <button
+            type="button"
+            onClick={onOpenPromptLab}
+            className="flex items-center justify-between rounded-xl border border-purple-200 bg-purple-50/70 p-3.5 text-left transition hover:border-purple-300 hover:bg-purple-100"
+          >
+            <div>
+              <p className="text-xs font-black text-purple-900">Prompt signal ใหม่</p>
+              <p className="mt-1 text-[11px] font-semibold text-purple-700">ไปวิเคราะห์ใน Prompt & Quality</p>
+            </div>
+            <span className="text-2xl font-black text-purple-600">{promptSignalCount}</span>
+          </button>
+        </div>
+      </section>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px]">
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-panel">
-          <div className="mb-6 flex items-center justify-between">
-            <h3 className="text-sm font-black text-slate-900">เอกสารล่าสุด</h3>
-            <button
-              type="button"
-              onClick={onOpenPromptLab}
-              className="rounded-xl bg-blue-600 px-3 py-2 text-[11px] font-bold text-white transition hover:bg-blue-500"
-            >
-              ไป Prompt & Quality
-            </button>
+      <div className="grid gap-6 xl:grid-cols-[1fr_380px]">
+        <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-panel sm:p-6">
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-blue-600">Document Activity</p>
+              <h4 className="mt-1 text-sm font-black text-slate-900">เอกสารล่าสุด</h4>
+            </div>
+            <span className="text-[11px] font-bold text-slate-400">แสดงงานสำคัญก่อน</span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] border-collapse text-left text-xs">
+            <table className="w-full min-w-[700px] border-collapse text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-200 font-black uppercase tracking-wider text-slate-400">
                   <th className="pb-3 pr-2">เอกสาร</th>
                   <th className="pb-3 px-2">ประเภท</th>
                   <th className="pb-3 px-2">อัปโหลดโดย</th>
-                  <th className="pb-3 px-2">วันที่อัปโหลด</th>
                   <th className="pb-3 px-2">สถานะ</th>
-                  <th className="pb-3 px-2 text-right">ความมั่นใจ</th>
+                  <th className="pb-3 px-2 text-right">ผลลัพธ์</th>
                   <th className="pb-3 pl-2 text-right">การดำเนินการ</th>
                 </tr>
               </thead>
               <tbody>
-                {documents.map((document) => (
-                  <tr key={document.id} className="border-b border-slate-100 last:border-0 transition-colors hover:bg-slate-50/40">
-                    <td className="py-3.5 pr-2">
-                      <span className="flex items-center gap-2 font-bold text-slate-900">
-                        {document.fileName.endsWith(".jpg") ? (
-                          <FileImage className="h-4.5 w-4.5 shrink-0 text-emerald-600" />
-                        ) : (
-                          <FileText className="h-4.5 w-4.5 shrink-0 text-red-600" />
-                        )}
-                        <span className="max-w-[180px] truncate">{document.fileName}</span>
-                      </span>
-                    </td>
-                    <td className="px-2 py-3.5">
-                      <span className="rounded bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-700">{document.type}</span>
-                    </td>
-                    <td className="px-2 py-3.5">
-                      <div className="flex items-center gap-2">
-                        <span className="flex h-7 w-7 items-center justify-center rounded-full border border-blue-200 bg-blue-50 text-[11px] font-black text-blue-600">
-                          {document.uploadedBy.avatar}
+                {recentDocuments.map((document) => {
+                  const needsReview = document.status === "review" || document.status === "error";
+                  return (
+                    <tr key={document.id} className="border-b border-slate-100 last:border-0 transition-colors hover:bg-slate-50/40">
+                      <td className="py-3.5 pr-2">
+                        <span className="flex items-center gap-2 font-bold text-slate-900">
+                          {document.fileName.match(/\.(jpg|jpeg|png)$/i) ? (
+                            <FileImage className="h-4.5 w-4.5 shrink-0 text-emerald-600" />
+                          ) : (
+                            <FileText className="h-4.5 w-4.5 shrink-0 text-red-600" />
+                          )}
+                          <span className="max-w-[180px] truncate" title={document.fileName}>{document.fileName}</span>
                         </span>
-                        <div>
-                          <p className="leading-none font-bold text-slate-800">{document.uploadedBy.name}</p>
-                          <p className="text-[9px] font-semibold text-slate-400">{document.uploadedBy.role}</p>
+                      </td>
+                      <td className="px-2 py-3.5">
+                        <span className="rounded bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-700">{document.type}</span>
+                      </td>
+                      <td className="px-2 py-3.5">
+                        <div className="flex items-center gap-2">
+                          <span className="flex h-7 w-7 items-center justify-center rounded-full border border-blue-200 bg-blue-50 text-[11px] font-black text-blue-600">{document.uploadedBy.avatar}</span>
+                          <span className="font-bold text-slate-800">{document.uploadedBy.name}</span>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-2 py-3.5 font-semibold text-slate-500">{document.date}</td>
-                    <td className="px-2 py-3.5">
-                      <StatusBadge status={document.status} label={document.statusLabel} />
-                    </td>
-                    <td className="px-2 py-3.5 text-right font-black text-slate-800">{document.result}</td>
-                    <td className="py-3.5 pl-2 text-right">
-                      <button
-                        type="button"
-                        onClick={() => onOpenDocument(document.id)}
-                        className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-[10px] font-black text-slate-700 transition hover:border-slate-400"
-                      >
-                        ตรวจทาน & แก้ไข
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-2 py-3.5"><StatusBadge status={document.status} label={document.statusLabel} /></td>
+                      <td className="px-2 py-3.5 text-right font-black text-slate-800">{document.result}</td>
+                      <td className="py-3.5 pl-2 text-right">
+                        <button
+                          type="button"
+                          onClick={() => onOpenDocument(document.id)}
+                          className={`rounded-lg border px-2.5 py-1.5 text-[10px] font-black transition ${needsReview ? "border-orange-200 bg-orange-50 text-orange-700 hover:border-orange-300" : "border-slate-200 bg-white text-slate-700 hover:border-slate-400"}`}
+                        >
+                          {needsReview ? "ตรวจและแก้ไข" : "ดูรายละเอียด"}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
-        </div>
+        </section>
 
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-panel">
-          <div className="mb-6 flex items-center gap-2">
+        <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-panel sm:p-6">
+          <div className="mb-5 flex items-center gap-2">
             <BrainCircuit className="h-4.5 w-4.5 text-blue-600" />
-            <h3 className="text-sm font-black text-slate-900">Prompt Feedback ล่าสุด</h3>
-          </div>
-
-          <div className="space-y-3">
-            {documents.flatMap((document) => document.promptSignals.slice(0, 1)).map((signal, index) => (
-              <div key={`${signal.id}-${index}`} className="rounded-xl border border-slate-200 bg-slate-50 p-3.5">
-                <div className="flex items-start justify-between gap-3">
-                  <p className="text-xs font-black leading-relaxed text-slate-900">{signal.title}</p>
-                  <span className="rounded-full bg-orange-50 px-2 py-0.5 text-[10px] font-black text-orange-700">
-                    {signal.severity}
-                  </span>
-                </div>
-                <p className="mt-2 text-[11px] font-semibold leading-relaxed text-slate-500">{signal.detail}</p>
-              </div>
-            ))}
-
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5">
-              <div className="flex items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-purple-600" />
-                <p className="text-xs font-black text-slate-900">Field Watchlist</p>
-              </div>
-              <div className="mt-3 space-y-2">
-                {["receiver", "total_amount", "document_date", "document_number"].map((field) => (
-                  <div key={field} className="flex items-center justify-between text-[11px]">
-                    <span className="font-mono font-bold text-slate-700">{field}</span>
-                    <span className="font-bold text-slate-400">monitor</span>
-                  </div>
-                ))}
-              </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-blue-600">Quality Summary</p>
+              <h4 className="mt-1 text-sm font-black text-slate-900">คุณภาพและ Prompt</h4>
             </div>
           </div>
+          <div className="space-y-3">
+            {analytics.map((item) => (
+              <div key={item.label} className="flex items-center justify-between rounded-xl bg-slate-50 px-3.5 py-3">
+                <div>
+                  <p className="text-xs font-black text-slate-800">{item.label}</p>
+                  <p className="mt-0.5 text-[10px] font-semibold text-slate-400">{item.hint}</p>
+                </div>
+                <span className="text-lg font-black text-blue-600">{item.value}</span>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={onOpenPromptLab}
+              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-[11px] font-black text-blue-700 transition hover:bg-blue-100"
+            >
+              เปิด Prompt & Quality <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-panel sm:p-6">
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Read-only Monitoring</p>
+            <h4 className="mt-1 flex items-center gap-1.5 text-sm font-black text-slate-900"><Activity className="h-4 w-4 text-emerald-600" /> System Health</h4>
+          </div>
+          <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[9px] font-black uppercase tracking-widest text-emerald-700">All systems active</span>
         </div>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-xl border border-slate-100 bg-slate-50 p-3.5">
+            <span className="block text-[9px] font-black uppercase text-slate-400">GPU Engine</span>
+            <span className="mt-1 block text-xs font-extrabold text-slate-900">NVIDIA CUDA 12.6</span>
+            <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-black text-emerald-700"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />ACTIVE</span>
+          </div>
+          <div className="rounded-xl border border-slate-100 bg-slate-50 p-3.5">
+            <span className="block text-[9px] font-black uppercase text-slate-400">VRAM Usage</span>
+            <span className="mt-1 block text-xs font-extrabold text-slate-900">4.8 GB / 8.0 GB</span>
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-200"><div className="h-full w-[60%] rounded-full bg-blue-600" /></div>
+          </div>
+          <div className="rounded-xl border border-slate-100 bg-slate-50 p-3.5">
+            <span className="block text-[9px] font-black uppercase text-slate-400">OCR Engine</span>
+            <span className="mt-1 block text-xs font-extrabold text-slate-900">PaddleOCR v4 (GPU)</span>
+            <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-black text-emerald-700"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />ACTIVE</span>
+          </div>
+          <div className="rounded-xl border border-slate-100 bg-slate-50 p-3.5">
+            <span className="block text-[9px] font-black uppercase text-slate-400">SLM Model</span>
+            <span className="mt-1 block text-xs font-extrabold text-slate-900">Qwen2.5-1.5B (FP16)</span>
+            <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-black text-emerald-700"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />ACTIVE</span>
+          </div>
+        </div>
+        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50 p-3.5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex gap-2.5">
+            <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
+            <p className="text-[10px] font-semibold leading-relaxed text-amber-800">งานของ Admin คือยืนยันข้อมูลที่ตกหล่นและเก็บ feedback จากเคสผิดพลาดเพื่อส่งต่อไปยัง Prompt & Quality</p>
+          </div>
+          <div className="shrink-0 text-[10px] font-bold text-slate-500">กำลังประมวลผล {processingDocs} รายการ</div>
+        </div>
+      </section>
+
+      <div className="flex items-center justify-between border-t border-slate-200 pt-4 text-xs">
+        <span className="font-semibold text-slate-500">System Uptime</span>
+        <span className="font-extrabold text-slate-900">2 วัน 14 ชม. 32 นาที</span>
       </div>
     </div>
   );

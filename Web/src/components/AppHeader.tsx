@@ -6,18 +6,12 @@ interface AppHeaderProps {
   user?: UserSession | null;
   onLogout?: () => void;
   onOpenSignIn?: () => void;
-  onOpenFeatures?: () => void;
-  onOpenWorkflow?: () => void;
-  onOpenPricing?: () => void;
 }
 
 export function AppHeader({
   user,
   onLogout,
   onOpenSignIn,
-  onOpenFeatures,
-  onOpenWorkflow,
-  onOpenPricing,
 }: AppHeaderProps) {
   const initial = user?.name ? user.name.charAt(0) : "U";
   const name = user?.name || "ผู้ใช้งานระบบ";
@@ -25,18 +19,12 @@ export function AppHeader({
 
   return (
     <header className="sticky top-0 z-30 h-13 border-b border-slate-200/90 bg-white/95 shadow-xs backdrop-blur-md sm:h-14">
-      <div className="mx-auto flex h-full max-w-[1420px] items-center justify-between px-3 sm:px-5 lg:px-6">
+      <div className="flex h-full w-full items-center justify-between px-3 sm:px-5 lg:px-6">
         <div className="flex items-center gap-3.5">
           <Logo theme="dark" size="sm" />
           <div className="hidden h-6 w-px bg-slate-200 sm:block" />
           <span className="hidden text-xs font-extrabold uppercase tracking-wide text-slate-500 md:inline">Docs to JSON</span>
         </div>
-
-        <nav className="hidden items-center gap-8 md:flex" aria-label="ข้อมูลระบบ">
-          <button type="button" onClick={onOpenFeatures} className="text-sm font-semibold text-slate-600 transition hover:text-slate-900">Features</button>
-          <button type="button" onClick={onOpenWorkflow} className="text-sm font-semibold text-slate-600 transition hover:text-slate-900">Workflow</button>
-          <button type="button" onClick={onOpenPricing} className="text-sm font-semibold text-slate-600 transition hover:text-slate-900">Pricing</button>
-        </nav>
 
         <div className="flex items-center gap-1.5 sm:gap-3">
           {user ? (
