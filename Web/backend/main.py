@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import base64
 import gc
+import io
 import os
 import sys
 import tempfile
@@ -9,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import requests
+from PIL import Image
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -72,6 +75,85 @@ class SlmExtractRequest(BaseModel):
     source_file: str = "document"
     ocr_text: str = Field(default="", min_length=1)
     ocr_lines: list[OcrLine] = Field(default_factory=list)
+    image_base64: str | None = None
+
+
+def convert_pdf_to_image(pdf_bytes: bytes, page_num: int = 0) -> tuple[Image.Image, int]:
+    try:
+        import pypdfium2 as pdfium
+        pdf = pdfium.PdfDocument(pdf_bytes)
+        page_count = len(pdf)
+        page = pdf[page_num if page_num < page_count else 0]
+        return page.render(scale=2.0).to_pil().convert("RGB"), page_count
+    except Exception:
+        try:
+            import fitz
+            document = fitz.open(stream=pdf_bytes, filetype="pdf")
+            page_count = len(document)
+            page = document[page_num if page_num < page_count else 0]
+            pixmap = page.get_pixmap(dpi=150)
+            return Image.frombytes("RGB", [pixmap.width, pixmap.height], pixmap.samples), page_count
+        except Exception as exc:
+            raise ValueError(f"Failed to render PDF: {exc}") from exc
+
+
+def convert_tiff_to_image(tiff_bytes: bytes) -> Image.Image:
+    return Image.open(io.BytesIO(tiff_bytes)).convert("RGB")
+
+
+def image_to_data_url(image: Image.Image, max_dimension: int = 1800) -> str:
+    preview = image.copy()
+    if max(preview.size) > max_dimension:
+        preview.thumbnail((max_dimension, max_dimension), Image.Resampling.LANCZOS)
+    buffer = io.BytesIO()
+    preview.save(buffer, format="PNG", optimize=True)
+    return f"data:image/png;base64,{base64.b64encode(buffer.getvalue()).decode('ascii')}"
+
+
+def prepare_ocr_input(payload: bytes, suffix: str) -> tuple[Path, str, int]:
+    page_count = 1
+    image_preview = ""
+    if suffix == ".pdf":
+        preview, page_count = convert_pdf_to_image(payload)
+        image_preview = image_to_data_url(preview)
+        temp_suffix = ".png"
+        temp_payload = io.BytesIO()
+        preview.save(temp_payload, format="PNG")
+        payload = temp_payload.getvalue()
+    elif suffix in {".tif", ".tiff"}:
+        preview = convert_tiff_to_image(payload)
+        image_preview = image_to_data_url(preview)
+        temp_suffix = ".png"
+        temp_payload = io.BytesIO()
+        preview.save(temp_payload, format="PNG")
+        payload = temp_payload.getvalue()
+    else:
+        temp_suffix = suffix
+        try:
+            image_preview = image_to_data_url(Image.open(io.BytesIO(payload)).convert("RGB"))
+        except Exception:
+            pass
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=temp_suffix) as tmp:
+        tmp.write(payload)
+        return Path(tmp.name), image_preview, page_count
+
+
+@app.post("/api/render-pdf-preview")
+async def render_pdf_preview(file: UploadFile = File(...)) -> dict[str, Any]:
+    payload = await file.read()
+    if not payload:
+        raise HTTPException(status_code=400, detail="ไฟล์ว่าง")
+    suffix = Path(file.filename or "document").suffix.lower()
+    try:
+        if suffix == ".pdf":
+            image, page_count = convert_pdf_to_image(payload)
+            return {"image_preview": image_to_data_url(image), "page_count": page_count, "format": "pdf"}
+        if suffix in {".tif", ".tiff"}:
+            return {"image_preview": image_to_data_url(convert_tiff_to_image(payload)), "page_count": 1, "format": "tiff"}
+        return {"image_preview": image_to_data_url(Image.open(io.BytesIO(payload)).convert("RGB")), "page_count": 1, "format": "image"}
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=f"ไม่สามารถสร้างภาพตัวอย่างได้: {exc}") from exc
 
 
 class SlmPromptRequest(BaseModel):
@@ -124,9 +206,7 @@ async def ocr_document(file: UploadFile = File(...), lang: str = Form("th")) -> 
         raise HTTPException(status_code=400, detail="ไฟล์ว่าง")
 
     engine = get_engine(lang)
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-        tmp.write(payload)
-        tmp_path = Path(tmp.name)
+    tmp_path, image_preview, page_count = prepare_ocr_input(payload, suffix)
     try:
         lines = extract_lines(predict(engine, tmp_path))
         text = "\n".join(line["text"] for line in lines if line["text"])
@@ -135,7 +215,16 @@ async def ocr_document(file: UploadFile = File(...), lang: str = Form("th")) -> 
             for line in lines
             if line["text"] and "position" in line and "tag" in line["position"]
         )
-        return {"text": text, "spatial_text": spatial_text, "lines": lines, "engine": "PaddleOCR", "language": lang, "device": OCR_DEVICE}
+        return {
+            "text": text,
+            "spatial_text": spatial_text,
+            "lines": lines,
+            "engine": "PaddleOCR",
+            "language": lang,
+            "device": OCR_DEVICE,
+            "image_preview": image_preview,
+            "page_count": page_count,
+        }
     finally:
         tmp_path.unlink(missing_ok=True)
         release_ocr_engines()

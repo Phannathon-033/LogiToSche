@@ -12,7 +12,7 @@ import { SlmPromptAssistantModal } from "./components/SlmPromptAssistantModal";
 import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
 import { saveDocumentToFirebase } from "./services/firebase";
 import { createJsonDownload } from "./services/mockProcessingService";
-import { runPaddleOcr, type OcrLanguage, type OcrLine } from "./services/ocrApi";
+import { renderPdfPreview, runPaddleOcr, type OcrLanguage, type OcrLine } from "./services/ocrApi";
 import { runSlmExtraction } from "./services/slmApi";
 import { EMPTY_JSON_SCHEMA } from "./types";
 import type {
@@ -127,6 +127,18 @@ export function App() {
       startedAt: new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }),
     }));
 
+    newItems.forEach((item) => {
+      const isPdf = item.file.type === "application/pdf" || item.file.name.toLowerCase().endsWith(".pdf");
+      if (isPdf) {
+        renderPdfPreview(item.file)
+          .then((previewUrl) => {
+            if (previewUrl) {
+              setBatchDocuments((current) => current.map((doc) => doc.id === item.id ? { ...doc, previewUrl } : doc));
+            }
+          });
+      }
+    });
+
     const allDocs = [...batchDocuments, ...newItems];
     setBatchDocuments(allDocs);
     if (batchDocuments.length === 0) {
@@ -174,6 +186,7 @@ export function App() {
             ocrText: text,
             spatialText: ocr.spatial_text,
             ocrLines: ocr.lines,
+            previewUrl: ocr.image_preview || allDocs[i].previewUrl,
             status: "ocr_completed",
             statusLabel: `OCR สำเร็จ (${i + 1}/${allDocs.length})`,
           };
@@ -226,6 +239,7 @@ export function App() {
             ocrText: allDocs[i].ocrText,
             ocrLines: allDocs[i].ocrLines,
             imageFile: allDocs[i].file,
+            imageBase64: allDocs[i].previewUrl?.startsWith("data:image/") ? allDocs[i].previewUrl ?? undefined : undefined,
           });
 
           allDocs[i] = {
@@ -607,6 +621,7 @@ export function App() {
         ocrText: textToUse,
         ocrLines: linesToUse,
         imageFile: targetDoc.file,
+        imageBase64: targetDoc.previewUrl?.startsWith("data:image/") ? targetDoc.previewUrl : undefined,
       });
 
       setBatchDocuments((prev) =>

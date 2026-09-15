@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import base64
 import json
 import os
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+import requests
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -132,6 +135,28 @@ class SlmExtractRequest(BaseModel):
     source_file: str = "document"
     ocr_text: str = Field(default="", min_length=1)
     ocr_lines: list[OcrLine] = Field(default_factory=list)
+    image_base64: str | None = None
+
+def fuse_image_ocr(payload: SlmExtractRequest) -> str:
+    if not payload.image_base64:
+        return payload.ocr_text
+    try:
+        raw_b64 = payload.image_base64.split(",")[-1] if "," in payload.image_base64 else payload.image_base64
+        image_bytes = base64.b64decode(raw_b64)
+        response = requests.post(
+            "http://127.0.0.1:8000/api/ocr",
+            files={"file": ("document.png", image_bytes, "image/png")},
+            data={"lang": "th"},
+            timeout=15,
+        )
+        if response.status_code != 200:
+            return payload.ocr_text
+        image_text = response.json().get("text", "")
+        existing_lines = {line.strip().lower() for line in payload.ocr_text.splitlines() if line.strip()}
+        new_lines = [line for line in image_text.splitlines() if line.strip() and line.strip().lower() not in existing_lines]
+        return payload.ocr_text + ("\n" + "\n".join(new_lines) if new_lines else "")
+    except (ValueError, TypeError, OSError, requests.RequestException):
+        return payload.ocr_text
 
 
 class SlmField(BaseModel):
@@ -245,9 +270,10 @@ def get_prompt_config() -> dict[str, Any]:
 
 @app.post("/api/slm/extract", response_model=SlmExtractResponse)
 def slm_extract(payload: SlmExtractRequest) -> SlmExtractResponse:
+    enriched_payload = payload.model_copy(update={"ocr_text": fuse_image_ocr(payload)}) if hasattr(payload, "model_copy") else payload.copy(update={"ocr_text": fuse_image_ocr(payload)})
     try:
-        data = generate_json(payload)
-        normalized = normalize_slm_output(data, payload.source_file)
+        data = generate_json(enriched_payload)
+        normalized = normalize_slm_output(data, enriched_payload.source_file)
         return SlmExtractResponse(
             json_schema=normalized["json_schema"],
             fields=normalized["fields"],
@@ -257,7 +283,7 @@ def slm_extract(payload: SlmExtractRequest) -> SlmExtractResponse:
             device="cuda:0",
         )
     except Exception as exc:
-        fallback = rule_based_fallback_extraction(payload)
+        fallback = rule_based_fallback_extraction(enriched_payload)
         return SlmExtractResponse(
             json_schema=fallback["json_schema"],
             fields=fallback["fields"],
