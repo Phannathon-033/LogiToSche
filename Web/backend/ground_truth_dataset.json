@@ -1,0 +1,390 @@
+{
+  "description": "LogiSchema Multi-format Logistics Document Benchmark Ground Truth Dataset (11 Core Fields)",
+  "version": "1.0",
+  "total_documents": 20,
+  "core_fields": [
+    "document_type",
+    "document_number",
+    "document_date",
+    "sender",
+    "receiver",
+    "origin",
+    "destination",
+    "reference_number",
+    "unit_price",
+    "total_amount",
+    "currency"
+  ],
+  "documents": [
+    {
+      "id": "DOC-001",
+      "file_name": "test_imagesa_a_a_h_aah01e00_88062630.tif",
+      "category": "commercial_invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "88062630",
+        "document_date": "1979-10-04",
+        "sender": "Lorillard G.A.D.",
+        "receiver": "Greensboro Branch",
+        "origin": "New York, USA",
+        "destination": "Greensboro, NC",
+        "reference_number": "PO-125",
+        "unit_price": 125.0,
+        "total_amount": 125.0,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "DOC-002",
+      "file_name": "test_imagesa_a_a_i_aai47c00_2084020024.tif",
+      "category": "purchase_order",
+      "ground_truth": {
+        "document_type": "purchase_order",
+        "document_number": "BOTI-208402",
+        "document_date": "1995-02-01",
+        "sender": "LBO BURNETT U.S.A.",
+        "receiver": "EST ND Supply Co.",
+        "origin": "Chicago, IL",
+        "destination": "North Dakota, USA",
+        "reference_number": "PO-2084020024",
+        "unit_price": 3707.3,
+        "total_amount": 3707.3,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "DOC-003",
+      "file_name": "test_imagesa_a_a_o_aao37c00_2073883295.tif",
+      "category": "commercial_invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "67550435",
+        "document_date": "1998-07-27",
+        "sender": "BAKER, DONELSON, BEARMAN & CALDWELL",
+        "receiver": "PHILIP MORRIS COMPANIES, INC.",
+        "origin": "Memphis, TN",
+        "destination": "New York, NY",
+        "reference_number": "REF-621047356",
+        "unit_price": 123250.0,
+        "total_amount": 123250.0,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "DOC-004",
+      "file_name": "test_imagesa_a_a_q_aaq54f00_0060284244.tif",
+      "category": "commercial_invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "INV-0060284244",
+        "document_date": "1998-07-27",
+        "sender": "BAKER, DONELSON, BEARMAN & CALDWELL",
+        "receiver": "PHILIP MORRIS COMPANIES, INC.",
+        "origin": "Washington, DC",
+        "destination": "Richmond, VA",
+        "reference_number": "REF-00602842",
+        "unit_price": 1973.4,
+        "total_amount": 1973.4,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "DOC-005",
+      "file_name": "test_imagesa_a_b_g_abg46e00_2023593676_2023593679.tif",
+      "category": "commercial_invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "SPPM-0693",
+        "document_date": "1993-06-01",
+        "sender": "MULTINATIONAL BUSINESS SERVICES, INC.",
+        "receiver": "Philip Morris U.S.A.",
+        "origin": "Washington, DC",
+        "destination": "New York, NY",
+        "reference_number": "PO-2023593676",
+        "unit_price": 5000.0,
+        "total_amount": 5000.0,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "DOC-006",
+      "file_name": "test_imagesa_a_b_q_abq00e00_89706845.tif",
+      "category": "commercial_invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "A-111",
+        "document_date": "1980-04-10",
+        "sender": "William Sands Co.",
+        "receiver": "Saxton Communications Group, Ltd.",
+        "origin": "New York, NY",
+        "destination": "New York, NY",
+        "reference_number": "SCOREBOOK-1980",
+        "unit_price": 695.75,
+        "total_amount": 2783.0,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "DOC-007",
+      "file_name": "test_imagesa_a_b_r_abr96c00_CTRCONTRACTS001598-1.tif",
+      "category": "delivery_order",
+      "ground_truth": {
+        "document_type": "delivery_order",
+        "document_number": "11221315",
+        "document_date": "1970-04-08",
+        "sender": "ROOMCHANGE LOGISTICS",
+        "receiver": "MOTA MOTORS CORP",
+        "origin": "Detroit, MI",
+        "destination": "Cleveland, OH",
+        "reference_number": "CTR-001598",
+        "unit_price": 25.99,
+        "total_amount": 25.99,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "DOC-008",
+      "file_name": "test_imagesa_a_b_t_abt90e00_91514762.tif",
+      "category": "commercial_invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "91514762",
+        "document_date": "2023-04-05",
+        "sender": "INNOWY IBN LOGISTICS",
+        "receiver": "PACIFIC TRADING LTD",
+        "origin": "Bangkok Port, Thailand",
+        "destination": "Singapore Port",
+        "reference_number": "PO-91514762",
+        "unit_price": 567.0,
+        "total_amount": 567.0,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "DOC-009",
+      "file_name": "bill_of_lading_sample.jpg",
+      "category": "bill_of_lading",
+      "ground_truth": {
+        "document_type": "bill_of_lading",
+        "document_number": "BL-2024-88910",
+        "document_date": "2024-08-25",
+        "sender": "Siam Global Logistics Co., Ltd.",
+        "receiver": "Tokyo Freight Corp.",
+        "origin": "Bangkok Port, Thailand",
+        "destination": "Tokyo Port, Japan",
+        "reference_number": "PO-2024-9988",
+        "unit_price": 79.0,
+        "total_amount": 15800.0,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "DOC-010",
+      "file_name": "delivery_order_sample.png",
+      "category": "delivery_order",
+      "ground_truth": {
+        "document_type": "delivery_order",
+        "document_number": "DO-88921",
+        "document_date": "2024-09-01",
+        "sender": "Surat Transport Express",
+        "receiver": "Southern Canned Food Co.",
+        "origin": "Surat Thani Terminal",
+        "destination": "Songkhla Distribution Center",
+        "reference_number": "SO-2024-4412",
+        "unit_price": 450.0,
+        "total_amount": 4500.0,
+        "currency": "THB"
+      }
+    },
+    {
+      "id": "DOC-011",
+      "file_name": "air_waybill_sample.jpg",
+      "category": "air_waybill",
+      "ground_truth": {
+        "document_type": "air_waybill",
+        "document_number": "AWB-774-9021882",
+        "document_date": "2024-08-28",
+        "sender": "Thai Airways Cargo",
+        "receiver": "Frankfurt Logistics Hub GmbH",
+        "origin": "Suvarnabhumi Airport (BKK)",
+        "destination": "Frankfurt Airport (FRA)",
+        "reference_number": "REF-AWB-9021",
+        "unit_price": 120.0,
+        "total_amount": 24000.0,
+        "currency": "EUR"
+      }
+    },
+    {
+      "id": "DOC-012",
+      "file_name": "packing_list_sample.jpg",
+      "category": "packing_list",
+      "ground_truth": {
+        "document_type": "packing_list",
+        "document_number": "PL-2024-098",
+        "document_date": "2024-08-20",
+        "sender": "Eastern Seaboard Manufacturer Ltd.",
+        "receiver": "Hanoi Electronics JSC",
+        "origin": "Laem Chabang Port, Thailand",
+        "destination": "Haiphong Port, Vietnam",
+        "reference_number": "PO-VN-2024-001",
+        "unit_price": 15.5,
+        "total_amount": 15500.0,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "DOC-013",
+      "file_name": "sea_freight_invoice_sample.png",
+      "category": "commercial_invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "INV-SEA-99120",
+        "document_date": "2024-08-15",
+        "sender": "Ocean Line Shipping Co.",
+        "receiver": "Penang Trading Enterprise",
+        "origin": "Bangkok Port, Thailand",
+        "destination": "Penang Port, Malaysia",
+        "reference_number": "BL-OCN-8812",
+        "unit_price": 850.0,
+        "total_amount": 1700.0,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "DOC-014",
+      "file_name": "customs_entry_sample.pdf",
+      "category": "customs_declaration",
+      "ground_truth": {
+        "document_type": "customs_declaration",
+        "document_number": "CD-TH-2024-5501",
+        "document_date": "2024-09-02",
+        "sender": "Customs Brokerage Express",
+        "receiver": "Import Masters Thailand Co.",
+        "origin": "Port of Shanghai, China",
+        "destination": "Laem Chabang Port, Thailand",
+        "reference_number": "ENTRY-99882",
+        "unit_price": 3200.0,
+        "total_amount": 3200.0,
+        "currency": "THB"
+      }
+    },
+    {
+      "id": "DOC-015",
+      "file_name": "truck_waybill_sample.jpg",
+      "category": "delivery_order",
+      "ground_truth": {
+        "document_type": "delivery_order",
+        "document_number": "TWB-44021",
+        "document_date": "2024-09-03",
+        "sender": "Andaman Highway Logistics",
+        "receiver": "Phuket Luxury Hotel Supplies",
+        "origin": "Surat Thani Hub",
+        "destination": "Phuket Depot",
+        "reference_number": "WAYBILL-44021",
+        "unit_price": 280.0,
+        "total_amount": 2800.0,
+        "currency": "THB"
+      }
+    },
+    {
+      "id": "DOC-016",
+      "file_name": "test_verification_doc.png",
+      "category": "invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "INV-TEST-2024",
+        "document_date": "2024-09-10",
+        "sender": "Global Logistics Hub Co.",
+        "receiver": "Southern Cargo Services",
+        "origin": "Bangkok Port",
+        "destination": "Surat Thani Terminal",
+        "reference_number": "PO-99881",
+        "unit_price": 750.0,
+        "total_amount": 1500.0,
+        "currency": "THB"
+      },
+      "annotated_at": "2026-09-10 10:11:44",
+      "status": "verified"
+    },
+    {
+      "id": "DOC-017",
+      "file_name": "document_1789010401291.png",
+      "category": "invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "4177",
+        "document_date": "1995-08-10",
+        "sender": "POWERFORCE\"",
+        "receiver": "Powerforce, A Division of Actmedia",
+        "origin": "DAIE OF IN",
+        "destination": "re Marketing Work",
+        "reference_number": "4177",
+        "unit_price": 266.11,
+        "total_amount": 266.11,
+        "currency": "THB"
+      },
+      "annotated_at": "2026-09-10 10:20:01",
+      "status": "verified"
+    },
+    {
+      "id": "DOC-018",
+      "file_name": "document_1789010402872.png",
+      "category": "invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "4177",
+        "document_date": "1995-08-10",
+        "sender": "POWERFORCE\"",
+        "receiver": "Powerforce, A Division of Actmedia",
+        "origin": "DAIE OF IN",
+        "destination": "re Marketing Work",
+        "reference_number": "4177",
+        "unit_price": 266.11,
+        "total_amount": 266.11,
+        "currency": "THB"
+      },
+      "annotated_at": "2026-09-10 10:20:02",
+      "status": "verified"
+    },
+    {
+      "id": "DOC-019",
+      "file_name": "document_1789128001156.png",
+      "category": "invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "-",
+        "document_date": "1984-01-10",
+        "sender": "-",
+        "receiver": "-",
+        "origin": "-",
+        "destination": "-",
+        "reference_number": "-",
+        "unit_price": 0,
+        "total_amount": 1636.07,
+        "currency": "-"
+      },
+      "annotated_at": "2026-09-11 19:00:01",
+      "status": "verified"
+    },
+    {
+      "id": "DOC-020",
+      "file_name": "document_1789128002659.png",
+      "category": "invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "-",
+        "document_date": "1984-01-10",
+        "sender": "-",
+        "receiver": "-",
+        "origin": "-",
+        "destination": "-",
+        "reference_number": "-",
+        "unit_price": 0,
+        "total_amount": 1636.07,
+        "currency": "-"
+      },
+      "annotated_at": "2026-09-11 19:00:02",
+      "status": "verified"
+    }
+  ]
+}

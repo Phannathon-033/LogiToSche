@@ -1,5 +1,7 @@
 import {
+  AlertCircle,
   Award,
+  BookmarkCheck,
   Building2,
   Calendar,
   Check,
@@ -7,12 +9,14 @@ import {
   Copy,
   DollarSign,
   Download,
+  Eye,
   FileCheck,
   FileCheck2,
   FileCode,
   FileText,
   FolderOpen,
   Hash,
+  Layers,
   Loader2,
   MapPin,
   RefreshCw,
@@ -22,7 +26,7 @@ import {
   Tag,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface GroundTruthViewerModalProps {
   isOpen: boolean;
@@ -35,7 +39,7 @@ interface GroundTruthDoc {
   category: string;
   annotated_at?: string;
   status?: string;
-  ground_truth: Record<string, string>;
+  ground_truth: Record<string, any>;
 }
 
 interface KFoldReport {
@@ -100,40 +104,11 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
-  const loadData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const gtResp = await fetch("/api/benchmark/ground-truth").catch(() =>
-        fetch("http://127.0.0.1:8001/api/benchmark/ground-truth")
-      );
-      if (gtResp.ok) {
-        const data = await gtResp.json();
-        const docs: GroundTruthDoc[] = data.documents || [];
-        setDocuments(docs);
-        if (docs.length > 0) {
-          setSelectedDoc((prev) => prev ?? docs[0]);
-        }
-      }
-
-      const kfResp = await fetch("/api/benchmark/kfold").catch(() =>
-        fetch("http://127.0.0.1:8001/api/benchmark/kfold")
-      );
-      if (kfResp.ok) {
-        const kfData = await kfResp.json();
-        setKfoldReport(kfData);
-      }
-    } catch (error) {
-      console.error("Failed to fetch benchmark data:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
     if (isOpen) {
       loadData();
     }
-  }, [isOpen, loadData]);
+  }, [isOpen]);
 
   // Handle ESC key to close modal (matching Firebase Modal UX)
   useEffect(() => {
@@ -145,6 +120,37 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
+
+  async function loadData() {
+    setLoading(true);
+    try {
+      // 1. Fetch Ground Truth Dataset
+      const gtResp = await fetch("/api/benchmark/ground-truth").catch(() =>
+        fetch("http://127.0.0.1:8001/api/benchmark/ground-truth")
+      );
+      if (gtResp.ok) {
+        const data = await gtResp.json();
+        const docs: GroundTruthDoc[] = data.documents || [];
+        setDocuments(docs);
+        if (docs.length > 0 && !selectedDoc) {
+          setSelectedDoc(docs[0]);
+        }
+      }
+
+      // 2. Fetch K-Fold Report
+      const kfResp = await fetch("/api/benchmark/kfold").catch(() =>
+        fetch("http://127.0.0.1:8001/api/benchmark/kfold")
+      );
+      if (kfResp.ok) {
+        const kfData = await kfResp.json();
+        setKfoldReport(kfData);
+      }
+    } catch (err) {
+      console.error("Failed to fetch benchmark data:", err);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleRerunKFold() {
     setIsRerunningKFold(true);
@@ -978,7 +984,7 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
 /**
  * Clean Light Theme JSON Syntax Highlighter (Matching Firebase modal)
  */
-function JsonSyntaxHighlighter({ json }: { json: unknown }) {
+function JsonSyntaxHighlighter({ json }: { json: any }) {
   const jsonString = useMemo(() => {
     try {
       return JSON.stringify(json, null, 2);
@@ -991,7 +997,7 @@ function JsonSyntaxHighlighter({ json }: { json: unknown }) {
 
   function highlightLine(line: string) {
     return line.replace(
-      /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g,
+      /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
       (match) => {
         let cls = "text-slate-800";
         if (/^"/.test(match)) {

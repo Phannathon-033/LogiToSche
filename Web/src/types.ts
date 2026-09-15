@@ -22,16 +22,40 @@ export interface JsonSchemaOutput {
   unit_price: number;
   total_amount: number;
   currency: string;
-  document_no?: string;
-  party_name?: string;
-  source_file?: string;
-  invoice_no?: string;
-  receiver_name?: string;
-  truck_plate?: string;
-  gross_weight_kg?: number;
-  quantity?: number;
   other?: Record<string, unknown>;
+
+  /** @deprecated Read legacy records only; new output uses canonical fields and other. */
+  document_no?: string;
+  /** @deprecated Read legacy records only; new output uses canonical fields and other. */
+  party_name?: string;
+  /** @deprecated Read legacy records only; new output uses canonical fields and other. */
+  source_file?: string;
+  /** @deprecated Read legacy records only; new output uses canonical fields and other. */
+  invoice_no?: string;
+  /** @deprecated Read legacy records only; new output uses canonical fields and other. */
+  receiver_name?: string;
+  /** @deprecated Read legacy records only; new output uses canonical fields and other. */
+  truck_plate?: string;
+  /** @deprecated Read legacy records only; new output uses canonical fields and other. */
+  gross_weight_kg?: number;
+  /** @deprecated Read legacy records only; new output uses canonical fields and other. */
+  quantity?: number;
 }
+
+export const EMPTY_JSON_SCHEMA: JsonSchemaOutput = {
+  document_type: "",
+  document_number: "",
+  document_date: "",
+  sender: "",
+  receiver: "",
+  origin: "",
+  destination: "",
+  reference_number: "",
+  unit_price: 0,
+  total_amount: 0,
+  currency: "",
+  other: {},
+};
 
 export const CORE_FIELDS_DEF = [
   { key: "document_type", label: "document_type (ประเภทเอกสาร)" },

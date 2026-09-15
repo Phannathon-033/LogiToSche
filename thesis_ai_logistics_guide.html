@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สรุปแกนหลักระบบ LogiSchema: OCR, SLM และ Ground Truth</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+    }
+    code, pre, .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .page-break { page-break-before: always; }
+      .shadow-xl, .shadow-2xl, .shadow-sm, .shadow-md { box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+
+  <!-- TOP HERO BAR -->
+  <header class="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-900 text-white border-b border-slate-800 shadow-md">
+    <div class="max-w-6xl mx-auto px-6 py-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div>
+          <div class="inline-flex items-center gap-2 rounded-full bg-blue-500/20 border border-blue-400/30 px-3 py-1 text-xs font-semibold text-blue-200 mb-3">
+            <span class="h-2 w-2 rounded-full bg-blue-400 animate-pulse"></span>
+            คู่มือสรุปองค์ความรู้ & วิทยานิพนธ์ (LogiSchema Thesis Guide)
+          </div>
+          <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-white leading-tight">
+            การสกัดเอกสารโลจิสติกส์สู่ 11 ฟิลด์มาตรฐานด้วย OCR, SLM และ Ground Truth
+          </h1>
+          <p class="mt-2 text-sm text-slate-300 max-w-3xl leading-relaxed">
+            สรุปเทคนิคการทำ OCR ให้แม่นยำสูงสุด, การออกแบบ SLM ให้เข้าใจบริบทโลจิสติกส์ และความสำคัญของ Ground Truth สำหรับการวัดผลในบทที่ 4
+          </p>
+        </div>
+        <div class="flex items-center gap-3 no-print">
+          <button onclick="window.print()" class="inline-flex items-center gap-2 bg-white text-slate-900 hover:bg-slate-100 font-bold px-4 py-2.5 rounded-xl text-xs transition shadow-sm">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            พิมพ์ / บันทึกเป็น PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Nav Anchor Pills -->
+      <div class="mt-6 pt-6 border-t border-slate-800/80 flex flex-wrap gap-2 text-xs no-print">
+        <a href="#section-ocr" class="bg-slate-800/80 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+          <span class="font-bold text-sky-400">1.</span> ทำไม OCR ถึงจับแม่นขึ้น?
+        </a>
+        <a href="#section-slm" class="bg-slate-800/80 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+          <span class="font-bold text-indigo-400">2.</span> SLM เข้าใจเอกสารได้อย่างไร?
+        </a>
+        <a href="#section-ground-truth" class="bg-slate-800/80 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+          <span class="font-bold text-emerald-400">3.</span> Ground Truth คืออะไร & ช่วยตรงไหน?
+        </a>
+        <a href="#section-summary" class="bg-slate-800/80 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+          <span class="font-bold text-amber-400">4.</span> ตารางสรุปภาพรวมวงจรระบบ
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-6xl mx-auto px-6 py-10 space-y-12">
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 1: OCR OPTIMIZATION                                               -->
+    <!-- ========================================================================= -->
+    <section id="section-ocr" class="scroll-mt-6 bg-white rounded-3xl border border-slate-200 p-7 md:p-9 shadow-sm">
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-5">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 border border-blue-200 shadow-2xs">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        </div>
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider text-blue-600">Part 1: Text Extraction Engine</span>
+          <h2 class="text-xl md:text-2xl font-black text-slate-900">OCR ทำยังไงให้จับข้อความได้แม่นยำมากขึ้น?</h2>
+        </div>
+      </div>
+
+      <p class="mt-4 text-sm text-slate-600 leading-relaxed">
+        ปัญหาหลักของ OCR กับเอกสารโลจิสติกส์ (เช่น ใบตราส่ง Bill of Lading, Invoice, Packing List) คือ <b>กระดาษเก่ามีรอยยับ, ภาพถ่ายเอียง, ตารางและเส้นกริดตีทับตัวหนังสือ, ตัวอักษรจาง และฟอนต์ Dot-matrix</b> การจะทำให้ OCR อ่านได้แม่นยำ ต้องแก้ปัญหาผ่าน 4 ขั้นตอนสำคัญ:
+      </p>
+
+      <!-- 4 Pillars Grid -->
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <!-- Pillar 1 -->
+        <div class="rounded-2xl border border-slate-200/90 bg-slate-50/60 p-5 hover:bg-slate-50 transition">
+          <div class="flex items-center gap-2.5 text-blue-700 font-extrabold text-sm mb-2">
+            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 text-blue-700 text-xs font-black">1</span>
+            <span>การปรับสภาพภาพล่วงหน้า (Image Preprocessing)</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            OCR จะอ่านได้ดีต่อเมื่อภาพมีความคมชัดและแยกตัวหนังสือออกจากพื้นหลังได้เด็ดขาด:
+          </p>
+          <ul class="mt-3 space-y-2 text-xs text-slate-700">
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500 font-bold">•</span>
+              <div><b>Adaptive Thresholding & Otsu Binarization:</b> แปลงภาพเป็นขาว-ดำสมบูรณ์ โดยตัดแสงสะท้อนและเงามืดออก</div>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500 font-bold">•</span>
+              <div><b>CLAHE (Contrast Enhancement):</b> เร่งความเปรียบต่างของหมึกพิมพ์ที่จาง ให้ตัวหนังสือดำชัดเจนขึ้น</div>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500 font-bold">•</span>
+              <div><b>Deskewing (ปรับมุมเอียง):</b> ตรวจหามุมเอียงของกระดาษและหมุนกลับมาที่ 0 องศา เพื่อให้แนวบรรทัดตรงเป๊ะ</div>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500 font-bold">•</span>
+              <div><b>Denoising:</b> ลบจุดฝุ่น คราบเปื้อน หรือคราบรอยพับกระดาษ เพื่อไม่ให้ OCR เข้าใจผิดว่าเป็นจุดทศนิยมหรือลูกน้ำ</div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="rounded-2xl border border-slate-200/90 bg-slate-50/60 p-5 hover:bg-slate-50 transition">
+          <div class="flex items-center gap-2.5 text-blue-700 font-extrabold text-sm mb-2">
+            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 text-blue-700 text-xs font-black">2</span>
+            <span>การปรับขนาดความละเอียด (Resolution & DPI 300)</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            โมเดล OCR มีขนาดความสูงของตัวอักษรที่ชอบที่สุดคือ <b>25 - 35 พิกเซล (x-height)</b>:
+          </p>
+          <ul class="mt-3 space-y-2 text-xs text-slate-700">
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500 font-bold">•</span>
+              <div><b>DPI Scaling:</b> หากสแกนภาพมา 72 หรือ 150 DPI ตัวหนังสือจะแตก ให้ทำ Super-Resolution หรือ Bicubic Interpolation ขยายขึ้นเป็น 300 DPI</div>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500 font-bold">•</span>
+              <div><b>ป้องกันภาพบวม:</b> ไม่ขยายภาพเกิน 600 DPI เพราะจะทำให้เสียเวลาประมวลผลโดยไม่จำเป็น และเกิด Artifacts ขอบหยัก</div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="rounded-2xl border border-slate-200/90 bg-slate-50/60 p-5 hover:bg-slate-50 transition">
+          <div class="flex items-center gap-2.5 text-blue-700 font-extrabold text-sm mb-2">
+            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 text-blue-700 text-xs font-black">3</span>
+            <span>Page Segmentation Mode (PSM) & Whitelisting</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            การสั่งให้เอนจิน OCR รู้ว่าเอกสารกำลังมีโครงสร้างแบบใด:
+          </p>
+          <ul class="mt-3 space-y-2 text-xs text-slate-700">
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500 font-bold">•</span>
+              <div><b>PSM 6 (Single Uniform Block):</b> สำหรับตารางและคอลัมน์ข้อมูลสินค้า</div>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500 font-bold">•</span>
+              <div><b>PSM 11 / PSM 12 (Sparse Text):</b> เหมาะกับใบแจ้งหนี้ที่มีข้อความกระจายตัวอยู่ตามมุมต่างๆ ทั่วทั้งหน้า</div>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500 font-bold">•</span>
+              <div><b>Character Whitelisting:</b> ในช่องตัวเลขหรือรหัส สามารถตัดตัวอักษรพิเศษที่ไม่เกี่ยวข้องออก ป้องกันการอ่านเลข 0 เป็นตัว O</div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pillar 4 -->
+        <div class="rounded-2xl border border-slate-200/90 bg-slate-50/60 p-5 hover:bg-slate-50 transition">
+          <div class="flex items-center gap-2.5 text-blue-700 font-extrabold text-sm mb-2">
+            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 text-blue-700 text-xs font-black">4</span>
+            <span>การเรียงลำดับการอ่าน (Spatial Reading Order)</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            OCR จะส่งออก Bounding Box (พิกัด X, Y) ของแต่ละคำออกมา:
+          </p>
+          <ul class="mt-3 space-y-2 text-xs text-slate-700">
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500 font-bold">•</span>
+              <div><b>Top-to-Bottom, Left-to-Right Sorting:</b> ต้องเรียงลำดับคำให้อ่านเป็นธรรมชาติ ไม่ให้ข้อความคอลัมน์ซ้ายกระโดดไปปนกับคอลัมน์ขวา</div>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-500 font-bold">•</span>
+              <div><b>Line Merging:</b> คำที่อยู่ในแนวระนาบ Y เดียวกัน (มีค่า Gap ใกล้เคียงกัน) จะต้องถูกนำมารวมเป็นบรรทัดเดียวกัน ก่อนส่งเข้าโมเดล SLM</div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Pro-Tip Box -->
+      <div class="mt-6 rounded-2xl bg-blue-50/70 border border-blue-200/80 p-4.5 text-xs text-blue-900 flex items-start gap-3">
+        <svg class="w-5 h-5 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <div>
+          <span class="font-extrabold">สรุปใจความสำคัญสำหรับเล่มวิทยานิพนธ์:</span>
+          OCR ที่ดีไม่ใช่เพียงแค่เอนจินรู้จำตัวอักษรอย่างเดียว แต่คุณภาพ 80% มาจาก <b>Pipeline การเตรียมภาพ (Preprocessing)</b> และ <b>การจัดระเบียบลำดับพิกัด (Layout Ordering)</b> เพื่อให้ส่งข้อความที่มีบริบทสมบูรณ์ที่สุดไปให้ SLM
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 2: SLM REASONING & EXTRACTION                                     -->
+    <!-- ========================================================================= -->
+    <section id="section-slm" class="scroll-mt-6 bg-white rounded-3xl border border-slate-200 p-7 md:p-9 shadow-sm">
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-5">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-200 shadow-2xs">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+        </div>
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider text-indigo-600">Part 2: Small Language Model Reasoning</span>
+          <h2 class="text-xl md:text-2xl font-black text-slate-900">SLM ทำยังไงให้เข้าใจและสกัด 11 ฟิลด์ได้ถูกต้อง?</h2>
+        </div>
+      </div>
+
+      <p class="mt-4 text-sm text-slate-600 leading-relaxed">
+        Small Language Model (เช่น Qwen2.5-1.5B / 3B) มีพารามิเตอร์จำกัดเมื่อเทียบกับโมเดลขนาดใหญ่หลายแสนล้านตัว ดังนั้นการจะให้ SLM เข้าใจเอกสารโลจิสติกส์ได้แม่นยำระดับ 90%+ จะต้องอาศัย <b>4 กลยุทธ์ในการออกแบบระบบ (System Design)</b>:
+      </p>
+
+      <div class="mt-6 space-y-4">
+
+        <!-- Strategy 1 -->
+        <div class="rounded-2xl border border-slate-200 p-5 bg-white">
+          <div class="flex items-center gap-2.5 text-indigo-800 font-extrabold text-sm mb-2">
+            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700 text-xs font-black">1</span>
+            <span>การจัดการคำศัพท์เฉพาะทางโลจิสติกส์ (Domain-Specific Synonym Mapping)</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            เอกสารแต่ละฉบับใช้คำเรียกไม่เหมือนกัน SLM จะต้องถูกป้อนคลังความรู้ (In-Context Vocabulary) ว่าคำต่อไปนี้คือฟิลด์เดียวกัน:
+          </p>
+          <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 text-xs font-mono">
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+              <span class="text-slate-400 block text-[10px] font-bold uppercase font-sans">Sender (ผู้ส่ง)</span>
+              <span class="text-slate-800 font-bold text-[11px]">Shipper, Consignor, Vendor, Sold by, Seller</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+              <span class="text-slate-400 block text-[10px] font-bold uppercase font-sans">Receiver (ผู้รับ)</span>
+              <span class="text-slate-800 font-bold text-[11px]">Consignee, Buyer, Bill To, Ship To, Deliver To</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+              <span class="text-slate-400 block text-[10px] font-bold uppercase font-sans">Origin (ต้นทาง)</span>
+              <span class="text-slate-800 font-bold text-[11px]">POL, Port of Loading, Place of Receipt, Origin</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+              <span class="text-slate-400 block text-[10px] font-bold uppercase font-sans">Destination (ปลายทาง)</span>
+              <span class="text-slate-800 font-bold text-[11px]">POD, Port of Discharge, Place of Delivery, Dest</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Strategy 2 -->
+        <div class="rounded-2xl border border-slate-200 p-5 bg-white">
+          <div class="flex items-center gap-2.5 text-indigo-800 font-extrabold text-sm mb-2">
+            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700 text-xs font-black">2</span>
+            <span>Few-Shot Prompting & In-Context Demonstrations</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            แทนที่จะสั่งคำสั่งสั้นๆ (Zero-Shot) ให้ส่งตัวอย่างข้อความ OCR ของเอกสารจริงพร้อมเฉลย JSON จำนวน 2-3 ตัวอย่างเข้าไปใน System Prompt:
+          </p>
+          <div class="mt-3 bg-slate-900 text-slate-200 rounded-xl p-3.5 font-mono text-[11.5px] leading-relaxed overflow-x-auto">
+            <span class="text-slate-500">// ตัวอย่างรูปแบบ System Prompt:</span><br>
+            <span class="text-purple-400">"You are an expert Logistics Information Extraction SLM."</span><br>
+            <span class="text-emerald-400">"Task: Extract the 11 Core Logistics Fields strictly into valid RFC 8259 JSON."</span><br>
+            <span class="text-amber-300">"Rule: Normalize Total Amount into raw numbers (remove commas, trim currency to ISO codes)."</span>
+          </div>
+        </div>
+
+        <!-- Strategy 3 -->
+        <div class="rounded-2xl border border-slate-200 p-5 bg-white">
+          <div class="flex items-center gap-2.5 text-indigo-800 font-extrabold text-sm mb-2">
+            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700 text-xs font-black">3</span>
+            <span>กระบวนการคิดวิเคราะห์ก่อนตอบ (Chain-of-Thought / Reasoning)</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            ให้ SLM วิเคราะห์ขั้นตอนในใจก่อนเขียน JSON Output เพื่อป้องกันการสับสนระหว่างที่อยู่บริษัทกับเมืองต้นทาง:
+          </p>
+          <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="p-3 rounded-xl bg-indigo-50/50 border border-indigo-100">
+              <span class="font-bold text-indigo-900 block mb-1">ขั้นที่ 1: ตรวจหาประเภทเอกสาร</span>
+              ดูคำว่า Invoice, Bill of Lading, หรือ Purchase Order ที่ส่วนหัวกระดาษ
+            </div>
+            <div class="p-3 rounded-xl bg-indigo-50/50 border border-indigo-100">
+              <span class="font-bold text-indigo-900 block mb-1">ขั้นที่ 2: แยกแยะคู่ค้าและสถานที่</span>
+              แยกชื่อบริษัทคู่ค้า ออกจากพิกัดท่าเรือหรือเมืองต้นทาง-ปลายทาง
+            </div>
+            <div class="p-3 rounded-xl bg-indigo-50/50 border border-indigo-100">
+              <span class="font-bold text-indigo-900 block mb-1">ขั้นที่ 3: สรุปยอดเงินและสกุลเงิน</span>
+              หายอด Total สุทธิตรงท้ายใบเสร็จ ไม่นำยอด Subtotal หรือ VAT มารวมปน
+            </div>
+          </div>
+        </div>
+
+        <!-- Strategy 4 -->
+        <div class="rounded-2xl border border-slate-200 p-5 bg-white">
+          <div class="flex items-center gap-2.5 text-indigo-800 font-extrabold text-sm mb-2">
+            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700 text-xs font-black">4</span>
+            <span>การทนทานต่อสัญญาณรบกวนของ OCR (OCR Noise Tolerance)</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            SLM ต้องมีความฉลาดพอที่จะแกะคำที่ OCR พิมพ์ผิด เช่น:
+          </p>
+          <div class="mt-2 flex flex-wrap gap-2 text-xs">
+            <span class="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-lg font-mono">"1NVO1CE" ➔ "invoice"</span>
+            <span class="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-lg font-mono">"$1,25O.OO" ➔ 1250.00</span>
+            <span class="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-lg font-mono">"O4/1O/1979" ➔ "1979-10-04"</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 3: GROUND TRUTH EXPLANATION                                       -->
+    <!-- ========================================================================= -->
+    <section id="section-ground-truth" class="scroll-mt-6 bg-white rounded-3xl border border-slate-200 p-7 md:p-9 shadow-sm">
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-5">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-2xs">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider text-emerald-600">Part 3: Evaluation & Validation Standard</span>
+          <h2 class="text-xl md:text-2xl font-black text-slate-900">Ground Truth คืออะไร และช่วยตรงไหนในระบบ?</h2>
+        </div>
+      </div>
+
+      <!-- Definition Box -->
+      <div class="mt-5 rounded-2xl bg-gradient-to-r from-emerald-50/90 via-teal-50/40 to-white border border-emerald-200 p-5 shadow-2xs">
+        <h3 class="text-sm font-black text-emerald-950 flex items-center gap-2">
+          <span class="flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+          ความหมายของ Ground Truth ในบริบทงานวิจัย AI & Logistics
+        </h3>
+        <p class="mt-2 text-xs text-slate-700 leading-relaxed">
+          <b>Ground Truth (ชุดข้อมูลเฉลยจริง)</b> คือ <b>"คำตอบที่ถูกต้องสมบูรณ์ 100%"</b> ของเอกสารแต่ละฉบับ ซึ่งผ่านการตรวจสอบและยืนยันโดยมนุษย์ (Human-Annotated & Verified) ทำหน้าที่เป็น <b>"ไม้บรรทัดมาตรฐานสากล (Golden Standard)"</b> สำหรับใช้เทียบวัดว่าระบบ AI ตอบถูกหรือตอบผิดกี่เปอร์เซ็นต์
+        </p>
+      </div>
+
+      <!-- 4 Roles of Ground Truth -->
+      <h3 class="mt-7 text-sm font-extrabold text-slate-900 uppercase tracking-wider">
+        Ground Truth ช่วยตรงไหนในระบบ LogiSchema และเล่มวิทยานิพนธ์?
+      </h3>
+
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <!-- Role 1 -->
+        <div class="p-4.5 rounded-2xl border border-slate-200 bg-white shadow-2xs">
+          <div class="flex items-center gap-2 text-emerald-700 font-extrabold text-sm mb-1.5">
+            <span class="text-lg">🎯</span>
+            <span>1. คำนวณความแม่นยำทางสถิติ (Exact Match & F1-Score)</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            ระบบจะนำค่าที่ SLM สกัดได้ ไปเทียบกับค่า Ground Truth แบบตัวอักษรต่อตัวอักษร เพื่อคิดออกมาเป็นตัวเลขทางสถิติ เช่น:
+          </p>
+          <div class="mt-2 font-mono text-[11px] bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-slate-800 space-y-1">
+            <div>• <b>Field Accuracy:</b> ฟิลด์ถูกตรงเป๊ะ 100% คิดเป็นกี่ฟิลด์จาก 11 ฟิลด์</div>
+            <div>• <b>Token Similarity:</b> คำนวณระยะห่าง Levenshtein Distance ของข้อความ</div>
+          </div>
+        </div>
+
+        <!-- Role 2 -->
+        <div class="p-4.5 rounded-2xl border border-slate-200 bg-white shadow-2xs">
+          <div class="flex items-center gap-2 text-emerald-700 font-extrabold text-sm mb-1.5">
+            <span class="text-lg">📊</span>
+            <span>2. นำไปสร้างตารางผลการทดลองในบทที่ 4 (K-Fold Benchmark)</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            ในเล่มวิทยานิพนธ์ ไม่สามารถพูดลอยๆ ได้ว่าโมเดลเก่ง ต้องแบ่งข้อมูลเป็น <b>5-Fold Cross-Validation</b> โดยรันเทียบกับ Ground Truth ครบทุก Fold เพื่อพิสูจน์ค่า <b>Mean Accuracy ± Std Dev</b> ว่าโมเดลนิ่งและเชื่อถือได้จริง
+          </p>
+        </div>
+
+        <!-- Role 3 -->
+        <div class="p-4.5 rounded-2xl border border-slate-200 bg-white shadow-2xs">
+          <div class="flex items-center gap-2 text-emerald-700 font-extrabold text-sm mb-1.5">
+            <span class="text-lg">🔍</span>
+            <span>3. ช่วยวิเคราะห์จุดบกพร่องของโมเดล (Error Analysis)</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            เมื่อเทียบกับ Ground Truth จะทำให้รู้ทันทีว่า <b>ฟิลด์ไหนที่โมเดลตอบผิดบ่อยที่สุด</b> เช่น ฟิลด์ Destination ได้ความแม่นยำต่ำกว่าฟิลด์ Total Amount ทำให้เรากลับไปปรับปรุง Prompting หรือตัวคัดกรองได้ตรงจุด
+          </p>
+        </div>
+
+        <!-- Role 4 -->
+        <div class="p-4.5 rounded-2xl border border-slate-200 bg-white shadow-2xs">
+          <div class="flex items-center gap-2 text-emerald-700 font-extrabold text-sm mb-1.5">
+            <span class="text-lg">💾</span>
+            <span>4. เป็นชุดข้อมูลสำหรับ Fine-Tuning ในอนาคต</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            คู่ข้อมูล (OCR Text, Ground Truth JSON) ที่สะสมไว้ในระบบ จะกลายเป็น <b>Dataset คุณภาพสูง</b> สำหรับนำไปเทรน LoRA / Fine-tuning โมเดลในระดับต่อไป โดยไม่ต้องจ้างคนมานั่งคีย์ข้อมูลใหม่
+          </p>
+        </div>
+
+      </div>
+
+      <!-- 11 Core Fields Standard Table -->
+      <div class="mt-6 rounded-2xl border border-slate-200 overflow-hidden shadow-2xs">
+        <div class="bg-slate-100 px-4 py-3 border-b border-slate-200 flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-800 uppercase">มาตรฐาน 11 ฟิลด์หลักที่ถูกเฉลยใน Ground Truth (LogiSchema 11 Core Fields)</span>
+          <span class="text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">11 Fields</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 p-3 gap-2 text-xs bg-white">
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">1. document_type (ประเภท)</div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">2. document_number (เลขที่)</div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">3. document_date (วันที่)</div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">4. sender (ผู้ส่ง/ผู้ขาย)</div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">5. receiver (ผู้รับ/ผู้ซื้อ)</div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">6. origin (ต้นทาง)</div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">7. destination (ปลายทาง)</div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">8. reference_number (เลขอ้างอิง)</div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">9. unit_price (ราคา/หน่วย)</div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">10. total_amount (ยอดรวม)</div>
+          <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">11. currency (สกุลเงิน)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 4: ARCHITECTURE PIPELINE SUMMARY                                  -->
+    <!-- ========================================================================= -->
+    <section id="section-summary" class="scroll-mt-6 bg-white rounded-3xl border border-slate-200 p-7 md:p-9 shadow-sm">
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-5">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 border border-amber-200 shadow-2xs">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+        </div>
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider text-amber-600">Part 4: End-to-End Workflow</span>
+          <h2 class="text-xl md:text-2xl font-black text-slate-900">สรุปความเชื่อมโยงภาพรวมทั้งระบบ (LogiSchema Architecture)</h2>
+        </div>
+      </div>
+
+      <!-- Flowchart Steps -->
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+
+        <!-- Step 1 -->
+        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
+          <div>
+            <span class="inline-block px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-bold text-[10px] uppercase mb-2">Stage 1</span>
+            <h4 class="font-black text-slate-900 text-sm mb-1">Image & OCR</h4>
+            <p class="text-slate-600 leading-relaxed">
+              ภาพเอกสาร ➔ Grayscale ➔ CLAHE ➔ Deskew ➔ 300 DPI ➔ OCR Engine ➔ สกัดข้อความดิบและพิกัดคำ
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-200 text-blue-700 font-bold text-[11px]">
+            ผลลัพธ์: Raw Text Blocks
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
+          <div>
+            <span class="inline-block px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 font-bold text-[10px] uppercase mb-2">Stage 2</span>
+            <h4 class="font-black text-slate-900 text-sm mb-1">SLM Reasoning</h4>
+            <p class="text-slate-600 leading-relaxed">
+              ข้อความดิบ + Few-Shot System Prompt ➔ ตีความคำพ้องความหมาย ➔ Chain-of-Thought ➔ แปลงเป็น 11 ฟิลด์
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-200 text-indigo-700 font-bold text-[11px]">
+            ผลลัพธ์: Predicted JSON Schema
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
+          <div>
+            <span class="inline-block px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-bold text-[10px] uppercase mb-2">Stage 3</span>
+            <h4 class="font-black text-slate-900 text-sm mb-1">Ground Truth Match</h4>
+            <p class="text-slate-600 leading-relaxed">
+              นำ Predicted JSON มาเปรียบเทียบกับชุดข้อมูลเฉลยจริงของมนุษย์ (Ground Truth) ในระบบ
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-200 text-emerald-700 font-bold text-[11px]">
+            ผลลัพธ์: Diff & Error Analysis
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
+          <div>
+            <span class="inline-block px-2 py-0.5 rounded bg-amber-100 text-amber-700 font-bold text-[10px] uppercase mb-2">Stage 4</span>
+            <h4 class="font-black text-slate-900 text-sm mb-1">Thesis Evaluation</h4>
+            <p class="text-slate-600 leading-relaxed">
+              คำนวณผล 5-Fold Cross-Validation ➔ สรุปค่า Accuracy, Precision, Recall, F1 ➔ สร้างตารางบทที่ 4
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-200 text-amber-700 font-bold text-[11px]">
+            ผลลัพธ์: เล่มวิทยานิพนธ์สมบูรณ์
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Info -->
+      <div class="mt-8 pt-6 border-t border-slate-200 text-center text-xs text-slate-500">
+        ระบบแปลงเอกสารโลจิสติกส์หลายรูปแบบสู่ข้อมูลเชิงโครงสร้างด้วย OCR ร่วมกับ SLM (LogiSchema Project) • 2026
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

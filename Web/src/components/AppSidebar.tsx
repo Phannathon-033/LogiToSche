@@ -1,5 +1,15 @@
-import { Bot, Braces, FileText, X } from "lucide-react";
-import { menuItems } from "../data/mockData";
+import { BarChart3, Bot, Braces, ClipboardCheck, Clock3, Cog, Cpu, FileText, Upload, X } from "lucide-react";
+import type { MenuItem } from "../types";
+
+const menuItems: MenuItem[] = [
+  { label: "แดชบอร์ด", icon: BarChart3 },
+  { label: "อัปโหลดเอกสาร", icon: Upload },
+  { label: "ประมวลผล", icon: Cpu },
+  { label: "ตรวจสอบผล", icon: ClipboardCheck },
+  { label: "ประวัติการแปลง", icon: Clock3 },
+  { label: "JSON Schema", icon: Braces },
+  { label: "ตั้งค่า", icon: Cog },
+];
 
 interface AppSidebarProps {
   activeMenu: string;
@@ -56,7 +66,7 @@ export function AppSidebar({ activeMenu, onMenuChange, open, onClose }: AppSideb
         </nav>
 
         <div className="mx-3 mb-5 rounded-lg border border-blue-200 bg-blue-50/40 p-3 text-center">
-          <p className="text-sm font-extrabold text-navy">ระบบรองรับ 13 ฟิลด์สำคัญ</p>
+          <p className="text-sm font-extrabold text-navy">ระบบรองรับ 11 ฟิลด์หลัก</p>
           <p className="mt-1 text-xs leading-5 text-slate-600">
             ข้อมูลที่ไม่ตรงกับฟิลด์จะถูกเก็บใน <span className="font-bold text-ink">"other"</span>
           </p>

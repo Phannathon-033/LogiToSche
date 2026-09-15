@@ -7,7 +7,9 @@ import {
   getDocs,
   getFirestore,
   limit,
+  orderBy,
   query,
+  serverTimestamp,
   setDoc,
   type Timestamp,
 } from "firebase/firestore";
@@ -72,7 +74,7 @@ export interface FirebaseDocumentRecord {
   reviewItems?: ReviewItem[];
   ocrText?: string;
   spatialText?: string;
-  createdAt?: Timestamp | string;
+  createdAt?: Timestamp | string | any;
   userEmail?: string;
   userName?: string;
   cloudSyncStatus?: "synced" | "local_saved" | "failed";
@@ -84,14 +86,14 @@ const LOCAL_STORAGE_KEY = "logiai_saved_documents_cache";
 /**
  * Clean all undefined values recursively to prevent Firestore from throwing serialization errors
  */
-function sanitizeForFirestore(value: unknown): unknown {
-  if (value === undefined) return null;
-  if (value === null || typeof value !== "object") return value;
-  if (Array.isArray(value)) return value.map(sanitizeForFirestore);
-  const result: Record<string, unknown> = {};
-  for (const [key, nestedValue] of Object.entries(value)) {
-    if (nestedValue !== undefined) {
-      result[key] = sanitizeForFirestore(nestedValue);
+function sanitizeForFirestore(obj: any): any {
+  if (obj === undefined) return null;
+  if (obj === null || typeof obj !== "object") return obj;
+  if (Array.isArray(obj)) return obj.map(sanitizeForFirestore);
+  const result: Record<string, any> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (value !== undefined) {
+      result[key] = sanitizeForFirestore(value);
     }
   }
   return result;
@@ -208,9 +210,8 @@ export async function saveDocumentToFirebase(
       storageUrl = uploadRes.downloadUrl;
       storagePath = uploadRes.storagePath;
       cloudUploaded = true;
-    } catch (storageError) {
-      const message = storageError instanceof Error ? storageError.message : storageError;
-      console.warn("Firebase Storage upload skipped/unavailable (proceeding to Firestore):", message);
+    } catch (storageError: any) {
+      console.warn("Firebase Storage upload skipped/unavailable (proceeding to Firestore):", storageError?.message || storageError);
     }
   }
 
@@ -227,9 +228,8 @@ export async function saveDocumentToFirebase(
   const unitPrice = typeof schema.unit_price === "number" ? schema.unit_price : (Number(schema.unit_price) || 0);
   const totalAmount = typeof schema.total_amount === "number" ? schema.total_amount : (Number(schema.total_amount) || 0);
   const currency = String(schema.currency || "THB");
-  const otherObj: Record<string, unknown> =
-    schema.other && typeof schema.other === "object" ? { ...schema.other } : {};
-  delete otherObj.storage_url;
+  const otherObj = schema.other && typeof schema.other === "object" ? { ...schema.other } : {};
+  delete (otherObj as any).storage_url;
 
   // Pure 11 Core Logistics Fields + other object ONLY
   const dataToSave = sanitizeForFirestore({
@@ -249,7 +249,7 @@ export async function saveDocumentToFirebase(
 
   try {
     const docRef = doc(db, "logistics_extractions", docId);
-    await setDoc(docRef, dataToSave as Record<string, unknown>, { merge: false });
+    await setDoc(docRef, dataToSave, { merge: false });
 
     const syncedRecord: FirebaseDocumentRecord = {
       ...localRecord,
@@ -260,8 +260,8 @@ export async function saveDocumentToFirebase(
     };
     saveToLocalCache(syncedRecord);
     return syncedRecord;
-  } catch (firestoreError) {
-    const errorMsg = firestoreError instanceof Error ? firestoreError.message : String(firestoreError);
+  } catch (firestoreError: any) {
+    const errorMsg = firestoreError?.message || String(firestoreError);
     console.warn("Cloud Firestore save notice:", errorMsg);
 
     const partialRecord: FirebaseDocumentRecord = {
@@ -288,24 +288,24 @@ export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<F
     const querySnapshot = await getDocs(query(collRef, limit(limitCount)));
 
     querySnapshot.forEach((docSnap) => {
-      const data = docSnap.data() as Record<string, unknown>;
+      const data = docSnap.data() as any;
       const schemaOut: JsonSchemaOutput = {
-        document_type: String(data.document_type || "invoice"),
-        document_number: String(data.document_number || data.document_no || "-"),
-        document_date: String(data.document_date || "-"),
-        sender: String(data.sender || data.party_name || "-"),
-        receiver: String(data.receiver || "-"),
-        origin: String(data.origin || "-"),
-        destination: String(data.destination || "-"),
-        reference_number: String(data.reference_number || data.document_number || data.document_no || "-"),
+        document_type: data.document_type || "invoice",
+        document_number: data.document_number || data.document_no || "-",
+        document_date: data.document_date || "-",
+        sender: data.sender || data.party_name || "-",
+        receiver: data.receiver || "-",
+        origin: data.origin || "-",
+        destination: data.destination || "-",
+        reference_number: data.reference_number || data.document_number || data.document_no || "-",
         unit_price: Number(data.unit_price) || 0,
         total_amount: Number(data.total_amount) || 0,
-        currency: String(data.currency || "THB"),
-        document_no: String(data.document_number || data.document_no || "-"),
-        party_name: String(data.sender || data.party_name || "-"),
-        source_file: String(data.source_file || docSnap.id),
-        quantity: Number(data.quantity) || 1,
-        other: data.other && typeof data.other === "object" ? data.other as unknown as Record<string, unknown> : {},
+        currency: data.currency || "THB",
+        document_no: data.document_number || data.document_no || "-",
+        party_name: data.sender || data.party_name || "-",
+        source_file: data.source_file || docSnap.id,
+        quantity: data.quantity ?? 1,
+        other: data.other && typeof data.other === "object" ? data.other : {},
       };
 
       const otherObj = schemaOut.other || {};
@@ -357,9 +357,8 @@ export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<F
         cloudSyncNote: "บันทึกใน Cloud Firestore (11 ฟิลด์หลัก + other) สำเร็จ",
       });
     });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : error;
-    console.warn("Notice reading from Cloud Firestore (showing local documents):", message);
+  } catch (error: any) {
+    console.warn("Notice reading from Cloud Firestore (showing local documents):", error?.message || error);
   }
 
   // Merge Cloud + Local records, avoiding duplicates

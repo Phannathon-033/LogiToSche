@@ -1,5 +1,6 @@
-import { documentTypes } from "../data/mockData";
 import type { DocumentType } from "../types";
+
+const documentTypes: DocumentType[] = ["Invoice", "Bill of Lading", "Packing List", "Purchase Order"];
 
 interface DocumentTypeSelectorProps {
   selected: DocumentType;

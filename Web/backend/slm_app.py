@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -613,3 +614,81 @@ def clamp_int(value: Any, low: int, high: int) -> int:
 def normalize_status(value: Any) -> str:
     status = str(value or "review")
     return status if status in {"success", "review", "error", "processing"} else "review"
+
+
+class GroundTruthEntry(BaseModel):
+    id: str | None = None
+    file_name: str
+    category: str = "invoice"
+    ground_truth: dict[str, Any]
+
+
+@app.get("/api/benchmark/ground-truth")
+def get_benchmark_ground_truth() -> dict[str, Any]:
+    gt_path = BASE_DIR / "ground_truth_dataset.json"
+    if not gt_path.exists():
+        raise HTTPException(status_code=404, detail="Ground truth dataset not found")
+    return json.loads(gt_path.read_text(encoding="utf-8"))
+
+
+@app.get("/api/benchmark/kfold")
+def get_kfold_report(k: int = 5, rerun: bool = False) -> dict[str, Any]:
+    report_path = BASE_DIR / "kfold_evaluation_report.json"
+    if rerun or not report_path.exists():
+        try:
+            try:
+                from .kfold_evaluator import run_kfold_evaluation
+            except ImportError:
+                from kfold_evaluator import run_kfold_evaluation
+            run_kfold_evaluation(k_splits=k)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"K-Fold evaluation failed: {exc}") from exc
+    if not report_path.exists():
+        raise HTTPException(status_code=500, detail="Report generation failed")
+    return json.loads(report_path.read_text(encoding="utf-8"))
+
+
+@app.post("/api/benchmark/save-ground-truth")
+def save_ground_truth(entry: GroundTruthEntry) -> dict[str, Any]:
+    gt_path = BASE_DIR / "ground_truth_dataset.json"
+    if gt_path.exists():
+        data = json.loads(gt_path.read_text(encoding="utf-8"))
+    else:
+        data = {
+            "description": "LogiSchema Multi-format Logistics Document Benchmark Ground Truth Dataset (11 Core Fields)",
+            "version": "1.0",
+            "total_documents": 0,
+            "core_fields": list(CORE_FIELDS),
+            "documents": [],
+        }
+
+    documents = data.setdefault("documents", [])
+    document_id = entry.id or f"DOC-{len(documents) + 1:03d}"
+    saved_entry = {
+        "id": document_id,
+        "file_name": entry.file_name,
+        "category": entry.category,
+        "ground_truth": {
+            field: canonical_value(entry.ground_truth, field) for field in CORE_FIELDS
+        },
+        "annotated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "status": "verified",
+    }
+    existing_index = next(
+        (index for index, document in enumerate(documents) if document.get("file_name") == entry.file_name),
+        -1,
+    )
+    if existing_index >= 0:
+        saved_entry["id"] = documents[existing_index].get("id", document_id)
+        documents[existing_index] = saved_entry
+    else:
+        documents.append(saved_entry)
+    data["total_documents"] = len(documents)
+    gt_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    return {
+        "status": "success",
+        "message": f"Saved ground truth for {entry.file_name} successfully",
+        "doc_id": saved_entry["id"],
+        "total_documents": len(documents),
+    }

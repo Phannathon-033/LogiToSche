@@ -6,7 +6,6 @@ import type { BatchDocumentItem } from "../types";
 
 interface DynamicStepTrackerProps {
   activeDoc: BatchDocumentItem | null;
-  isProcessing?: boolean;
 }
 
 export function DynamicStepTracker({ activeDoc }: DynamicStepTrackerProps) {

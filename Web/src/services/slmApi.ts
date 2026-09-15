@@ -6,6 +6,7 @@ import type {
   ReviewItem,
   SlmPerformanceMetrics,
   SlmPromptConfig,
+  SlmPromptConfigResponse,
   SlmPromptPresetResponse,
   SlmPromptRequest,
   SlmPromptResponse,
@@ -160,60 +161,50 @@ export async function runSlmExtraction({
   };
 }
 
-export async function getSlmPromptConfig(): Promise<SlmPromptConfig> {
-  const response = await fetch("/api/slm/prompt-config");
-  if (!response.ok) throw new Error("ไม่สามารถโหลดการตั้งค่า Prompt ได้");
-  const data = (await response.json()) as {
-    system_prompt: string;
-    fallback_rules: string[];
-    confidence_threshold: number;
-    selected_model: string;
-    monitored_fields: SlmPromptConfig["monitoredFields"];
-  };
+function mapPromptConfig(data: {
+  confidence_threshold: number;
+  selected_model: string;
+  system_prompt: string;
+  fallback_rules: string[];
+  monitored_fields: string[];
+}): SlmPromptConfigResponse {
   return {
-    systemPrompt: data.system_prompt,
-    fallbackRules: data.fallback_rules,
     confidenceThreshold: data.confidence_threshold,
     selectedModel: data.selected_model,
-    monitoredFields: data.monitored_fields,
+    systemPrompt: data.system_prompt,
+    fallbackRules: data.fallback_rules,
+    monitoredFields: data.monitored_fields as SlmPromptConfigResponse["monitoredFields"],
   };
 }
 
-export async function saveSlmPromptConfig(config: SlmPromptConfig): Promise<SlmPromptConfig> {
+export async function getSlmPromptConfig(): Promise<SlmPromptConfigResponse> {
+  const response = await fetch("/api/slm/prompt-config");
+  if (!response.ok) throw new Error(`Prompt config request failed with ${response.status}`);
+  return mapPromptConfig(await response.json());
+}
+
+export async function saveSlmPromptConfig(config: SlmPromptConfig): Promise<SlmPromptConfigResponse> {
   const response = await fetch("/api/slm/prompt-config", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      system_prompt: config.systemPrompt,
-      fallback_rules: config.fallbackRules,
       confidence_threshold: config.confidenceThreshold,
       selected_model: config.selectedModel,
+      system_prompt: config.systemPrompt,
+      fallback_rules: config.fallbackRules,
       monitored_fields: config.monitoredFields,
     }),
   });
   if (!response.ok) {
     const detail = await response.text();
-    throw new Error(detail || `ไม่สามารถบันทึกการตั้งค่า Prompt ได้ (${response.status})`);
+    throw new Error(detail || `Prompt config save failed with ${response.status}`);
   }
-  const data = (await response.json()) as {
-    system_prompt: string;
-    fallback_rules: string[];
-    confidence_threshold: number;
-    selected_model: string;
-    monitored_fields: SlmPromptConfig["monitoredFields"];
-  };
-  return {
-    systemPrompt: data.system_prompt,
-    fallbackRules: data.fallback_rules,
-    confidenceThreshold: data.confidence_threshold,
-    selectedModel: data.selected_model,
-    monitoredFields: data.monitored_fields,
-  };
+  return mapPromptConfig(await response.json());
 }
 
 export async function getSlmPrompts(): Promise<SlmPromptPresetResponse[]> {
   const response = await fetch("/api/slm/prompts");
-  if (!response.ok) throw new Error("ไม่สามารถโหลด Prompt สำเร็จรูปได้");
+  if (!response.ok) throw new Error(`Prompt presets request failed with ${response.status}`);
   return (await response.json()) as SlmPromptPresetResponse[];
 }
 
@@ -228,7 +219,7 @@ export async function executeSlmPrompt({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       prompt_template_id: promptTemplateId,
-      user_instruction: userInstruction || "",
+      user_instruction: userInstruction,
       ocr_text: ocrText || "",
       json_schema: jsonSchema || {},
     }),

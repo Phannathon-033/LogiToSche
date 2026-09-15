@@ -2,15 +2,24 @@ import { OcrProcessingAnimation } from "./OcrProcessingAnimation";
 import {
   AlignLeft,
   Check,
+  ChevronDown,
+  ChevronRight,
   Clipboard,
   Code2,
+  Filter,
+  Info,
+  LayoutGrid,
+  MapPin,
   Pencil,
   Plus,
   ScanText,
   Search,
   Sparkles,
   Table,
+  TerminalSquare,
   Trash2,
+  X,
+  Zap,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { OcrLine } from "../services/ocrApi";
@@ -24,10 +33,11 @@ interface OCRResultPanelProps {
   onUpdateLines?: (lines: OcrLine[]) => void;
 }
 
-export function OCRResultPanel({ text, lines = [], onCopy, onUpdateLines }: OCRResultPanelProps) {
+export function OCRResultPanel({ text, spatialText, lines = [], onCopy, onUpdateLines }: OCRResultPanelProps) {
   const [viewMode, setViewMode] = useState<"table" | "json" | "raw">("table");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterConfidence, setFilterConfidence] = useState<"all" | "high" | "review">("all");
+  const [expandedRow, setExpandedRow] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editingText, setEditingText] = useState<string>("");
@@ -181,6 +191,8 @@ export function OCRResultPanel({ text, lines = [], onCopy, onUpdateLines }: OCRR
 
   function getConfidenceBadge(conf: number) {
     const pct = Math.round(conf * 100);
+    const isBelowThreshold = conf < 0.85;
+
     if (conf >= 0.90) {
       return {
         pct: `${pct}%`,
@@ -356,7 +368,7 @@ export function OCRResultPanel({ text, lines = [], onCopy, onUpdateLines }: OCRR
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-medium dark:divide-slate-800">
-                  {filteredLines.map((line) => {
+                  {filteredLines.map((line: any) => {
                     const lineIdx = line.originalIndex ?? 0;
                     const isEditing = editingIndex === lineIdx;
                     const isDeleting = deletingIndex === lineIdx;

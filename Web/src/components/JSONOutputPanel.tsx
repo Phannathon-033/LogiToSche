@@ -27,7 +27,6 @@ interface JSONOutputPanelProps {
   onDownload: () => void;
   onMoveOtherToCore?: (sourceOtherKey: string, targetCoreKey: string, removeFromOther: boolean) => void;
   onSaveJson?: (updatedJson: JsonSchemaOutput) => void;
-  onSaveToFirebase?: (json: JsonSchemaOutput) => void;
 }
 
 const tokenColors = {
@@ -53,20 +52,20 @@ export function JSONOutputPanel({
   async function handleSaveAsGroundTruth() {
     setIsSavingGt(true);
     try {
-      const fileName = json.other?.source_file && json.other.source_file !== "document" ? String(json.other.source_file) : `document_${Date.now()}.png`;
+      const fileName = json.source_file && json.source_file !== "document" ? json.source_file : `document_${Date.now()}.png`;
       const payload = {
         file_name: fileName,
         category: formDocType || json.document_type || "invoice",
         ground_truth: {
           document_type: formDocType || json.document_type || "invoice",
-          document_number: formDocNumber || json.document_number || json.document_no || "-",
+          document_number: formDocNumber || (json as any).document_number || (json as any).document_no || "-",
           document_date: formDocDate || json.document_date || "-",
-          sender: formSender || json.sender || json.party_name || "-",
-          receiver: formReceiver || json.receiver || "-",
-          origin: formOrigin || json.origin || "-",
-          destination: formDestination || json.destination || "-",
-          reference_number: formRefNumber || json.reference_number || "-",
-          unit_price: Number(formUnitPrice || json.unit_price || 0),
+          sender: formSender || (json as any).sender || (json as any).party_name || "-",
+          receiver: formReceiver || (json as any).receiver || "-",
+          origin: formOrigin || (json as any).origin || "-",
+          destination: formDestination || (json as any).destination || "-",
+          reference_number: formRefNumber || (json as any).reference_number || "-",
+          unit_price: Number(formUnitPrice || (json as any).unit_price || 0),
           total_amount: Number(formTotalAmount || json.total_amount || 0),
           currency: formCurrency || json.currency || "THB",
         }
@@ -98,16 +97,16 @@ export function JSONOutputPanel({
 
   // Form editor state for 11 core fields
   const [formDocType, setFormDocType] = useState(json.document_type || "invoice");
-  const [formDocNumber, setFormDocNumber] = useState(json.document_number || json.document_no || "");
+  const [formDocNumber, setFormDocNumber] = useState((json as any).document_number || (json as any).document_no || "");
   const [formDocDate, setFormDocDate] = useState(json.document_date || "");
-  const [formSender, setFormSender] = useState(json.sender || json.party_name || "");
-  const [formReceiver, setFormReceiver] = useState(json.receiver || "");
-  const [formOrigin, setFormOrigin] = useState(json.origin || "");
-  const [formDestination, setFormDestination] = useState(json.destination || "");
-  const [formRefNumber, setFormRefNumber] = useState(json.reference_number || "");
-  const [formUnitPrice, setFormUnitPrice] = useState<string | number>(json.unit_price ?? 0);
+  const [formSender, setFormSender] = useState((json as any).sender || (json as any).party_name || "");
+  const [formReceiver, setFormReceiver] = useState((json as any).receiver || "");
+  const [formOrigin, setFormOrigin] = useState((json as any).origin || "");
+  const [formDestination, setFormDestination] = useState((json as any).destination || "");
+  const [formRefNumber, setFormRefNumber] = useState((json as any).reference_number || "");
+  const [formUnitPrice, setFormUnitPrice] = useState<string | number>((json as any).unit_price ?? 0);
   const [formTotalAmount, setFormTotalAmount] = useState<string | number>(json.total_amount ?? 0);
-  const [formCurrency, setFormCurrency] = useState(json.currency || "THB");
+  const [formCurrency, setFormCurrency] = useState((json as any).currency || "THB");
   const [otherEntries, setOtherEntries] = useState<Array<{ key: string; value: string }>>([]);
 
   // New Other field input
@@ -118,16 +117,16 @@ export function JSONOutputPanel({
   useEffect(() => {
     setRawText(JSON.stringify(json, null, 2));
     setFormDocType(json.document_type || "invoice");
-    setFormDocNumber(json.document_number || json.document_no || "");
+    setFormDocNumber((json as any).document_number || (json as any).document_no || "");
     setFormDocDate(json.document_date || "");
-    setFormSender(json.sender || json.party_name || "");
-    setFormReceiver(json.receiver || "");
-    setFormOrigin(json.origin || "");
-    setFormDestination(json.destination || "");
-    setFormRefNumber(json.reference_number || "");
-    setFormUnitPrice(json.unit_price ?? 0);
+    setFormSender((json as any).sender || (json as any).party_name || "");
+    setFormReceiver((json as any).receiver || "");
+    setFormOrigin((json as any).origin || "");
+    setFormDestination((json as any).destination || "");
+    setFormRefNumber((json as any).reference_number || "");
+    setFormUnitPrice((json as any).unit_price ?? 0);
     setFormTotalAmount(json.total_amount ?? 0);
-    setFormCurrency(json.currency || "THB");
+    setFormCurrency((json as any).currency || "THB");
 
     const entries = json.other
       ? Object.entries(json.other).map(([k, v]) => ({ key: k, value: String(v) }))
@@ -156,16 +155,16 @@ export function JSONOutputPanel({
     setJsonError(null);
     setRawText(JSON.stringify(json, null, 2));
     setFormDocType(json.document_type || "invoice");
-    setFormDocNumber(json.document_number || json.document_no || "");
+    setFormDocNumber((json as any).document_number || (json as any).document_no || "");
     setFormDocDate(json.document_date || "");
-    setFormSender(json.sender || json.party_name || "");
-    setFormReceiver(json.receiver || "");
-    setFormOrigin(json.origin || "");
-    setFormDestination(json.destination || "");
-    setFormRefNumber(json.reference_number || "");
-    setFormUnitPrice(json.unit_price ?? 0);
+    setFormSender((json as any).sender || (json as any).party_name || "");
+    setFormReceiver((json as any).receiver || "");
+    setFormOrigin((json as any).origin || "");
+    setFormDestination((json as any).destination || "");
+    setFormRefNumber((json as any).reference_number || "");
+    setFormUnitPrice((json as any).unit_price ?? 0);
     setFormTotalAmount(json.total_amount ?? 0);
-    setFormCurrency(json.currency || "THB");
+    setFormCurrency((json as any).currency || "THB");
 
     const entries = json.other
       ? Object.entries(json.other).map(([k, v]) => ({ key: k, value: String(v) }))
@@ -179,8 +178,8 @@ export function JSONOutputPanel({
     try {
       JSON.parse(val);
       setJsonError(null);
-    } catch (error) {
-      setJsonError(error instanceof Error ? error.message : "Invalid JSON syntax");
+    } catch (e: any) {
+      setJsonError(e.message || "Invalid JSON syntax");
     }
   }
 
@@ -227,12 +226,12 @@ export function JSONOutputPanel({
         }
         onSaveJson(parsed as JsonSchemaOutput);
         setIsEditing(false);
-      } catch (error) {
-        setJsonError(`ไม่สามารถบันทึกได้: ${error instanceof Error ? error.message : "Invalid JSON"}`);
+      } catch (err: any) {
+        setJsonError(`ไม่สามารถบันทึกได้: ${err.message}`);
       }
     } else {
       // Form mode save
-      const otherObj: Record<string, unknown> = {};
+      const otherObj: Record<string, any> = {};
       otherEntries.forEach(({ key, value }) => {
         if (key.trim()) {
           const num = Number(value);

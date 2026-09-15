@@ -12,14 +12,27 @@ import {
   Users,
   X,
 } from "lucide-react";
-import type { AdminDocumentRecord, AdminPromptLabState, DocumentJob, JsonSchemaOutput } from "../types";
+import type {
+  AdminAnalyticsPoint,
+  AdminDocumentRecord,
+  AdminErrorCluster,
+  AdminPromptLabState,
+  DocumentJob,
+  JsonSchemaOutput,
+} from "../types";
 import { getSlmPromptConfig, saveSlmPromptConfig } from "../services/slmApi";
-import {
-  mockAdminAnalytics,
-  mockAdminDocuments,
-  mockAdminErrorClusters,
-  mockPromptLabState,
-} from "../data/mockData";
+const initialPromptLabState: AdminPromptLabState = {
+  confidenceThreshold: 85,
+  selectedModel: "qwen-2.5-1.5b",
+  systemPrompt: "",
+  fallbackRules: [],
+  monitoredFields: [],
+  fewShotExamples: [],
+};
+
+const initialDocuments: AdminDocumentRecord[] = [];
+const initialAnalytics: AdminAnalyticsPoint[] = [];
+const initialErrorClusters: AdminErrorCluster[] = [];
 import { AdminOverview } from "./admin/AdminOverview";
 import { AdminPromptConfig } from "./admin/AdminPromptConfig";
 import { AdminReports } from "./admin/AdminReports";
@@ -42,9 +55,9 @@ interface AdminDashboardProps {
 export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDashboardProps) {
   const [activeView, setActiveView] = useState<AdminView>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [documents, setDocuments] = useState<AdminDocumentRecord[]>(mockAdminDocuments);
-  const [selectedDocumentId, setSelectedDocumentId] = useState<string>(mockAdminDocuments[0]?.id ?? "");
-  const [promptLab, setPromptLab] = useState<AdminPromptLabState>(mockPromptLabState);
+  const [documents, setDocuments] = useState<AdminDocumentRecord[]>(initialDocuments);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string>(initialDocuments[0]?.id ?? "");
+  const [promptLab, setPromptLab] = useState<AdminPromptLabState>(initialPromptLabState);
   const [promptQualityTab, setPromptQualityTab] = useState<PromptQualityTab>("prompt");
   const [usersSettingsTab, setUsersSettingsTab] = useState<UsersSettingsTab>("users");
   const [groundTruthOpen, setGroundTruthOpen] = useState(false);
@@ -151,7 +164,7 @@ export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDas
       case "dashboard":
         return (
           <AdminOverview
-            analytics={mockAdminAnalytics}
+            analytics={initialAnalytics}
             documents={documents}
             onOpenDocument={openDocument}
             onOpenPromptLab={() => setActiveView("prompt")}
@@ -240,7 +253,7 @@ export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDas
                 saving={promptConfigSaving}
               />
             ) : (
-              <AdminReports documents={documents} errorClusters={mockAdminErrorClusters} onOpenDocument={openDocument} />
+              <AdminReports documents={documents} errorClusters={initialErrorClusters} onOpenDocument={openDocument} />
             )}
             <GroundTruthViewerModal isOpen={groundTruthOpen} onClose={() => setGroundTruthOpen(false)} />
           </>

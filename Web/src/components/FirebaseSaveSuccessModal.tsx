@@ -46,7 +46,7 @@ export function FirebaseSaveSuccessModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md animate-fadeIn">
       {/* Success Card Modal */}
       <div className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-emerald-200/80 bg-white p-7 text-center shadow-2xl shadow-emerald-950/20 dark:border-emerald-900/50 dark:bg-slate-900 animate-scaleUp">
-
+        
         {/* Soft Ambient Radial Glow */}
         <div className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 h-36 w-36 rounded-full bg-emerald-400/20 blur-2xl dark:bg-emerald-500/15" />
 

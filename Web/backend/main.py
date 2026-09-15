@@ -173,6 +173,30 @@ def get_slm_prompts() -> list[dict[str, Any]]:
     return forward_slm_request("/api/slm/prompts", {}, method="GET")
 
 
+@app.get("/api/benchmark/ground-truth")
+def get_benchmark_ground_truth() -> Any:
+    return forward_slm_request("/api/benchmark/ground-truth", {}, method="GET")
+
+
+@app.get("/api/benchmark/kfold")
+def get_benchmark_kfold(k: int = 5, rerun: bool = False) -> Any:
+    query = f"?k={k}&rerun={str(rerun).lower()}"
+    return forward_slm_request(f"/api/benchmark/kfold{query}", {}, method="GET")
+
+
+class GroundTruthEntry(BaseModel):
+    id: str | None = None
+    file_name: str
+    category: str = "invoice"
+    ground_truth: dict[str, Any]
+
+
+@app.post("/api/benchmark/save-ground-truth")
+def save_benchmark_ground_truth(payload: GroundTruthEntry) -> Any:
+    body = payload.model_dump() if hasattr(payload, "model_dump") else payload.dict()
+    return forward_slm_request("/api/benchmark/save-ground-truth", body)
+
+
 def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -> Any:
     if method == "GET":
         try:

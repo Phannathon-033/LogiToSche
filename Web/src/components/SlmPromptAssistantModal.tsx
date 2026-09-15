@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { executeSlmPrompt, getSlmPrompts } from "../services/slmApi";
-import type { JsonSchemaOutput, SlmPromptPresetResponse } from "../types";
+import type { JsonSchemaOutput, SlmPromptPreset } from "../types";
 
 interface SlmPromptAssistantModalProps {
   isOpen: boolean;
@@ -44,51 +44,46 @@ export function SlmPromptAssistantModal({
 }: SlmPromptAssistantModalProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryType>("synonym");
   const [selectedPresetId, setSelectedPresetId] = useState<string>("synonym_party");
-  const [selectedPresetPrompt, setSelectedPresetPrompt] = useState("");
   const [customPrompt, setCustomPrompt] = useState("");
+  const [presets, setPresets] = useState<SlmPromptPreset[]>([]);
   const [loading, setLoading] = useState(false);
   const [resultText, setResultText] = useState<string>("");
   const [modelInfo, setModelInfo] = useState<string>("");
   const [copied, setCopied] = useState(false);
-  const [backendPresets, setBackendPresets] = useState<SlmPromptPresetResponse[]>([]);
-  const [presetsLoading, setPresetsLoading] = useState(true);
-  const [presetsError, setPresetsError] = useState(false);
 
   useEffect(() => {
+    if (!isOpen) return;
     getSlmPrompts()
-      .then(setBackendPresets)
-      .catch(() => setPresetsError(true))
-      .finally(() => setPresetsLoading(false));
-  }, []);
-
-  useEffect(() => {
-    const selected = backendPresets.find((preset) => preset.id === selectedPresetId);
-    if (selected) {
-      setSelectedPresetPrompt(selected.prompt);
-      setCustomPrompt(selected.prompt);
-    }
-  }, [backendPresets, selectedPresetId]);
+      .then((nextPresets) => {
+        setPresets(nextPresets);
+        const firstPreset = nextPresets.find((preset) => preset.category === activeCategory);
+        if (firstPreset) {
+          setSelectedPresetId(firstPreset.id);
+          setCustomPrompt(firstPreset.prompt);
+        }
+      })
+      .catch(() => onShowToast("ไม่สามารถโหลด Prompt จาก backend ได้"));
+  }, [activeCategory, isOpen, onShowToast]);
 
   if (!isOpen) return null;
 
-  const currentCategoryPresets = backendPresets.filter((p) => p.category === activeCategory);
+  const currentCategoryPresets = presets.filter((p) => p.category === activeCategory);
 
-  function handleSelectPreset(preset: SlmPromptPresetResponse) {
+  function handleSelectPreset(preset: SlmPromptPreset) {
     setSelectedPresetId(preset.id);
-    setSelectedPresetPrompt(preset.prompt);
-    setCustomPrompt(preset.prompt);
+    setCustomPrompt(preset.prompt || "");
   }
 
   async function handleRunPrompt(e?: React.FormEvent) {
     if (e) e.preventDefault();
-    if (presetsError || (!customPrompt.trim() && selectedPresetId === "custom")) return;
+    if (!customPrompt.trim()) return;
 
     setLoading(true);
     setResultText("");
     try {
       const res = await executeSlmPrompt({
         promptTemplateId: selectedPresetId,
-        userInstruction: customPrompt === selectedPresetPrompt ? undefined : customPrompt,
+        userInstruction: customPrompt,
         ocrText,
         jsonSchema,
       });
@@ -147,12 +142,6 @@ export function SlmPromptAssistantModal({
 
         {/* Content Body */}
         <div className="flex-1 min-h-0 overflow-y-auto p-6 space-y-5">
-          {!presetsLoading && presetsError && (
-            <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-700">
-              ไม่สามารถโหลด Prompt จาก backend ได้ กรุณาตรวจสอบ SLM service แล้วลองใหม่
-            </p>
-          )}
-
           {/* Category Tabs */}
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((cat) => {
@@ -166,14 +155,12 @@ export function SlmPromptAssistantModal({
                     setActiveCategory(cat.id);
                     if (cat.id === "custom") {
                       setSelectedPresetId("custom");
-                      setSelectedPresetPrompt("");
                       setCustomPrompt("วิเคราะห์เอกสารนี้และสรุปข้อมูลสำคัญ...");
                     } else {
-                      const firstInCat = backendPresets.find((p) => p.category === cat.id);
+                      const firstInCat = presets.find((p) => p.category === cat.id);
                       if (firstInCat) {
                         setSelectedPresetId(firstInCat.id);
-                        setSelectedPresetPrompt(firstInCat.prompt);
-                        setCustomPrompt(firstInCat.prompt);
+                        setCustomPrompt(firstInCat.prompt || "");
                       }
                     }
                   }}
@@ -247,7 +234,7 @@ export function SlmPromptAssistantModal({
           <div className="flex justify-end">
             <button
               type="button"
-              disabled={loading || presetsLoading || presetsError || (selectedPresetId === "custom" && !customPrompt.trim())}
+              disabled={loading || !customPrompt.trim()}
               onClick={() => handleRunPrompt()}
               className="inline-flex items-center gap-2 rounded-xl bg-primary hover:bg-primary/90 px-5 py-2.5 text-xs font-bold text-white transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >

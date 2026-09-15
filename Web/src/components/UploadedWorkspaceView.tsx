@@ -14,8 +14,11 @@ import {
   FileCode,
   FileText,
   Info,
+  LayoutGrid,
   Layers,
   Loader2,
+  MapPin,
+  Maximize2,
   Minimize2,
   Pencil,
   Plus,
@@ -29,11 +32,8 @@ import {
   X,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { initialJson } from "../data/mockData";
+import { EMPTY_JSON_SCHEMA, type BatchDocumentItem, type JsonSchemaOutput } from "../types";
 import type { OcrLine } from "../services/ocrApi";
-import type { BatchDocumentItem, JsonSchemaOutput } from "../types";
-
-const EMPTY_OCR_LINES: OcrLine[] = [];
 import { DocumentPreview } from "./DocumentPreview";
 import { DynamicStepTracker } from "./DynamicStepTracker";
 import { OcrProcessingAnimation } from "./OcrProcessingAnimation";
@@ -96,11 +96,13 @@ export function UploadedWorkspaceView({
   const [isEditingRaw, setIsEditingRaw] = useState<boolean>(false);
   const [rawTextDraft, setRawTextDraft] = useState<string>("");
 
-  const fileName = activeDoc?.fileName ?? "";
-  const jsonOutput = activeDoc?.jsonOutput || initialJson;
-  const performance = activeDoc?.performance;
-  const ocrLines = activeDoc?.ocrLines ?? EMPTY_OCR_LINES;
-  const accuracyPct = performance?.accuracy_pct ?? activeDoc?.overallConfidence ?? 98.4;
+  if (!activeDoc) return null;
+
+  const fileName = activeDoc.fileName;
+  const jsonOutput = activeDoc.jsonOutput || EMPTY_JSON_SCHEMA;
+  const performance = activeDoc.performance;
+  const ocrLines = activeDoc.ocrLines || [];
+  const accuracyPct = performance?.accuracy_pct ?? activeDoc.overallConfidence ?? 98.4;
   const processingTime = performance?.inference_time_sec
     ? `${performance.inference_time_sec.toFixed(2)}s`
     : "0.85s";
@@ -112,8 +114,8 @@ export function UploadedWorkspaceView({
   // Filtered live OCR lines from PaddleOCR GPU with normalized confidence and preserved originalIndex
   const filteredOcrLines = useMemo(() => {
     return ocrLines
-      .map((line: OcrLine, originalIndex: number) => ({ ...line, originalIndex }))
-      .filter((line) => {
+      .map((line: any, originalIndex: number) => ({ ...line, originalIndex }))
+      .filter((line: any) => {
         const rawConf = line.confidence ?? 0.95;
         const conf = rawConf > 1.0 ? rawConf / 100.0 : rawConf;
         const matchesSearch =
@@ -127,8 +129,8 @@ export function UploadedWorkspaceView({
 
   // Check if active document has bounding box coordinates
   const hasAnyValidBox = useMemo(() => {
-    return ocrLines.some((line) => {
-      const b = line.bounding_box || line.box;
+    return ocrLines.some((l: any) => {
+      const b = l.bounding_box || l.box;
       return Array.isArray(b) && b.length >= 4;
     });
   }, [ocrLines]);
@@ -145,7 +147,7 @@ export function UploadedWorkspaceView({
 
   // Check if active document has any manually edited or added lines
   const hasEditedLines = useMemo(() => {
-    return ocrLines.some((line) => line.isEdited || line.isManual);
+    return ocrLines.some((l: any) => l.isEdited || l.isManual);
   }, [ocrLines]);
 
   function handleStartEdit(lineIdx: number, currentText: string) {
@@ -160,17 +162,17 @@ export function UploadedWorkspaceView({
       onShowToast("ข้อความต้องไม่ว่างเปล่า");
       return;
     }
-    const updated = ocrLines.map((line, i) => {
+    const updated = ocrLines.map((l: any, i: number) => {
       if (i === lineIdx) {
         return {
-          ...line,
+          ...l,
           text: trimmed,
           isManual: true,
           isEdited: true,
           confidence: 1.0,
         };
       }
-      return line;
+      return l;
     });
     setEditingIndex(null);
     setEditingText("");
@@ -185,9 +187,10 @@ export function UploadedWorkspaceView({
   function handleConfirmDelete(lineIdx: number, e?: React.MouseEvent) {
     e?.stopPropagation();
     const itemToDelete = ocrLines[lineIdx];
+    // Save for undo
     setLastDeletedItem({ line: itemToDelete, index: lineIdx });
 
-    const updated = ocrLines.filter((_, i) => i !== lineIdx);
+    const updated = ocrLines.filter((_: any, i: number) => i !== lineIdx);
     if (selectedOcrIndex === lineIdx) {
       setSelectedOcrIndex(null);
     } else if (selectedOcrIndex !== null && selectedOcrIndex > lineIdx) {
@@ -264,7 +267,7 @@ export function UploadedWorkspaceView({
 
   // Core 11 Fields extraction summary
   const coreFieldsSummary = useMemo(() => {
-    const raw = activeDoc?.jsonOutput || initialJson;
+    const raw: any = activeDoc?.jsonOutput || {};
     const docType = raw.document_type || "Invoice";
     const docNumber = raw.document_number || raw.document_no || "-";
     const docDate = raw.document_date || "-";
@@ -292,8 +295,7 @@ export function UploadedWorkspaceView({
     ];
 
     const filledCount = fields.filter((f) => f.isSet).length;
-    const other = raw.other ?? {};
-    const otherKeys = Object.keys(other).filter((key) => Boolean(other[key]));
+    const otherKeys = raw.other ? Object.keys(raw.other).filter((k: string) => Boolean(raw.other[k])) : [];
 
     return {
       docType,
@@ -312,8 +314,6 @@ export function UploadedWorkspaceView({
       otherKeys,
     };
   }, [activeDoc?.jsonOutput]);
-
-  if (!activeDoc) return null;
 
   function getHumanRegion(region?: string) {
     switch (region) {
@@ -441,7 +441,7 @@ export function UploadedWorkspaceView({
       {/* ========================================================================= */}
       {/* 3. WORKFLOW STEP TRACKER (แสดงขั้นตอนปัจจุบันแบบ Real-Time)               */}
       {/* ========================================================================= */}
-      <DynamicStepTracker activeDoc={activeDoc} isProcessing={isProcessing} />
+      <DynamicStepTracker activeDoc={activeDoc} />
 
       {/* ========================================================================= */}
       {/* 4. ROW 1: OCR RESULT STUDIO (PaddleOCR GPU) - Full-Width Line             */}
@@ -663,7 +663,7 @@ export function UploadedWorkspaceView({
                             </td>
                           </tr>
                         ) : (
-                          filteredOcrLines.map((line) => {
+                          filteredOcrLines.map((line: any) => {
                             const lineIdx = line.originalIndex;
                             const isSelected = selectedOcrIndex === lineIdx;
                             const isEditing = editingIndex === lineIdx;
@@ -895,7 +895,7 @@ export function UploadedWorkspaceView({
                             setRawTextDraft(
                               activeDoc.spatialText ||
                                 activeDoc.ocrText ||
-                                ocrLines.map((line) => line.text).join("\n"),
+                                ocrLines.map((l: any) => l.text).join("\n"),
                             );
                             setIsEditingRaw(true);
                           }}
@@ -1227,7 +1227,7 @@ export function UploadedWorkspaceView({
         </div>
       </footer>
 
-
+      
     </div>
   );
 }

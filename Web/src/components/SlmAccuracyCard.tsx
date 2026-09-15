@@ -39,9 +39,9 @@ export function SlmAccuracyCard({
 
   const coreFieldsList = [
     { key: "document_type", label: "1. ประเภทเอกสาร (document_type)", value: jsonOutput.document_type || "-" },
-    { key: "document_number", label: "2. เลขที่เอกสาร (document_number)", value: jsonOutput.document_number || jsonOutput.document_no || "-" },
+    { key: "document_number", label: "2. เลขที่เอกสาร (document_number)", value: jsonOutput.document_number || (jsonOutput as any).document_no || "-" },
     { key: "document_date", label: "3. วันที่เอกสาร (document_date)", value: jsonOutput.document_date || "-" },
-    { key: "sender", label: "4. ผู้ส่ง / ผู้ขาย (sender)", value: jsonOutput.sender || jsonOutput.party_name || "-" },
+    { key: "sender", label: "4. ผู้ส่ง / ผู้ขาย (sender)", value: jsonOutput.sender || (jsonOutput as any).party_name || "-" },
     { key: "receiver", label: "5. ผู้รับ / ผู้ซื้อ (receiver)", value: jsonOutput.receiver || "-" },
     { key: "origin", label: "6. ต้นทาง (origin)", value: jsonOutput.origin || "-" },
     { key: "destination", label: "7. ปลายทาง (destination)", value: jsonOutput.destination || "-" },

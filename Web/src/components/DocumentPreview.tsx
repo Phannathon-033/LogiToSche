@@ -8,7 +8,7 @@ import {
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { OcrLine } from "../services/ocrApi";
 
 export interface BoxBounds {
@@ -159,7 +159,7 @@ export function DocumentPreview({
   const boxesWithBounds: BoxBounds[] = useMemo(() => {
     if (!ocrLines || ocrLines.length === 0) return [];
 
-    return ocrLines.map((line: OcrLine, index: number) => {
+    return ocrLines.map((line, index: number) => {
       const rawBox = line.bounding_box || line.box;
       let minX = 0,
         minY = 0,
@@ -171,14 +171,14 @@ export function DocumentPreview({
       if (rawBox && Array.isArray(rawBox)) {
         // Format A: 4-point polygon [[x1, y1], [x2, y2], [x3, y3], [x4, y4]]
         if (rawBox.length >= 4 && Array.isArray(rawBox[0])) {
-          const xs = rawBox.map((p: number[] | number) => (Array.isArray(p) ? Number(p[0]) || 0 : 0));
-          const ys = rawBox.map((p: number[] | number) => (Array.isArray(p) ? Number(p[1]) || 0 : 0));
+          const xs = rawBox.map((p: number[]) => (Array.isArray(p) ? Number(p[0]) || 0 : 0));
+          const ys = rawBox.map((p: number[]) => (Array.isArray(p) ? Number(p[1]) || 0 : 0));
           minX = Math.round(Math.min(...xs));
           maxX = Math.round(Math.max(...xs));
           minY = Math.round(Math.min(...ys));
           maxY = Math.round(Math.max(...ys));
           polygonPoints = rawBox
-            .map((p: number[] | number) => `${Math.round(Array.isArray(p) ? p[0] || 0 : 0)},${Math.round(Array.isArray(p) ? p[1] || 0 : 0)}`)
+            .map((p: number[]) => `${Math.round(p[0] || 0)},${Math.round(p[1] || 0)}`)
             .join(" ");
           isValid = maxX > minX && maxY > minY;
         }
@@ -267,7 +267,7 @@ export function DocumentPreview({
   }, [selectedBox, zoom, effectiveNaturalSize]);
 
   // Smooth RAF interpolation loop (60fps/120fps buttery glide)
-  const startSmoothAnimation = useCallback(() => {
+  const startSmoothAnimation = () => {
     if (animFrameRef.current !== null) return;
 
     const tick = () => {
@@ -308,7 +308,7 @@ export function DocumentPreview({
     };
 
     animFrameRef.current = requestAnimationFrame(tick);
-  }, []);
+  };
 
   // Zoom controls (smooth glide)
   function handleZoomIn() {
@@ -333,7 +333,7 @@ export function DocumentPreview({
   }
 
   // Smooth mouse wheel zoom with Zoom-to-Cursor
-  const handleWheelZoom = useCallback((e: WheelEvent, container: HTMLDivElement, isFs: boolean = false) => {
+  const handleWheelZoom = (e: WheelEvent, container: HTMLDivElement, isFs: boolean = false) => {
     e.preventDefault();
 
     // Standardize delta across different mice & trackpads
@@ -382,7 +382,7 @@ export function DocumentPreview({
     }
 
     startSmoothAnimation();
-  }, [startSmoothAnimation]);
+  };
 
   // Mouse wheel zoom for main preview
   useEffect(() => {
@@ -397,7 +397,7 @@ export function DocumentPreview({
     return () => {
       container.removeEventListener("wheel", onWheel);
     };
-  }, [handleWheelZoom]);
+  }, []);
 
   // Mouse wheel zoom for fullscreen modal
   useEffect(() => {
@@ -413,7 +413,7 @@ export function DocumentPreview({
     return () => {
       fsContainer.removeEventListener("wheel", onWheel);
     };
-  }, [handleWheelZoom, isFullscreen]);
+  }, [isFullscreen]);
 
   // Cleanup animation frame on unmount
   useEffect(() => {

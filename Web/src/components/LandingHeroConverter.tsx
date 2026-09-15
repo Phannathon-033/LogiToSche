@@ -2,10 +2,14 @@ import {
   ArrowRight,
   BrainCircuit,
   Check,
+  CheckCircle2,
   Code2,
+  FileCode,
+  FileSpreadsheet,
   FileText,
   Globe,
   Layers,
+  Sparkles,
   UploadCloud,
 } from "lucide-react";
 import { useRef, useState } from "react";
@@ -24,6 +28,9 @@ export function LandingHeroConverter({
   language,
   onLanguageChange,
   onFilesSelect,
+  onOpenPricing,
+  onOpenFeatures,
+  onOpenWorkflow,
 }: LandingHeroConverterProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [dragging, setDragging] = useState(false);

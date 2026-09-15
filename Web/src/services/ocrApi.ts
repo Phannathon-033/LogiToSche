@@ -13,8 +13,6 @@ export interface OcrLine {
   bounding_box?: number[][];
   box?: number[][];
   position?: OcrPosition;
-  isManual?: boolean;
-  isEdited?: boolean;
 }
 
 export interface OcrApiResponse {

@@ -27,7 +27,7 @@ import {
   UploadCloud,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   deleteDocumentFromFirebase,
   fetchFirebaseDocuments,
@@ -58,7 +58,24 @@ export function FirebaseCloudHistoryModal({
   const [copiedJson, setCopiedJson] = useState(false);
   const [copiedRules, setCopiedRules] = useState(false);
 
-  const loadDocuments = useCallback(async () => {
+  useEffect(() => {
+    if (isOpen) {
+      loadDocuments();
+    }
+  }, [isOpen]);
+
+  // Handle ESC key
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  async function loadDocuments() {
     setLoading(true);
     try {
       const records = await fetchFirebaseDocuments(50);
@@ -80,24 +97,7 @@ export function FirebaseCloudHistoryModal({
     } finally {
       setLoading(false);
     }
-  }, [onShowToast]);
-
-  useEffect(() => {
-    if (isOpen) {
-      loadDocuments();
-    }
-  }, [isOpen, loadDocuments]);
-
-  // Handle ESC key
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape" && isOpen) {
-        onClose();
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
+  }
 
   async function handleRetrySyncAll() {
     setSyncingAll(true);
@@ -131,8 +131,10 @@ export function FirebaseCloudHistoryModal({
       await deleteDocumentFromFirebase(docId, storagePath);
       setDocuments((prev) => prev.filter((d) => d.id !== docId));
       if (selectedRecord?.id === docId) {
-        const remaining = documents.filter((d) => d.id !== docId);
-        setSelectedRecord(remaining.length > 0 ? remaining[0] : null);
+        setSelectedRecord((prev) => {
+          const remaining = documents.filter((d) => d.id !== docId);
+          return remaining.length > 0 ? remaining[0] : null;
+        });
       }
       onShowToast("ลบเอกสารเรียบร้อย");
     } catch (err) {
@@ -183,12 +185,12 @@ export function FirebaseCloudHistoryModal({
       if (!q) return true;
 
       const docNo = String(
-        doc.jsonSchema?.document_number || doc.jsonSchema?.document_no || ""
+        doc.jsonSchema?.document_number || (doc.jsonSchema as any)?.document_no || ""
       ).toLowerCase();
       const party = String(
         doc.jsonSchema?.sender ||
           doc.jsonSchema?.receiver ||
-          doc.jsonSchema?.party_name ||
+          (doc.jsonSchema as any)?.party_name ||
           ""
       ).toLowerCase();
       const fileName = (doc.fileName || "").toLowerCase();
@@ -469,12 +471,12 @@ export function FirebaseCloudHistoryModal({
                   const isCloud = docItem.cloudSyncStatus === "synced";
                   const docNo =
                     docItem.jsonSchema?.document_number ||
-                    docItem.jsonSchema?.document_no ||
+                    (docItem.jsonSchema as any)?.document_no ||
                     "-";
                   const party =
                     docItem.jsonSchema?.sender ||
                     docItem.jsonSchema?.receiver ||
-                    docItem.jsonSchema?.party_name ||
+                    (docItem.jsonSchema as any)?.party_name ||
                     docItem.documentType;
 
                   return (
@@ -844,14 +846,14 @@ export function FirebaseCloudHistoryModal({
                       </div>
 
                       {/* Extra: Quantity if present */}
-                      {extracted.qtyLabel && (
+                      {extracted.qty && (
                         <div className="rounded-xl border border-slate-200/90 bg-white p-3 shadow-2xs hover:border-blue-200 transition">
                           <div className="flex items-center gap-1 text-[10.5px] font-bold uppercase text-slate-400 mb-1">
                             <Layers className="h-3 w-3 text-indigo-500" />
                             <span>จำนวนสินค้า (Quantity)</span>
                           </div>
                           <p className="font-bold text-xs text-slate-900">
-                            {extracted.qtyLabel}
+                            {extracted.qty}
                           </p>
                         </div>
                       )}
@@ -949,7 +951,7 @@ export function FirebaseCloudHistoryModal({
 /**
  * Clean Light Theme JSON Syntax Highlighter
  */
-function JsonSyntaxHighlighter({ json }: { json: unknown }) {
+function JsonSyntaxHighlighter({ json }: { json: any }) {
   const jsonString = useMemo(() => {
     try {
       return JSON.stringify(json, null, 2);
@@ -962,7 +964,7 @@ function JsonSyntaxHighlighter({ json }: { json: unknown }) {
 
   function highlightLine(line: string) {
     return line.replace(
-      /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g,
+      /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
       (match) => {
         let cls = "text-slate-800";
         if (/^"/.test(match)) {
@@ -1012,11 +1014,11 @@ function JsonSyntaxHighlighter({ json }: { json: unknown }) {
  * Robust extraction helper with field fallbacks between document_number/document_no and sender/party_name
  */
 function getExtractedFieldValues(record: FirebaseDocumentRecord) {
-  const schema = record.jsonSchema;
+  const schema = record.jsonSchema || ({} as any);
   const docType = schema.document_type || record.documentType || "-";
-  const docNo = schema.document_number || schema.document_no || "-";
+  const docNo = schema.document_number || (schema as any).document_no || "-";
   const docDate = schema.document_date || "-";
-  const sender = schema.sender || schema.party_name || "-";
+  const sender = schema.sender || (schema as any).party_name || "-";
   const receiver = schema.receiver || "-";
   const origin = schema.origin || "-";
   const destination = schema.destination || "-";
@@ -1036,8 +1038,7 @@ function getExtractedFieldValues(record: FirebaseDocumentRecord) {
         })
       : "-";
   const currency = schema.currency && schema.currency !== "-" ? schema.currency : "THB";
-  const qty = schema.other?.quantity ?? schema.quantity ?? null;
-  const qtyLabel = qty === null ? null : String(qty);
+  const qty = schema.other?.quantity ?? (schema as any).quantity ?? null;
   const vat =
     schema.other?.vat_amount !== undefined &&
     schema.other?.vat_amount !== null &&
@@ -1059,7 +1060,7 @@ function getExtractedFieldValues(record: FirebaseDocumentRecord) {
     unitPrice,
     total,
     currency,
-    qtyLabel,
+    qty,
     vat,
   };
 }
@@ -1083,8 +1084,6 @@ function formatRecordDate(record: FirebaseDocumentRecord): string {
         timeStyle: "short",
       });
     }
-  } catch {
-    return "";
-  }
+  } catch {}
   return "";
 }

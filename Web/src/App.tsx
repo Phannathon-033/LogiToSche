@@ -10,11 +10,11 @@ import { UploadedWorkspaceView } from "./components/UploadedWorkspaceView";
 import { FirebaseSaveSuccessModal } from "./components/FirebaseSaveSuccessModal";
 import { SlmPromptAssistantModal } from "./components/SlmPromptAssistantModal";
 import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
-import { initialJson, recentJobs } from "./data/mockData";
 import { saveDocumentToFirebase } from "./services/firebase";
 import { createJsonDownload } from "./services/mockProcessingService";
 import { runPaddleOcr, type OcrLanguage, type OcrLine } from "./services/ocrApi";
 import { runSlmExtraction } from "./services/slmApi";
+import { EMPTY_JSON_SCHEMA } from "./types";
 import type {
   BatchDocumentItem,
   DocumentJob,
@@ -57,14 +57,14 @@ export function App() {
   } | null>(null);
   const [isSavingToFirebase, setIsSavingToFirebase] = useState(false);
 
-  const [, setJobs] = useState<DocumentJob[]>(recentJobs);
+  const [, setJobs] = useState<DocumentJob[]>([]);
   const [reviewingItem, setReviewingItem] = useState<ReviewItem | null>(null);
   const [toast, setToast] = useState("");
 
   const activeDoc = batchDocuments[activeDocIndex] || null;
   const hasDocument = batchDocuments.length > 0;
 
-  const jsonOutput = activeDoc?.jsonOutput ?? initialJson;
+  const jsonOutput = activeDoc?.jsonOutput ?? EMPTY_JSON_SCHEMA;
   const fields = activeDoc?.fields ?? [];
   const reviewItems = activeDoc?.reviewItems ?? [];
 
