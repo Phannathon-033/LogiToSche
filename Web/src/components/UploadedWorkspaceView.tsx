@@ -18,6 +18,7 @@ import {
   Expand,
   Eye,
   FileCode,
+  FileSpreadsheet,
   FileText,
   Filter,
   Flame,
@@ -62,8 +63,12 @@ interface UploadedWorkspaceViewProps {
   onAddFiles: (files: File[]) => void;
   onReRunOcr: () => void;
   onExportAllJson: () => void;
+  onExportAllExcel?: () => void;
+  onExportAllCsv?: () => void;
   onCopyJson: () => void;
   onDownloadJson: () => void;
+  onDownloadExcel?: () => void;
+  onDownloadCsv?: () => void;
   onSaveToFirebase: (updatedJson?: JsonSchemaOutput) => void;
   onUpdateLocalJson?: (updatedJson: JsonSchemaOutput) => void;
   isSavingToFirebase?: boolean;
@@ -82,8 +87,12 @@ export function UploadedWorkspaceView({
   onAddFiles,
   onReRunOcr,
   onExportAllJson,
+  onExportAllExcel,
+  onExportAllCsv,
   onCopyJson,
   onDownloadJson,
+  onDownloadExcel,
+  onDownloadCsv,
   onSaveToFirebase,
   onUpdateLocalJson,
   isSavingToFirebase = false,
@@ -429,14 +438,39 @@ export function UploadedWorkspaceView({
             <span>สแกน OCR ใหม่</span>
           </button>
 
-          {/* Export JSON */}
+          {/* Export Batch Buttons */}
+          {onExportAllExcel && (
+            <button
+              type="button"
+              onClick={onExportAllExcel}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-800 shadow-xs transition hover:bg-emerald-100"
+              title="ส่งออกเอกสารทั้งหมดในแบทช์เป็นไฟล์ Excel (.xlsx)"
+            >
+              <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
+              <span>Excel (.xlsx) ทั้งหมด</span>
+            </button>
+          )}
+
+          {onExportAllCsv && (
+            <button
+              type="button"
+              onClick={onExportAllCsv}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-teal-300 bg-teal-50 px-2.5 py-1.5 text-xs font-bold text-teal-800 shadow-xs transition hover:bg-teal-100"
+              title="ส่งออกเอกสารทั้งหมดในแบทช์เป็นไฟล์ CSV"
+            >
+              <FileText className="h-3.5 w-3.5 text-teal-600" />
+              <span>CSV ทั้งหมด</span>
+            </button>
+          )}
+
           <button
             type="button"
             onClick={onExportAllJson}
             className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-xs transition hover:bg-slate-50 hover:border-slate-300"
+            title="ส่งออกเอกสารทั้งหมดในแบทช์เป็นไฟล์ JSON"
           >
             <Download className="h-3.5 w-3.5 text-slate-500" />
-            <span>ดาวน์โหลด JSON ทั้งหมด</span>
+            <span>JSON ทั้งหมด</span>
           </button>
         </div>
       </section>
@@ -1022,13 +1056,38 @@ export function UploadedWorkspaceView({
               <span>คัดลอก</span>
             </button>
 
+            {onDownloadExcel && (
+              <button
+                type="button"
+                onClick={onDownloadExcel}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-800 shadow-xs transition hover:bg-emerald-100"
+                title="ดาวน์โหลดเฉพาะเอกสารนี้เป็น Excel (.xlsx)"
+              >
+                <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
+                <span>Excel</span>
+              </button>
+            )}
+
+            {onDownloadCsv && (
+              <button
+                type="button"
+                onClick={onDownloadCsv}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-teal-300 bg-teal-50 px-2.5 py-1.5 text-xs font-bold text-teal-800 shadow-xs transition hover:bg-teal-100"
+                title="ดาวน์โหลดเฉพาะเอกสารนี้เป็น CSV"
+              >
+                <FileText className="h-3.5 w-3.5 text-teal-600" />
+                <span>CSV</span>
+              </button>
+            )}
+
             <button
               type="button"
               onClick={onDownloadJson}
               className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-xs transition hover:bg-slate-50"
+              title="ดาวน์โหลดเฉพาะเอกสารนี้เป็น JSON"
             >
               <Download className="h-3.5 w-3.5 text-slate-500" />
-              <span>ดาวน์โหลด</span>
+              <span>JSON</span>
             </button>
 
             <button
@@ -1208,6 +1267,8 @@ export function UploadedWorkspaceView({
                   json={activeDoc.jsonOutput}
                   onCopy={onCopyJson}
                   onDownload={onDownloadJson}
+                  onDownloadExcel={onDownloadExcel}
+                  onDownloadCsv={onDownloadCsv}
                   onMoveOtherToCore={onMoveOtherToCore}
                   onSaveJson={onUpdateLocalJson}
                 />

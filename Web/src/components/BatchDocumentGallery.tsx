@@ -22,6 +22,8 @@ interface BatchDocumentGalleryProps {
   onAddFiles: (files: File[]) => void;
   onRemoveDocument: (index: number) => void;
   onExportAllJson: () => void;
+  onExportAllExcel?: () => void;
+  onExportAllCsv?: () => void;
   isProcessing: boolean;
   batchPhase: "idle" | "ocr" | "slm" | "completed";
 }
@@ -33,6 +35,8 @@ export function BatchDocumentGallery({
   onAddFiles,
   onRemoveDocument,
   onExportAllJson,
+  onExportAllExcel,
+  onExportAllCsv,
   isProcessing,
   batchPhase,
 }: BatchDocumentGalleryProps) {
@@ -137,14 +141,39 @@ export function BatchDocumentGallery({
           </button>
 
           {slmDoneCount > 0 ? (
-            <button
-              type="button"
-              onClick={onExportAllJson}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-primary/90"
-            >
-              <Download className="h-3.5 w-3.5" />
-              ดาวน์โหลด JSON ทั้งหมด ({slmDoneCount}/{totalCount})
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              {onExportAllExcel && (
+                <button
+                  type="button"
+                  onClick={onExportAllExcel}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500 bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700"
+                  title="ดาวน์โหลดสรุป 11 ฟิลด์ของทุกเอกสารในแบทช์เป็น Excel (.xlsx)"
+                >
+                  <FileSpreadsheet className="h-3.5 w-3.5" />
+                  Excel (.xlsx) ({slmDoneCount})
+                </button>
+              )}
+              {onExportAllCsv && (
+                <button
+                  type="button"
+                  onClick={onExportAllCsv}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-teal-500 bg-teal-700 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-teal-800"
+                  title="ดาวน์โหลดสรุปทุกเอกสารในแบทช์เป็น CSV"
+                >
+                  <FileText className="h-3.5 w-3.5" />
+                  CSV ({slmDoneCount})
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onExportAllJson}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-primary/90"
+                title="ดาวน์โหลด JSON Schema ของทุกเอกสารในแบทช์"
+              >
+                <Download className="h-3.5 w-3.5" />
+                JSON ({slmDoneCount}/{totalCount})
+              </button>
+            </div>
           ) : null}
         </div>
       </div>

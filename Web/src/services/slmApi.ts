@@ -152,9 +152,9 @@ export async function runSlmExtraction({
       status: item.status,
       isOther: !ROOT_FIELDS.has(item.field),
     })),
-    performance: data.performance,
-    model: data.model,
-    device: data.device,
+    performance: data.performance as SlmPerformanceMetrics | undefined,
+    model: data.model || "Qwen/Qwen2.5-1.5B-Instruct",
+    device: data.device || "cuda:0",
   };
 }
 
