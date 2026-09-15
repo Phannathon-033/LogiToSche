@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Activity,
+  BarChart3,
   Bell,
-  ChevronDown,
   CircleHelp,
   FileSearch,
   LayoutDashboard,
@@ -17,15 +17,21 @@ import { getSlmPromptConfig, saveSlmPromptConfig } from "../services/slmApi";
 import {
   mockAdminAnalytics,
   mockAdminDocuments,
+  mockAdminErrorClusters,
   mockPromptLabState,
 } from "../data/mockData";
 import { AdminOverview } from "./admin/AdminOverview";
 import { AdminPromptConfig } from "./admin/AdminPromptConfig";
+import { AdminReports } from "./admin/AdminReports";
 import { AdminReviewQueue } from "./admin/AdminReviewQueue";
 import { AdminJobsHistory } from "./admin/AdminJobsHistory";
+import { AdminActivityLogs } from "./admin/AdminActivityLogs";
 import { AdminUserSettings } from "./admin/AdminUserSettings";
+import { GroundTruthViewerModal } from "./GroundTruthViewerModal";
 
 type AdminView = "dashboard" | "documents" | "document-detail" | "users" | "prompt";
+type PromptQualityTab = "prompt" | "reports";
+type UsersSettingsTab = "users" | "activity";
 
 interface AdminDashboardProps {
   onUpdateJob: (updatedJob: DocumentJob, updatedJson?: JsonSchemaOutput) => void;
@@ -36,10 +42,12 @@ interface AdminDashboardProps {
 export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDashboardProps) {
   const [activeView, setActiveView] = useState<AdminView>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [dateRange] = useState("25 ส.ค. 2025 - 26 ส.ค. 2025");
   const [documents, setDocuments] = useState<AdminDocumentRecord[]>(mockAdminDocuments);
   const [selectedDocumentId, setSelectedDocumentId] = useState<string>(mockAdminDocuments[0]?.id ?? "");
   const [promptLab, setPromptLab] = useState<AdminPromptLabState>(mockPromptLabState);
+  const [promptQualityTab, setPromptQualityTab] = useState<PromptQualityTab>("prompt");
+  const [usersSettingsTab, setUsersSettingsTab] = useState<UsersSettingsTab>("users");
+  const [groundTruthOpen, setGroundTruthOpen] = useState(false);
   const [promptConfigLoading, setPromptConfigLoading] = useState(true);
   const [promptConfigSaving, setPromptConfigSaving] = useState(false);
   const showToastRef = useRef(showToast);
@@ -168,37 +176,94 @@ export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDas
           />
         );
       case "users":
-        return <AdminUserSettings />;
+        return (
+          <>
+            <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200/80 bg-white p-2 shadow-panel">
+              {[
+                ["users", "ผู้ใช้งาน", Users],
+                ["activity", "Activity Log", Activity],
+              ].map(([tab, label, Icon]) => (
+                <button
+                  key={tab as string}
+                  type="button"
+                  onClick={() => setUsersSettingsTab(tab as UsersSettingsTab)}
+                  className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition ${
+                    usersSettingsTab === tab ? "bg-blue-600 text-white" : "text-slate-600 hover:bg-slate-50"
+                  }`}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {label as string}
+                </button>
+              ))}
+            </div>
+            {usersSettingsTab === "users" ? <AdminUserSettings /> : <AdminActivityLogs />}
+          </>
+        );
       case "prompt":
         return (
-          <AdminPromptConfig
-            value={promptLab}
-            documents={documents}
-            onChange={setPromptLab}
-            onSave={handleSavePromptConfig}
-            loading={promptConfigLoading}
-            saving={promptConfigSaving}
-          />
+          <>
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white p-2 shadow-panel">
+              <div className="flex flex-wrap items-center gap-2">
+                {[
+                  ["prompt", "Prompt Configuration", Settings],
+                  ["reports", "Quality Reports", BarChart3],
+                ].map(([tab, label, Icon]) => (
+                  <button
+                    key={tab as string}
+                    type="button"
+                    onClick={() => setPromptQualityTab(tab as PromptQualityTab)}
+                    className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition ${
+                      promptQualityTab === tab ? "bg-blue-600 text-white" : "text-slate-600 hover:bg-slate-50"
+                    }`}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    {label as string}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setGroundTruthOpen(true)}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-purple-200 bg-purple-50 px-3.5 py-2 text-xs font-bold text-purple-700 transition hover:bg-purple-100"
+              >
+                <BarChart3 className="h-3.5 w-3.5" />
+                Ground Truth & Benchmark
+              </button>
+            </div>
+            {promptQualityTab === "prompt" ? (
+              <AdminPromptConfig
+                value={promptLab}
+                documents={documents}
+                onChange={setPromptLab}
+                onSave={handleSavePromptConfig}
+                loading={promptConfigLoading}
+                saving={promptConfigSaving}
+              />
+            ) : (
+              <AdminReports documents={documents} errorClusters={mockAdminErrorClusters} onOpenDocument={openDocument} />
+            )}
+            <GroundTruthViewerModal isOpen={groundTruthOpen} onClose={() => setGroundTruthOpen(false)} />
+          </>
         );
     }
   }
 
   const activeMenuTitle =
     activeView === "dashboard"
-      ? "ภาพรวมระบบ"
+      ? "Dashboard"
       : activeView === "documents"
-        ? "เอกสารทั้งหมด"
+        ? "Documents & Review Queue"
         : activeView === "document-detail"
           ? "Document Detail"
           : activeView === "users"
-            ? "จัดการผู้ใช้งาน"
-            : "Prompt Configuration";
+            ? "Users & Settings"
+            : "Prompt & Quality";
 
   const adminMenuItems = [
-    { id: "dashboard" as const, name: "ภาพรวมระบบ", icon: LayoutDashboard },
-    { id: "documents" as const, name: "เอกสารทั้งหมด", icon: FileSearch },
-    { id: "users" as const, name: "จัดการผู้ใช้งาน", icon: Users },
-    { id: "prompt" as const, name: "Prompt Configuration", icon: Settings },
+    { id: "dashboard" as const, name: "Dashboard", icon: LayoutDashboard },
+    { id: "documents" as const, name: "Documents", icon: FileSearch },
+    { id: "users" as const, name: "Users & Settings", icon: Users },
+    { id: "prompt" as const, name: "Prompt & Quality", icon: Settings },
   ];
 
   function selectAdminView(view: AdminView, name: string) {
@@ -287,11 +352,6 @@ export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDas
             <button type="button" onClick={() => setViewMode("user")} className="hidden rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-extrabold text-slate-700 transition hover:bg-slate-50 sm:inline-flex">
               สลับมุมมองผู้ใช้
             </button>
-            <div className="hidden items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700 md:flex">
-              <Activity className="h-4 w-4 text-slate-400" />
-              <span>{dateRange}</span>
-              <ChevronDown className="h-3 w-3 text-slate-400" />
-            </div>
             <button type="button" className="relative rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900" aria-label="การแจ้งเตือน">
               <Bell className="h-5 w-5" />
               <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-orange-500" />

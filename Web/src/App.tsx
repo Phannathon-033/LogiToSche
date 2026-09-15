@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { AppHeader } from "./components/AppHeader";
 import { AdminDashboard } from "./components/AdminDashboard";
-import { FirebaseCloudHistoryModal } from "./components/FirebaseCloudHistoryModal";
-import { GroundTruthViewerModal } from "./components/GroundTruthViewerModal";
 import { LandingHeroConverter } from "./components/LandingHeroConverter";
 import { LoginPage, type UserSession } from "./components/LoginPage";
 import { ManualReviewModal } from "./components/ManualReviewModal";
@@ -13,7 +11,7 @@ import { FirebaseSaveSuccessModal } from "./components/FirebaseSaveSuccessModal"
 import { SlmPromptAssistantModal } from "./components/SlmPromptAssistantModal";
 import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
 import { initialJson, recentJobs } from "./data/mockData";
-import { saveDocumentToFirebase, type FirebaseDocumentRecord } from "./services/firebase";
+import { saveDocumentToFirebase } from "./services/firebase";
 import { createJsonDownload } from "./services/mockProcessingService";
 import { runPaddleOcr, type OcrLanguage, type OcrLine } from "./services/ocrApi";
 import { runSlmExtraction } from "./services/slmApi";
@@ -25,6 +23,10 @@ import type {
   JsonSchemaOutput,
   ReviewItem,
 } from "./types";
+
+function isAdminSession(session: UserSession | null) {
+  return session?.role.toLowerCase().includes("admin") ?? false;
+}
 
 export function App() {
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
@@ -43,9 +45,9 @@ export function App() {
 
   const [ocrLanguage, setOcrLanguage] = useState<OcrLanguage>("th");
   const selectedType: DocumentType = "Invoice";
-  const [viewMode, setViewMode] = useState<"user" | "admin">("user");
-  const [showCloudHistoryModal, setShowCloudHistoryModal] = useState(false);
-  const [showGroundTruthModal, setShowGroundTruthModal] = useState(false);
+  const [viewMode, setViewMode] = useState<"user" | "admin">(() =>
+    isAdminSession(userSession) ? "admin" : "user",
+  );
   const [showPromptAssistantModal, setShowPromptAssistantModal] = useState(false);
   const [firebaseSuccessModal, setFirebaseSuccessModal] = useState<{
     isOpen: boolean;
@@ -68,6 +70,7 @@ export function App() {
 
   function handleLogin(session: UserSession) {
     setUserSession(session);
+    setViewMode(isAdminSession(session) ? "admin" : "user");
     try {
       localStorage.setItem("logiai_user", JSON.stringify(session));
     } catch {
@@ -521,38 +524,6 @@ export function App() {
     setFirebaseSuccessModal(null);
   }
 
-  function handleLoadFromCloud(record: FirebaseDocumentRecord) {
-    const dummyFile = new File([""], record.fileName, { type: record.fileType || "image/jpeg" });
-    const loadedItem: BatchDocumentItem = {
-      id: record.id,
-      file: dummyFile,
-      fileName: record.fileName,
-      fileSize: record.fileSize || "0.50 MB",
-      previewUrl: record.storageUrl || null,
-      status: "completed",
-      statusLabel: `โหลดจาก Firebase (${record.performance?.accuracy_pct ?? record.overallConfidence}%)`,
-      ocrProgress: 100,
-      ocrText: record.ocrText || "",
-      spatialText: record.spatialText,
-      ocrLines: [],
-      jsonOutput: record.jsonSchema,
-      fields: record.fields || [],
-      confidenceScores: record.confidenceScores || [],
-      overallConfidence: record.overallConfidence || 95,
-      performance: record.performance || null,
-      reviewItems: record.reviewItems || [],
-      cloudSyncStatus: "synced",
-      cloudRecordId: record.id,
-      storageUrl: record.storageUrl,
-      startedAt: new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }),
-      completedAt: new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }),
-    };
-
-    setBatchDocuments((prev) => [loadedItem, ...prev]);
-    setActiveDocIndex(0);
-    showToast(`โหลดเอกสาร "${record.fileName}" จาก Firebase สำเร็จ`);
-  }
-
   async function copyText(text: string, successMessage: string) {
     try {
       await navigator.clipboard.writeText(text);
@@ -732,12 +703,9 @@ export function App() {
       <AppHeader
         user={userSession}
         onLogout={handleLogout}
-        onOpenGroundTruth={() => setShowGroundTruthModal(true)}
-        onOpenCloudHistory={() => setShowCloudHistoryModal(true)}
         onOpenFeatures={() => showToast("ฟีเจอร์: PaddleOCR GPU + Qwen2.5 SLM Multimodal + Firebase Cloud")}
         onOpenWorkflow={() => showToast("กระบวนการ: Upload -> OCR -> AI Reasoning -> JSON Schema")}
         onOpenPricing={() => showToast("แพ็กเกจ: ใช้งานฟรีสำหรับนักศึกษาและทดสอบระบบ")}
-        onOpenAdmin={userSession.role.toLowerCase().includes("admin") ? () => setViewMode("admin") : undefined}
       />
       <main className="px-3 py-3.5 sm:px-5 lg:px-6">
         <div className="mx-auto flex w-full max-w-[1420px] flex-col gap-4">
@@ -799,18 +767,6 @@ export function App() {
           )}
         </div>
       </main>
-
-      <FirebaseCloudHistoryModal
-        isOpen={showCloudHistoryModal}
-        onClose={() => setShowCloudHistoryModal(false)}
-        onLoadDocument={handleLoadFromCloud}
-        onShowToast={showToast}
-      />
-
-      <GroundTruthViewerModal
-        isOpen={showGroundTruthModal}
-        onClose={() => setShowGroundTruthModal(false)}
-      />
 
       {firebaseSuccessModal && (
         <FirebaseSaveSuccessModal

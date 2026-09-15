@@ -1,29 +1,23 @@
-import { BookmarkCheck, Cloud, LogOut, ShieldCheck } from "lucide-react";
+import { LogOut } from "lucide-react";
 import type { UserSession } from "./LoginPage";
 import { Logo } from "./Logo";
 
 interface AppHeaderProps {
   user?: UserSession | null;
   onLogout?: () => void;
-  onOpenCloudHistory?: () => void;
-  onOpenGroundTruth?: () => void;
   onOpenSignIn?: () => void;
   onOpenFeatures?: () => void;
   onOpenWorkflow?: () => void;
   onOpenPricing?: () => void;
-  onOpenAdmin?: () => void;
 }
 
 export function AppHeader({
   user,
   onLogout,
-  onOpenCloudHistory,
-  onOpenGroundTruth,
   onOpenSignIn,
   onOpenFeatures,
   onOpenWorkflow,
   onOpenPricing,
-  onOpenAdmin,
 }: AppHeaderProps) {
   const initial = user?.name ? user.name.charAt(0) : "U";
   const name = user?.name || "ผู้ใช้งานระบบ";
@@ -45,30 +39,6 @@ export function AppHeader({
         </nav>
 
         <div className="flex items-center gap-1.5 sm:gap-3">
-          {onOpenAdmin && (
-            <button
-              type="button"
-              onClick={onOpenAdmin}
-              className="hidden items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/80 px-3 py-1.5 text-xs font-bold text-blue-800 shadow-xs transition hover:border-blue-300 hover:bg-blue-100 sm:inline-flex"
-              title="เปิด Admin Console"
-            >
-              <ShieldCheck className="h-4 w-4 text-blue-600" />
-              <span>Admin Console</span>
-            </button>
-          )}
-          {onOpenGroundTruth && (
-            <button type="button" onClick={onOpenGroundTruth} className="hidden items-center gap-1.5 rounded-xl border border-purple-300 bg-purple-50/90 px-3.5 py-1.5 text-xs font-bold text-purple-900 shadow-xs transition hover:border-purple-400 hover:bg-purple-100 lg:inline-flex" title="เปิดดูคลังข้อมูลเฉลย Ground Truth และผลการประเมิน K-Fold Cross-Validation">
-              <BookmarkCheck className="h-4 w-4 text-purple-600" />
-              <span>Ground Truth & Benchmark</span>
-            </button>
-          )}
-          {onOpenCloudHistory && (
-            <button type="button" onClick={onOpenCloudHistory} className="hidden items-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50/80 px-3.5 py-1.5 text-xs font-bold text-amber-900 shadow-xs transition hover:border-amber-400 hover:bg-amber-100 lg:inline-flex" title="เปิดคลังเอกสารและ JSON ที่บันทึกบน Google Cloud Firestore">
-              <Cloud className="h-4 w-4 text-amber-600" />
-              <span>Firebase Cloud</span>
-            </button>
-          )}
-
           {user ? (
             <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50/80 px-2.5 py-1">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-white shadow-xs">{initial}</div>

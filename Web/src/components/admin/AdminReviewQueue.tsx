@@ -24,6 +24,10 @@ export function AdminReviewQueue({ documents, onOpenDocument }: AdminReviewQueue
     <div className="space-y-6">
       <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-panel">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-blue-600">Documents & Review Queue</p>
+            <h3 className="mt-1 text-sm font-black text-slate-900">รายการเอกสารและคิวตรวจสอบ</h3>
+          </div>
           <div className="relative max-w-md flex-1">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
             <input
@@ -35,7 +39,7 @@ export function AdminReviewQueue({ documents, onOpenDocument }: AdminReviewQueue
             />
           </div>
           <div className="flex flex-wrap gap-2">
-            {["all", "success", "processing", "error"].map((status) => (
+            {["all", "success", "processing", "review", "error"].map((status) => (
               <button
                 key={status}
                 type="button"
@@ -44,7 +48,7 @@ export function AdminReviewQueue({ documents, onOpenDocument }: AdminReviewQueue
                   statusFilter === status ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
               >
-                {status === "all" ? "ทั้งหมด" : status === "success" ? "สำเร็จ" : status === "processing" ? "กำลังประมวลผล" : "ไม่สำเร็จ"}
+                {status === "all" ? "ทั้งหมด" : status === "success" ? "สำเร็จ" : status === "processing" ? "กำลังประมวลผล" : status === "review" ? "รอตรวจสอบ" : "ไม่สำเร็จ"}
               </button>
             ))}
           </div>

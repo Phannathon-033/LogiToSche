@@ -227,7 +227,7 @@ export function AdminOverview({
               onClick={onOpenPromptLab}
               className="rounded-xl bg-blue-600 px-3 py-2 text-[11px] font-bold text-white transition hover:bg-blue-500"
             >
-              ไป Prompt Lab
+              ไป Prompt & Quality
             </button>
           </div>
 
