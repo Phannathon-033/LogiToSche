@@ -54,6 +54,7 @@ import { DynamicStepTracker } from "./DynamicStepTracker";
 import { OcrProcessingAnimation } from "./OcrProcessingAnimation";
 import { SlmReasoningAnimation } from "./SlmReasoningAnimation";
 import { JSONOutputPanel } from "./JSONOutputPanel";
+import { calculateDocumentCompleteness } from "../services/dataValidationService";
 
 interface UploadedWorkspaceViewProps {
   activeDoc: BatchDocumentItem | null;
@@ -477,29 +478,101 @@ export function UploadedWorkspaceView({
 
       {/* Multi-document Batch Switcher Pills (If more than 1 document) */}
       {batchDocuments.length > 1 && (
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
-          <span className="text-xs font-medium text-slate-500 whitespace-nowrap">
-            สลับดูเอกสาร:
-          </span>
-          {batchDocuments.map((doc, idx) => (
-            <button
-              key={doc.id}
-              type="button"
-              onClick={() => onSelectDocIndex(idx)}
-              className={`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-                idx === activeDocIndex
-                  ? "bg-slate-900 text-white shadow-xs"
-                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
-              }`}
-            >
-              <span className="truncate max-w-[140px]">{doc.fileName}</span>
-              <span className={`rounded px-1.5 py-0.5 font-mono text-[10px] font-medium ${
-                idx === activeDocIndex ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
-              }`}>
-                #{idx + 1}
+        <div className="rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2 dark:border-slate-800">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-extrabold text-navy dark:text-white whitespace-nowrap">
+                สลับดูเอกสารในแบทช์:
               </span>
-            </button>
-          ))}
+              <span className="text-[11px] text-slate-500 font-medium">
+                (แสดงความครบถ้วนของ 11 ฟิลด์หลักหลัง SLM สกัดข้อมูล)
+              </span>
+            </div>
+            {/* Color Legend */}
+            <div className="flex flex-wrap items-center gap-3 text-[11px] font-bold">
+              <span className="inline-flex items-center gap-1.5 text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md">
+                <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse shrink-0" />
+                แดง: ฟิลด์ไม่ครบ (&lt; 65%)
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
+                <span className="h-2 w-2 rounded-full bg-amber-500 shrink-0" />
+                เหลือง: ปานกลาง (65–84%)
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0" />
+                เขียว: สมบูรณ์ (≥ 85%)
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-2 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+            {batchDocuments.map((doc, idx) => {
+              const isActive = idx === activeDocIndex;
+              const completeness = calculateDocumentCompleteness(doc);
+
+              // Determine color styles based on completeness after SLM
+              let pillClasses = "";
+              let badgeClasses = "";
+              let dotEl: JSX.Element | null = null;
+
+              if (completeness.level === "critical") {
+                // RED: < 65% completed fields
+                if (isActive) {
+                  pillClasses = "bg-rose-700 text-white border-rose-800 shadow-sm ring-2 ring-rose-300 font-bold";
+                  badgeClasses = "bg-rose-900/80 text-white font-mono font-black";
+                } else {
+                  pillClasses = "bg-rose-50 text-rose-900 border-rose-300 hover:bg-rose-100 hover:border-rose-400 font-bold shadow-xs";
+                  badgeClasses = "bg-rose-200 text-rose-950 font-mono font-black";
+                }
+                dotEl = <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse shrink-0" title="ฟิลด์ครบไม่ถึง 65% (ต้องตรวจสอบด่วน)" />;
+              } else if (completeness.level === "warning") {
+                // YELLOW/AMBER: 65% - 84% completed fields
+                if (isActive) {
+                  pillClasses = "bg-amber-600 text-white border-amber-700 shadow-sm ring-2 ring-amber-300 font-bold";
+                  badgeClasses = "bg-amber-900/80 text-white font-mono font-black";
+                } else {
+                  pillClasses = "bg-amber-50 text-amber-950 border-amber-300 hover:bg-amber-100 hover:border-amber-400 font-bold shadow-xs";
+                  badgeClasses = "bg-amber-200 text-amber-950 font-mono font-black";
+                }
+                dotEl = <span className="h-2 w-2 rounded-full bg-amber-500 shrink-0" title="ฟิลด์ครบระดับปานกลาง (65% - 84%)" />;
+              } else if (completeness.level === "good") {
+                // GREEN: >= 85% completed fields
+                if (isActive) {
+                  pillClasses = "bg-slate-900 text-white shadow-xs font-semibold";
+                  badgeClasses = "bg-white/20 text-white font-mono";
+                } else {
+                  pillClasses = "bg-white text-slate-700 border-slate-200 hover:bg-emerald-50/40 hover:border-emerald-200";
+                  badgeClasses = "bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono font-bold";
+                }
+                dotEl = <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" title="ฟิลด์ครบถ้วนสมบูรณ์ (≥ 85%)" />;
+              } else {
+                // PENDING: Still processing or queued
+                if (isActive) {
+                  pillClasses = "bg-slate-900 text-white shadow-xs font-medium";
+                  badgeClasses = "bg-white/20 text-white font-mono";
+                } else {
+                  pillClasses = "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50";
+                  badgeClasses = "bg-slate-100 text-slate-500 font-mono";
+                }
+              }
+
+              return (
+                <button
+                  key={doc.id}
+                  type="button"
+                  onClick={() => onSelectDocIndex(idx)}
+                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs transition-all ${pillClasses}`}
+                  title={`${doc.fileName} — ${completeness.label}`}
+                >
+                  {dotEl}
+                  <span className="truncate max-w-[135px]">{doc.fileName}</span>
+                  <span className={`rounded px-1.5 py-0.5 text-[10px] ${badgeClasses}`}>
+                    #{idx + 1}{completeness.level !== "pending" ? ` · ${completeness.pct}%` : ""}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 

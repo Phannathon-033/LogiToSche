@@ -488,3 +488,90 @@ export function normalizeLogisticsJsonSchema(json: JsonSchemaOutput): {
 
   return { normalized: nextJson, changes };
 }
+
+export interface DocumentCompleteness {
+  pct: number;
+  filledCount: number;
+  totalCount: number;
+  level: "critical" | "warning" | "good" | "pending";
+  label: string;
+}
+
+/**
+ * Calculates field completeness percentage (% ความครบของ 11 ฟิลด์หลัก)
+ * Evaluates core fields: document_type, document_number, document_date, sender, receiver,
+ * origin, destination, reference_number, unit_price, total_amount, currency
+ */
+export function calculateDocumentCompleteness(doc: {
+  status?: string;
+  jsonOutput?: JsonSchemaOutput | null;
+  performance?: any;
+  overallConfidence?: number;
+}): DocumentCompleteness {
+  if (doc.status !== "completed" || !doc.jsonOutput) {
+    return { pct: 0, filledCount: 0, totalCount: 11, level: "pending", label: "รอประมวลผล" };
+  }
+
+  const json = doc.jsonOutput;
+  const coreKeys = [
+    "document_type",
+    "document_number",
+    "document_date",
+    "sender",
+    "receiver",
+    "origin",
+    "destination",
+    "reference_number",
+    "unit_price",
+    "total_amount",
+    "currency",
+  ] as const;
+
+  let filledCount = 0;
+  for (const key of coreKeys) {
+    let val: any = json[key];
+    if ((val === undefined || val === null || val === "" || val === "-" || val === "N/A") && key === "document_number") {
+      val = json.document_no;
+    }
+    if ((val === undefined || val === null || val === "" || val === "-" || val === "N/A") && key === "sender") {
+      val = json.party_name;
+    }
+
+    if (val !== undefined && val !== null && val !== "" && val !== "-" && val !== "N/A") {
+      if (typeof val === "number") {
+        if (val > 0) filledCount++;
+      } else {
+        filledCount++;
+      }
+    }
+  }
+
+  const pct = Math.round((filledCount / coreKeys.length) * 100);
+
+  // Red: < 65%, Yellow: 65% - 84%, Green: >= 85%
+  if (pct < 65) {
+    return {
+      pct,
+      filledCount,
+      totalCount: coreKeys.length,
+      level: "critical", // Red
+      label: `ฟิลด์ครบ ${pct}% (ต้องตรวจซ้ำ)`,
+    };
+  } else if (pct < 85) {
+    return {
+      pct,
+      filledCount,
+      totalCount: coreKeys.length,
+      level: "warning", // Yellow
+      label: `ฟิลด์ครบ ${pct}% (ปานกลาง)`,
+    };
+  } else {
+    return {
+      pct,
+      filledCount,
+      totalCount: coreKeys.length,
+      level: "good", // Green
+      label: `ฟิลด์ครบ ${pct}% (สมบูรณ์)`,
+    };
+  }
+}
