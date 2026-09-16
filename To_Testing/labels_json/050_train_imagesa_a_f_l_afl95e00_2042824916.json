@@ -1,0 +1,27 @@
+{
+  "id": "DOC-050",
+  "rank": 50,
+  "file_name": "050_train_imagesa_a_f_l_afl95e00_2042824916.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "65071",
+    "document_date": "1982-12-16",
+    "sender": "PUBLIC RELATIONS AIDS, INC. 330 West 34th Street. New York. N.Y 10001 - 212/947-773",
+    "receiver": "-",
+    "origin": "New York, NY 10017",
+    "destination": "-",
+    "reference_number": "Job",
+    "unit_price": 66.1,
+    "total_amount": 66.1,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:09:01"
+}

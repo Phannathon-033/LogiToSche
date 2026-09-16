@@ -1,0 +1,27 @@
+{
+  "id": "DOC-269",
+  "rank": 269,
+  "file_name": "269_train_imagesl_l_h_d_lhd83c00_2041158273.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3488",
+    "document_date": "1994-10-10",
+    "sender": "VOUCHER TYPE_ (1-Reg; 2-P.P.; 3-C.M.; 4-D.M.; 5-C.P.; 6-V.C",
+    "receiver": "-",
+    "origin": "itical Action Committee",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 25000.0,
+    "total_amount": 25000.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:35:41"
+}

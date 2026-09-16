@@ -1,0 +1,27 @@
+{
+  "id": "DOC-277",
+  "rank": 277,
+  "file_name": "277_train_imagesg_g_a_i_gai35e00_2024525855.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "1201",
+    "document_date": "1991-05-09",
+    "sender": "H1B31",
+    "receiver": "-",
+    "origin": "l Seminar",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 89213.0,
+    "total_amount": 89213.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:36:40"
+}

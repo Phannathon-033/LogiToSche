@@ -1,0 +1,27 @@
+{
+  "id": "DOC-166",
+  "rank": 166,
+  "file_name": "166_train_imagesg_g_j_b_gjb52c00_2074104214.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "2024-09-26",
+    "sender": "ID",
+    "receiver": "-",
+    "origin": "itical Contribution-Campaign",
+    "destination": "Eustis, FL 32736",
+    "reference_number": "-",
+    "unit_price": 500.0,
+    "total_amount": 500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:23:33"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-025",
+  "rank": 25,
+  "file_name": "025_val_imagesc_c_u_f_cuf43c00_99403735.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3722",
+    "document_date": "2001-01-24",
+    "sender": "Lashley Auss (919)416-3722",
+    "receiver": "Same Recipient",
+    "origin": "DURHAM, NC",
+    "destination": "Reston, VA",
+    "reference_number": "-",
+    "unit_price": 24.34,
+    "total_amount": 24.34,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:06:11"
+}

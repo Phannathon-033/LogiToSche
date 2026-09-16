@@ -1,0 +1,301 @@
+﻿rank,id,file_name,document_type,document_number,document_date,sender,receiver,origin,destination,reference_number,unit_price,total_amount,currency,overall_confidence,completeness
+1,DOC-001,001_train_imagesv_v_t_j_vtj11e00_87065032.png,invoice,9157,1987-07-30,"HOMEVIEWERPUBLICATIONS,INC.",LORILLARD MEDIA,"Philadelphia, PA 19106","new york, NY 10103",LM 2565,12675.0,10773.75,USD,97,100
+2,DOC-002,002_train_imagesw_w_h_d_whd35f00_0060118998.png,invoice,121737,1994-11-16,MID AMERICA,MATT STOCK,"NEENAH, WI 54957-0427","STAMFORD, CT 06904-2380",-,89.97,100.0,USD,92,91
+3,DOC-003,003_train_imagesm_m_o_m_mom34c00_83645350_5352.png,invoice,21998-8,1998-02-19,"ASSOCIATION OF NATIONAL ADVERTISERS, INC.",-,"NEW YORK, NY 10017","Greensboro, NC 27408",-,1000.0,16750.0,USD,87,82
+4,DOC-004,004_train_imagesh_h_o_m_hom34c00_83645348.png,invoice,21998-8,1998-02-19,"ASSOCIATION OF NATIONAL ADVERTISERS, INC.",-,"NEW YORK, NY 10017","Greensboro, NC 27408",-,1000.0,16750.0,USD,87,82
+5,DOC-005,005_train_imagesk_k_s_d_ksd53c00_92243414_3421.png,invoice,10020,1987-09-09,TimeInc.Magazines,MS BETTY EPPERSON,"NEW YORK, NY 10020","FO R TU, NE",-,76738.0,76738.0,USD,92,91
+6,DOC-006,006_train_imagesg_g_o_i_goi66d00_514225065+-5065.png,invoice,27102,1999-12-22,Inventory on or after,-,ater Teresa M. Swith,-,-,7006.0,7006.0,USD,82,73
+7,DOC-007,007_train_imagest_t_q_y_tqy64c00_91505655_5656.png,invoice,94604,1985-01-22,"OAKLAND TRIBUNE, INC.",-,"Oakland, CA 94604","NEW YCRK, NY 10019",DATE,5935.35,5935.35,USD,92,91
+8,DOC-008,008_train_imagesx_x_u_j_xuj11e00_87064711.png,invoice,063161002,1987-06-25,ORIGIN,-,BS MÄGAZINES,"NEW YORK, NY 10174",-,11690.0,11690.0,USD,87,82
+9,DOC-009,009_train_imagesv_v_b_e_vbe63e00_2030138090.png,invoice,A22745359,1992-09-30,FISHER.[1;1H[5i[4i[5i[4i[5i[4i[5i,-,"RALEIGH, NC 27629","CHESTER, VA 23831",-,943.0,943.0,USD,87,82
+10,DOC-010,010_train_imagesu_u_c_o_uco00e00_91694224.png,invoice,235,1990-05-18,New Nork,NEW YORK,"MELVILLE, NY 11747","NEW YORK, NY 10016",-,6013.82,6013.82,USD,92,91
+11,DOC-011,011_val_imagest_t_m_m_tmm44a00_82293532.png,invoice,DEN024259,2020-07-14,FREEBORN,DENJOHS,"Pedoral, ID","DENVER, CO 80202",-,2414.68,2414.68,USD,92,91
+12,DOC-012,012_train_imagesc_c_f_r_cfr47e00_2030413033.png,invoice,10837,1992-06-09,Anderson Machine Mfg. Co.. Inc.,SHIP TO,Net 30,"Richmond, VA 23261",-,1270.0,1270.0,USD,92,91
+13,DOC-013,013_train_imageso_o_k_z_okz00e00_94415089.png,invoice,1300,1991-05-01,DISPLAY PERIOD,-,"New York, NY 10016",-,-,4446.0,4446.0,USD,82,73
+14,DOC-014,014_train_imagesi_i_o_e_ioe23d00_513261428_513261430.png,invoice,186,1990-03-30,"P R O M O T I O N A L M A R K E T I N G , I N C.",-,"Salem, NC 27102",-,-,60610.31,186289.0,USD,82,73
+15,DOC-015,015_val_imagesp_p_p_r_ppr90d00_518253442+-3448.png,invoice,75586,1998-02-26,-,-,Destination,(S),-,0.32,191.28,THB,82,73
+16,DOC-016,016_val_imagesj_j_u_f_juf43c00_99403740.png,invoice,3722,2001-01-24,Laphley Ru3s (919X416-3722,Same Recipient,"DURHAM, NC","Charleston, SC",-,24.34,24.34,USD,92,91
+17,DOC-017,017_train_imagesp_p_d_r_pdr62d00_82572796.png,invoice,237,2000-01-21,Location,Bugen-Allyar Whole Ship To,"HUNTSVILLE, AL","DURHAM, NC 27702",-,0.2,3057.0,USD,92,91
+18,DOC-018,018_test_imagesq_q_m_a_qma54c00_80703458.png,invoice,2196,1981-11-01,"A. H.VILLEPIGUE, INC.",-,"LORILLARD, OH",-,-,3774.0,3774.0,USD,82,73
+19,DOC-019,019_test_imagesw_w_n_x_wnx18d00_2020157193.png,invoice,90517,1968-01-22,Coors Ceramics Company,PO NUMBER,"RICHMOND, VA 23234",DATE,46303,61155.76,61155.76,USD,97,100
+20,DOC-020,020_val_imagesk_k_t_j_ktj11e00_87065022.png,invoice,11134,1987-10-07,"HOME VIEWER PUBLICATIONS, INC.",LORILLARD MEDIA,"Philadelphia, PA 19106",-,LM 1363,12575.0,10772.75,USD,92,91
+21,DOC-021,021_train_imagesu_u_q_p_uqp50e00_92679719.png,invoice,042480,1993-04-23,COMM,-,"New York, NY 10022","LORILLARD TOBACCO, CO",-,75.0,5330.0,USD,87,82
+22,DOC-022,022_test_imagesi_i_r_c_irc21a00_0071006676.png,invoice,121710,2022-11-02,MID AMERICA,CHRIS SURT,"America, CT","NEENAH, WI 54957-0427",-,285.41,321.63,USD,92,91
+23,DOC-023,023_train_imagesk_k_f_z_kfz64c00_91507726_7727.png,invoice,102,1984-08-07,LORILLARD MEDIA SERVICES (LMS),"LORILARD,BULOVA, CHA, LOENS CORP","MATIONAL, CO","ARE, IN",-,208.65,208.65,USD,92,91
+24,DOC-024,024_train_imagesa_a_k_w_akw10c00_2085538660.png,purchase_order,59276-1,2001-12-13,DEC 13 2001 11:24AM,-,"Richmond, VA 25234","Federal Employee, ID",3328,12667.55,4108.33,USD,92,91
+25,DOC-025,025_val_imagesc_c_u_f_cuf43c00_99403735.png,invoice,3722,2001-01-24,Lashley Auss (919)416-3722,Same Recipient,"DURHAM, NC","Reston, VA",-,24.34,24.34,USD,92,91
+26,DOC-026,026_train_imagesj_j_w_t_jwt10c00_2085532852.png,invoice,2085532852,2001-10-22,NEW YORK MEDICAL COLLEGE,-,"VALHALLA, NY 10595","Richmond, VA 23234",-,32422.75,32422.75,USD,87,82
+27,DOC-027,027_train_imagesk_k_r_c_krc21a00_0071006678.png,invoice,121710,1994-11-17,MID AMERICA,CHRIS BURT,"NEENAH, WI 54957-0427","SURFACE SLIT, IN",-,3.0,321.63,USD,92,91
+28,DOC-028,028_test_imagesu_u_m_g_umg41e00_80233786.png,purchase_order,401,1985-12-03,BIOTECHNOLOGIES CORPORATION,-,"Greensboro, NC 27420",-,311A,1100.0,1100.0,USD,87,82
+29,DOC-029,029_train_imagesh_h_a_n_han13e00_2057992645.png,invoice,-,1995-05-17,Philip Morris USA BUSINESS,-,"Richmond, VA 23284-3039",-,-,20000.0,20000.0,USD,77,64
+30,DOC-030,030_train_imagesf_f_h_t_fht00e00_80703462.png,invoice,h1/1,1981-11-01,"A. H.VILLEPIGUE, INC.",-,"LORILLARD, OH","OUTD O, OR",-,1678.6,1678.6,USD,87,82
+31,DOC-031,031_train_imagest_t_s_y_tsy33c00_99407073.png,bill_of_lading,7911,2000-07-06,Lashley Auss (919)416-3722,Same Recipient,"DURHAM, NC","Now York, NY",-,14.04,14.04,USD,92,91
+32,DOC-032,032_train_imagesp_p_d_a_pda84c00_91695282_5283.png,invoice,14751,1984-11-05,-,CASHIER 5TH FLOOR,AL COPY,-,-,38733.26,38733.26,USD,82,73
+33,DOC-033,033_test_imagesb_b_e_g_beg41e00_80233885.png,invoice,311D,1986-01-15,"RIES AMERICA, INC","Daniel J. Heck, Ph.D","Greensboro, NC 27420-1688","TORES AMERICA, NC",-,2250.0,2250.0,USD,92,91
+34,DOC-034,034_train_imagesa_a_j_e_aje21e00_87103889.png,invoice,30666,1983-01-13,DAWSON RESEARCH CORPORATION,-,"Greensboro, NC 27420","Greensboro, NC",-,415.0,415.0,USD,87,82
+35,DOC-035,035_train_imagesy_y_v_k_yvk53a00_2048386587.png,invoice,5323,1996-02-02,FEB-02-1996,Philip Morris,"Bethel Park, PA 15102-3622",-,-,75.0,206.9,USD,87,82
+36,DOC-036,036_train_imagesd_d_d_o_ddo00e00_91694267.png,invoice,235,1990-08-03,Neweday,NEW YORK,"NEW YORK, NY 10016","MELVILLE, NY 11747",-,3265.04,3265.04,USD,92,91
+37,DOC-037,037_train_imagesw_w_p_q_wpq25a00_92872552.png,purchase_order,25911,2002-08-06,BATCH,Accounts Payable Department,"New York, NY 10016","New York, NY 10010-5201",AMOUNT,45.0,170.0,USD,97,100
+38,DOC-038,038_train_imagese_e_o_b_eob64a00_89723759.png,invoice,1539,1982-01-01,"COMPANY,INC",now,-,-,-,26220.0,26220.0,GBP,82,73
+39,DOC-039,039_train_imagesj_j_j_c_jjc74c00_91591545_1548.png,purchase_order,081802248,1988-04-30,Las Angeles Times,MS BETTY EPPERSON,"Los Angeles, CA 90053","NEW YORK, NY 10016",-,55635.9,55635.9,USD,92,91
+40,DOC-040,040_test_imagesz_z_q_p_zqp50e00_92679728.png,invoice,041730,1993-03-22,COMM,-,"New York, NY 10022","LORILLARD TOBACCO, CO",-,876.58,876.58,USD,87,82
+41,DOC-041,041_train_imagesf_f_r_p_frp50e00_92679735.png,invoice,041472,2016-02-00,COMM,-,"New York, NY 10022","LORILLARD TOBACCO, CO",-,140.7,140.7,USD,87,82
+42,DOC-042,042_train_imagesu_u_i_y_uiy61c00_2084061330.png,invoice,1304,2015-03-07,"PROFESSIONAL SPORTS MARKETING, INC.",MR. GARY CAPREOL,"New York, NY 10017","San Francisco, CA",-,187500.0,187500.0,USD,92,91
+43,DOC-043,043_train_imagesz_z_m_g_zmg05a00_2074950031_0032.png,invoice,P55990,1993-03-18,MAR-18-93 THU 14:37,UNIVERSAL CONS. COMMODITIES,ICY # R-35389,UNITED STATES LAW PROHIBIT,-,200000.0,200000.0,USD,92,91
+44,DOC-044,044_train_imagesq_q_t_j_qtj11e00_87065027.png,invoice,11113,1987-08-20,"HOME VIEWER PUBLICATIONS, INC.",LORILLARD MEDIA,"Philadelphia, PA 19106","NEW YORK, NY",NPT-291-3,12675.0,12675.0,USD,97,100
+45,DOC-045,045_val_imagesi_i_i_b_iib52c00_2074104238.png,invoice,ORKCA34EBHT,1961-09-24,L CCHPANIS,-,itical Contribution-Campaign,-,-,200.0,200.0,USD,82,73
+46,DOC-046,046_train_imagest_t_b_s_tbs93c00_2064354208.png,invoice,PX0185,1997-09-30,Shunichi Kuriyama,-,-,-,-,100.0,800.0,USD,77,64
+47,DOC-047,047_test_imagesq_q_s_p_qsp50e00_92679791.png,invoice,42471,1993-05-03,COMM,-,"New York, NY 10022","LORILLARD TOBACCO, CO",-,41.25,41.25,USD,87,82
+48,DOC-048,048_train_imagesi_i_g_j_igj64d00_506436617.png,invoice,355By,1987-03-30,R. L. McGee,-,-,-,-,7.0,7.0,USD,77,64
+49,DOC-049,049_train_imagesa_a_k_q_akq50e00_92679121_92679122.png,invoice,10022,1993-09-23,COMM,-,"New York, NY 10022","Thad AiinueNew York, NY 10022",-,123.75,123.75,USD,87,82
+50,DOC-050,050_train_imagesa_a_f_l_afl95e00_2042824916.png,invoice,65071,1982-12-16,"PUBLIC RELATIONS AIDS, INC. 330 West 34th Street. New York. N.Y 10001 - 212/947-773",-,"New York, NY 10017",-,Job,66.1,66.1,USD,87,82
+51,DOC-051,051_train_imagesp_p_i_t_pit54a00_91654454_4455.png,invoice,101,1990-09-01,AUG 06 RECO,-,"NEW YORK, NY 10036",-,TERMS,19116.64,19116.64,USD,87,82
+52,DOC-052,052_train_imagesv_v_c_a_vca84c00_91695242_5243.png,invoice,15272,1984-12-10,-,EBETTY EFFEESCN,AL COPY,-,-,49451.6,49451.6,USD,82,73
+53,DOC-053,053_train_imagesu_u_y_f_uyf70e00_91573805.png,invoice,01832,1989-12-31,Post-Tribune,-,"Gary, IN 46402","NEWYORK, NY 10016-5895",-,2240.8,2240.8,USD,87,82
+54,DOC-054,054_val_imagesb_b_a_v_bav70e00_91386909.png,invoice,12125453448,2008-06-20,THOMAS COOK TRAVEL,-,"CHICAGO, IL 60611","NEW YORK, NY 10016",-,195.0,195.0,USD,87,82
+55,DOC-055,055_train_imagesy_y_l_i_yli35e00_2024526282.png,invoice,M00136,1992-02-19,Healthy Buildings International.Inc.,-,"Fairfax, VA 22030",-,-,5.76,2572.22,USD,82,73
+56,DOC-056,056_val_imagesw_w_c_o_wco00e00_91694232.png,invoice,235,1990-05-13,New Nork,NEW YORK,"MELVILLE, NY 11747","NEW YORK, NY 10016",-,219.73,8695.6,USD,92,91
+57,DOC-057,057_val_imagesu_u_d_r_udr62d00_82572803.png,invoice,115741,2024-01-05,01/31/00,PO NO,"Bowling Grgen, KY 42102","REIDSUILLE CRO, CO",SHIV,6357.2,6357.2,USD,97,100
+58,DOC-058,058_train_imagesa_a_i_q_aiq25a00_92873570.png,purchase_order,04-2678,2001-12-31,Mediamatic System,Lorrillard,"Chicago, IL 60606","Chicago, IL 60611-2927",Number,132.89,132.89,USD,97,100
+59,DOC-059,059_train_imagesw_w_w_c_wwc23d00_513280091.png,purchase_order,401,1992-04-15,"s Attornbys' Fees, and court couts. Payment of servico charg",R.J. RENOLDS,"Fresno, CA 93706","SALEM, NC 27107",WINSTON-SALEM,10905.0,12610.39,USD,97,100
+60,DOC-060,060_train_imagesq_q_u_f_quf43c00_99403791.png,invoice,tShi6Label,2000-12-11,Lashley Pluss (919)418-3722,Same Recipient,"DURHAM, NC","Chicago, IL",-,9.05,9.05,USD,92,91
+61,DOC-061,061_train_imagesh_h_j_b_hjb52c00_2074104213.png,invoice,-,1961-09-24,ID,-,itical Contribution-Campaign,"CO A, NY",-,500.0,500.0,USD,82,73
+62,DOC-062,062_train_imagesv_v_f_i_vfi35e00_2024526069.png,invoice,M00094,1991-10-23,Healthy Buildings Intemaional.Inc,-,"Fairfax, VA 22030","Fairax, VA 22030",-,10062.68,10062.68,USD,87,82
+63,DOC-063,063_train_imagese_e_j_b_ejb52c00_2074104216.png,invoice,-,2024-09-26,CAPTALCORP,-,itical Contribution-Campaign,"DESC, ID",ID,500.0,500.0,USD,87,82
+64,DOC-064,064_train_imagesx_x_s_f_xsf43c00_99403839.png,invoice,V00,2000-11-14,crtShip Lab,Same Recipient,"DURHAM, NC","Washington, DC",-,10.97,10.97,THB,92,91
+65,DOC-065,065_train_imagesx_x_f_r_xfr13c00_91513246.png,invoice,05573,1985-04-02,ORIGINAL,-,"GANNETT OUTDOOR, CO",-,-,4833.33,4833.33,USD,82,73
+66,DOC-066,066_train_imagesa_a_u_l_aul87e00_2024526067.png,invoice,4258,1991-10-31,-,-,"Fin, VA 22030","inax, VA 22030",-,2500.0,6177.02,USD,82,73
+67,DOC-067,067_test_imagesy_y_t_l_ytl87e00_2024526063.png,invoice,4257,1991-10-31,Park Avenue,-,-,-,-,346.5,346.5,USD,77,64
+68,DOC-068,068_train_imagesy_y_o_f_yof41e00_80234901_80234904.png,invoice,032,1986-03-11,MICROBIOLOGICAL,SHIPPED TO,AL INVOICE,LORILLARD RESEARCH CENTER,-,5300.0,5300.0,USD,92,91
+69,DOC-069,069_train_imagesa_a_m_i_ami35e00_2024526274.png,invoice,CH0194,1992-01-23,"Rita Stark, all with receipts and",-,"f the account of Rita Stark of, AK",-,-,101190.63,161905.02,USD,82,73
+70,DOC-070,070_train_imagesg_g_i_t_git54a00_91654505.png,invoice,12-7,1990-02-01,M. Carlus,-,"NEW YORK, NY 10036","NEW YORK, NY 10038",-,4615.0,43078.28,USD,87,82
+71,DOC-071,071_train_imagesv_v_i_b_vib52c00_2074104225.png,invoice,-,1961-09-24,ID,-,itical Contribution-Campaign,-,-,500.0,500.0,USD,77,64
+72,DOC-072,072_train_imagesz_z_a_a_zaa34c00_96211232.png,purchase_order,PROMO1-MARL,1997-06-02,INCORPORATED,-,30410,"NAPERVILLE, IL 60563",-,2.56,76533.6,USD,87,82
+73,DOC-073,073_val_imagesd_d_i_g_dig62d00_83545353_5355.png,invoice,L05112459,1999-07-22,THIS INVOICE,L05-JONE,"Federal, ID","CHICAGO, IL 60601",99070211,556655.16,556655.16,USD,97,100
+74,DOC-074,074_train_imagese_e_u_f_euf43c00_99403736.png,invoice,3722,2001-01-24,Prom: Lashlay Atess (919)416-3722,Same Recipient,"DURHAM, NC","San Francisco, CA",-,42.74,42.74,USD,92,91
+75,DOC-075,075_train_imagesv_v_r_h_vrh35e00_2024525507.png,invoice,5717,1994-01-31,A2),-,"Fairiax, VA 22030",-,-,8000.0,1350.0,USD,82,73
+76,DOC-076,076_train_imagesm_m_m_j_mmj97e00_1000047237.png,invoice,17631,1977-12-22,OUR AGENCY TO THE PARTICIPATING,-,-,-,-,641.0,641.0,USD,77,64
+77,DOC-077,077_train_imagesv_v_m_m_vmm44a00_82293530.png,invoice,1477,1999-07-20,FREEBORN PET,DENJOHS,"Faderal, ID","DENVER, CO 80202",-,696.03,2011.6,USD,92,91
+78,DOC-078,078_train_imagesu_u_u_a_uua35e00_2024329111.png,invoice,94501,1993-07-06,Layard Associates,"Michael T. Buckley, Esq","Alameda, CA 94501","Travel to Washington, DC",-,13252.95,13252.95,USD,92,91
+79,DOC-079,079_train_imagesj_j_i_b_jib52c00_2074104237.png,invoice,-,2024-09-26,ID,-,itical Contribution-Campaign,"KOR ASE RY MCUACOS AY P, CO",-,200.0,200.0,GBP,82,73
+80,DOC-080,080_train_imageso_o_h_l_ohl34c00_96439061.png,purchase_order,4215,1992-07-01,OUTDOOR EAST,-,"Columbia, SC 29240","NEW YORK, NY 10016-5895",-,526.91,526.91,USD,87,82
+81,DOC-081,081_train_imagesx_x_i_b_xib52c00_2074104223.png,invoice,-,1961-09-24,ID,-,itical Contribution-Campaign,"U COHIANLS, ID",-,500.0,500.0,USD,82,73
+82,DOC-082,082_train_imagesm_m_e_i_mei52e00_2045455668.png,invoice,422-10A,1993-10-19,S-139PV(REV 12/91)3M,COPY,-,-,-,204.0,204.0,USD,82,73
+83,DOC-083,083_test_imagesa_a_y_x_ayx34c00_83565198.png,invoice,?50,1998-11-30,-,-,"GORDON FLESCH, CO","CDOUGALL, SC",-,1.71,1.71,USD,82,73
+84,DOC-084,084_train_imagesl_l_t_d_ltd06e00_2044686026.png,invoice,88649,1985-04-23,"ANNE ROTHSCHILD & CO., INC.","GIVE INSTRUCTIONS HOW TO SHIP: VIA MAIL, UNITED",ALS AND PRINTS ARE NORMALLY RETURHED TOCUSTOM,Philip Morris,-,175.91,182.91,USD,92,91
+85,DOC-085,085_train_imagest_t_a_b_tab74e00_1003200031_1003200035.png,purchase_order,3113,1981-01-13,HÉWLETT hD PACKARD,Ms. Robin Kinser,"REFER TO THIS, IN","Richmond, VA 23261",-,132000.0,132000.0,USD,92,91
+86,DOC-086,086_train_imagesm_m_p_t_mpt24c00_96148745.png,invoice,500,1994-08-09,NO. WALL-439880,COPY,"WALGREEN, CO","PLAN, IA",-,44.0,607.5,USD,92,91
+87,DOC-087,087_train_imagesk_k_q_s_kqs23d00_512982478_512982479.png,invoice,45915-0,1989-07-13,IMPORTANT,SHIP TO,ls 317-632-2692,"SHELBYVILLE, IN",-,600.0,600.0,USD,92,91
+88,DOC-088,088_train_imagesv_v_c_n_vcn00e00_92204693.png,invoice,111896,1993-10-12,WOMEN'SMAGAZINES,EILEEN ANTIGNIELLC,"NEW YORK, NY",-,-,21975.0,210000.0,USD,87,82
+89,DOC-089,089_test_imageso_o_p_t_opt24c00_96148752.png,invoice,500,1994-04-27,NO. WAI.L-439880,COPY,"WALGREEN, CO","PLAN, IA",-,44.0,663.5,USD,92,91
+90,DOC-090,090_train_imagesz_z_w_s_zws35f00_0060092528.png,invoice,11/09/93,1993-11-09,ARS,-,"THE AMERICAN TOBACCO, CO","STAMFORD, CT",-,1886.74,1886.74,USD,87,82
+91,DOC-091,091_test_imageso_o_t_d_otd40c00_ti10161636.png,invoice,4959,1992-11-30,"Healthy Buikdings.International,Inc",-,"Faifax, VA 22030","Fasfac, VA 22030",-,29000.0,29000.0,USD,87,82
+92,DOC-092,092_train_imagesv_v_s_u_vsu13c00_89690863.png,invoice,Sa1,2032-03-06,NATIONAL BLACK MONITOR,Mr. Sa1 Ragusa,"NEW YORK, NY 10001",-,ATTN,3950.1,3950.1,USD,92,91
+93,DOC-093,093_train_imagesy_y_e_w_yew35f00_0060096969.png,invoice,USA-10018,1992-04-30,EIVED BY,Contact,"STAMFORD, CT 06904-2380","STAMFORD, CT",M12963,8926.16,8926.16,USD,97,100
+94,DOC-094,094_test_imagesu_u_b_k_ubk97e00_1000047656.png,invoice,10017,1975-11-19,OUR AGENCY TO THE PARTICIPATING,-,-,-,-,528.4,528.4,USD,77,64
+95,DOC-095,095_val_imagesl_l_a_t_lat54a00_91693312.png,invoice,95246,1992-12-02,PETERSEN PUBLISHING COMPANY,-,"PETERSEN PUBLISHING, CO","CHICASO, IL 60554",-,4292.5,4292.5,USD,87,82
+96,DOC-096,096_train_imagesy_y_h_i_yhi35e00_2024526012.png,invoice,CH0156,2023-08-00,"Healthy Buildings Intemational,Inc.",-,"Fairfax, VA 22030","Washington, DC",-,8000.0,4567.0,USD,87,82
+97,DOC-097,097_train_imagesz_z_g_b_zgb33d00_512773032_512773042.png,invoice,1795-1804,1994-03-01,Wattenspa,-,AUSTRIA,-,-,55.0,55.0,USD,82,73
+98,DOC-098,098_test_imageso_o_j_j_ojj41e00_80211385.png,invoice,152E,1984-05-04,"LABORATORIES AMERICA, INC",-,"Greensboro, NC 27420","VIENNA, VA",-,1950.0,1950.0,USD,87,82
+99,DOC-099,099_test_imagesj_j_o_g_jog41e00_80233836.png,invoice,286B,1985-11-12,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","VIENNA, VA",-,1200.0,1200.0,USD,92,91
+100,DOC-100,100_train_imagesb_b_y_f_byf41e00_80234079.png,purchase_order,5400,1984-08-08,"LABORATORIES AMERICA, INC.",Melanee B. Bennett,"Greensboro, NC 27420",-,354B,2050.0,2050.0,USD,92,91
+101,DOC-101,101_train_imagesp_p_w_f_pwf41e00_80234041.png,invoice,0061,1985-04-17,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"VIENNA, VA 22180","Greensboro, NC 27420",-,2050.0,2050.0,USD,92,91
+102,DOC-102,102_test_imageso_o_p_y_opy74c00_91652351.png,invoice,011990041500770,1990-02-01,MS EILEEN ANTIONIELLO,-,"DAYS FROM, MS","NEW YORK, NY 10016-5896",-,561916.0,66.96,USD,87,82
+103,DOC-103,103_test_imagesy_y_j_j_yjj41e00_80211395.png,invoice,5400,1984-08-08,"LABORATORIES AMERICA, INC",Melanee Bennett,"Greensboro, NC 27420","VIENNA, VA",-,1950.0,1950.0,USD,92,91
+104,DOC-104,104_train_imagesj_j_x_f_jxf41e00_80234061.png,invoice,505053,1984-11-12,"LABORATORIES AMERICA, INC.",-,"VIENNA, VA","Greensboro, NC 27420",-,2050.0,2050.0,USD,87,82
+105,DOC-105,105_train_imagesj_j_x_f_jxf54a00_92676571.png,invoice,D14013,1993-08-27,LORILLARD MEDIA SERVICES,EILEEN ANTONIELLO,"NEW YORK, NY 10001-5209","YORK, NY 10016-5895",-,26334.0,4397.77,USD,92,91
+106,DOC-106,106_train_imagesq_q_e_g_qeg41e00_80233900.png,invoice,311D,1985-11-12,"LABORATORIES AMERICA, INC",Dr. Connie Stone,"Greensboro, NC 27420",-,-,2250.0,2250.0,USD,87,82
+107,DOC-107,107_test_imagesa_a_g_c_agc90d00_580066976+-6976.png,invoice,28373,2021-07-06,ctional Lcoué,-,dym,"JN TOEHO IL, LA",-,3.3,8653.4,USD,87,82
+108,DOC-108,108_test_imagesi_i_o_g_iog41e00_80233835.png,invoice,605071,1985-11-12,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","VIENNA, VA",-,1200.0,1200.0,USD,92,91
+109,DOC-109,109_train_imagesn_n_e_g_neg41e00_80233897.png,invoice,311D,1985-12-04,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","VIENNA, VA",-,2250.0,2250.0,USD,92,91
+110,DOC-110,110_train_imagesz_z_j_c_zjc00e00_89001756.png,invoice,152E,1984-02-21,"LABORATORIES AMERICA, INC",Dr. Connie Stone,"Lorillard Research Center, OK","Greensboro, NC 27420",-,1950.0,1950.0,USD,92,91
+111,DOC-111,111_train_imagesp_p_e_e_pee21e00_87104144.png,invoice,87104144,1985-03-29,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"VIENNA, VA 22180","VIENNA, VA",-,1200.0,1200.0,USD,92,91
+112,DOC-112,112_train_imagesi_i_w_g_iwg43a00_89001786.png,invoice,354B,1984-05-04,"LABORATORIES AMERICA, INC.",Melanee: Bennett,"Greensboro, NC 27420","Namnemeyor, OK",-,2050.0,2050.0,USD,92,91
+113,DOC-113,113_train_imagesf_f_g_g_fgg41e00_80233954.png,invoice,162B,1985-08-21,"LABORATORIES AMERICA, INC",Dr. Connie Stone,"Greensboro, NC 27420","VIENNA, VA",-,2250.0,2250.0,USD,92,91
+114,DOC-114,114_test_imageso_o_z_g_ozg55a00_506593724+-3724.png,invoice,B7MSB019E,1987-07-17,"Long, Haymes & Carr Inc. 4O Charlois Blvd. Box 5627 Winston-Salem, NC 27113 (919)765-3630",R.J. Reynolds Tobacco Co. Page 1 of,"Salem, NC 27113","TO PRINTER, IN",-,30.0,27120.0,USD,92,91
+115,DOC-115,115_train_imagesk_k_e_e_kee21e00_87104139.png,purchase_order,87104139,1985-01-21,"LABORATORIES AMERICA, INC.",-,"Greensboro, NC 27420","VIENNA, VA",354B,2050.0,2050.0,USD,92,91
+116,DOC-116,116_train_imagesc_c_c_b_ccb52c00_2074104001.png,purchase_order,-,1996-09-19,COMPANY,-,CON -- WII be hand-dellvered,"alo Timathy Osmond, OK",Box635,2000.0,2000.0,USD,87,82
+117,DOC-117,117_train_imagesc_c_k_j_ckj41e00_80211400.png,invoice,334B,1985-04-22,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","VIENNA, VA",-,2250.0,2250.0,USD,92,91
+118,DOC-118,118_train_imagesm_m_v_d_mvd21e00_87104230.png,invoice,2843,1986-01-27,LABORATORIES AMERICAINC,Dr. Daniel J. Heck,"Greensboro, NC 27420","LABORATORIES AMERICA, NC",-,1200.0,1200.0,USD,92,91
+119,DOC-119,119_train_imagesh_h_g_b_hgb55f00_0060202534.png,invoice,0003584,1992-02-27,THE AMERICAN TOBACCO COMPANY,-,"GREENWICH, CT 08870-0811","GREENWICH, CT 06870-0811",-,199500.0,2127500.0,USD,87,82
+120,DOC-120,120_train_imagese_e_o_g_eog41e00_80233831.png,invoice,032218,1985-12-10,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420",-,-,1200.0,1200.0,USD,87,82
+121,DOC-121,121_train_imagest_t_w_f_twf41e00_80234045.png,invoice,35413,1985-04-03,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","VIENNA, VA",-,2050.0,2050.0,USD,92,91
+122,DOC-122,122_val_imagesz_z_v_k_zvk53a00_2048386586.png,invoice,15102,1995-12-01,-,Philip Morris,"Bethel Park, PA 15102-3622",-,-,75.0,22.17,USD,82,73
+123,DOC-123,123_train_imagesb_b_o_g_bog41e00_80233828.png,invoice,607083,1986-01-27,"LABORATORIES AMERICA,INC",Dr. Daniel J. Heck,"Greensboro, NC 27420","LABORATORIES AMERICA, NC",-,1200.0,1200.0,USD,92,91
+124,DOC-124,124_train_imagesk_k_w_g_kwg43a00_89001784.png,invoice,152E,1984-05-04,"LABORATORIES AMERICA, INC.",-,"VIENNA, VA 22160","Greensboro, NC 27420",-,1950.0,1950.0,USD,87,82
+125,DOC-125,125_train_imagesm_m_w_f_mwf41e00_80234038.png,invoice,354B,1985-04-17,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","VIENNA, VA",-,2050.0,2050.0,USD,92,91
+126,DOC-126,126_train_imagesk_k_l_b_klb52c00_2074104149.png,invoice,-,1996-10-23,COMPANY,-,itical Contribution-Campaign,"ahassee, FL 32399",-,500.0,500.0,USD,82,73
+127,DOC-127,127_train_imagesf_f_f_g_ffg41e00_80233915.png,invoice,311D,1985-08-23,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","VENNA, VA",-,2250.0,2250.0,USD,92,91
+128,DOC-128,128_train_imagesi_i_v_g_ivg43a00_89001813.png,invoice,505054,1984-11-12,LABORATORIES AMERICA INC,-,"Greensboro, NC 27420","LABORATORIES AMERICA, NC",-,2050.0,2050.0,USD,87,82
+129,DOC-129,129_train_imagesh_h_j_i_hji56c00_2075573368.png,invoice,1073468000,1991-03-19,MANAGEMENT CORPORATION,-,"New York, NY 10022","York, NY 10022",-,734680.0,734680.0,USD,87,82
+130,DOC-130,130_train_imagesg_g_y_f_gyf41e00_80234084.png,invoice,354B,1984-07-13,"LABORATORIES AMERICA, INC",Melanee B. Bennett,"Greensboro, NC 27420","VIENNA, VA",-,2050.0,2050.0,USD,92,91
+131,DOC-131,131_train_imagesm_m_l_k_mlk06e00_2043948067.png,bill_of_lading,120,1986-02-07,ON THEIR SUBJECT MATTER. NO REVISION OF OR ADDITION TO ANY O,delivery address,al bill of lading or transportation receipt t,"EFFECTIVE WHETHER, IN",number,48600.0,48600.0,USD,97,100
+132,DOC-132,132_train_imagesm_m_w_g_mwg43a00_89001782.png,invoice,152E,1984-05-04,"LABORATORIES AMERICA, INC.",Melanee Bennett,"VIENNA, VA","Greensboro, NC 27420",-,1950.0,1950.0,USD,92,91
+133,DOC-133,133_val_imagesf_f_j_t_fjt00e00_80703529.png,invoice,1509,1981-03-01,"A. H. VILLEPIGUE, INC.",-,"LORILLARD, OH",-,-,3100.0,3100.0,USD,82,73
+134,DOC-134,134_train_imagesa_a_x_f_axf41e00_80234052.png,invoice,354B,1985-02-21,"LABORATORIES AMERICA, INC.",-,"Greensboro, NC 27420","Mmemeyer, OK",-,2050.0,2050.0,USD,87,82
+135,DOC-135,135_train_imagesc_c_v_s_cvs78e00_2023527755.png,invoice,-,1988-07-11,BUSINESS EXPENSE VOUCHER,-,DESTINATION,COMMENTS:(Note if on Company aircraft),-,107.55,107.55,USD,82,73
+136,DOC-136,136_train_imagesp_p_i_b_pib52c00_2074104231.png,invoice,-,1996-09-01,ID,-,"Cape Coral, FL 33910","FOR SOT NUSAOSR O, CO",IO,500.0,500.0,USD,87,82
+137,DOC-137,137_train_imagesa_a_c_e_ace63e00_2030138098.png,invoice,A23008118,1992-10-26,FISHER.[1;1H[5i[4i[5i[4i[5i[4i[5i[4i[5i,-,YSEED CAPSULES 50/PK,"CHESTER, VA 23831",-,8.06,1595.46,USD,87,82
+138,DOC-138,138_train_imagesj_j_v_d_jvd21e00_87104227.png,invoice,608031,1986-02-04,LABORATORIES AMERICA,Dr. Daniel J. Heck,"Greensboro, NC 27420-1688","Minnemeya, OK",-,1200.0,1200.0,USD,92,91
+139,DOC-139,139_train_imagesf_f_e_g_feg41e00_80233889.png,invoice,21D,1986-01-15,"LABORATORIES AMERICA, INC.","Daniel J. Heck, Ph.D","VIENNA, VA 22180","Greensboro, NC 27420",-,2250.0,2250.0,USD,92,91
+140,DOC-140,140_train_imagesl_l_s_z_lsz47c00_2072654340.png,purchase_order,063-1132,1994-03-04,03/21 '94 10:27,-,"ORSYTH TOBACCO PRODUCTS, MA","ROCKVILLE, MD 20850",-,3.25,1249.2,USD,87,82
+141,DOC-141,141_train_imagesv_v_e_e_vee21e00_87104150.png,invoice,348A,1985-02-06,"LABORATORIES AMERICA, INC.",-,"Greensboro, NC 27405","VIENNA, VA",-,21680.0,21680.0,USD,87,82
+142,DOC-142,142_test_imagese_e_d_g_edg41e00_80233859.png,invoice,286,1985-04-03,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","VIENNA, VA",-,400.0,400.0,USD,92,91
+143,DOC-143,143_train_imagesj_j_t_u_jtu91a00_2063116799.png,invoice,3488,1996-11-04,COMPANY,Lonnie Miller,itical Contribution,-,-,500.0,500.0,USD,87,82
+144,DOC-144,144_train_imagesz_z_w_g_zwg43a00_89001769.png,invoice,152E,1984-04-20,"LABORATORIES AMERICA, INC.",Melanee Bennett,"VIENNA, VA","Greensboro, NC 27420",-,1950.0,1950.0,USD,92,91
+145,DOC-145,145_train_imagesp_p_v_g_pvg43a00_89001806.png,invoice,354B,1984-10-23,"LABORATORIES AMERICA, INC.",-,"VIENNA, VA 22180","Greensboro, NC 27420",-,2050.0,2050.0,USD,87,82
+146,DOC-146,146_train_imagest_t_h_d_thd35f00_0060118995.png,invoice,54957-0427,2022-11-01,MID AMERICA,MATT STOCK,"America, CT","STAMFORD, CT",-,89.97,89.97,THB,92,91
+147,DOC-147,147_train_imagesz_z_c_g_zcg41e00_80233854.png,purchase_order,286B,1985-06-25,"LABORATORIES AMERICA, INC.","Dr, Connie Stone","Greensboro, NC 27420","JMimiemeyer, OK",-,400.0,400.0,USD,92,91
+148,DOC-148,148_train_imagesh_h_p_h_hph43a00_89001082.png,invoice,006A,1986-04-10,"LABORATORIES AMERICA, INC.",Dr. J. Daniel Heck,"VIENNA, VA","Greensboro, NC 27420-1688",-,500.0,500.0,USD,92,91
+149,DOC-149,149_train_imagesx_x_u_d_xud21e00_87104215.png,invoice,311D,1985-10-24,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","VIENNA, VA",-,4500.0,4500.0,USD,92,91
+150,DOC-150,150_train_imagesf_f_l_b_flb52c00_2074104154.png,invoice,-,1996-10-23,COMPANY,-,itical Contribution-Campaign,-,-,500.0,500.0,USD,77,64
+151,DOC-151,151_train_imageso_o_o_g_oog41e00_80233841.png,invoice,604060,1985-10-24,"LABORATORIES AMERICA, INC",Dr. Connie Stone,"VIENNA, VA","Greensboro, NC 27420",-,400.0,400.0,USD,92,91
+152,DOC-152,152_test_imagesn_n_g_g_ngg41e00_80233964.png,invoice,162C,1985-11-00,"LABORATORIES AMERICA, INC",Dr. Connie Stone,"VIENNA, VA","Greensboro, NC 27405",-,21680.0,21680.0,USD,92,91
+153,DOC-153,153_train_imagesl_l_y_f_lyf41e00_80234089.png,invoice,354B,1984-05-07,"LABORATORIES AMERICA, INC.",Melanee Bennett,"Greensboro, NC 27420","VIENNA, VA",-,2050.0,2050.0,USD,92,91
+154,DOC-154,154_train_imagesu_u_w_f_uwf41e00_80234046.png,invoice,509092,1985-03-26,"LABORATORIES AMERICA, INC.",-,"Greensboro, NC 27420",-,-,2050.0,2050.0,USD,82,73
+155,DOC-155,155_train_imagesp_p_w_g_pwg43a00_89001779.png,invoice,152E,1984-04-20,"LABORATORIES AMERICA, INC",Melanee Bennett,"VIENNA, VA","Greensboro, NC 27420",-,1950.0,4101.3,USD,92,91
+156,DOC-156,156_train_imagesn_n_o_h_noh43a00_89001102.png,invoice,343C,1986-06-23,"LABORATORIES AMERICA,INC",Dr. J. Daniel Heck,"Greensboro, NC 27420","LABDFATORIES AMERICA, NC",-,2850.0,2850.0,USD,92,91
+157,DOC-157,157_train_imageso_o_w_g_owg43a00_89001780.png,invoice,152E,1984-05-04,LABORATORIES AMERICA INC,Melanee Bennett,"VIENNA, VA 22180","Greensboro, NC 27420",-,1950.0,1950.0,USD,92,91
+158,DOC-158,158_train_imagesn_n_u_d_nud21e00_87104205.png,invoice,311D,1986-02-15,LABORATORIES AMERICA INC,Dr. Daniel J. Heck,"Greensboro, NC 27420-1688","LABORATORIES AMERICA, NC",-,2250.0,2250.0,USD,92,91
+159,DOC-159,159_val_imagesc_c_n_i_cni91e00_00921704.png,invoice,406205,1983-12-22,"LABORATORIES AMERICA,INC",Dr. Connie J. Stone,"Greensboro, NC 27420","VIENNA, VA",-,1950.0,1950.0,USD,92,91
+160,DOC-160,160_train_imagesw_w_w_f_wwf41e00_80234048.png,invoice,354B,1985-03-20,"LABORATORIES AMERICA, INC",-,"Greensboro, NC 27420","VIENNA, VA",-,2050.0,2050.0,USD,87,82
+161,DOC-161,161_train_imagesa_a_x_g_axg43a00_89001768.png,purchase_order,152,1984-05-04,"LABORATORIES AMERICA,INC",Melanee Bennett,"Greensboro, NC 27420",-,-,1950.0,1950.0,USD,87,82
+162,DOC-162,162_train_imagesy_y_n_n_ynn32d00_2048771132.png,purchase_order,20>116,1993-09-10,an Asian perspective; reviewing,-,-,-,B0X,78400.0,78400.0,USD,82,73
+163,DOC-163,163_test_imagesc_c_y_e_cye41e00_81440439.png,invoice,006A,1986-04-10,"LABORATORIES AMERICA, INC",Dr. J. Daniel Heck,"Greensboro, NC 27420-1688","TURNPIKE VIENNA, VA",-,500.0,500.0,USD,92,91
+164,DOC-164,164_train_imagesu_u_f_h_ufh43a00_89001460.png,invoice,286B,1985-10-24,"LABORATORIES AMERICA, INC",Dr. Connie Stone,"Greensboro, NC 27420","Monneneyor, OH",-,400.0,400.0,USD,92,91
+165,DOC-165,165_train_imagesi_i_d_g_idg41e00_80233863.png,invoice,286B,1985-04-17,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","VIENNA, VA",-,1200.0,1200.0,USD,92,91
+166,DOC-166,166_train_imagesg_g_j_b_gjb52c00_2074104214.png,invoice,-,2024-09-26,ID,-,itical Contribution-Campaign,"Eustis, FL 32736",-,500.0,500.0,USD,82,73
+167,DOC-167,167_train_imagesk_k_j_r_kjr23d00_512984780_512984781.png,invoice,10017,2028-03-00,McCANN-ERICKSON,RJT,"NEW YORK, NY 10017-0000",-,-,5000.0,5000.0,USD,87,82
+168,DOC-168,168_train_imagesd_d_p_h_dph43a00_89001086.png,invoice,343C,1986-05-13,"LABORATORIES AMERICA, INC",Dr. J. Daniel Heck,"Greensboro, NC 27420","Mnnemeyes, OK",-,2850.0,2850.0,USD,92,91
+169,DOC-169,169_train_imagesw_w_c_g_wcg41e00_80233851.png,invoice,1703,1985-08-23,"LABORATORIES AMERICA, INC.",-,"Greensboro, NC 27420","Mormemeyer, OK",-,400.0,400.0,USD,87,82
+170,DOC-170,170_train_imagest_t_x_o_txo24e00_2023592628.png,invoice,3488,1992-06-30,COMPANY,-,"KEEP, OR","REVIEW WITH, ME",-,121691.36,121691.36,USD,87,82
+171,DOC-171,171_train_imagesd_d_q_h_dqh43a00_89001060.png,invoice,115C,1986-03-03,"LABORATORIES AMERICA, INC.",Dr. J. Daniel Heck,"Greensboro, NC 27420","VIENNA, VA",-,11280.0,11280.0,USD,92,91
+172,DOC-172,172_train_imagest_t_e_g_teg41e00_80233903.png,invoice,603091,1985-09-26,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","gMnenuyer, OR",-,2250.0,2250.0,USD,92,91
+173,DOC-173,173_test_imagesm_m_b_e_mbe21e00_87104056.png,purchase_order,152E,1984-05-04,"LABORATORIES AMERICA, INC",Melanee Bennett,"Greensboro, NC 27420","Fii, OK",-,1950.0,1950.0,USD,92,91
+174,DOC-174,174_train_imagesb_b_f_g_bfg41e00_80233911.png,invoice,D2OO,1985-08-23,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"VIENNA, VA","Greensboro, NC 27420",-,2250.0,2250.0,USD,92,91
+175,DOC-175,175_test_imagesg_g_e_e_gee21e00_87104135.png,invoice,354B,1985-02-12,"LABORATORIES AMERICA, INC",-,"VIENNA, VA","Greensboro, NC 27420",-,2050.0,2050.0,USD,87,82
+176,DOC-176,176_train_imagesp_p_c_g_pcg41e00_80233844.png,invoice,603067,1985-09-12,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","VIENNA, VA",-,1200.0,1200.0,USD,92,91
+177,DOC-177,177_train_imagest_t_x_f_txf41e00_80234071.png,invoice,35113,1984-10-19,"LABORATORIES AMERICA, INC.",-,"Greensboro, NC 27420","VIENNA, VA",-,2050.0,2050.0,USD,87,82
+178,DOC-178,178_train_imagesr_r_j_j_rjj41e00_80211388.png,invoice,411060,1984-05-04,LABORATORIES AMERICA. INC,Melanee Bennett,"Greensboro, NC 27420","VIENNA, VA",-,1950.0,1950.0,USD,92,91
+179,DOC-179,179_train_imagesd_d_d_g_ddg41e00_80233858.png,invoice,510046,1985-04-08,"LABORATORIES AMERICA, INC.",Dr. Connie:Stone,"Greensboro, NC 27420",-,-,400.0,400.0,USD,87,82
+180,DOC-180,180_train_imagesa_a_a_h_aah55a00_506593712+-3712.png,invoice,M7MSB091T4CR1,1941-08-12,"Long, Haymes & Carr Inc. 40 Charlois Bivd., Box 5627 Winston-Salem NC 271l3 (919)765-3630",R.J. Reynolds Tobacco Co. Page 1 of,ally estimated as straight warning revision,-,-,635.0,635.0,USD,87,82
+181,DOC-181,181_train_imagesn_n_v_d_nvd23d00_513265741_513265875.png,invoice,10150008,1990-12-12,R J REYNOLDS TOBACCO COMPANY,LOUISE NORMAN,"SALEM, NC 27102","Irvine, CA 92718",-,4550.76,4550.76,USD,92,91
+182,DOC-182,182_train_imagesi_i_y_f_iyf41e00_80234086.png,invoice,354B,1984-05-04,"LABORATORIES AMERICA, INC",Melanee Bennett,"Greensboro, NC 27420","Nanemeyer, OK",-,2050.0,2050.0,USD,92,91
+183,DOC-183,183_train_imagesu_u_n_g_ung41e00_80233821.png,invoice,286B,1986-03-17,"LABORATORIES AMERICA, INC.",Dr. J. Daniel Heck,"VIENNA, VA","Greensboro, NC 27420",-,1200.0,1200.0,USD,92,91
+184,DOC-184,184_train_imagesr_r_w_f_rwf41e00_80234043.png,invoice,509106,1985-03-27,"LABORATORIES AMERICA, INC.",-,"VIENNA, VA","Greensboro, NC 27420",-,2050.0,2050.0,USD,87,82
+185,DOC-185,185_train_imagesh_h_x_g_hxg43a00_89001761.png,invoice,9073,1984-03-19,"LABORATORIES AMERICA,INC.",Melanie B. Bennett,"VIENNA, VA","Greensboro, NC 27420",-,1950.0,1950.0,USD,92,91
+186,DOC-186,186_train_imagese_e_e_e_eee21e00_87104133.png,invoice,87104133,1985-02-21,"LABORATORIES AMERICA, INC",-,"VIENNA, VA","Greensboro, NC 27420",-,2050.0,2050.0,USD,87,82
+187,DOC-187,187_train_imagesn_n_b_e_nbe21e00_87104057.png,purchase_order,152E,1984-04-10,"LABORATORIES AMERICA, INC.",Melanee B. Bennett,"Greensboro, NC 27420","VIENNA, VA",-,1950.0,1950.0,USD,92,91
+188,DOC-188,188_train_imagesv_v_j_j_vjj41e00_80211392.png,invoice,152,1984-05-04,"LABORATORIES AMERICA, INC.",Melanee Bennett,"Greensboro, NC 27420","VIENNA, VA",-,1950.0,1950.0,USD,92,91
+189,DOC-189,189_train_imagesn_n_q_h_nqh43a00_89001050.png,invoice,607056,1986-01-15,LABORATORIES AMERICAINC,"Daniel J. Heck, Ph.D","Greensboro, NC 27420-1688","VIENNA, VA",-,2250.0,2250.0,USD,92,91
+190,DOC-190,190_train_imagesu_u_t_z_utz47c00_2072654234.png,invoice,12300,1993-04-20,MOUNTAIN/SERVICE,ADDRESS,-,-,-,3.25,485.4,USD,82,73
+191,DOC-191,191_test_imagesc_c_d_g_cdg41e00_80233857.png,invoice,511114,1985-05-17,"LABORATORIES AMERICA, INC.",-,"Greensboro, NC 27420","VIENNA, VA",-,400.0,400.0,USD,87,82
+192,DOC-192,192_train_imagesv_v_o_h_voh43a00_89001094.png,invoice,610087,1986-05-28,"LABORATORIES AMERICA, INC",Dr. J. Daniel Heck,"VIENNA, VA","Greensboro, NC 27420",-,1350.0,1350.0,USD,92,91
+193,DOC-193,193_test_imagesc_c_j_r_cjr03a00_518041941+-1945.png,invoice,052395,2027-04-16,larry,-,-,-,-,6747.65,6747.65,USD,77,64
+194,DOC-194,194_train_imagesd_d_x_g_dxg43a00_89001765.png,purchase_order,152E,1984-05-04,LABORATORIES AMERICA INC,Melanee Bennett,"VIENNA, VA","Greensboro, NC 27420",-,1950.0,1950.0,USD,92,91
+195,DOC-195,195_train_imagesi_i_v_d_ivd21e00_87104226.png,purchase_order,286B,1986-02-07,"LABORATORIES AMERICA, INC",Dr. Daniel J. Heck,"VIENNA, VA 22180","Greensboro, NC 27420-1688",-,400.0,400.0,USD,92,91
+196,DOC-196,196_train_imagesx_x_c_g_xcg41e00_80233852.png,invoice,9200,1985-08-21,"LABORATORIES AMERICA, INC.",Dr. Connie Stone,"Greensboro, NC 27420","Nknnemeger, OK",-,1200.0,1200.0,USD,92,91
+197,DOC-197,197_train_imagesg_g_b_x_gbx74c00_91579548.png,purchase_order,205633,1986-05-06,THE DAILY REVIEW,-,"RD TOBACCO, CO","NEW YORK, NY 10174",BOX,798.0,798.0,USD,92,91
+198,DOC-198,198_train_imagesa_a_m_o_amo00e00_91664920.png,purchase_order,033262,2009-04-02,The-New York Times Company Magazine Group,EILEEN ANTIONIELLO,"NEW YORK, NY 10008","NEW YORK, NY",BOX,33946.5,96990.0,USD,97,100
+199,DOC-199,199_train_imagese_e_b_a_eba84c00_91689707.png,purchase_order,4103830,1992-04-29,TimeInc.Magazines,MS EILEEN ANTONIELLO,"NEW YORK, NY 10020","NEW YORK, NY 10016",B0X,23199.81,23199.81,USD,97,100
+200,DOC-200,200_val_imagesq_q_l_s_qls94d00_505838425.png,purchase_order,0487064,1987-04-15,Pacific Northwest Laboratories,Order No,"COPY, IN","REYNOLDS TOBACCO, CO",BOX,14173.93,96673.83,USD,97,100
+201,DOC-201,201_train_imagesz_z_p_y_zpy61c00_2084061504.png,invoice,1070-R,2021-12-03,"Crystal Plastics, pick up, uncrate and install",MR. GARY CAPREOL,"New York, NY 10017","San Francisco, CA",-,3975.0,922.88,USD,92,91
+202,DOC-202,202_train_imagesy_y_d_x_ydx5aa00_11301252.png,purchase_order,00329-1,1995-11-01,AmericanAirlines,-,LICE ASST TR,"NEWARK, NJ",BOX,3783.84,3783.84,USD,92,91
+203,DOC-203,203_train_imagesx_x_l_o_xlo00e00_91664909.png,purchase_order,033263,1992-05-12,The New York Times Company Magazine Group,EILEEN ANTIONIELLO,"NEW YORK, NY 10016","YORK, NY 10008",80X,3.29,4794.6,USD,97,100
+204,DOC-204,204_test_imagesa_a_p_t_apt94d00_505831460.png,purchase_order,0487065,1987-04-15,Pacific Northwest Laboratories,Order No,"REYNOLDS TOBACCO, CO","SALEM, NC 27102",BOX,84480.76,168390.17,USD,97,100
+205,DOC-205,205_train_imagese_e_w_v_ewv10c00_2085537816.png,invoice,258,2002-01-14,Pleaso include a copy,-,"Richmond, VA 23234","Grantor, ID",-,40256.44,40256.44,USD,87,82
+206,DOC-206,206_train_imagesq_q_n_b_qnb55f00_0060072410.png,purchase_order,M11170,1989-07-05,-,"PACKAGES, CORRESPONDENCE AND INVOICES","MAIL YOUR INVOICES, IN","New York, NY 10165",3OX,74.95,74.95,USD,92,91
+207,DOC-207,207_train_imagesf_f_i_e_fie97d00_2046261021.png,purchase_order,38098915,1996-02-14,FROM: NORFOLK,PARTY,"MARLBORO, KS",UNITED STATES LAW PROHIBITS,BOX,66300.0,66300.0,USD,97,100
+208,DOC-208,208_train_imageso_o_j_y_ojy34c00_83565318.png,purchase_order,26949,2028-07-19,"SUMMATION LEGAL TECHNOLOGIES, INC.",Accounts Payable,MV PSO THANS-MICRO ELECTRQNIC FORMS,"Eederal Tax, ID",Box,5189.55,5189.55,USD,97,100
+209,DOC-209,209_train_imagesp_p_h_a_pha84c00_91695305_5306.png,invoice,955,1984-10-03,10/03/84,CASHIER 5TH FLOOR,AL COPY,"YGRK, NY 10103",14324,56195.0,56195.0,USD,97,100
+210,DOC-210,210_train_imagesl_l_s_v_lsv13c00_92270032.png,purchase_order,6645,1996-04-01,"Only Ferns and Conditions, and those incorporaled by",-,"NEW YORK, NY 10010","SHE LOVES, ME",DATE,13715.0,13715.0,USD,92,91
+211,DOC-211,211_test_imagesu_u_l_o_ulo00e00_91664891.png,purchase_order,033264,2013-04-02,The New York Times Company Magazine Group,EILEEN ANTIONIELLO,"NEW YORK, NY 10016","NEW YORK, NY 10008",BOX,11129.6,48495.0,USD,97,100
+212,DOC-212,212_test_imagesk_k_v_d_kvd21e00_87104228.png,invoice,608032,1986-02-04,"Lorillard, Inc.",Dr. Daniel J. Heck,"VIENNA, VA 22180","Greensboro, NC 27420-1688",-,1200.0,1200.0,USD,92,91
+213,DOC-213,213_train_imagesa_a_h_e_ahe51d00_518726082+-6121.png,bill_of_lading,275-0132,1995-10-16,A FUTURE PAYMENT ****,UNION TOBACCO COMPANY,"NEW BEDFORD, MA","f lading NUMBER PURCHASE CRDER, OR",BOX,722.0,722.0,USD,97,100
+214,DOC-214,214_train_imagese_e_g_f_egf57e00_2030762243.png,invoice,500,1992-02-13,LOCATION,-,"RATE FORMS FOR EACH DIFFERENCE, IN",Park 500 Shipping - Att: Dary1 Ampey,/FREIGHT,5809.11,5809.11,USD,92,91
+215,DOC-215,215_test_imagesw_w_u_q_wuq25a00_92871560.png,purchase_order,04-2750,2002-04-08,Mediamatic System,Lorillard,"Chicago, IL 60606","Chicago, IL 60611-2927",Number,5.0,118.0,USD,97,100
+216,DOC-216,216_train_imagesh_h_l_c_hlc84c00_92225867.png,invoice,60590023104,1986-02-28,THE CONTRACT RATE SHOWN,LORILLARD MEDIA SERVICES,"NEW YORK, NY 10103","UBMITTED, IN",-,30588.0,30588.0,USD,92,91
+217,DOC-217,217_train_imagesj_j_d_z_jdz74c00_91659992_9993.png,invoice,4244002514,1984-08-31,THE CONTRACT RATE SHOWN,LORILLARD MEDIA SERVICES,"LOS ANGELES, CA","FIFTH AVENUE, NY 10103",-,65346.3,65346.3,USD,92,91
+218,DOC-218,218_train_imagesm_m_j_b_mjb52c00_2074104208.png,invoice,-,1961-09-24,ID,-,itical Contribution-Campaign,"ORKY HOOS R, CO",-,500.0,500.0,USD,82,73
+219,DOC-219,219_train_imagesd_d_j_b_djb52c00_2074104217.png,invoice,-,1961-09-24,n comrantes,-,itical Contribution-Campaign,"COMP ASI, ID",-,200.0,200.0,USD,82,73
+220,DOC-220,220_train_imagesk_k_i_b_kib52c00_2074104236.png,invoice,-,1961-09-24,ID,-,itical Contribution-Campaign,"FROM, ID",-,200.0,200.0,USD,82,73
+221,DOC-221,221_train_imagesp_p_j_b_pjb52c00_2074104205.png,invoice,-,1961-09-24,ID,-,itical Contribution-Campaign,"COGANLS, ID",-,500.0,500.0,USD,82,73
+222,DOC-222,222_train_imagesv_v_e_j_vej11e00_87065290.png,invoice,7273002390,1987-09-30,THE CONTRACT RATE SHOWN,LORILLARD MEDIA SERVICES,"LOS ANGELES, CA","NEW YORK, NY 10103",-,17895.05,17895.05,USD,92,91
+223,DOC-223,223_train_imagesb_b_d_z_bdz74c00_91659978.png,invoice,4305002590,1984-10-31,THE CONTRACT RATE SHOWN,LORILLARD MEDIA SERVICES,"NEW YORK, NY","NET AMOUNT, MO",-,13811.42,13811.42,USD,92,91
+224,DOC-224,224_test_imagesb_b_j_b_bjb52c00_2074104219.png,invoice,-,1961-09-24,ID,-,itical Contribution-Campaign,"FOM, NY",-,500.0,500.0,USD,82,73
+225,DOC-225,225_train_imagesi_i_z_s_izs78e00_2023526952.png,invoice,3210,1989-08-24,2023526952,YELLOW - REMITTANCE,"LINTHICUM, MD 21090",ene,-,787.95,16934.23,USD,92,91
+226,DOC-226,226_train_imagesm_m_q_n_mqn47e00_2030394023.png,purchase_order,C954846-N,1991-03-27,BL NO,ACCOUNTS PAYABLE,BL NO,"RICHMOND, VA 23261",1151DP4E22M181,1160.5,1160.5,USD,97,100
+227,DOC-227,227_train_imagesl_l_g_w_lgw61f00_2015016473.png,invoice,3488,2025-03-07,FOR ACCOUNTING USE ONLY,-,"New York, NY 10022","GROSS AMTL, DC",-,863848.0,863848.0,USD,87,82
+228,DOC-228,228_train_imagesw_w_h_w_whw61f00_2015016511.png,invoice,3488,1986-05-02,FOR ACCOUNTING USE ONLY,-,"GROSS AMTL, DC","APP, ID",-,445922.76,445922.76,USD,87,82
+229,DOC-229,229_train_imagesl_l_k_p_lkp52e00_2057091594_2057091595.png,invoice,38047851,1993-07-17,JFK,PARTY;,ICY # R35389. CLAIMS PAYABLE IN NEW YORK,UNITED STATÉS LAW PROHIBITS,20102195,8648.64,8648.64,USD,97,100
+230,DOC-230,230_train_imagesi_i_k_a_ika09e00_2029370304.png,invoice,984032,1990-09-27,MANAGEMENT CORPORATION,-,"WAshinoton, DC 20044","Washinoton, DC",-,45000.0,45000.0,USD,87,82
+231,DOC-231,231_test_imagesj_j_c_b_jcb52c00_2074103994.png,invoice,-,1996-09-12,COMPANY,-,CON - WII be hand-delivered,-,-,500.0,500.0,USD,77,64
+232,DOC-232,232_train_imagesa_a_l_g_alg62d00_83545550.png,invoice,121732,1999-11-16,MSHgr,-,AL AND 1 COPY OF TRANSCRIPT OF,"Durham, NC 27705",-,3566.7,3566.7,USD,87,82
+233,DOC-233,233_train_imagest_t_z_h_tzh35e00_2024525857.png,invoice,3454,2030-05-01,CAPITAL CORP,-,"Washington, DC 20044","ACCT, OR",-,213.54,213.54,USD,87,82
+234,DOC-234,234_train_imagesp_p_u_d_pud21e00_87104207.png,purchase_order,311D,1986-02-07,LABORATORIESAMERICA,Dr. Daniel J. Heck,"Greensboro, NC 27420-1688","Mneneyer, OK",-,2250.0,2250.0,USD,92,91
+235,DOC-235,235_train_imagesa_a_k_b_akb52c00_2074104185.png,invoice,-,1996-10-25,COMPANY,-,itical Contribution-Campaign,-,-,500.0,500.0,USD,77,64
+236,DOC-236,236_train_imagesj_j_h_s_jhs53e00_2015020052.png,invoice,2722,2022-04-22,CORPORATE/USA,-,"New York, NY 10022","CASH CONTROL, OR",-,158850.0,158850.0,USD,87,82
+237,DOC-237,237_train_imagesl_l_p_f_lpf84a00_2041158010.png,invoice,3488,1994-11-22,COMPANY,-,"New York, NY 10023",-,-,150.0,900.0,USD,82,73
+238,DOC-238,238_train_imagesx_x_p_z_xpz47c00_2072654445.png,invoice,222-1903,2010-08-04,SAMELSONHLEDN CO,-,"SAMELSONHLEDN, CO","MEMPHIS, TN 38118",-,1.3,801.6,USD,87,82
+239,DOC-239,239_val_imagesv_v_k_b_vkb52c00_2074104164.png,invoice,-,1996-10-23,COMPANY,-,itical Contribution-Campaign,-,-,500.0,500.0,USD,77,64
+240,DOC-240,240_train_imagesw_w_f_w_wfw61f00_2015016453.png,invoice,34DB,2015-06-07,CORPORATE,-,"New York, NY 10022","GROSS AMT, DC",-,581119.84,581119.84,USD,87,82
+241,DOC-241,241_train_imagesj_j_e_w_jew61f00_2015016388.png,invoice,3488,2028-08-06,CORPORATE,-,"APP, ID",-,-,132195.0,132195.0,USD,82,73
+242,DOC-242,242_test_imagesq_q_j_l_qjl65c00_2082888030.png,invoice,753289,1999-01-31,SPSS,SHIPPED TO,AL INVOICE,PHILIP MORRIS,SHIP,1978.66,1978.66,USD,97,100
+243,DOC-243,243_val_imagesj_j_w_q_jwq48d00_2063233952.png,invoice,1501,1978-01-01,CORPORATE,-,cies,-,-,22627.0,22627.0,USD,82,73
+244,DOC-244,244_test_imagesx_x_k_b_xkb52c00_2074104162.png,invoice,-,1996-10-23,COMPANY,-,itical Contribution-Campaign,-,-,500.0,500.0,USD,77,64
+245,DOC-245,245_test_imagesl_l_k_b_lkb52c00_2074104174.png,invoice,-,2023-10-01,COMPANY,-,itical Contribution-Campaign,-,ID,500.0,500.0,USD,82,73
+246,DOC-246,246_train_imagesa_a_m_b_amb52c00_2074104095.png,purchase_order,-,1996-04-09,COMPANY,-,itical Contribution -- Annual Fundralser bein,"Eimhurst, IL",Box33,25000.0,25000.0,USD,87,82
+247,DOC-247,247_train_imagesx_x_u_l_xul78e00_2015022184.png,invoice,3488,1987-03-31,CORPORATE,-,"Washington, DC 20006","APP, ID",-,54587.5,54587.5,USD,87,82
+248,DOC-248,248_train_imagesl_l_j_i_lji56c00_2075573376.png,invoice,133390,1991-09-23,"ZCOMPANYO005-COMPANIES; DO9-MANAGEMENT, 010-INCORPORATED)",-,"New York, NY 10022","SS NYPM, NC",-,814515.0,814515.0,USD,87,82
+249,DOC-249,249_val_imagest_t_t_u_ttu91a00_2063116809.png,invoice,3488,1996-11-04,COMPANY,-,itical Contribution,"OMIT IF, NC",-,200.0,200.0,USD,87,82
+250,DOC-250,250_train_imagesl_l_i_s_lis53e00_2015020090.png,invoice,2722,2019-07-23,PM INC. REV. 1/79,-,"New York, NY 10022","CASH CONTROL, OR",-,19.81,19.81,USD,87,82
+251,DOC-251,251_train_imagesd_d_l_o_dlo20d00_525460342+-0342.png,invoice,1119,2016-02-12,BEST,-,"NSURANCE, CO",-,-,848.03,848.03,USD,82,73
+252,DOC-252,252_test_imagesj_j_g_s_jgs90e00_91515215.png,invoice,1157,1985-03-29,AAPR 1,-,"NE y, NY","AV LZ, MN",-,1054.17,1054.17,USD,87,82
+253,DOC-253,253_train_imagesi_i_u_u_iuu91a00_2063116826.png,invoice,34RR,1996-11-04,COMPANY,-,itical Contribution,-,-,150.0,150.0,USD,82,73
+254,DOC-254,254_test_imagesa_a_l_b_alb52c00_2074104159.png,invoice,-,2023-10-01,COMPANY,-,itical Contribution-Campaign,-,-,500.0,500.0,USD,77,64
+255,DOC-255,255_train_imagesl_l_m_h_lmh43a00_89001160.png,invoice,032,1986-08-15,-,SHIPPED TO,AL INVOICE,3967091,-,4400.0,4400.0,USD,87,82
+256,DOC-256,256_train_imagese_e_t_u_etu91a00_2063116794.png,invoice,348R,1996-11-04,COMPANY,-,itical Contribution,-,-,175.0,175.0,USD,82,73
+257,DOC-257,257_train_imagesv_v_s_x_vsx06e00_2049023137.png,invoice,233546,1983-06-03,-,-,"D NEW YORK""",-,-,1500.0,1500.0,USD,77,64
+258,DOC-258,258_train_imagest_t_l_p_tlp55e00_2044207473.png,invoice,2722,1983-12-06,PM INC. REV. 1/79,-,"New York, NY 10016","CASH CONTROL, OR",-,96.56,96.56,USD,87,82
+259,DOC-259,259_train_imagesj_j_g_i_jgi35e00_2024526057.png,invoice,961485,1991-10-31,CAPITAL CORP,-,"Washington, DC 20044","CO S REY, MO",-,30000.0,30000.0,USD,87,82
+260,DOC-260,260_train_imagesf_f_h_w_fhw61f00_2015016494.png,invoice,34BB,1986-09-15,FOR ACCOUNTING USE ONLY,-,"GROSS AMTL, DC","APP, ID",-,863848.0,863848.0,USD,87,82
+261,DOC-261,261_train_imagesw_w_h_s_whs53e00_2015020071.png,invoice,ห2122,1981-10-31,PM INC. REV. 1/79,-,"New York, NY 10022","CASH CONTROL, OR",-,139095.0,139095.0,USD,87,82
+262,DOC-262,262_test_imagesh_h_k_b_hkb52c00_2074104178.png,invoice,-,1996-10-23,COMPANY,-,itical Contribution-Campaign,"Sebring, FL 33870",-,500.0,500.0,USD,82,73
+263,DOC-263,263_train_imagesb_b_s_z_bsz64c00_91508649.png,invoice,00443,1984-10-09,THE CONTRACT RATE SHOWN,STATEMENT NO,"NEW YORK, NY","ADVERTISING CONTRACT IS, IN",-,3.11,3.11,USD,92,91
+264,DOC-264,264_train_imagesr_r_p_w_rpw61f00_2015016353.png,invoice,-,1987-06-15,XCORPORATE,-,"New York, NY 10022","APP, ID",-,95775.0,95775.0,USD,82,73
+265,DOC-265,265_train_imagesw_w_r_u_wru91a00_2063116759.png,invoice,34RR,1996-11-04,COMPANY,-,itical Contribution,-,-,250.0,250.0,USD,82,73
+266,DOC-266,266_val_imagesq_q_g_w_qgw61f00_2015016478.png,invoice,34BB,2013-02-07,CORPORATE,-,"New York, NY 10022","APP, ID",-,431924.0,431924.0,USD,87,82
+267,DOC-267,267_val_imagesb_b_y_c_byc37c00_2047190666.png,invoice,231GY6,2011-07-01,MANAGEMENT CORPORATION,-,icy,-,-,25000.0,25000.0,USD,82,73
+268,DOC-268,268_train_imagesx_x_m_m_xmm64e00_1001604588_1001604589.png,purchase_order,D243997,1965-03-22,SHIP TO –,Service Dept,AL INVOICE,mEM No,-,48.2,270.23,THB,92,91
+269,DOC-269,269_train_imagesl_l_h_d_lhd83c00_2041158273.png,invoice,3488,1994-10-10,VOUCHER TYPE_ (1-Reg; 2-P.P.; 3-C.M.; 4-D.M.; 5-C.P.; 6-V.C,-,itical Action Committee,-,-,25000.0,25000.0,USD,82,73
+270,DOC-270,270_train_imagesw_w_k_b_wkb52c00_2074104163.png,invoice,-,1996-10-23,COMPANY,-,itical Contribution-Campaign,"Saint Petersburg, FL 33704",-,500.0,500.0,USD,82,73
+271,DOC-271,271_train_imagesg_g_i_b_gib52c00_2074104240.png,invoice,-,1961-09-24,ID,-,itical Contribution-Campaign,"PROM, ID",-,500.0,500.0,USD,82,73
+272,DOC-272,272_train_imagesc_c_j_d_cjd83c00_2041159735.png,invoice,11/28/94,1994-12-06,COMPANY,-,"WASHINGTON, DC 20001",-,-,2500.0,32500.0,USD,82,73
+273,DOC-273,273_val_imagesp_p_g_s_pgs53e00_2015020020.png,invoice,1/79,2021-12-09,"PM INC"" REV. 1/79",-,"New York, NY 10022","CASH CONTROL, OR",-,95310.0,95310.0,USD,87,82
+274,DOC-274,274_val_imagesu_u_g_s_ugs53e00_2015020031.png,invoice,2722,1982-09-30,PM INC. REV. 1/79,-,"New York, NY 10022","CASH CONTROL, OR",-,190620.0,190620.0,USD,87,82
+275,DOC-275,275_train_imagesv_v_e_w_vew61f00_2015016407.png,invoice,3488,1986-02-26,CORPORATE,-,"APP, ID",-,-,84622.0,84622.0,USD,82,73
+276,DOC-276,276_train_imagesf_f_j_b_fjb52c00_2074104215.png,invoice,401,2024-09-26,ID,-,itical Contribution-Campaign,-,-,500.0,500.0,USD,82,73
+277,DOC-277,277_train_imagesg_g_a_i_gai35e00_2024525855.png,invoice,1201,1991-05-09,H1B31,-,l Seminar,-,-,89213.0,89213.0,USD,82,73
+278,DOC-278,278_test_imagesh_h_g_a_hga74c00_91542409.png,invoice,13004,1985-10-24,Star,-,"TARRYTOWN, NY 10591","NEN YORK, NY 10103",-,15529.5,15529.5,USD,87,82
+279,DOC-279,279_train_imagesb_b_l_o_blo55e00_2044146528.png,invoice,2722,2016-09-01,PM CORP/USA REV. 1/81,-,"Hauppauge, NY 11788","CASH CONTROL, OR",-,62800.0,62800.0,USD,87,82
+280,DOC-280,280_val_imagesj_j_m_a_jma09e00_2029370253-a.png,invoice,113042,2023-05-01,MANAGEMENT CORPORATION,-,"Washington, DC 20044","ACCT, OR",-,213.52,213.52,USD,87,82
+281,DOC-281,281_test_imagesd_d_z_r_dzr90e00_91515343.png,invoice,91515343,1985-03-29,APR 1,-,-,-,-,1054.17,1054.17,GBP,77,64
+282,DOC-282,282_train_imagesf_f_y_r_fyr90e00_91515319.png,invoice,249,1985-06-28,I mr,-,-,-,-,1054.17,1054.17,EUR,77,64
+283,DOC-283,283_train_imagesf_f_z_r_fzr90e00_91515345.png,invoice,339,1985-03-29,APR 1,-,-,-,-,3950.1,3950.1,USD,77,64
+284,DOC-284,284_train_imagesa_a_y_b_ayb20f00_0012580159.png,invoice,474,2014-09-00,"B & W will be the balance of $35,000.00",-,"Louisville, KY 40232",-,-,70000.0,35000.0,USD,82,73
+285,DOC-285,285_train_imagesc_c_u_i_cui35f00_0060034007.png,purchase_order,1370,1988-07-05,overhead will incur an additional labor and material charge,-,-,-,-,144.0,144.0,USD,77,64
+286,DOC-286,286_test_imagesp_p_z_s_pzs90e00_91514715.png,purchase_order,236333,1985-09-20,LAMARCORPORATION,COPY,AL INVOICE,"NORTH AUGUSTA, SC",Box,1.48,9.99,USD,97,100
+287,DOC-287,287_train_imagesm_m_m_o_mmo00e00_91664962.png,purchase_order,031601,2007-02-02,The New York Times Company Magazine Group,EILEEN ANTIONIELLO,"NEW YORK, NY 10016","NEW YORK, NY 10008",BOX,4794.6,4794.6,USD,97,100
+288,DOC-288,288_val_imagesy_y_d_n_ydn00e00_92184746.png,purchase_order,021560,2016-01-01,The New York Times Company Magazine Group,-,"NEW YORK, NY 10016","NEW YORK, NY 10008",BOX,22900.28,449617.26,USD,92,91
+289,DOC-289,289_train_imagese_e_m_h_emh43a00_89001167.png,purchase_order,3438,1986-09-24,MICROBIOLOGICAL,LORILLARD RESEARCH CENTER,AL INVOICE,4567063,DATE,1375.0,1375.0,USD,97,100
+290,DOC-290,290_test_imagesh_h_d_n_hdn00e00_92204785.png,purchase_order,103456,1993-02-23,WOMEN'S MAGAZINES,EILEEN ANTICNIELLC,"NEW YORK, NY 10010","NEW YORK, NY",BOX,105000.0,105000.0,USD,97,100
+291,DOC-291,291_train_imagesb_b_e_t_bet90e00_91514455.png,purchase_order,P-12376,1985-01-10,RECEIPT OF INVOICE,-,"New York, NY 10103",-,BOX,1769.0,1769.0,USD,87,82
+292,DOC-292,292_train_imagesz_z_x_q_zxq7aa00_50040077.png,bill_of_lading,"5—11-1-71—300,000",1972-02-29,COMMONWEALTH OF VIRGINIA,-,al bill,"SHIPMENT, OR",promptly,485.66,485.66,USD,92,91
+293,DOC-293,293_test_imagesm_m_x_c_mxc81f00_2025792689.png,purchase_order,F258416,1991-08-20,NUMBER,Gayle A. Chapman,"STUDENT, ID","SOCIAL SECURITY, OR",MUMBEA,175661.0,175661.0,USD,97,100
+294,DOC-294,294_train_imagesg_g_g_w_ggw98c00_89706837.png,invoice,212-697-1460,1980-04-01,Publications,Mr. Bill Sands,"New York, NY 10019",-,Letter,21.24,21247.0,USD,92,91
+295,DOC-295,295_test_imagest_t_l_m_tlm81f00_2030278732.png,purchase_order,$99.55,1992-09-16,"Summerell Co., Inc","Park 500, North Warehouse","Mechanicsville, VA 23111",Shipping Point,NUMBER,99.55,271.87,USD,97,100
+296,DOC-296,296_train_imagesv_v_j_x_vjx48d00_2063162024.png,invoice,-,1966-12-05,DEC 5 E386,the mortgagee,icy or Bond,"York, NY",-,11007.0,11007.0,USD,87,82
+297,DOC-297,297_train_imagesj_j_u_c_juc35f00_0060081880.png,purchase_order,-,1994-05-27,SHIP TO,"EMSON, Division. of E._Mishan_&_Sons","STAMFORD, CT","New York, NY 10010",/RELEASE,4.48,4.48,USD,92,91
+298,DOC-298,298_train_imagesh_h_f_e_hfe65d00_504633392.png,purchase_order,0Brodhurs,1985-07-25,"BERT YELLEN ASSOCIATES, INC.",-,AROID,"ew York, NY 10153",-,3500.0,3500.0,USD,87,82
+299,DOC-299,299_train_imagesx_x_j_n_xjn67c00_2076893544.png,purchase_order,0009,2025-06-09,JUN 25 '99,-,"FOR, MD","MRSUNY, TN",TEST,4.65,865.4,USD,92,91
+300,DOC-300,300_train_imagesl_l_i_y_liy44a00_93426829.png,bill_of_lading,19940210,1994-02-24,LOCATIOH,ANDALUSIA CIST CC INC,"EFIC NCN FILTER, KS","CPPCKTUAITY AS A PARINEN, IN",ORDER,509.4,545.33,USD,97,100

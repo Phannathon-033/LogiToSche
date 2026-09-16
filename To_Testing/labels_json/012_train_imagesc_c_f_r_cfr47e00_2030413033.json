@@ -1,0 +1,27 @@
+{
+  "id": "DOC-012",
+  "rank": 12,
+  "file_name": "012_train_imagesc_c_f_r_cfr47e00_2030413033.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "10837",
+    "document_date": "1992-06-09",
+    "sender": "Anderson Machine Mfg. Co.. Inc.",
+    "receiver": "SHIP TO",
+    "origin": "Net 30",
+    "destination": "Richmond, VA 23261",
+    "reference_number": "-",
+    "unit_price": 1270.0,
+    "total_amount": 1270.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:04:53"
+}

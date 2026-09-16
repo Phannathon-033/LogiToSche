@@ -1,0 +1,27 @@
+{
+  "id": "DOC-236",
+  "rank": 236,
+  "file_name": "236_train_imagesj_j_h_s_jhs53e00_2015020052.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "2722",
+    "document_date": "2022-04-22",
+    "sender": "CORPORATE/USA",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "CASH CONTROL, OR",
+    "reference_number": "-",
+    "unit_price": 158850.0,
+    "total_amount": 158850.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:31:35"
+}

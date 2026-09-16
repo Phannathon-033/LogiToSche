@@ -1,0 +1,27 @@
+{
+  "id": "DOC-051",
+  "rank": 51,
+  "file_name": "051_train_imagesp_p_i_t_pit54a00_91654454_4455.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "101",
+    "document_date": "1990-09-01",
+    "sender": "AUG 06 RECO",
+    "receiver": "-",
+    "origin": "NEW YORK, NY 10036",
+    "destination": "-",
+    "reference_number": "TERMS",
+    "unit_price": 19116.64,
+    "total_amount": 19116.64,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:09:08"
+}

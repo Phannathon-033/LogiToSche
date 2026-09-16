@@ -1,0 +1,27 @@
+{
+  "id": "DOC-162",
+  "rank": 162,
+  "file_name": "162_train_imagesy_y_n_n_ynn32d00_2048771132.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "20>116",
+    "document_date": "1993-09-10",
+    "sender": "an Asian perspective; reviewing",
+    "receiver": "-",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "B0X",
+    "unit_price": 78400.0,
+    "total_amount": 78400.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:22:51"
+}

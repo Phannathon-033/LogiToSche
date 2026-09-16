@@ -1,0 +1,27 @@
+{
+  "id": "DOC-291",
+  "rank": 291,
+  "file_name": "291_train_imagesb_b_e_t_bet90e00_91514455.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "P-12376",
+    "document_date": "1985-01-10",
+    "sender": "RECEIPT OF INVOICE",
+    "receiver": "-",
+    "origin": "New York, NY 10103",
+    "destination": "-",
+    "reference_number": "BOX",
+    "unit_price": 1769.0,
+    "total_amount": 1769.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:38:24"
+}

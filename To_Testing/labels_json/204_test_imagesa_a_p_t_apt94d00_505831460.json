@@ -1,0 +1,27 @@
+{
+  "id": "DOC-204",
+  "rank": 204,
+  "file_name": "204_test_imagesa_a_p_t_apt94d00_505831460.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "0487065",
+    "document_date": "1987-04-15",
+    "sender": "Pacific Northwest Laboratories",
+    "receiver": "Order No",
+    "origin": "REYNOLDS TOBACCO, CO",
+    "destination": "SALEM, NC 27102",
+    "reference_number": "BOX",
+    "unit_price": 84480.76,
+    "total_amount": 168390.17,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:28:01"
+}

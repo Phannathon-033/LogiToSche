@@ -1,0 +1,27 @@
+{
+  "id": "DOC-239",
+  "rank": 239,
+  "file_name": "239_val_imagesv_v_k_b_vkb52c00_2074104164.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "1996-10-23",
+    "sender": "COMPANY",
+    "receiver": "-",
+    "origin": "itical Contribution-Campaign",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 500.0,
+    "total_amount": 500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:31:57"
+}

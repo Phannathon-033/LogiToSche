@@ -1,0 +1,27 @@
+{
+  "id": "DOC-248",
+  "rank": 248,
+  "file_name": "248_train_imagesl_l_j_i_lji56c00_2075573376.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "133390",
+    "document_date": "1991-09-23",
+    "sender": "ZCOMPANYO005-COMPANIES; DO9-MANAGEMENT, 010-INCORPORATED)",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "SS NYPM, NC",
+    "reference_number": "-",
+    "unit_price": 814515.0,
+    "total_amount": 814515.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:33:06"
+}

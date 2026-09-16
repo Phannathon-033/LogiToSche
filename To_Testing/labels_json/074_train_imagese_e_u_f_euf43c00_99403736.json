@@ -1,0 +1,27 @@
+{
+  "id": "DOC-074",
+  "rank": 74,
+  "file_name": "074_train_imagese_e_u_f_euf43c00_99403736.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3722",
+    "document_date": "2001-01-24",
+    "sender": "Prom: Lashlay Atess (919)416-3722",
+    "receiver": "Same Recipient",
+    "origin": "DURHAM, NC",
+    "destination": "San Francisco, CA",
+    "reference_number": "-",
+    "unit_price": 42.74,
+    "total_amount": 42.74,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:11:59"
+}

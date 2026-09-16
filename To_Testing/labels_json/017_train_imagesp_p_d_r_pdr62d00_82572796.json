@@ -1,0 +1,27 @@
+{
+  "id": "DOC-017",
+  "rank": 17,
+  "file_name": "017_train_imagesp_p_d_r_pdr62d00_82572796.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "237",
+    "document_date": "2000-01-21",
+    "sender": "Location",
+    "receiver": "Bugen-Allyar Whole Ship To",
+    "origin": "HUNTSVILLE, AL",
+    "destination": "DURHAM, NC 27702",
+    "reference_number": "-",
+    "unit_price": 0.2,
+    "total_amount": 3057.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:05:22"
+}

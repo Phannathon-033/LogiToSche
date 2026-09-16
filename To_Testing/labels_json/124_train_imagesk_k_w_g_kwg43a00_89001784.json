@@ -1,0 +1,27 @@
+{
+  "id": "DOC-124",
+  "rank": 124,
+  "file_name": "124_train_imagesk_k_w_g_kwg43a00_89001784.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "152E",
+    "document_date": "1984-05-04",
+    "sender": "LABORATORIES AMERICA, INC.",
+    "receiver": "-",
+    "origin": "VIENNA, VA 22160",
+    "destination": "Greensboro, NC 27420",
+    "reference_number": "-",
+    "unit_price": 1950.0,
+    "total_amount": 1950.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:17:53"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-088",
+  "rank": 88,
+  "file_name": "088_train_imagesv_v_c_n_vcn00e00_92204693.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "111896",
+    "document_date": "1993-10-12",
+    "sender": "WOMEN'SMAGAZINES",
+    "receiver": "EILEEN ANTIGNIELLC",
+    "origin": "NEW YORK, NY",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 21975.0,
+    "total_amount": 210000.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:13:27"
+}

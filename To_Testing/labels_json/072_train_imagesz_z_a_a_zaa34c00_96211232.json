@@ -1,0 +1,27 @@
+{
+  "id": "DOC-072",
+  "rank": 72,
+  "file_name": "072_train_imagesz_z_a_a_zaa34c00_96211232.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "PROMO1-MARL",
+    "document_date": "1997-06-02",
+    "sender": "INCORPORATED",
+    "receiver": "-",
+    "origin": "30410",
+    "destination": "NAPERVILLE, IL 60563",
+    "reference_number": "-",
+    "unit_price": 2.56,
+    "total_amount": 76533.6,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:11:42"
+}

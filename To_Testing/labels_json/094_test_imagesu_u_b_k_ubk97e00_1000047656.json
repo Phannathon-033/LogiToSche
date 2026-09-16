@@ -1,0 +1,27 @@
+{
+  "id": "DOC-094",
+  "rank": 94,
+  "file_name": "094_test_imagesu_u_b_k_ubk97e00_1000047656.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "10017",
+    "document_date": "1975-11-19",
+    "sender": "OUR AGENCY TO THE PARTICIPATING",
+    "receiver": "-",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 528.4,
+    "total_amount": 528.4,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:14:03"
+}

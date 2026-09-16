@@ -1,0 +1,27 @@
+{
+  "id": "DOC-201",
+  "rank": 201,
+  "file_name": "201_train_imagesz_z_p_y_zpy61c00_2084061504.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "1070-R",
+    "document_date": "2021-12-03",
+    "sender": "Crystal Plastics, pick up, uncrate and install",
+    "receiver": "MR. GARY CAPREOL",
+    "origin": "New York, NY 10017",
+    "destination": "San Francisco, CA",
+    "reference_number": "-",
+    "unit_price": 3975.0,
+    "total_amount": 922.88,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:27:43"
+}

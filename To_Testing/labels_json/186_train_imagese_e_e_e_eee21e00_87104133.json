@@ -1,0 +1,27 @@
+{
+  "id": "DOC-186",
+  "rank": 186,
+  "file_name": "186_train_imagese_e_e_e_eee21e00_87104133.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "87104133",
+    "document_date": "1985-02-21",
+    "sender": "LABORATORIES AMERICA, INC",
+    "receiver": "-",
+    "origin": "VIENNA, VA",
+    "destination": "Greensboro, NC 27420",
+    "reference_number": "-",
+    "unit_price": 2050.0,
+    "total_amount": 2050.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:26:05"
+}

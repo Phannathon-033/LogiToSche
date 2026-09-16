@@ -1,0 +1,27 @@
+{
+  "id": "DOC-170",
+  "rank": 170,
+  "file_name": "170_train_imagest_t_x_o_txo24e00_2023592628.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3488",
+    "document_date": "1992-06-30",
+    "sender": "COMPANY",
+    "receiver": "-",
+    "origin": "KEEP, OR",
+    "destination": "REVIEW WITH, ME",
+    "reference_number": "-",
+    "unit_price": 121691.36,
+    "total_amount": 121691.36,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:24:11"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-009",
+  "rank": 9,
+  "file_name": "009_train_imagesv_v_b_e_vbe63e00_2030138090.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "A22745359",
+    "document_date": "1992-09-30",
+    "sender": "FISHER.[1;1H[5i[4i[5i[4i[5i[4i[5i",
+    "receiver": "-",
+    "origin": "RALEIGH, NC 27629",
+    "destination": "CHESTER, VA 23831",
+    "reference_number": "-",
+    "unit_price": 943.0,
+    "total_amount": 943.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:04:36"
+}

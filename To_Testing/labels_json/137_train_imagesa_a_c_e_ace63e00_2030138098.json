@@ -1,0 +1,27 @@
+{
+  "id": "DOC-137",
+  "rank": 137,
+  "file_name": "137_train_imagesa_a_c_e_ace63e00_2030138098.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "A23008118",
+    "document_date": "1992-10-26",
+    "sender": "FISHER.[1;1H[5i[4i[5i[4i[5i[4i[5i[4i[5i",
+    "receiver": "-",
+    "origin": "YSEED CAPSULES 50/PK",
+    "destination": "CHESTER, VA 23831",
+    "reference_number": "-",
+    "unit_price": 8.06,
+    "total_amount": 1595.46,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:19:25"
+}

@@ -4,7 +4,6 @@ import {
   ArrowUpRight,
   BookmarkCheck,
   Braces,
-  Check,
   CheckCircle2,
   Clipboard,
   Code2,
@@ -17,21 +16,11 @@ import {
   RotateCcw,
   Save,
   Sparkles,
-  Calendar,
-  DollarSign,
-  Package,
   Trash2,
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CORE_FIELDS_DEF, type JsonSchemaOutput } from "../types";
-import {
-  normalizeDateToIso,
-  normalizeCurrency,
-  validateMathIntegrity,
-  validateContainerNumber,
-  normalizeLogisticsJsonSchema,
-} from "../services/dataValidationService";
 import { Card } from "./Card";
 import { apiFetch } from "../services/apiClient";
 
@@ -159,32 +148,6 @@ export function JSONOutputPanel({
   const [targetKey, setTargetKey] = useState<string>("sender");
   const [removeFromOther, setRemoveFromOther] = useState(true);
 
-  // Real-time Business Rules & Data Validation
-  const dateValidation = normalizeDateToIso(json.document_date);
-  const currencyValidation = normalizeCurrency(json.currency);
-  const mathValidation = validateMathIntegrity(
-    json.total_amount,
-    (json.other?.subtotal_amount ?? json.other?.subtotal) as string | number | undefined,
-    (json.other?.vat_amount ?? json.other?.vat) as string | number | undefined,
-  );
-  const containerCandidate =
-    (typeof json.other?.container_number === "string" && json.other.container_number) ||
-    (typeof json.other?.container_no === "string" && json.other.container_no) ||
-    (typeof json.reference_number === "string" && /^[A-Z]{3}[UJZ]\d{7}$/i.test(json.reference_number.replace(/[\s\-_]/g, ""))
-      ? json.reference_number
-      : "");
-  const containerValidation = containerCandidate ? validateContainerNumber(containerCandidate) : null;
-
-  function handleAutoNormalizeData() {
-    const { normalized, changes } = normalizeLogisticsJsonSchema(json);
-    if (changes.length === 0) {
-      alert("ข้อมูลทั้งหมดอยู่ในรูปแบบมาตรฐานสากลเรียบร้อยแล้ว (ISO 8601 / ISO 4217)");
-      return;
-    }
-    if (onSaveJson) {
-      onSaveJson(normalized);
-    }
-  }
 
   // Start editing
   function handleStartEdit() {
@@ -790,91 +753,6 @@ export function JSONOutputPanel({
       ) : (
         /* READ-ONLY SYNTAX HIGHLIGHTED VIEW */
         <>
-          {/* Business Validation & Compliance Badges */}
-          <div className="mb-2.5 rounded-xl border border-slate-200 bg-slate-50/90 p-2.5 dark:border-slate-800 dark:bg-slate-800/80">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-1.5 text-xs">
-                {/* 1. Date Validation */}
-                {dateValidation.isValid ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50/90 px-2 py-1 text-[11px] font-bold text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
-                    <Calendar className="h-3 w-3 text-emerald-600" />
-                    <span>วันที่: {dateValidation.isoDate} (ISO 8601)</span>
-                    {dateValidation.wasConvertedFromBuddhist && (
-                      <span className="rounded bg-emerald-200/70 px-1 text-[9px] font-mono font-bold text-emerald-900">
-                        พ.ศ. → ค.ศ.
-                      </span>
-                    )}
-                  </span>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleAutoNormalizeData}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-2 py-1 text-[11px] font-bold text-amber-900 hover:bg-amber-100 transition"
-                    title="คลิกเพื่อแปลงรูปแบบวันที่ให้เป็นมาตรฐาน ISO YYYY-MM-DD"
-                  >
-                    <AlertCircle className="h-3 w-3 text-amber-600" />
-                    <span>วันที่: {json.document_date || "ไม่ระบุ"} (คลิกแปลง ISO)</span>
-                  </button>
-                )}
-
-                {/* 2. Currency Validation */}
-                <span className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50/90 px-2 py-1 text-[11px] font-bold text-blue-800 dark:border-blue-900/50 dark:bg-blue-950/40 dark:text-blue-300">
-                  <DollarSign className="h-3 w-3 text-blue-600" />
-                  <span>สกุลเงิน: {currencyValidation.code} ({currencyValidation.nameThai})</span>
-                  {currencyValidation.isStandard ? (
-                    <Check className="h-3 w-3 text-blue-600" />
-                  ) : null}
-                </span>
-
-                {/* 3. Math Integrity */}
-                {mathValidation.status === "verified" ? (
-                  <span
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50/90 px-2 py-1 text-[11px] font-bold text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300"
-                    title={mathValidation.message}
-                  >
-                    <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-                    <span>ผลรวมสอดคล้อง (Subtotal + VAT)</span>
-                  </span>
-                ) : mathValidation.status === "discrepancy" ? (
-                  <span
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-rose-300 bg-rose-50 px-2 py-1 text-[11px] font-bold text-rose-800"
-                    title={mathValidation.message}
-                  >
-                    <AlertCircle className="h-3 w-3 text-rose-600" />
-                    <span>ยอดรวมไม่ตรงกับ Subtotal+VAT (ส่วนต่าง ฿{mathValidation.discrepancyAmount.toLocaleString()})</span>
-                  </span>
-                ) : null}
-
-                {/* 4. Container Checksum (if detected) */}
-                {containerValidation && (
-                  <span
-                    className={`inline-flex items-center gap-1.5 rounded-lg border px-2 py-1 text-[11px] font-bold ${
-                      containerValidation.isValid
-                        ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-                        : "border-amber-300 bg-amber-50 text-amber-900"
-                    }`}
-                    title={containerValidation.message}
-                  >
-                    <Package className="h-3 w-3" />
-                    <span>{containerValidation.formatted} (ISO 6346: {containerValidation.isValid ? "Valid" : "Invalid"})</span>
-                  </span>
-                )}
-              </div>
-
-              {/* One-click Auto Normalize Button */}
-              {onSaveJson && (
-                <button
-                  type="button"
-                  onClick={handleAutoNormalizeData}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-white px-2.5 py-1 text-[11px] font-bold text-indigo-700 shadow-xs hover:bg-indigo-50 transition"
-                  title="จัดระเบียบข้อมูลทุกฟิลด์ให้เป็นมาตรฐานสากล (ISO 8601, ISO 4217, ตัวเลขมาตรฐาน)"
-                >
-                  <Sparkles className="h-3 w-3 text-indigo-600" />
-                  <span>จัดระเบียบอัตโนมัติ (Normalize)</span>
-                </button>
-              )}
-            </div>
-          </div>
 
           <div className="flex-1 min-h-[440px] max-h-[600px] min-w-0 overflow-auto rounded-xl bg-[#0F172A] p-4 font-mono text-xs leading-6 text-slate-100 shadow-inner scrollbar-thin">
             {lines.map((line, index) => (

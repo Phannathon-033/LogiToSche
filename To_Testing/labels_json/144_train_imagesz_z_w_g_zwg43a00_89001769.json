@@ -1,0 +1,27 @@
+{
+  "id": "DOC-144",
+  "rank": 144,
+  "file_name": "144_train_imagesz_z_w_g_zwg43a00_89001769.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "152E",
+    "document_date": "1984-04-20",
+    "sender": "LABORATORIES AMERICA, INC.",
+    "receiver": "Melanee Bennett",
+    "origin": "VIENNA, VA",
+    "destination": "Greensboro, NC 27420",
+    "reference_number": "-",
+    "unit_price": 1950.0,
+    "total_amount": 1950.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:20:14"
+}

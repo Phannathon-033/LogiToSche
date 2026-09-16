@@ -1,4 +1,5 @@
 param(
+  [string]$HostAddress = "0.0.0.0",
   [int]$FrontendPort = 5173,
   [int]$OcrPort = 8000,
   [int]$SlmPort = 8001
@@ -82,7 +83,7 @@ if (Test-Port $OcrPort) {
   Start-BackgroundCommand `
     -Name "OCR API" `
     -WorkingDirectory $Backend `
-    -Command "`"$Python`" -m uvicorn ocr_app:app --host 127.0.0.1 --port $OcrPort" `
+    -Command "`"$Python`" -m uvicorn ocr_app:app --host $HostAddress --port $OcrPort" `
     -LogFile (Join-Path $Root "backend-ocr.log") `
     -ErrorLogFile (Join-Path $Root "backend-ocr.err.log")
 }
@@ -93,7 +94,7 @@ if (Test-Port $SlmPort) {
   Start-BackgroundCommand `
     -Name "SLM API" `
     -WorkingDirectory $Backend `
-    -Command "`"$Python`" -m uvicorn slm_app:app --host 127.0.0.1 --port $SlmPort" `
+    -Command "`"$Python`" -m uvicorn slm_app:app --host $HostAddress --port $SlmPort" `
     -LogFile (Join-Path $Root "backend-slm.log") `
     -ErrorLogFile (Join-Path $Root "backend-slm.err.log")
 }

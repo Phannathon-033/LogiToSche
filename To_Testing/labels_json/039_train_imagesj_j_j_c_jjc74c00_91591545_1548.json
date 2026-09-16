@@ -1,0 +1,27 @@
+{
+  "id": "DOC-039",
+  "rank": 39,
+  "file_name": "039_train_imagesj_j_j_c_jjc74c00_91591545_1548.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "081802248",
+    "document_date": "1988-04-30",
+    "sender": "Las Angeles Times",
+    "receiver": "MS BETTY EPPERSON",
+    "origin": "Los Angeles, CA 90053",
+    "destination": "NEW YORK, NY 10016",
+    "reference_number": "-",
+    "unit_price": 55635.9,
+    "total_amount": 55635.9,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:07:46"
+}

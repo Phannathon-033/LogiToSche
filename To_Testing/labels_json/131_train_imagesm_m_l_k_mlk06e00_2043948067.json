@@ -1,0 +1,27 @@
+{
+  "id": "DOC-131",
+  "rank": 131,
+  "file_name": "131_train_imagesm_m_l_k_mlk06e00_2043948067.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "bill_of_lading",
+    "document_number": "120",
+    "document_date": "1986-02-07",
+    "sender": "ON THEIR SUBJECT MATTER. NO REVISION OF OR ADDITION TO ANY O",
+    "receiver": "delivery address",
+    "origin": "al bill of lading or transportation receipt t",
+    "destination": "EFFECTIVE WHETHER, IN",
+    "reference_number": "number",
+    "unit_price": 48600.0,
+    "total_amount": 48600.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:18:43"
+}

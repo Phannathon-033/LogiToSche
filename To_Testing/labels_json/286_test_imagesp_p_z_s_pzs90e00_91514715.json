@@ -1,0 +1,27 @@
+{
+  "id": "DOC-286",
+  "rank": 286,
+  "file_name": "286_test_imagesp_p_z_s_pzs90e00_91514715.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "236333",
+    "document_date": "1985-09-20",
+    "sender": "LAMARCORPORATION",
+    "receiver": "COPY",
+    "origin": "AL INVOICE",
+    "destination": "NORTH AUGUSTA, SC",
+    "reference_number": "Box",
+    "unit_price": 1.48,
+    "total_amount": 9.99,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:37:47"
+}

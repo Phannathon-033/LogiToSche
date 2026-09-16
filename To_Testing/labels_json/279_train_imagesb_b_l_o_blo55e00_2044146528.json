@@ -1,0 +1,27 @@
+{
+  "id": "DOC-279",
+  "rank": 279,
+  "file_name": "279_train_imagesb_b_l_o_blo55e00_2044146528.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "2722",
+    "document_date": "2016-09-01",
+    "sender": "PM CORP/USA REV. 1/81",
+    "receiver": "-",
+    "origin": "Hauppauge, NY 11788",
+    "destination": "CASH CONTROL, OR",
+    "reference_number": "-",
+    "unit_price": 62800.0,
+    "total_amount": 62800.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:36:55"
+}

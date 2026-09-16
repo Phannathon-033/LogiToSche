@@ -1,0 +1,27 @@
+{
+  "id": "DOC-182",
+  "rank": 182,
+  "file_name": "182_train_imagesi_i_y_f_iyf41e00_80234086.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "354B",
+    "document_date": "1984-05-04",
+    "sender": "LABORATORIES AMERICA, INC",
+    "receiver": "Melanee Bennett",
+    "origin": "Greensboro, NC 27420",
+    "destination": "Nanemeyer, OK",
+    "reference_number": "-",
+    "unit_price": 2050.0,
+    "total_amount": 2050.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:25:39"
+}

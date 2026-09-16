@@ -1,0 +1,27 @@
+{
+  "id": "DOC-038",
+  "rank": 38,
+  "file_name": "038_train_imagese_e_o_b_eob64a00_89723759.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "1539",
+    "document_date": "1982-01-01",
+    "sender": "COMPANY,INC",
+    "receiver": "now",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 26220.0,
+    "total_amount": 26220.0,
+    "currency": "GBP"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:07:38"
+}

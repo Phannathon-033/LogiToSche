@@ -1,0 +1,27 @@
+{
+  "id": "DOC-278",
+  "rank": 278,
+  "file_name": "278_test_imagesh_h_g_a_hga74c00_91542409.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "13004",
+    "document_date": "1985-10-24",
+    "sender": "Star",
+    "receiver": "-",
+    "origin": "TARRYTOWN, NY 10591",
+    "destination": "NEN YORK, NY 10103",
+    "reference_number": "-",
+    "unit_price": 15529.5,
+    "total_amount": 15529.5,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:36:48"
+}

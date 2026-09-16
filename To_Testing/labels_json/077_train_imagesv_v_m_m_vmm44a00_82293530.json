@@ -1,0 +1,27 @@
+{
+  "id": "DOC-077",
+  "rank": 77,
+  "file_name": "077_train_imagesv_v_m_m_vmm44a00_82293530.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "1477",
+    "document_date": "1999-07-20",
+    "sender": "FREEBORN PET",
+    "receiver": "DENJOHS",
+    "origin": "Faderal, ID",
+    "destination": "DENVER, CO 80202",
+    "reference_number": "-",
+    "unit_price": 696.03,
+    "total_amount": 2011.6,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:12:22"
+}

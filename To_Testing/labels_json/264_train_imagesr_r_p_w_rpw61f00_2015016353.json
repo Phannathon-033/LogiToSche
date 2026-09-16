@@ -1,0 +1,27 @@
+{
+  "id": "DOC-264",
+  "rank": 264,
+  "file_name": "264_train_imagesr_r_p_w_rpw61f00_2015016353.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "1987-06-15",
+    "sender": "XCORPORATE",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "APP, ID",
+    "reference_number": "-",
+    "unit_price": 95775.0,
+    "total_amount": 95775.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:35:02"
+}

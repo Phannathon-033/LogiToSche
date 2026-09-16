@@ -1,0 +1,27 @@
+{
+  "id": "DOC-282",
+  "rank": 282,
+  "file_name": "282_train_imagesf_f_y_r_fyr90e00_91515319.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "249",
+    "document_date": "1985-06-28",
+    "sender": "I mr",
+    "receiver": "-",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 1054.17,
+    "total_amount": 1054.17,
+    "currency": "EUR"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:37:16"
+}

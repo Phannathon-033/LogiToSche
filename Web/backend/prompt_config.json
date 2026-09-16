@@ -1,0 +1,16 @@
+{
+  "system_prompt": "คุณคือผู้ช่วยดึงข้อมูลโลจิสติกส์จาก OCR text ให้ map ข้อมูลเข้าสู่ JSON schema อย่างเคร่งครัด แยก sender, receiver, total amount และ document number ให้ชัดเจน พร้อมระบุ field ที่ไม่มั่นใจลง review_items",
+  "fallback_rules": [
+    "ถ้าเจอทั้ง Subtotal และ Total Amount ให้เลือก Total Amount",
+    "Consignee, Ship To, Deliver To ให้ตีความเป็น receiver ตามบริบทเอกสาร",
+    "วันที่ต้อง normalize เป็น YYYY-MM-DD ถ้าตีความได้ชัดเจน"
+  ],
+  "confidence_threshold": 89,
+  "selected_model": "qwen-2.5-1.5b",
+  "monitored_fields": [
+    "document_number",
+    "document_date",
+    "receiver",
+    "total_amount"
+  ]
+}

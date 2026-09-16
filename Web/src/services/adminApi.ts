@@ -84,3 +84,45 @@ export async function getAdminErrorClusters(): Promise<AdminErrorCluster[]> {
   if (!res.ok) throw new Error("Failed to fetch admin error clusters");
   return (await res.json()) as AdminErrorCluster[];
 }
+
+export interface SystemHealthData {
+  status: "all_active" | "partial" | "offline";
+  status_label: string;
+  uptime_human: string;
+  uptime_seconds: number;
+  gpu: {
+    name: string;
+    engine: string;
+    cuda_version: string;
+    driver_version: string;
+    utilization: number;
+    status: string;
+  };
+  vram: {
+    used_mb: number;
+    total_mb: number;
+    free_mb: number;
+    used_gb: number;
+    total_gb: number;
+    label: string;
+    percent: number;
+  };
+  ocr: {
+    engine: string;
+    device: string;
+    status: string;
+    cuda: boolean;
+  };
+  slm: {
+    model: string;
+    device: string;
+    status: string;
+    cuda: boolean;
+  };
+}
+
+export async function getSystemHealth(): Promise<SystemHealthData> {
+  const res = await fetch("/api/system/health");
+  if (!res.ok) throw new Error("Failed to fetch system health");
+  return (await res.json()) as SystemHealthData;
+}

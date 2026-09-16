@@ -1,0 +1,27 @@
+{
+  "id": "DOC-008",
+  "rank": 8,
+  "file_name": "008_train_imagesx_x_u_j_xuj11e00_87064711.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "063161002",
+    "document_date": "1987-06-25",
+    "sender": "ORIGIN",
+    "receiver": "-",
+    "origin": "BS MÄGAZINES",
+    "destination": "NEW YORK, NY 10174",
+    "reference_number": "-",
+    "unit_price": 11690.0,
+    "total_amount": 11690.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:04:29"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-214",
+  "rank": 214,
+  "file_name": "214_train_imagese_e_g_f_egf57e00_2030762243.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "500",
+    "document_date": "1992-02-13",
+    "sender": "LOCATION",
+    "receiver": "-",
+    "origin": "RATE FORMS FOR EACH DIFFERENCE, IN",
+    "destination": "Park 500 Shipping - Att: Dary1 Ampey",
+    "reference_number": "/FREIGHT",
+    "unit_price": 5809.11,
+    "total_amount": 5809.11,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:29:05"
+}

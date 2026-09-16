@@ -1,0 +1,27 @@
+{
+  "id": "DOC-276",
+  "rank": 276,
+  "file_name": "276_train_imagesf_f_j_b_fjb52c00_2074104215.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "401",
+    "document_date": "2024-09-26",
+    "sender": "ID",
+    "receiver": "-",
+    "origin": "itical Contribution-Campaign",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 500.0,
+    "total_amount": 500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:36:34"
+}

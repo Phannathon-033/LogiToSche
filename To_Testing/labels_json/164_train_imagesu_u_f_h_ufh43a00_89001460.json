@@ -1,0 +1,27 @@
+{
+  "id": "DOC-164",
+  "rank": 164,
+  "file_name": "164_train_imagesu_u_f_h_ufh43a00_89001460.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "286B",
+    "document_date": "1985-10-24",
+    "sender": "LABORATORIES AMERICA, INC",
+    "receiver": "Dr. Connie Stone",
+    "origin": "Greensboro, NC 27420",
+    "destination": "Monneneyor, OH",
+    "reference_number": "-",
+    "unit_price": 400.0,
+    "total_amount": 400.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:23:12"
+}

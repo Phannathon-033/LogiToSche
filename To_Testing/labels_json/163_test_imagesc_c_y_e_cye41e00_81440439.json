@@ -1,0 +1,27 @@
+{
+  "id": "DOC-163",
+  "rank": 163,
+  "file_name": "163_test_imagesc_c_y_e_cye41e00_81440439.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "006A",
+    "document_date": "1986-04-10",
+    "sender": "LABORATORIES AMERICA, INC",
+    "receiver": "Dr. J. Daniel Heck",
+    "origin": "Greensboro, NC 27420-1688",
+    "destination": "TURNPIKE VIENNA, VA",
+    "reference_number": "-",
+    "unit_price": 500.0,
+    "total_amount": 500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:23:02"
+}

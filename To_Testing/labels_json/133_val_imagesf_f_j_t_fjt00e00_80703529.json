@@ -1,0 +1,27 @@
+{
+  "id": "DOC-133",
+  "rank": 133,
+  "file_name": "133_val_imagesf_f_j_t_fjt00e00_80703529.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "1509",
+    "document_date": "1981-03-01",
+    "sender": "A. H. VILLEPIGUE, INC.",
+    "receiver": "-",
+    "origin": "LORILLARD, OH",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 3100.0,
+    "total_amount": 3100.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:18:56"
+}
