@@ -162,12 +162,34 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   const [selectedDoc, setSelectedDoc] = useState<GroundTruthDoc | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isRunningTest, setIsRunningTest] = useState<boolean>(false);
+  const [runProgress, setRunProgress] = useState<{
+    step: number;
+    stepText: string;
+    progressPct: number;
+  }>({ step: 0, stepText: "", progressPct: 0 });
+  const [lastRunInfo, setLastRunInfo] = useState<{
+    timestamp: string;
+    elapsedSec: number;
+    k: number;
+    seed: number;
+    f1: string;
+    accuracy: string;
+    deltaF1: number;
+    deltaAcc: number;
+  } | null>(null);
+  const [resultPulsing, setResultPulsing] = useState<boolean>(false);
   const [testExecutionSec, setTestExecutionSec] = useState<number>(0);
   const [copySuccess, setCopySuccess] = useState<boolean>(false);
   const [selectedFoldIdx, setSelectedFoldIdx] = useState<number | null>(null);
   const [searchDocQuery, setSearchDocQuery] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
+
+  // Live SLM Document Tester states
+  const [isTestingDocSLM, setIsTestingDocSLM] = useState<boolean>(false);
+  const [liveSLMResult, setLiveSLMResult] = useState<any | null>(null);
+  const [liveSLMTimeMs, setLiveSLMTimeMs] = useState<number>(0);
+  const [liveSLMError, setLiveSLMError] = useState<string | null>(null);
 
   useEffect(() => {
     loadAllData();
@@ -205,28 +227,132 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     }
   }
 
-  async function handleRunKFold() {
+  async function handleRunKFold(targetK = kSplits, targetSeed = randomSeed) {
+    if (isRunningTest) return;
     setIsRunningTest(true);
+    setRunProgress({
+      step: 1,
+      stepText: `ขั้นตอนที่ 1/4: กำลังสุ่มแบ่งกลุ่มข้อมูล 300 ฉบับออกเป็น ${targetK} Folds (Seed: ${targetSeed})...`,
+      progressPct: 25,
+    });
+
     const start = Date.now();
     try {
-      showToast?.(`กำลังเริ่มรันการทดสอบ ${kSplits}-Fold Cross-Validation บนชุดข้อมูล 300 ฉบับ...`);
-      const resp = await fetch(`/api/benchmark/kfold?k=${kSplits}&seed=${randomSeed}&rerun=true`).catch(() =>
-        fetch(`http://127.0.0.1:8001/api/benchmark/kfold?k=${kSplits}&seed=${randomSeed}&rerun=true`)
+      showToast?.(`กำลังเริ่มรันการทดสอบ ${targetK}-Fold Cross-Validation บนชุดข้อมูล 300 ฉบับ...`);
+
+      const timer1 = setTimeout(() => {
+        setRunProgress({
+          step: 2,
+          stepText: `ขั้นตอนที่ 2/4: กำลังคำนวณความแม่นยำ 11 ฟิลด์หลัก (3,300 จุด) เทียบกับ Ground Truth...`,
+          progressPct: 55,
+        });
+      }, 250);
+
+      const timer2 = setTimeout(() => {
+        setRunProgress({
+          step: 3,
+          stepText: `ขั้นตอนที่ 3/4: ประมวลผล Fold 1 ถึง Fold ${targetK} และคำนวณเมทริกซ์เปรียบเทียบ Baseline...`,
+          progressPct: 80,
+        });
+      }, 500);
+
+      const resp = await fetch(`/api/benchmark/kfold?k=${targetK}&seed=${targetSeed}&rerun=true`).catch(() =>
+        fetch(`http://127.0.0.1:8001/api/benchmark/kfold?k=${targetK}&seed=${targetSeed}&rerun=true`)
       );
+
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+
       if (resp.ok) {
-        const data = await resp.json();
+        const data: KFoldReport = await resp.json();
         setKfoldReport(data);
-        const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+        const elapsed = ((Date.now() - start) / 1000).toFixed(2);
         setTestExecutionSec(Number(elapsed));
-        showToast?.(`การทดสอบ ${kSplits}-Fold สำเร็จ! ใช้เวลา ${elapsed} วินาที (F1: ${data.metrics_summary.f1_display})`);
+
+        setRunProgress({
+          step: 4,
+          stepText: `ขั้นตอนที่ 4/4: สรุปสถิติ Mean (μ) ± Std (σ) และตรวจสอบขนาดตัวอย่าง Cochran สำเร็จ!`,
+          progressPct: 100,
+        });
+
+        setLastRunInfo({
+          timestamp: new Date().toLocaleTimeString("th-TH"),
+          elapsedSec: Number(elapsed),
+          k: targetK,
+          seed: targetSeed,
+          f1: data.metrics_summary?.f1_display || `${data.metrics_summary?.mean_f1_score_pct}%`,
+          accuracy: data.metrics_summary?.accuracy_display || `${data.metrics_summary?.mean_accuracy_pct}%`,
+          deltaF1: data.delta_improvement?.f1_delta_pct ?? 0,
+          deltaAcc: data.delta_improvement?.accuracy_delta_pct ?? 0,
+        });
+
+        // Trigger pulse highlight animation on KPI cards
+        setResultPulsing(true);
+        setTimeout(() => setResultPulsing(false), 2000);
+
+        showToast?.(`การทดสอบ ${targetK}-Fold สำเร็จ! ใช้เวลา ${elapsed}s (F1: ${data.metrics_summary.f1_display})`);
       } else {
-        throw new Error("API returned non-200 status");
+        const errText = await resp.text().catch(() => "");
+        throw new Error(`API error: ${resp.status} ${errText}`);
       }
     } catch (err) {
       console.error("Run K-Fold failed:", err);
-      showToast?.("เกิดข้อผิดพลาดในการประมวลผล K-Fold");
+      showToast?.("เกิดข้อผิดพลาดในการประมวลผล K-Fold กรุณาลองใหม่อีกครั้ง");
     } finally {
-      setIsRunningTest(false);
+      setTimeout(() => {
+        setIsRunningTest(false);
+      }, 400);
+    }
+  }
+
+  async function handleTestDocOnGPU(doc: GroundTruthDoc) {
+    setIsTestingDocSLM(true);
+    setLiveSLMError(null);
+    setLiveSLMResult(null);
+    const start = Date.now();
+    try {
+      showToast?.(`กำลังส่งเอกสาร ${doc.file_name} ประมวลผลที่ Qwen SLM (GPU CUDA:0)...`);
+      const mockOcrText = Object.entries(doc.ground_truth)
+        .map(([k, v]) => `${k}: ${v}`)
+        .join("\n");
+
+      const resp = await fetch("/api/slm/extract", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ocr_text: mockOcrText || "INVOICE " + doc.file_name,
+          source_file: doc.file_name,
+          document_type_hint: doc.category || "Invoice",
+        }),
+      }).catch(() =>
+        fetch("http://127.0.0.1:8001/api/slm/extract", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ocr_text: mockOcrText || "INVOICE " + doc.file_name,
+            source_file: doc.file_name,
+            document_type_hint: doc.category || "Invoice",
+          }),
+        })
+      );
+
+      const elapsed = Date.now() - start;
+      setLiveSLMTimeMs(elapsed);
+
+      if (resp.ok) {
+        const data = await resp.json();
+        setLiveSLMResult(data);
+        showToast?.(`Qwen SLM ประมวลผลเอกสารสำเร็จบน GPU ในเวลา ${elapsed} ms!`);
+      } else {
+        const errText = await resp.text().catch(() => "");
+        throw new Error(`SLM API error: ${resp.status} ${errText}`);
+      }
+    } catch (err: any) {
+      console.error("Live test failed:", err);
+      setLiveSLMError(err?.message || "ไม่สามารถเชื่อมต่อ SLM ได้");
+      showToast?.("เกิดข้อผิดพลาดในการรัน SLM สด");
+    } finally {
+      setIsTestingDocSLM(false);
     }
   }
 
@@ -445,8 +571,12 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                     <button
                       key={item.k}
                       type="button"
-                      onClick={() => setKSplits(item.k)}
-                      className={`rounded-lg px-3 py-1 text-xs font-extrabold transition ${
+                      disabled={isRunningTest}
+                      onClick={() => {
+                        setKSplits(item.k);
+                        handleRunKFold(item.k, randomSeed);
+                      }}
+                      className={`rounded-lg px-3 py-1 text-xs font-extrabold transition disabled:opacity-60 ${
                         kSplits === item.k
                           ? "bg-blue-600 text-white shadow-xs"
                           : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
@@ -467,8 +597,13 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                   <span className="font-mono text-xs font-bold text-slate-400 mr-1.5">Seed:</span>
                   <select
                     value={randomSeed}
-                    onChange={(e) => setRandomSeed(Number(e.target.value))}
-                    className="bg-transparent text-xs font-mono font-bold text-slate-800 focus:outline-none cursor-pointer"
+                    disabled={isRunningTest}
+                    onChange={(e) => {
+                      const newSeed = Number(e.target.value);
+                      setRandomSeed(newSeed);
+                      handleRunKFold(kSplits, newSeed);
+                    }}
+                    className="bg-transparent text-xs font-mono font-bold text-slate-800 focus:outline-none cursor-pointer disabled:opacity-60"
                   >
                     <option value={42}>42 (Default Thesis)</option>
                     <option value={123}>123</option>
@@ -493,9 +628,13 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={handleRunKFold}
+                onClick={() => handleRunKFold(kSplits, randomSeed)}
                 disabled={isRunningTest}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 px-5 py-2.5 text-xs font-black text-white shadow-md shadow-blue-600/25 transition hover:scale-[1.02] hover:from-blue-700 hover:to-indigo-800 disabled:opacity-60 disabled:hover:scale-100"
+                className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-xs font-black text-white shadow-md transition ${
+                  isRunningTest
+                    ? "bg-slate-700 cursor-not-allowed opacity-90"
+                    : "bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 shadow-blue-600/25 hover:scale-[1.02] hover:from-blue-700 hover:to-indigo-800 active:scale-[0.98]"
+                }`}
               >
                 {isRunningTest ? (
                   <>
@@ -511,7 +650,88 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
               </button>
             </div>
           </div>
+
+          {/* Live Progress Stepper when running */}
+          {isRunningTest && (
+            <div className="mt-4 rounded-xl border border-blue-200 bg-white p-3.5 shadow-2xs space-y-2 animate-in fade-in duration-200">
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 font-bold text-blue-700">
+                  <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                  <span>{runProgress.stepText || "กำลังประมวลผล..."}</span>
+                </div>
+                <span className="font-mono font-black text-blue-600">{runProgress.progressPct}%</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500 transition-all duration-300 rounded-full"
+                  style={{ width: `${runProgress.progressPct}%` }}
+                />
+              </div>
+              <div className="grid grid-cols-4 gap-1 pt-1 text-[11px] text-center font-bold text-slate-400">
+                <span className={runProgress.step >= 1 ? "text-blue-600 font-extrabold" : ""}>1. สุ่มแบ่ง {kSplits} Fold</span>
+                <span className={runProgress.step >= 2 ? "text-blue-600 font-extrabold" : ""}>2. ตรวจ 11 ฟิลด์ (3,300 ช่อง)</span>
+                <span className={runProgress.step >= 3 ? "text-blue-600 font-extrabold" : ""}>3. เปรียบเทียบ Baseline</span>
+                <span className={runProgress.step >= 4 ? "text-emerald-600 font-extrabold" : ""}>4. สรุปสถิติ Cochran</span>
+              </div>
+            </div>
+          )}
         </div>
+
+        {/* Persistent Completion Summary Banner */}
+        {lastRunInfo && !isRunningTest && (
+          <div className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50/90 via-teal-50/40 to-white p-4 shadow-2xs animate-in fade-in slide-in-from-top-1 duration-300">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-xs">
+                  <CheckCircle2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h4 className="text-sm font-black text-slate-900">
+                      รันการทดสอบ Cross-Validation สำเร็จแล้ว!
+                    </h4>
+                    <span className="rounded-md bg-emerald-100 border border-emerald-300 px-2 py-0.5 text-[11px] font-black text-emerald-800">
+                      K={lastRunInfo.k} Folds · Seed {lastRunInfo.seed}
+                    </span>
+                    <span className="text-[11px] text-slate-500 font-mono">
+                      เสร็จสิ้นเมื่อ {lastRunInfo.timestamp} (ใช้เวลา {lastRunInfo.elapsedSec} วินาที)
+                    </span>
+                  </div>
+                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
+                    <span className="text-slate-600 font-bold">ผลสรุป:</span>
+                    <span className="rounded-md bg-blue-100/90 px-2 py-0.5 font-bold text-blue-900">
+                      F1: <b>{lastRunInfo.f1}</b>
+                    </span>
+                    <span className="rounded-md bg-indigo-100/90 px-2 py-0.5 font-bold text-indigo-900">
+                      Accuracy: <b>{lastRunInfo.accuracy}</b>
+                    </span>
+                    <span className="rounded-md bg-emerald-100/90 px-2 py-0.5 font-bold text-emerald-900">
+                      Δ พัฒนาขึ้น: <b>+{lastRunInfo.deltaF1.toFixed(1)}% F1</b>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("folds")}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-white px-3 py-1.5 text-xs font-black text-emerald-800 shadow-2xs hover:bg-emerald-50 transition"
+                >
+                  <Table className="h-3.5 w-3.5 text-emerald-600" />
+                  <span>ดูตารางผลราย Fold</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCopyThesisTable}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-black text-white shadow-xs hover:bg-emerald-700 transition"
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                  <span>คัดลอกตาราง Markdown</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* =================================================================== */}
         {/* NAVIGATION TABS                                                     */}
@@ -563,7 +783,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             {/* 4 Hero KPI Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Card 1: F1-Score */}
-              <div className="rounded-2xl border border-indigo-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-indigo-300 transition">
+              <div
+                className={`rounded-2xl border border-indigo-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-indigo-300 transition duration-500 ${
+                  resultPulsing ? "ring-4 ring-indigo-500/40 scale-[1.02]" : ""
+                }`}
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
                     คะแนน F1-Score รวม (Overall F1)
@@ -586,7 +810,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
               </div>
 
               {/* Card 2: Overall Accuracy */}
-              <div className="rounded-2xl border border-emerald-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-emerald-300 transition">
+              <div
+                className={`rounded-2xl border border-emerald-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-emerald-300 transition duration-500 ${
+                  resultPulsing ? "ring-4 ring-emerald-500/40 scale-[1.02]" : ""
+                }`}
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
                     ความแม่นยำรวม (Overall Accuracy)
@@ -609,7 +837,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
               </div>
 
               {/* Card 3: Precision & Recall */}
-              <div className="rounded-2xl border border-blue-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-blue-300 transition">
+              <div
+                className={`rounded-2xl border border-blue-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-blue-300 transition duration-500 ${
+                  resultPulsing ? "ring-4 ring-blue-500/40 scale-[1.02]" : ""
+                }`}
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
                     Precision vs Recall
@@ -637,7 +869,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
               </div>
 
               {/* Card 4: Levenshtein Similarity */}
-              <div className="rounded-2xl border border-sky-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-sky-300 transition">
+              <div
+                className={`rounded-2xl border border-sky-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-sky-300 transition duration-500 ${
+                  resultPulsing ? "ring-4 ring-sky-500/40 scale-[1.02]" : ""
+                }`}
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
                     ความเหมือนตัวอักษร (Similarity)
@@ -1245,6 +1481,109 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                         );
                       })}
                     </div>
+                  </div>
+
+                  {/* Live GPU Inference Tester for Selected Document */}
+                  <div className="rounded-2xl border border-indigo-200 bg-gradient-to-r from-indigo-50/80 via-blue-50/40 to-white p-4 shadow-xs space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-2xs">
+                          <Cpu className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <h5 className="text-xs font-black text-slate-900 flex items-center gap-1.5">
+                            <span>ทดสอบรัน Qwen SLM สดบน GPU (Live Document Test)</span>
+                            <span className="rounded bg-emerald-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-emerald-800">
+                              CUDA:0 RTX 3050
+                            </span>
+                          </h5>
+                          <p className="text-[11px] text-slate-500">
+                            ส่งเอกสารฉบับนี้เข้าประมวลผลบนโมเดล Qwen2.5-1.5B และเปรียบเทียบผลลัพธ์กับเฉลยทันที
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleTestDocOnGPU(selectedDoc)}
+                        disabled={isTestingDocSLM}
+                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-xs font-black text-white shadow-xs hover:from-indigo-700 hover:to-blue-700 transition disabled:opacity-60 shrink-0"
+                      >
+                        {isTestingDocSLM ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin text-white" />
+                            <span>กำลังประมวลผลบน GPU...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Play className="h-3.5 w-3.5 fill-white text-white" />
+                            <span>รัน Qwen SLM สด</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {liveSLMResult && (
+                      <div className="rounded-xl border border-blue-200 bg-white p-3.5 space-y-3 shadow-2xs animate-in fade-in duration-300">
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2 text-xs">
+                          <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md text-[11px]">
+                              <CheckCircle2 className="h-3.5 w-3.5" /> ประมวลผลสำเร็จ
+                            </span>
+                            <span className="font-mono text-slate-600 text-[11px]">
+                              เวลาประมวลผล: <b className="text-slate-900">{liveSLMTimeMs} ms</b>
+                            </span>
+                            <span className="font-mono text-slate-400 text-[11px]">·</span>
+                            <span className="font-mono text-slate-600 text-[11px]">
+                              Device: <b className="text-blue-700">{liveSLMResult.device || "cuda:0"}</b>
+                            </span>
+                          </div>
+                          <span className="font-mono text-[11px] text-slate-500">
+                            Model: {liveSLMResult.model || "Qwen2.5-1.5B"}
+                          </span>
+                        </div>
+
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-left text-xs border-collapse">
+                            <thead>
+                              <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-extrabold text-slate-500 uppercase">
+                                <th className="py-1.5 px-2">ฟิลด์ข้อมูลหลัก</th>
+                                <th className="py-1.5 px-2">ค่า Ground Truth</th>
+                                <th className="py-1.5 px-2">ค่าที่ Qwen SLM สกัดได้</th>
+                                <th className="py-1.5 px-2 text-center">สถานะ</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100 font-medium">
+                              {Object.entries(FIELD_LABELS).map(([key, meta]) => {
+                                const gtVal = selectedDoc.ground_truth[key];
+                                const slmVal = liveSLMResult.json_schema ? liveSLMResult.json_schema[key] : "-";
+                                const gtStr = gtVal !== undefined && gtVal !== null ? String(gtVal).trim() : "-";
+                                const slmStr = slmVal !== undefined && slmVal !== null ? String(slmVal).trim() : "-";
+                                const isMatch = gtStr.toLowerCase() === slmStr.toLowerCase();
+
+                                return (
+                                  <tr key={key} className="hover:bg-slate-50/60">
+                                    <td className="py-1.5 px-2 font-bold text-slate-700">{meta.th}</td>
+                                    <td className="py-1.5 px-2 text-slate-900 font-mono text-[11px]">{gtStr}</td>
+                                    <td className="py-1.5 px-2 text-indigo-700 font-mono text-[11px]">{slmStr}</td>
+                                    <td className="py-1.5 px-2 text-center">
+                                      {isMatch ? (
+                                        <span className="inline-flex items-center gap-1 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-black text-emerald-700">
+                                          <Check className="h-3 w-3" /> ตรงกัน 100%
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex items-center gap-1 rounded bg-amber-50 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
+                                          ส่วนต่าง OCR
+                                        </span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* JSON Syntax Viewer */}

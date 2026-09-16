@@ -792,13 +792,29 @@ def get_benchmark_ground_truth() -> dict[str, Any]:
 @app.get("/api/benchmark/kfold")
 def get_kfold_report(k: int = 5, seed: int = 42, rerun: bool = False) -> dict[str, Any]:
     report_path = BASE_DIR / "kfold_evaluation_report.json"
-    if rerun or not report_path.exists():
+    need_rerun = rerun or not report_path.exists()
+    if not need_rerun and report_path.exists():
         try:
+            cached = json.loads(report_path.read_text(encoding="utf-8"))
+            if cached.get("k_splits") != k or cached.get("random_seed") != seed:
+                need_rerun = True
+        except Exception:
+            need_rerun = True
+
+    if need_rerun:
+        try:
+            import importlib
             try:
-                from .kfold_evaluator import run_kfold_evaluation
+                from . import kfold_evaluator
+                importlib.reload(kfold_evaluator)
+                run_kfold_evaluation = kfold_evaluator.run_kfold_evaluation
             except ImportError:
-                from kfold_evaluator import run_kfold_evaluation
-            run_kfold_evaluation(k_splits=k, random_seed=seed)
+                import kfold_evaluator
+                importlib.reload(kfold_evaluator)
+                run_kfold_evaluation = kfold_evaluator.run_kfold_evaluation
+            result = run_kfold_evaluation(k_splits=k, random_seed=seed)
+            if result:
+                return result
         except Exception as exc:
             raise HTTPException(status_code=500, detail=f"K-Fold evaluation failed: {exc}") from exc
     if not report_path.exists():

@@ -240,7 +240,7 @@ def run_kfold_evaluation(k_splits: int = 5, random_seed: int = 42):
             "similarity_pct": base_avg_sim
         })
 
-        print(f"  ▶ Fold {fold_idx}/5 (Test: {len(val_docs)} docs) -> Proposed SLM Acc: {slm_acc}% (F1: {slm_f1}%) | Baseline Acc: {base_acc}%")
+        print(f"  ▶ Fold {fold_idx}/{k_splits} (Test: {len(val_docs)} docs) -> Proposed SLM Acc: {slm_acc}% (F1: {slm_f1}%) | Baseline Acc: {base_acc}%")
 
     # Aggregate Statistics
     slm_accs = [f["accuracy_pct"] for f in slm_fold_results]
@@ -268,12 +268,13 @@ def run_kfold_evaluation(k_splits: int = 5, random_seed: int = 42):
             "scores_per_fold": slm_field_fold_scores[f]
         }
 
+    splits_list = list(kf.split(doc_indices))
     ui_folds = []
     for f_res in slm_fold_results:
         f_idx = f_res["fold"] - 1
         f_accs = {f: slm_field_fold_scores[f][f_idx] for f in CORE_FIELDS}
         base_f_accs = {f: baseline_field_fold_scores[f][f_idx] for f in CORE_FIELDS}
-        val_slice = [documents[i] for i in list(kf.split(doc_indices))[f_idx][1]]
+        val_slice = [documents[i] for i in splits_list[f_idx][1]]
         ui_folds.append({
             "fold": f_res["fold"],
             "val_samples_count": f_res["test_docs_count"],
@@ -391,15 +392,19 @@ def generate_markdown_thesis_table(report: dict) -> str:
     slm = report["proposed_slm"]
     base = report["baseline_model"]
     samp = report["sample_size_verification"]
+    k_splits = report.get("k_splits", 5)
 
     md = []
-    md.append("## ตารางผลการทดลอง 5-Fold Cross-Validation (K=5) ระบบแปลงเอกสารใบแจ้งหนี้สู่ JSON Schema")
+    md.append(f"## ตารางผลการทดลอง {k_splits}-Fold Cross-Validation (K={k_splits}) ระบบแปลงเอกสารใบแจ้งหนี้สู่ JSON Schema")
     md.append(f"**การตรวจสอบขนาดกลุ่มตัวอย่าง (Cochran's Formula):** $n_0 = \\frac{{1.96^2 \\times 0.80 \\times 0.20}}{{0.05^2}} = 245.86 \\approx 246$ ฉบับ | **จำนวนตัวอย่างจริงที่ใช้:** $N = {report['total_documents']}$ ฉบับ (ผ่านเกณฑ์ทางสถิติที่ 95% Confidence, Margin of Error $\\le \\pm 5\\%$)")
     md.append("")
-    md.append("### ตารางที่ 4.1: เปรียบเทียบผลความแม่นยำรายฟิลด์ 11 ฟิลด์หลัก (Fold 1 ถึง Fold 5)")
+    md.append(f"### ตารางที่ 4.1: เปรียบเทียบผลความแม่นยำรายฟิลด์ 11 ฟิลด์หลัก (Fold 1 ถึง Fold {k_splits})")
     md.append("")
-    md.append("| ฟิลด์ข้อมูลหลัก (11 Core Fields) | Fold 1 | Fold 2 | Fold 3 | Fold 4 | Fold 5 | แบบเดิม (Baseline Regex) | โมเดลที่นำเสนอ (Qwen SLM) | ส่วนต่าง (Δ) |")
-    md.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
+
+    fold_headers = " | ".join(f"Fold {f_obj['fold']}" for f_obj in slm["folds"])
+    fold_align = " | ".join([":---:"] * len(slm["folds"]))
+    md.append(f"| ฟิลด์ข้อมูลหลัก (11 Core Fields) | {fold_headers} | แบบเดิม (Baseline Regex) | โมเดลที่นำเสนอ (Qwen SLM) | ส่วนต่าง (Δ) |")
+    md.append(f"| :--- | {fold_align} | :---: | :---: | :---: |")
 
     for f in CORE_FIELDS:
         label = FIELD_LABELS_TH[f]
@@ -412,13 +417,17 @@ def generate_markdown_thesis_table(report: dict) -> str:
         diff_str = f"+{diff:.1f}%" if diff >= 0 else f"{diff:.1f}%"
         md.append(f"| {label} | {folds_str} | {base_mean_std} | {slm_mean_std} | **{diff_str}** |")
 
-    md.append(f"| **ความแม่นยำภาพรวม (Overall Accuracy)** | **{slm['folds'][0]['accuracy_pct']:.1f}%** | **{slm['folds'][1]['accuracy_pct']:.1f}%** | **{slm['folds'][2]['accuracy_pct']:.1f}%** | **{slm['folds'][3]['accuracy_pct']:.1f}%** | **{slm['folds'][4]['accuracy_pct']:.1f}%** | {base['mean_accuracy_pct']:.1f}% ± {base['std_accuracy']:.1f}% | 🏆 **{slm['mean_accuracy_pct']:.1f}% ± {slm['std_accuracy']:.1f}%** | **+{slm['mean_accuracy_pct'] - base['mean_accuracy_pct']:.1f}%** |")
-    md.append(f"| **F1-Score รวม (Overall F1-Score)** | {slm['folds'][0]['f1_score_pct']:.1f}% | {slm['folds'][1]['f1_score_pct']:.1f}% | {slm['folds'][2]['f1_score_pct']:.1f}% | {slm['folds'][3]['f1_score_pct']:.1f}% | {slm['folds'][4]['f1_score_pct']:.1f}% | {base['mean_f1_score_pct']:.1f}% ± {base['std_f1']:.1f}% | 🏆 **{slm['mean_f1_score_pct']:.1f}% ± {slm['std_f1']:.1f}%** | **+{slm['mean_f1_score_pct'] - base['mean_f1_score_pct']:.1f}%** |")
+    acc_folds_str = " | ".join(f"**{f['accuracy_pct']:.1f}%**" for f in slm["folds"])
+    f1_folds_str = " | ".join(f"{f['f1_score_pct']:.1f}%" for f in slm["folds"])
+
+    md.append(f"| **ความแม่นยำภาพรวม (Overall Accuracy)** | {acc_folds_str} | {base['mean_accuracy_pct']:.1f}% ± {base['std_accuracy']:.1f}% | 🏆 **{slm['mean_accuracy_pct']:.1f}% ± {slm['std_accuracy']:.1f}%** | **+{slm['mean_accuracy_pct'] - base['mean_accuracy_pct']:.1f}%** |")
+    md.append(f"| **F1-Score รวม (Overall F1-Score)** | {f1_folds_str} | {base['mean_f1_score_pct']:.1f}% ± {base['std_f1']:.1f}% | 🏆 **{slm['mean_f1_score_pct']:.1f}% ± {slm['std_f1']:.1f}%** | **+{slm['mean_f1_score_pct'] - base['mean_f1_score_pct']:.1f}%** |")
     md.append("")
-    md.append("> **สรุปผลการวิจัย:** การทดสอบ 5-Fold Cross-Validation ยืนยันว่าโมเดล SLM ร่วมกับระบบ Semantic Auto-Correction ให้ค่าความแม่นยำเฉลี่ยสูงกว่าระบบ OCR เดิมอย่างมีนัยสำคัญทางสถิติในทุก Fold โดยค่าความแม่นยำสม่ำเสมอมีค่าเบี่ยงเบนมาตรฐาน (σ) ต่ำ บ่งชี้ว่าระบบไม่มีปัญหา Overfitting")
+    md.append(f"> **สรุปผลการวิจัย:** การทดสอบ {k_splits}-Fold Cross-Validation ยืนยันว่าโมเดล SLM ร่วมกับระบบ Semantic Auto-Correction ให้ค่าความแม่นยำเฉลี่ยสูงกว่าระบบ OCR เดิมอย่างมีนัยสำคัญทางสถิติในทุก Fold โดยค่าความแม่นยำสม่ำเสมอมีค่าเบี่ยงเบนมาตรฐาน (σ) ต่ำ บ่งชี้ว่าระบบไม่มีปัญหา Overfitting")
 
     return "\n".join(md)
 
 
 if __name__ == "__main__":
     run_kfold_evaluation()
+
