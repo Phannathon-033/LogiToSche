@@ -3,6 +3,7 @@ import {
   BrainCircuit,
   CheckCircle2,
   Download,
+  FileSpreadsheet,
   FileText,
   Layers,
   Loader2,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import { useRef } from "react";
 import type { BatchDocumentItem, BatchFileStatus } from "../types";
+import { calculateDocumentCompleteness } from "../services/dataValidationService";
 
 interface BatchDocumentGalleryProps {
   documents: BatchDocumentItem[];
@@ -20,6 +22,8 @@ interface BatchDocumentGalleryProps {
   onAddFiles: (files: File[]) => void;
   onRemoveDocument: (index: number) => void;
   onExportAllJson: () => void;
+  onExportAllExcel?: () => void;
+  onExportAllCsv?: () => void;
   isProcessing: boolean;
   batchPhase: "idle" | "ocr" | "slm" | "completed";
 }
@@ -31,6 +35,8 @@ export function BatchDocumentGallery({
   onAddFiles,
   onRemoveDocument,
   onExportAllJson,
+  onExportAllExcel,
+  onExportAllCsv,
   isProcessing,
   batchPhase,
 }: BatchDocumentGalleryProps) {
@@ -50,7 +56,11 @@ export function BatchDocumentGallery({
   const slmProgressPct = (slmDoneCount / Math.max(totalCount, 1)) * 55;
   const totalProgressPct = Math.min(100, Math.round(ocrProgressPct + slmProgressPct));
 
-  function getStatusInfo(status: BatchFileStatus, acc?: number | null) {
+  function getStatusInfo(doc: BatchDocumentItem) {
+    const status = doc.status;
+    const acc = doc.performance?.accuracy_pct ?? doc.overallConfidence;
+    const completeness = calculateDocumentCompleteness(doc);
+
     switch (status) {
       case "queued":
         return {
@@ -77,8 +87,21 @@ export function BatchDocumentGallery({
           icon: <Loader2 className="h-3 w-3 animate-spin text-indigo-600" />,
         };
       case "completed":
+        if (completeness.level === "critical") {
+          return {
+            label: `ฟิลด์ไม่ครบ (${completeness.pct}%)`,
+            bg: "bg-rose-50 border-rose-300 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 font-bold",
+            icon: <AlertCircle className="h-3 w-3 text-rose-600" />,
+          };
+        } else if (completeness.level === "warning") {
+          return {
+            label: `ฟิลด์ปานกลาง (${completeness.pct}%)`,
+            bg: "bg-amber-50 border-amber-300 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300 font-bold",
+            icon: <AlertCircle className="h-3 w-3 text-amber-600" />,
+          };
+        }
         return {
-          label: `เสร็จสมบูรณ์ (${acc ?? 98}%)`,
+          label: `เสร็จสมบูรณ์ (${completeness.pct || acc || 98}%)`,
           bg: "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-300",
           icon: <CheckCircle2 className="h-3 w-3 text-emerald-600" />,
         };
@@ -135,14 +158,39 @@ export function BatchDocumentGallery({
           </button>
 
           {slmDoneCount > 0 ? (
-            <button
-              type="button"
-              onClick={onExportAllJson}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-primary/90"
-            >
-              <Download className="h-3.5 w-3.5" />
-              ดาวน์โหลด JSON ทั้งหมด ({slmDoneCount}/{totalCount})
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              {onExportAllExcel && (
+                <button
+                  type="button"
+                  onClick={onExportAllExcel}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500 bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700"
+                  title="ดาวน์โหลดสรุป 11 ฟิลด์ของทุกเอกสารในแบทช์เป็น Excel (.xlsx)"
+                >
+                  <FileSpreadsheet className="h-3.5 w-3.5" />
+                  Excel (.xlsx) ({slmDoneCount})
+                </button>
+              )}
+              {onExportAllCsv && (
+                <button
+                  type="button"
+                  onClick={onExportAllCsv}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-teal-500 bg-teal-700 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-teal-800"
+                  title="ดาวน์โหลดสรุปทุกเอกสารในแบทช์เป็น CSV"
+                >
+                  <FileText className="h-3.5 w-3.5" />
+                  CSV ({slmDoneCount})
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onExportAllJson}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-primary/90"
+                title="ดาวน์โหลด JSON Schema ของทุกเอกสารในแบทช์"
+              >
+                <Download className="h-3.5 w-3.5" />
+                JSON ({slmDoneCount}/{totalCount})
+              </button>
+            </div>
           ) : null}
         </div>
       </div>
@@ -197,16 +245,28 @@ export function BatchDocumentGallery({
       <div className="mt-4 flex gap-3 overflow-x-auto pb-2 pt-1 scrollbar-thin">
         {documents.map((doc, idx) => {
           const isActive = idx === activeIndex;
-          const statusInfo = getStatusInfo(doc.status, doc.performance?.accuracy_pct ?? doc.overallConfidence);
+          const statusInfo = getStatusInfo(doc);
+          const completeness = calculateDocumentCompleteness(doc);
+          const isPdf = doc.fileName.toLowerCase().endsWith(".pdf");
+
+          // Determine card border styling based on completeness after SLM
+          let cardBorderClass = "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm dark:border-slate-800 dark:bg-slate-800/60";
+          if (completeness.level === "critical") {
+            cardBorderClass = isActive
+              ? "border-rose-500 bg-rose-50/50 ring-2 ring-rose-400 shadow-md dark:border-rose-700 dark:bg-rose-950/40"
+              : "border-rose-300 bg-rose-50/25 hover:border-rose-400 hover:shadow-sm dark:border-rose-900/50 dark:bg-rose-950/20";
+          } else if (completeness.level === "warning") {
+            cardBorderClass = isActive
+              ? "border-amber-500 bg-amber-50/50 ring-2 ring-amber-400 shadow-md dark:border-amber-700 dark:bg-amber-950/40"
+              : "border-amber-300 bg-amber-50/25 hover:border-amber-400 hover:shadow-sm dark:border-amber-900/50 dark:bg-amber-950/20";
+          } else if (isActive) {
+            cardBorderClass = "border-primary bg-blue-50/40 ring-2 ring-primary/30 shadow-md dark:border-primary dark:bg-slate-800";
+          }
           return (
             <div
               key={doc.id}
               onClick={() => onSelectIndex(idx)}
-              className={`group relative flex w-60 shrink-0 cursor-pointer flex-col justify-between rounded-xl border p-3 transition-all duration-200 ${
-                isActive
-                  ? "border-primary bg-blue-50/40 ring-2 ring-primary/30 shadow-md dark:border-primary dark:bg-slate-800"
-                  : "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm dark:border-slate-800 dark:bg-slate-800/60"
-              }`}
+              className={`group relative flex w-60 shrink-0 cursor-pointer flex-col justify-between rounded-xl border p-3 transition-all duration-200 ${cardBorderClass}`}
             >
               {/* Card Top: Index Badge & Delete button */}
               <div className="flex items-center justify-between">

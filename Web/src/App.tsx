@@ -12,8 +12,16 @@ import { SlmPromptAssistantModal } from "./components/SlmPromptAssistantModal";
 import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
 import { saveDocumentToFirebase } from "./services/firebase";
 import { createJsonDownload } from "./services/mockProcessingService";
+import {
+  exportBatchToExcel,
+  exportBatchToCsv,
+  exportSingleDocToExcel,
+  exportSingleDocToCsv,
+  exportToJson,
+} from "./services/exportService";
 import { renderPdfPreview, runPaddleOcr, type OcrLanguage, type OcrLine } from "./services/ocrApi";
 import { runSlmExtraction } from "./services/slmApi";
+import { normalizeLogisticsJsonSchema } from "./services/dataValidationService";
 import { EMPTY_JSON_SCHEMA } from "./types";
 import type {
   BatchDocumentItem,
@@ -239,13 +247,28 @@ export function App() {
             ocrText: allDocs[i].ocrText,
             ocrLines: allDocs[i].ocrLines,
             imageFile: allDocs[i].file,
-            imageBase64: allDocs[i].previewUrl?.startsWith("data:image/") ? allDocs[i].previewUrl ?? undefined : undefined,
+            imageBase64: allDocs[i].previewUrl?.startsWith("data:image/") ? (allDocs[i].previewUrl as string) : undefined,
+          });
+
+          // Apply automatic logistics business validation & normalization (ISO 8601 / ISO 4217)
+          const { normalized: normalizedSchema } = normalizeLogisticsJsonSchema(slm.jsonOutput);
+          const normalizedFields = slm.fields.map((f) => {
+            if (f.field === "document_date" && normalizedSchema.document_date) {
+              return { ...f, value: normalizedSchema.document_date };
+            }
+            if (f.field === "currency" && normalizedSchema.currency) {
+              return { ...f, value: normalizedSchema.currency };
+            }
+            if (f.field === "total_amount" && normalizedSchema.total_amount) {
+              return { ...f, value: String(normalizedSchema.total_amount) };
+            }
+            return f;
           });
 
           allDocs[i] = {
             ...allDocs[i],
-            jsonOutput: slm.jsonOutput,
-            fields: slm.fields,
+            jsonOutput: normalizedSchema,
+            fields: normalizedFields,
             confidenceScores: slm.confidenceScores,
             overallConfidence: slm.overallConfidence,
             performance: slm.performance ?? null,
@@ -297,6 +320,40 @@ export function App() {
     }
   }
 
+  function handleRemoveBatchDoc(index: number) {
+    const docToRemove = batchDocuments[index];
+    if (docToRemove?.previewUrl && docToRemove.previewUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(docToRemove.previewUrl);
+    }
+    const nextList = batchDocuments.filter((_, idx) => idx !== index);
+    setBatchDocuments(nextList);
+    if (nextList.length === 0) {
+      handleResetDocument();
+    } else if (activeDocIndex >= nextList.length) {
+      setActiveDocIndex(nextList.length - 1);
+    }
+    showToast(`ลบเอกสารออกจากแบทช์แล้ว`);
+  }
+
+  function handleExportAllExcel() {
+    try {
+      exportBatchToExcel(batchDocuments);
+      const count = batchDocuments.filter((d) => d.jsonOutput !== null).length;
+      showToast(`ส่งออก Excel (.xlsx) รวม ${count} เอกสารเรียบร้อยแล้ว`);
+    } catch (err: any) {
+      showToast(err.message || "เกิดข้อผิดพลาดในการส่งออก Excel");
+    }
+  }
+
+  function handleExportAllCsv() {
+    try {
+      exportBatchToCsv(batchDocuments);
+      const count = batchDocuments.filter((d) => d.jsonOutput !== null).length;
+      showToast(`ส่งออก CSV รวม ${count} เอกสารเรียบร้อยแล้ว`);
+    } catch (err: any) {
+      showToast(err.message || "เกิดข้อผิดพลาดในการส่งออก CSV");
+    }
+  }
   function handleExportAllJson() {
     const completedSchemas = batchDocuments
       .filter((d) => d.jsonOutput !== null)
@@ -307,14 +364,26 @@ export function App() {
       return;
     }
 
-    const blob = new Blob([JSON.stringify(completedSchemas, null, 2)], { type: "application/json;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `logiai_batch_export_${new Date().toISOString().slice(0, 10)}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
+    exportToJson(completedSchemas, `logiai_batch_export_${new Date().toISOString().slice(0, 10)}.json`);
     showToast(`ดาวน์โหลด JSON รวม ${completedSchemas.length} เอกสารเรียบร้อยแล้ว`);
+  }
+
+  function handleDownloadSingleDocExcel() {
+    if (!activeDoc || !activeDoc.jsonOutput) {
+      showToast("ยังไม่มีข้อมูลสำหรับเอกสารนี้");
+      return;
+    }
+    exportSingleDocToExcel(activeDoc);
+    showToast(`ดาวน์โหลด Excel สำหรับ "${activeDoc.fileName}" สำเร็จ`);
+  }
+
+  function handleDownloadSingleDocCsv() {
+    if (!activeDoc || !activeDoc.jsonOutput) {
+      showToast("ยังไม่มีข้อมูลสำหรับเอกสารนี้");
+      return;
+    }
+    exportSingleDocToCsv(activeDoc);
+    showToast(`ดาวน์โหลด CSV สำหรับ "${activeDoc.fileName}" สำเร็จ`);
   }
 
   function handleMoveOtherToCore(sourceOtherKey: string, targetCoreKey: string, removeFromOther: boolean) {
@@ -756,8 +825,12 @@ export function App() {
                   }
                 }}
                 onExportAllJson={handleExportAllJson}
+                onExportAllExcel={handleExportAllExcel}
+                onExportAllCsv={handleExportAllCsv}
                 onCopyJson={() => copyText(JSON.stringify(jsonOutput, null, 2), "คัดลอก JSON แล้ว")}
                 onDownloadJson={() => createJsonDownload(jsonOutput)}
+                onDownloadExcel={handleDownloadSingleDocExcel}
+                onDownloadCsv={handleDownloadSingleDocCsv}
                 onSaveToFirebase={handleSaveToFirebase}
                 onUpdateLocalJson={handleUpdateLocalJson}
                 isSavingToFirebase={isSavingToFirebase}
