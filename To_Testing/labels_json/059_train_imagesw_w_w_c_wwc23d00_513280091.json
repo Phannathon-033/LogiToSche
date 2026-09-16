@@ -1,0 +1,27 @@
+{
+  "id": "DOC-059",
+  "rank": 59,
+  "file_name": "059_train_imagesw_w_w_c_wwc23d00_513280091.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "401",
+    "document_date": "1992-04-15",
+    "sender": "s Attornbys' Fees, and court couts. Payment of servico charg",
+    "receiver": "R.J. RENOLDS",
+    "origin": "Fresno, CA 93706",
+    "destination": "SALEM, NC 27107",
+    "reference_number": "WINSTON-SALEM",
+    "unit_price": 10905.0,
+    "total_amount": 12610.39,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:10:09"
+}

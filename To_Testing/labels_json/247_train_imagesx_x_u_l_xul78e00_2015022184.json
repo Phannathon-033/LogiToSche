@@ -1,0 +1,27 @@
+{
+  "id": "DOC-247",
+  "rank": 247,
+  "file_name": "247_train_imagesx_x_u_l_xul78e00_2015022184.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3488",
+    "document_date": "1987-03-31",
+    "sender": "CORPORATE",
+    "receiver": "-",
+    "origin": "Washington, DC 20006",
+    "destination": "APP, ID",
+    "reference_number": "-",
+    "unit_price": 54587.5,
+    "total_amount": 54587.5,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:32:58"
+}

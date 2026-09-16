@@ -1,0 +1,27 @@
+{
+  "id": "DOC-028",
+  "rank": 28,
+  "file_name": "028_test_imagesu_u_m_g_umg41e00_80233786.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "401",
+    "document_date": "1985-12-03",
+    "sender": "BIOTECHNOLOGIES CORPORATION",
+    "receiver": "-",
+    "origin": "Greensboro, NC 27420",
+    "destination": "-",
+    "reference_number": "311A",
+    "unit_price": 1100.0,
+    "total_amount": 1100.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:06:30"
+}

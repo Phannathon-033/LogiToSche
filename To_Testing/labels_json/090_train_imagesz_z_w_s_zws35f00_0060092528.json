@@ -1,0 +1,27 @@
+{
+  "id": "DOC-090",
+  "rank": 90,
+  "file_name": "090_train_imagesz_z_w_s_zws35f00_0060092528.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "11/09/93",
+    "document_date": "1993-11-09",
+    "sender": "ARS",
+    "receiver": "-",
+    "origin": "THE AMERICAN TOBACCO, CO",
+    "destination": "STAMFORD, CT",
+    "reference_number": "-",
+    "unit_price": 1886.74,
+    "total_amount": 1886.74,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:13:41"
+}

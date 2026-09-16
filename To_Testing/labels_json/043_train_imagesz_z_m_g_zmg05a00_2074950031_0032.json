@@ -1,0 +1,27 @@
+{
+  "id": "DOC-043",
+  "rank": 43,
+  "file_name": "043_train_imagesz_z_m_g_zmg05a00_2074950031_0032.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "P55990",
+    "document_date": "1993-03-18",
+    "sender": "MAR-18-93 THU 14:37",
+    "receiver": "UNIVERSAL CONS. COMMODITIES",
+    "origin": "ICY # R-35389",
+    "destination": "UNITED STATES LAW PROHIBIT",
+    "reference_number": "-",
+    "unit_price": 200000.0,
+    "total_amount": 200000.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:08:14"
+}

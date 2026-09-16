@@ -1,0 +1,27 @@
+{
+  "id": "DOC-215",
+  "rank": 215,
+  "file_name": "215_test_imagesw_w_u_q_wuq25a00_92871560.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "04-2750",
+    "document_date": "2002-04-08",
+    "sender": "Mediamatic System",
+    "receiver": "Lorillard",
+    "origin": "Chicago, IL 60606",
+    "destination": "Chicago, IL 60611-2927",
+    "reference_number": "Number",
+    "unit_price": 5.0,
+    "total_amount": 118.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:29:12"
+}

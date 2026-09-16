@@ -1,0 +1,27 @@
+{
+  "id": "DOC-265",
+  "rank": 265,
+  "file_name": "265_train_imagesw_w_r_u_wru91a00_2063116759.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "34RR",
+    "document_date": "1996-11-04",
+    "sender": "COMPANY",
+    "receiver": "-",
+    "origin": "itical Contribution",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 250.0,
+    "total_amount": 250.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:35:09"
+}

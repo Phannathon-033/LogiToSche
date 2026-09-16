@@ -1,0 +1,27 @@
+{
+  "id": "DOC-284",
+  "rank": 284,
+  "file_name": "284_train_imagesa_a_y_b_ayb20f00_0012580159.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "474",
+    "document_date": "2014-09-00",
+    "sender": "B & W will be the balance of $35,000.00",
+    "receiver": "-",
+    "origin": "Louisville, KY 40232",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 70000.0,
+    "total_amount": 35000.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:37:30"
+}

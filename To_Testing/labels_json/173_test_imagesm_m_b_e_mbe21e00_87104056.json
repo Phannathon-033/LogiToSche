@@ -1,0 +1,27 @@
+{
+  "id": "DOC-173",
+  "rank": 173,
+  "file_name": "173_test_imagesm_m_b_e_mbe21e00_87104056.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "152E",
+    "document_date": "1984-05-04",
+    "sender": "LABORATORIES AMERICA, INC",
+    "receiver": "Melanee Bennett",
+    "origin": "Greensboro, NC 27420",
+    "destination": "Fii, OK",
+    "reference_number": "-",
+    "unit_price": 1950.0,
+    "total_amount": 1950.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:24:32"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-227",
+  "rank": 227,
+  "file_name": "227_train_imagesl_l_g_w_lgw61f00_2015016473.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3488",
+    "document_date": "2025-03-07",
+    "sender": "FOR ACCOUNTING USE ONLY",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "GROSS AMTL, DC",
+    "reference_number": "-",
+    "unit_price": 863848.0,
+    "total_amount": 863848.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:30:32"
+}

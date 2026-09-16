@@ -1,0 +1,27 @@
+{
+  "id": "DOC-147",
+  "rank": 147,
+  "file_name": "147_train_imagesz_z_c_g_zcg41e00_80233854.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "286B",
+    "document_date": "1985-06-25",
+    "sender": "LABORATORIES AMERICA, INC.",
+    "receiver": "Dr, Connie Stone",
+    "origin": "Greensboro, NC 27420",
+    "destination": "JMimiemeyer, OK",
+    "reference_number": "-",
+    "unit_price": 400.0,
+    "total_amount": 400.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:20:42"
+}

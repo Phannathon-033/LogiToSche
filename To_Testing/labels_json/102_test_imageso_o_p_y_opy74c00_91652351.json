@@ -1,0 +1,27 @@
+{
+  "id": "DOC-102",
+  "rank": 102,
+  "file_name": "102_test_imageso_o_p_y_opy74c00_91652351.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "011990041500770",
+    "document_date": "1990-02-01",
+    "sender": "MS EILEEN ANTIONIELLO",
+    "receiver": "-",
+    "origin": "DAYS FROM, MS",
+    "destination": "NEW YORK, NY 10016-5896",
+    "reference_number": "-",
+    "unit_price": 561916.0,
+    "total_amount": 66.96,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:15:01"
+}

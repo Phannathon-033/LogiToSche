@@ -1,0 +1,27 @@
+{
+  "id": "DOC-087",
+  "rank": 87,
+  "file_name": "087_train_imagesk_k_q_s_kqs23d00_512982478_512982479.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "45915-0",
+    "document_date": "1989-07-13",
+    "sender": "IMPORTANT",
+    "receiver": "SHIP TO",
+    "origin": "ls 317-632-2692",
+    "destination": "SHELBYVILLE, IN",
+    "reference_number": "-",
+    "unit_price": 600.0,
+    "total_amount": 600.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:13:21"
+}

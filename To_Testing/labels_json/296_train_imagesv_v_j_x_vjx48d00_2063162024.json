@@ -1,0 +1,27 @@
+{
+  "id": "DOC-296",
+  "rank": 296,
+  "file_name": "296_train_imagesv_v_j_x_vjx48d00_2063162024.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "1966-12-05",
+    "sender": "DEC 5 E386",
+    "receiver": "the mortgagee",
+    "origin": "icy or Bond",
+    "destination": "York, NY",
+    "reference_number": "-",
+    "unit_price": 11007.0,
+    "total_amount": 11007.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:39:01"
+}

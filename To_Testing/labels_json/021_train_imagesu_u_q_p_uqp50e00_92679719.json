@@ -1,0 +1,27 @@
+{
+  "id": "DOC-021",
+  "rank": 21,
+  "file_name": "021_train_imagesu_u_q_p_uqp50e00_92679719.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "042480",
+    "document_date": "1993-04-23",
+    "sender": "COMM",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "LORILLARD TOBACCO, CO",
+    "reference_number": "-",
+    "unit_price": 75.0,
+    "total_amount": 5330.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:05:44"
+}

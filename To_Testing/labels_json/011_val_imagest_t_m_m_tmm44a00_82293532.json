@@ -1,0 +1,27 @@
+{
+  "id": "DOC-011",
+  "rank": 11,
+  "file_name": "011_val_imagest_t_m_m_tmm44a00_82293532.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "DEN024259",
+    "document_date": "2020-07-14",
+    "sender": "FREEBORN",
+    "receiver": "DENJOHS",
+    "origin": "Pedoral, ID",
+    "destination": "DENVER, CO 80202",
+    "reference_number": "-",
+    "unit_price": 2414.68,
+    "total_amount": 2414.68,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:04:48"
+}

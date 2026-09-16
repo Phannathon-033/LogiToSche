@@ -1,0 +1,27 @@
+{
+  "id": "DOC-249",
+  "rank": 249,
+  "file_name": "249_val_imagest_t_t_u_ttu91a00_2063116809.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3488",
+    "document_date": "1996-11-04",
+    "sender": "COMPANY",
+    "receiver": "-",
+    "origin": "itical Contribution",
+    "destination": "OMIT IF, NC",
+    "reference_number": "-",
+    "unit_price": 200.0,
+    "total_amount": 200.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:33:14"
+}

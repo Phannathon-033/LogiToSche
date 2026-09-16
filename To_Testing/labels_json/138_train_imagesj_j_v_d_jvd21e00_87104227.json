@@ -1,0 +1,27 @@
+{
+  "id": "DOC-138",
+  "rank": 138,
+  "file_name": "138_train_imagesj_j_v_d_jvd21e00_87104227.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "608031",
+    "document_date": "1986-02-04",
+    "sender": "LABORATORIES AMERICA",
+    "receiver": "Dr. Daniel J. Heck",
+    "origin": "Greensboro, NC 27420-1688",
+    "destination": "Minnemeya, OK",
+    "reference_number": "-",
+    "unit_price": 1200.0,
+    "total_amount": 1200.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:19:32"
+}

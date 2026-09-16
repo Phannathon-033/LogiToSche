@@ -1,0 +1,27 @@
+{
+  "id": "DOC-299",
+  "rank": 299,
+  "file_name": "299_train_imagesx_x_j_n_xjn67c00_2076893544.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "0009",
+    "document_date": "2025-06-09",
+    "sender": "JUN 25 '99",
+    "receiver": "-",
+    "origin": "FOR, MD",
+    "destination": "MRSUNY, TN",
+    "reference_number": "TEST",
+    "unit_price": 4.65,
+    "total_amount": 865.4,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:39:25"
+}

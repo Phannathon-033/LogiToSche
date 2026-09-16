@@ -1,0 +1,27 @@
+{
+  "id": "DOC-223",
+  "rank": 223,
+  "file_name": "223_train_imagesb_b_d_z_bdz74c00_91659978.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "4305002590",
+    "document_date": "1984-10-31",
+    "sender": "THE CONTRACT RATE SHOWN",
+    "receiver": "LORILLARD MEDIA SERVICES",
+    "origin": "NEW YORK, NY",
+    "destination": "NET AMOUNT, MO",
+    "reference_number": "-",
+    "unit_price": 13811.42,
+    "total_amount": 13811.42,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:30:05"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-110",
+  "rank": 110,
+  "file_name": "110_train_imagesz_z_j_c_zjc00e00_89001756.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "152E",
+    "document_date": "1984-02-21",
+    "sender": "LABORATORIES AMERICA, INC",
+    "receiver": "Dr. Connie Stone",
+    "origin": "Lorillard Research Center, OK",
+    "destination": "Greensboro, NC 27420",
+    "reference_number": "-",
+    "unit_price": 1950.0,
+    "total_amount": 1950.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:16:18"
+}

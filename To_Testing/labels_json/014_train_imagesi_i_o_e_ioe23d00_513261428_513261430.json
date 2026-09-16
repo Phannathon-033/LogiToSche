@@ -1,0 +1,27 @@
+{
+  "id": "DOC-014",
+  "rank": 14,
+  "file_name": "014_train_imagesi_i_o_e_ioe23d00_513261428_513261430.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "186",
+    "document_date": "1990-03-30",
+    "sender": "P R O M O T I O N A L M A R K E T I N G , I N C.",
+    "receiver": "-",
+    "origin": "Salem, NC 27102",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 60610.31,
+    "total_amount": 186289.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:05:04"
+}

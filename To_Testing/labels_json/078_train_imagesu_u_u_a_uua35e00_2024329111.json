@@ -1,0 +1,27 @@
+{
+  "id": "DOC-078",
+  "rank": 78,
+  "file_name": "078_train_imagesu_u_u_a_uua35e00_2024329111.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "94501",
+    "document_date": "1993-07-06",
+    "sender": "Layard Associates",
+    "receiver": "Michael T. Buckley, Esq",
+    "origin": "Alameda, CA 94501",
+    "destination": "Travel to Washington, DC",
+    "reference_number": "-",
+    "unit_price": 13252.95,
+    "total_amount": 13252.95,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:12:27"
+}

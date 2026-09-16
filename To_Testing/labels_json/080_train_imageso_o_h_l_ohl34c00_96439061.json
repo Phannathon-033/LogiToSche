@@ -1,0 +1,27 @@
+{
+  "id": "DOC-080",
+  "rank": 80,
+  "file_name": "080_train_imageso_o_h_l_ohl34c00_96439061.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "4215",
+    "document_date": "1992-07-01",
+    "sender": "OUTDOOR EAST",
+    "receiver": "-",
+    "origin": "Columbia, SC 29240",
+    "destination": "NEW YORK, NY 10016-5895",
+    "reference_number": "-",
+    "unit_price": 526.91,
+    "total_amount": 526.91,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:12:39"
+}

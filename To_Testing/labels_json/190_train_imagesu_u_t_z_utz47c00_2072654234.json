@@ -1,0 +1,27 @@
+{
+  "id": "DOC-190",
+  "rank": 190,
+  "file_name": "190_train_imagesu_u_t_z_utz47c00_2072654234.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "12300",
+    "document_date": "1993-04-20",
+    "sender": "MOUNTAIN/SERVICE",
+    "receiver": "ADDRESS",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 3.25,
+    "total_amount": 485.4,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:26:32"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-228",
+  "rank": 228,
+  "file_name": "228_train_imagesw_w_h_w_whw61f00_2015016511.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3488",
+    "document_date": "1986-05-02",
+    "sender": "FOR ACCOUNTING USE ONLY",
+    "receiver": "-",
+    "origin": "GROSS AMTL, DC",
+    "destination": "APP, ID",
+    "reference_number": "-",
+    "unit_price": 445922.76,
+    "total_amount": 445922.76,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:30:38"
+}

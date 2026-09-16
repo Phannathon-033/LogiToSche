@@ -1,0 +1,27 @@
+{
+  "id": "DOC-261",
+  "rank": 261,
+  "file_name": "261_train_imagesw_w_h_s_whs53e00_2015020071.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "ห2122",
+    "document_date": "1981-10-31",
+    "sender": "PM INC. REV. 1/79",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "CASH CONTROL, OR",
+    "reference_number": "-",
+    "unit_price": 139095.0,
+    "total_amount": 139095.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:34:38"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-016",
+  "rank": 16,
+  "file_name": "016_val_imagesj_j_u_f_juf43c00_99403740.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3722",
+    "document_date": "2001-01-24",
+    "sender": "Laphley Ru3s (919X416-3722",
+    "receiver": "Same Recipient",
+    "origin": "DURHAM, NC",
+    "destination": "Charleston, SC",
+    "reference_number": "-",
+    "unit_price": 24.34,
+    "total_amount": 24.34,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:05:16"
+}

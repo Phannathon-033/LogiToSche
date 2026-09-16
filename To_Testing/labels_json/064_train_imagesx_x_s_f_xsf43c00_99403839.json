@@ -1,0 +1,27 @@
+{
+  "id": "DOC-064",
+  "rank": 64,
+  "file_name": "064_train_imagesx_x_s_f_xsf43c00_99403839.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "V00",
+    "document_date": "2000-11-14",
+    "sender": "crtShip Lab",
+    "receiver": "Same Recipient",
+    "origin": "DURHAM, NC",
+    "destination": "Washington, DC",
+    "reference_number": "-",
+    "unit_price": 10.97,
+    "total_amount": 10.97,
+    "currency": "THB"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:10:44"
+}

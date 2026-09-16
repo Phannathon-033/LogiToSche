@@ -1,0 +1,27 @@
+{
+  "id": "DOC-054",
+  "rank": 54,
+  "file_name": "054_val_imagesb_b_a_v_bav70e00_91386909.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "12125453448",
+    "document_date": "2008-06-20",
+    "sender": "THOMAS COOK TRAVEL",
+    "receiver": "-",
+    "origin": "CHICAGO, IL 60611",
+    "destination": "NEW YORK, NY 10016",
+    "reference_number": "-",
+    "unit_price": 195.0,
+    "total_amount": 195.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:09:30"
+}

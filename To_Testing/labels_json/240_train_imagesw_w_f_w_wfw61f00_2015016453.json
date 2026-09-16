@@ -1,0 +1,27 @@
+{
+  "id": "DOC-240",
+  "rank": 240,
+  "file_name": "240_train_imagesw_w_f_w_wfw61f00_2015016453.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "34DB",
+    "document_date": "2015-06-07",
+    "sender": "CORPORATE",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "GROSS AMT, DC",
+    "reference_number": "-",
+    "unit_price": 581119.84,
+    "total_amount": 581119.84,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:32:05"
+}

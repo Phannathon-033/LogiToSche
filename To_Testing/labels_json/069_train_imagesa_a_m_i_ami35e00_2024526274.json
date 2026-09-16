@@ -1,0 +1,27 @@
+{
+  "id": "DOC-069",
+  "rank": 69,
+  "file_name": "069_train_imagesa_a_m_i_ami35e00_2024526274.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "CH0194",
+    "document_date": "1992-01-23",
+    "sender": "Rita Stark, all with receipts and",
+    "receiver": "-",
+    "origin": "f the account of Rita Stark of, AK",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 101190.63,
+    "total_amount": 161905.02,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:11:18"
+}

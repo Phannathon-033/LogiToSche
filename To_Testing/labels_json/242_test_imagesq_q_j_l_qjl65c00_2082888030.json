@@ -1,0 +1,27 @@
+{
+  "id": "DOC-242",
+  "rank": 242,
+  "file_name": "242_test_imagesq_q_j_l_qjl65c00_2082888030.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "753289",
+    "document_date": "1999-01-31",
+    "sender": "SPSS",
+    "receiver": "SHIPPED TO",
+    "origin": "AL INVOICE",
+    "destination": "PHILIP MORRIS",
+    "reference_number": "SHIP",
+    "unit_price": 1978.66,
+    "total_amount": 1978.66,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:32:21"
+}

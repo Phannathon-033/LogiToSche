@@ -1,0 +1,27 @@
+{
+  "id": "DOC-275",
+  "rank": 275,
+  "file_name": "275_train_imagesv_v_e_w_vew61f00_2015016407.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3488",
+    "document_date": "1986-02-26",
+    "sender": "CORPORATE",
+    "receiver": "-",
+    "origin": "APP, ID",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 84622.0,
+    "total_amount": 84622.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:36:26"
+}

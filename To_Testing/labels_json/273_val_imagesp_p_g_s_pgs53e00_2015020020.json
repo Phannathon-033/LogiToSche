@@ -1,0 +1,27 @@
+{
+  "id": "DOC-273",
+  "rank": 273,
+  "file_name": "273_val_imagesp_p_g_s_pgs53e00_2015020020.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "1/79",
+    "document_date": "2021-12-09",
+    "sender": "PM INC\" REV. 1/79",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "CASH CONTROL, OR",
+    "reference_number": "-",
+    "unit_price": 95310.0,
+    "total_amount": 95310.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:36:11"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-033",
+  "rank": 33,
+  "file_name": "033_test_imagesb_b_e_g_beg41e00_80233885.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "311D",
+    "document_date": "1986-01-15",
+    "sender": "RIES AMERICA, INC",
+    "receiver": "Daniel J. Heck, Ph.D",
+    "origin": "Greensboro, NC 27420-1688",
+    "destination": "TORES AMERICA, NC",
+    "reference_number": "-",
+    "unit_price": 2250.0,
+    "total_amount": 2250.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:07:04"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-026",
+  "rank": 26,
+  "file_name": "026_train_imagesj_j_w_t_jwt10c00_2085532852.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "2085532852",
+    "document_date": "2001-10-22",
+    "sender": "NEW YORK MEDICAL COLLEGE",
+    "receiver": "-",
+    "origin": "VALHALLA, NY 10595",
+    "destination": "Richmond, VA 23234",
+    "reference_number": "-",
+    "unit_price": 32422.75,
+    "total_amount": 32422.75,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:06:18"
+}

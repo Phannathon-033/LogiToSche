@@ -1,0 +1,27 @@
+{
+  "id": "DOC-252",
+  "rank": 252,
+  "file_name": "252_test_imagesj_j_g_s_jgs90e00_91515215.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "1157",
+    "document_date": "1985-03-29",
+    "sender": "AAPR 1",
+    "receiver": "-",
+    "origin": "NE y, NY",
+    "destination": "AV LZ, MN",
+    "reference_number": "-",
+    "unit_price": 1054.17,
+    "total_amount": 1054.17,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:33:37"
+}

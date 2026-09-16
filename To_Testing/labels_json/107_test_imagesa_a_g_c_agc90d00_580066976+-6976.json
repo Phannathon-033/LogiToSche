@@ -1,0 +1,27 @@
+{
+  "id": "DOC-107",
+  "rank": 107,
+  "file_name": "107_test_imagesa_a_g_c_agc90d00_580066976+-6976.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "28373",
+    "document_date": "2021-07-06",
+    "sender": "ctional Lcoué",
+    "receiver": "-",
+    "origin": "dym",
+    "destination": "JN TOEHO IL, LA",
+    "reference_number": "-",
+    "unit_price": 3.3,
+    "total_amount": 8653.4,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:15:35"
+}

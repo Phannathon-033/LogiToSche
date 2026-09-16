@@ -1,0 +1,27 @@
+{
+  "id": "DOC-037",
+  "rank": 37,
+  "file_name": "037_train_imagesw_w_p_q_wpq25a00_92872552.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "25911",
+    "document_date": "2002-08-06",
+    "sender": "BATCH",
+    "receiver": "Accounts Payable Department",
+    "origin": "New York, NY 10016",
+    "destination": "New York, NY 10010-5201",
+    "reference_number": "AMOUNT",
+    "unit_price": 45.0,
+    "total_amount": 170.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:07:31"
+}

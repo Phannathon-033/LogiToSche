@@ -1,0 +1,27 @@
+{
+  "id": "DOC-061",
+  "rank": 61,
+  "file_name": "061_train_imagesh_h_j_b_hjb52c00_2074104213.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "1961-09-24",
+    "sender": "ID",
+    "receiver": "-",
+    "origin": "itical Contribution-Campaign",
+    "destination": "CO A, NY",
+    "reference_number": "-",
+    "unit_price": 500.0,
+    "total_amount": 500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:10:23"
+}

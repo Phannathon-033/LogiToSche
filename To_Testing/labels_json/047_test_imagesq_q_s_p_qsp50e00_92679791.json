@@ -1,0 +1,27 @@
+{
+  "id": "DOC-047",
+  "rank": 47,
+  "file_name": "047_test_imagesq_q_s_p_qsp50e00_92679791.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "42471",
+    "document_date": "1993-05-03",
+    "sender": "COMM",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "LORILLARD TOBACCO, CO",
+    "reference_number": "-",
+    "unit_price": 41.25,
+    "total_amount": 41.25,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:08:40"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-085",
+  "rank": 85,
+  "file_name": "085_train_imagest_t_a_b_tab74e00_1003200031_1003200035.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "3113",
+    "document_date": "1981-01-13",
+    "sender": "HÉWLETT hD PACKARD",
+    "receiver": "Ms. Robin Kinser",
+    "origin": "REFER TO THIS, IN",
+    "destination": "Richmond, VA 23261",
+    "reference_number": "-",
+    "unit_price": 132000.0,
+    "total_amount": 132000.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:13:09"
+}

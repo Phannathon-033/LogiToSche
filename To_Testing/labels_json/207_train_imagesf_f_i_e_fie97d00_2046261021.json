@@ -1,0 +1,27 @@
+{
+  "id": "DOC-207",
+  "rank": 207,
+  "file_name": "207_train_imagesf_f_i_e_fie97d00_2046261021.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "38098915",
+    "document_date": "1996-02-14",
+    "sender": "FROM: NORFOLK",
+    "receiver": "PARTY",
+    "origin": "MARLBORO, KS",
+    "destination": "UNITED STATES LAW PROHIBITS",
+    "reference_number": "BOX",
+    "unit_price": 66300.0,
+    "total_amount": 66300.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:28:22"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-034",
+  "rank": 34,
+  "file_name": "034_train_imagesa_a_j_e_aje21e00_87103889.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "30666",
+    "document_date": "1983-01-13",
+    "sender": "DAWSON RESEARCH CORPORATION",
+    "receiver": "-",
+    "origin": "Greensboro, NC 27420",
+    "destination": "Greensboro, NC",
+    "reference_number": "-",
+    "unit_price": 415.0,
+    "total_amount": 415.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:07:11"
+}

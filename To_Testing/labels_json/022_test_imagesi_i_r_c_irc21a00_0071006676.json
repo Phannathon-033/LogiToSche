@@ -1,0 +1,27 @@
+{
+  "id": "DOC-022",
+  "rank": 22,
+  "file_name": "022_test_imagesi_i_r_c_irc21a00_0071006676.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "121710",
+    "document_date": "2022-11-02",
+    "sender": "MID AMERICA",
+    "receiver": "CHRIS SURT",
+    "origin": "America, CT",
+    "destination": "NEENAH, WI 54957-0427",
+    "reference_number": "-",
+    "unit_price": 285.41,
+    "total_amount": 321.63,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:05:49"
+}

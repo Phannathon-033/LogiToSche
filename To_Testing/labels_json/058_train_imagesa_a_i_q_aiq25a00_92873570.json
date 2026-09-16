@@ -1,0 +1,27 @@
+{
+  "id": "DOC-058",
+  "rank": 58,
+  "file_name": "058_train_imagesa_a_i_q_aiq25a00_92873570.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "04-2678",
+    "document_date": "2001-12-31",
+    "sender": "Mediamatic System",
+    "receiver": "Lorrillard",
+    "origin": "Chicago, IL 60606",
+    "destination": "Chicago, IL 60611-2927",
+    "reference_number": "Number",
+    "unit_price": 132.89,
+    "total_amount": 132.89,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:10:01"
+}

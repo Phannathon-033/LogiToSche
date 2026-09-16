@@ -1,0 +1,27 @@
+{
+  "id": "DOC-073",
+  "rank": 73,
+  "file_name": "073_val_imagesd_d_i_g_dig62d00_83545353_5355.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "L05112459",
+    "document_date": "1999-07-22",
+    "sender": "THIS INVOICE",
+    "receiver": "L05-JONE",
+    "origin": "Federal, ID",
+    "destination": "CHICAGO, IL 60601",
+    "reference_number": "99070211",
+    "unit_price": 556655.16,
+    "total_amount": 556655.16,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:11:50"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-141",
+  "rank": 141,
+  "file_name": "141_train_imagesv_v_e_e_vee21e00_87104150.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "348A",
+    "document_date": "1985-02-06",
+    "sender": "LABORATORIES AMERICA, INC.",
+    "receiver": "-",
+    "origin": "Greensboro, NC 27405",
+    "destination": "VIENNA, VA",
+    "reference_number": "-",
+    "unit_price": 21680.0,
+    "total_amount": 21680.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:19:53"
+}

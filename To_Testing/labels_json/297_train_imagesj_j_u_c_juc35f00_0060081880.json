@@ -1,0 +1,27 @@
+{
+  "id": "DOC-297",
+  "rank": 297,
+  "file_name": "297_train_imagesj_j_u_c_juc35f00_0060081880.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "-",
+    "document_date": "1994-05-27",
+    "sender": "SHIP TO",
+    "receiver": "EMSON, Division. of E._Mishan_&_Sons",
+    "origin": "STAMFORD, CT",
+    "destination": "New York, NY 10010",
+    "reference_number": "/RELEASE",
+    "unit_price": 4.48,
+    "total_amount": 4.48,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:39:08"
+}

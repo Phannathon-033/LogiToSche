@@ -1,0 +1,27 @@
+{
+  "id": "DOC-065",
+  "rank": 65,
+  "file_name": "065_train_imagesx_x_f_r_xfr13c00_91513246.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "05573",
+    "document_date": "1985-04-02",
+    "sender": "ORIGINAL",
+    "receiver": "-",
+    "origin": "GANNETT OUTDOOR, CO",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 4833.33,
+    "total_amount": 4833.33,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:10:50"
+}

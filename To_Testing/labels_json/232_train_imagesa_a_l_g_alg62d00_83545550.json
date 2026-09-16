@@ -1,0 +1,27 @@
+{
+  "id": "DOC-232",
+  "rank": 232,
+  "file_name": "232_train_imagesa_a_l_g_alg62d00_83545550.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "121732",
+    "document_date": "1999-11-16",
+    "sender": "MSHgr",
+    "receiver": "-",
+    "origin": "AL AND 1 COPY OF TRANSCRIPT OF",
+    "destination": "Durham, NC 27705",
+    "reference_number": "-",
+    "unit_price": 3566.7,
+    "total_amount": 3566.7,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:31:07"
+}

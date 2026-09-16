@@ -1,0 +1,27 @@
+{
+  "id": "DOC-082",
+  "rank": 82,
+  "file_name": "082_train_imagesm_m_e_i_mei52e00_2045455668.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "422-10A",
+    "document_date": "1993-10-19",
+    "sender": "S-139PV(REV 12/91)3M",
+    "receiver": "COPY",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 204.0,
+    "total_amount": 204.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:12:50"
+}

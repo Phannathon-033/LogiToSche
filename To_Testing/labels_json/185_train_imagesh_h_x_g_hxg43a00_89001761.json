@@ -1,0 +1,27 @@
+{
+  "id": "DOC-185",
+  "rank": 185,
+  "file_name": "185_train_imagesh_h_x_g_hxg43a00_89001761.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "9073",
+    "document_date": "1984-03-19",
+    "sender": "LABORATORIES AMERICA,INC.",
+    "receiver": "Melanie B. Bennett",
+    "origin": "VIENNA, VA",
+    "destination": "Greensboro, NC 27420",
+    "reference_number": "-",
+    "unit_price": 1950.0,
+    "total_amount": 1950.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:25:58"
+}

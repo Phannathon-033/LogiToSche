@@ -1,0 +1,27 @@
+{
+  "id": "DOC-274",
+  "rank": 274,
+  "file_name": "274_val_imagesu_u_g_s_ugs53e00_2015020031.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "2722",
+    "document_date": "1982-09-30",
+    "sender": "PM INC. REV. 1/79",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "CASH CONTROL, OR",
+    "reference_number": "-",
+    "unit_price": 190620.0,
+    "total_amount": 190620.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:36:18"
+}

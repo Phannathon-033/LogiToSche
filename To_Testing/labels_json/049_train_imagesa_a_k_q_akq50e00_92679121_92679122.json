@@ -1,0 +1,27 @@
+{
+  "id": "DOC-049",
+  "rank": 49,
+  "file_name": "049_train_imagesa_a_k_q_akq50e00_92679121_92679122.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "10022",
+    "document_date": "1993-09-23",
+    "sender": "COMM",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "Thad AiinueNew York, NY 10022",
+    "reference_number": "-",
+    "unit_price": 123.75,
+    "total_amount": 123.75,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:08:54"
+}

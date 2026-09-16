@@ -1,0 +1,27 @@
+{
+  "id": "DOC-093",
+  "rank": 93,
+  "file_name": "093_train_imagesy_y_e_w_yew35f00_0060096969.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "USA-10018",
+    "document_date": "1992-04-30",
+    "sender": "EIVED BY",
+    "receiver": "Contact",
+    "origin": "STAMFORD, CT 06904-2380",
+    "destination": "STAMFORD, CT",
+    "reference_number": "M12963",
+    "unit_price": 8926.16,
+    "total_amount": 8926.16,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:13:57"
+}
