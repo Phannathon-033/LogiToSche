@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import json
+import pathlib
 from typing import Any
 
 CORE_FIELDS = (
@@ -35,7 +37,36 @@ EXTRACTION_RULES = (
     "Return only valid JSON with no markdown or explanation.",
 )
 
-PROMPT_PRESETS: dict[str, dict[str, Any]] = {
+BASE_DIR = pathlib.Path(__file__).resolve().parent
+PRESETS_FILE = BASE_DIR / "prompt_presets.json"
+
+DEFAULT_PROMPT_PRESETS: dict[str, dict[str, Any]] = {
+    # 1. Extraction Core Presets
+    "standard_extraction": {
+        "category": "extraction",
+        "categoryLabel": "สกัด 11 ฟิลด์หลัก",
+        "badge": "Core 11 Fields",
+        "title": "มาตรฐานสกัด 11 ฟิลด์หลักโลจิสติกส์",
+        "description": "สกัดข้อมูลเอกสารเข้าสู่ JSON Schema 11 ฟิลด์หลักอย่างเคร่งครัด แยก sender, receiver, total_amount, document_number ให้สมบูรณ์",
+        "prompt": "คุณคือผู้ช่วยดึงข้อมูลโลจิสติกส์จาก OCR text ให้ map ข้อมูลเข้าสู่ JSON schema อย่างเคร่งครัด แยก sender, receiver, total amount และ document number ให้ชัดเจน หากไม่มีข้อมูลให้ใส่ค่าว่างหรือ 0 ห้ามแต่งข้อมูลขึ้นมาเอง",
+    },
+    "bilingual_thai_en": {
+        "category": "extraction",
+        "categoryLabel": "สกัด 11 ฟิลด์หลัก",
+        "badge": "Bilingual Thai/EN",
+        "title": "สกัดเอกสารสองภาษา ไทย-อังกฤษ & แปลง พ.ศ. เป็น ค.ศ.",
+        "description": "จัดการเอกสารใบกำกับภาษีไทยและใบขนส่งที่มีทั้งภาษาไทยและอังกฤษ พร้อมแปลงปี พ.ศ. เป็น ค.ศ. (YYYY-MM-DD)",
+        "prompt": "สกัดข้อมูลเอกสารสองภาษาไทย-อังกฤษ แยกชื่อผู้ส่งและผู้รับให้ถูกต้องตามนิติบุคคลหลัก พร้อมตรวจสอบปี พ.ศ. หากพบให้แปลงเป็นปี ค.ศ. (YYYY-MM-DD) ตามมาตรฐาน ISO 8601",
+    },
+    "shipping_bl_ocean": {
+        "category": "extraction",
+        "categoryLabel": "สกัด 11 ฟิลด์หลัก",
+        "badge": "Maritime & Air",
+        "title": "สกัดใบตราส่งสินค้าทางเรือ (B/L) และทางอากาศ (AWB)",
+        "description": "สกัดข้อมูลเฉพาะทางโลจิสติกส์ เช่น B/L No, Shipper, Consignee, Port of Loading (origin), Port of Discharge (destination)",
+        "prompt": "สกัดข้อมูลใบตราส่งสินค้าทางเรือ (Ocean Bill of Lading) และทางอากาศ (Air Waybill) โดย map Port of Loading เป็น origin และ Port of Discharge เป็น destination",
+    },
+    # 2. Synonym & Disambiguation Presets
     "synonym_party": {
         "category": "synonym",
         "categoryLabel": "ตรวจสอบคำความหมายเดียวกัน",
@@ -60,6 +91,7 @@ PROMPT_PRESETS: dict[str, dict[str, Any]] = {
         "description": "ตรวจสอบคำระบุข้อมูลยานพาหนะ เช่น ทะเบียนรถ, รถบรรทุก, ทะเบียนหัวลาก, Container No, Car Plate, Truck No. และสกัดค่าที่แท้จริง",
         "prompt": "ตรวจสอบคำระบุข้อมูลยานพาหนะและการขนส่ง เช่น ทะเบียนรถ, ทะเบียนหัวลาก, หมายเลขตู้คอนเทนเนอร์ (Container No.), ชื่อเรือ (Vessel) หรือทะเบียนรถส่งของ แล้วสรุปค่าที่พบ",
     },
+    # 3. Summarization Presets
     "summarize_short": {
         "category": "summary",
         "categoryLabel": "วิเคราะห์ & สรุปกระชับ",
@@ -84,6 +116,7 @@ PROMPT_PRESETS: dict[str, dict[str, Any]] = {
         "description": "วิเคราะห์เงื่อนไขเครดิตเทอม วันครบกำหนดชำระ เลขที่บัญชีธนาคาร และเงื่อนไขการส่งสินค้า (Incoterms)",
         "prompt": "วิเคราะห์และสรุปเงื่อนไขการชำระเงิน (Credit Term, Due Date, Bank Account) และเงื่อนไขการจัดส่ง (Incoterms เช่น FOB, CIF, Door-to-Door) ให้กระชับเข้าใจง่าย",
     },
+    # 4. Validation Presets
     "validate_numbers": {
         "category": "validation",
         "categoryLabel": "ตรวจสอบความถูกต้อง",
@@ -100,6 +133,7 @@ PROMPT_PRESETS: dict[str, dict[str, Any]] = {
         "description": "ตรวจสอบว่าเอกสารนี้มีข้อมูลครบทั้ง 11 ฟิลด์หลักหรือไม่ และแนะนำข้อความใน OCR ที่สามารถนำมาเติมในฟิลด์ที่ขาดได้",
         "prompt": "ตรวจสอบว่าเอกสารนี้มีข้อมูลครบทั้ง 11 ฟิลด์หลักหรือไม่ (document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, currency) หากฟิลด์ไหนขาดหายไป ให้แนะนำข้อความที่น่าจะเป็นไปได้จาก OCR Text",
     },
+    # 5. Translation & Normalization
     "translate_format": {
         "category": "translation",
         "categoryLabel": "แปลภาษา & จัดรูปแบบ",
@@ -109,6 +143,31 @@ PROMPT_PRESETS: dict[str, dict[str, Any]] = {
         "prompt": "แปลชื่อบริษัท, ที่อยู่ และรายการสินค้าในเอกสารจากภาษาอังกฤษเป็นภาษาไทยที่ถูกต้องตามศัพท์โลจิสติกส์ พร้อมแปลงวันที่ทุกรูปแบบให้อยู่ในมาตรฐาน ISO 8601 (YYYY-MM-DD)",
     },
 }
+
+PROMPT_PRESETS = DEFAULT_PROMPT_PRESETS
+
+
+def load_prompt_presets() -> dict[str, dict[str, Any]]:
+    if PRESETS_FILE.exists():
+        try:
+            data = json.loads(PRESETS_FILE.read_text(encoding="utf-8"))
+            if isinstance(data, dict) and len(data) > 0:
+                return data
+        except Exception:
+            pass
+    # Initialize presets file with defaults
+    save_prompt_presets(DEFAULT_PROMPT_PRESETS)
+    return deepcopy(DEFAULT_PROMPT_PRESETS)
+
+
+def save_prompt_presets(presets: dict[str, dict[str, Any]]) -> None:
+    PRESETS_FILE.write_text(json.dumps(presets, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def reset_prompt_presets() -> dict[str, dict[str, Any]]:
+    save_prompt_presets(DEFAULT_PROMPT_PRESETS)
+    return deepcopy(DEFAULT_PROMPT_PRESETS)
+
 
 DEFAULT_ADMIN_CONFIG = {
     "system_prompt": "คุณคือผู้ช่วยดึงข้อมูลโลจิสติกส์จาก OCR text ให้ map ข้อมูลเข้าสู่ JSON schema อย่างเคร่งครัด แยก sender, receiver, total amount และ document number ให้ชัดเจน พร้อมระบุ field ที่ไม่มั่นใจลง review_items",
@@ -128,9 +187,11 @@ def default_admin_config() -> dict[str, Any]:
 
 
 def prompt_preset_list() -> list[dict[str, Any]]:
-    return [{"id": preset_id, **deepcopy(preset)} for preset_id, preset in PROMPT_PRESETS.items()]
+    presets = load_prompt_presets()
+    return [{"id": preset_id, **deepcopy(preset)} for preset_id, preset in presets.items()]
 
 
 def prompt_for_preset(preset_id: str) -> str:
-    preset = PROMPT_PRESETS.get(preset_id)
+    presets = load_prompt_presets()
+    preset = presets.get(preset_id)
     return str(preset["prompt"]) if preset else ""

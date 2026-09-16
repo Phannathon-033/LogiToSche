@@ -23,6 +23,8 @@ try:
         default_admin_config,
         prompt_for_preset,
         prompt_preset_list,
+        reset_prompt_presets,
+        save_prompt_presets,
     )
 except ImportError:
     from prompts import (
@@ -34,6 +36,8 @@ except ImportError:
         default_admin_config,
         prompt_for_preset,
         prompt_preset_list,
+        reset_prompt_presets,
+        save_prompt_presets,
     )
 
 PROMPT_CONFIG_PATH = Path(__file__).resolve().parent / "prompt_config.json"
@@ -261,6 +265,54 @@ def save_prompt_config(payload: SlmPromptConfig) -> dict[str, Any]:
 @app.get("/api/slm/prompts")
 def get_prompts() -> list[dict[str, Any]]:
     return prompt_preset_list()
+
+
+class PromptPresetItem(BaseModel):
+    id: str
+    category: str = "custom"
+    categoryLabel: str = "กำหนดเอง"
+    badge: str = "Custom"
+    title: str
+    description: str = ""
+    prompt: str
+
+
+class SavePromptPresetsPayload(BaseModel):
+    presets: list[PromptPresetItem]
+
+
+@app.post("/api/slm/prompts")
+def save_prompts(payload: SavePromptPresetsPayload) -> dict[str, Any]:
+    try:
+        data = {
+            item.id: {
+                "category": item.category,
+                "categoryLabel": item.categoryLabel,
+                "badge": item.badge,
+                "title": item.title,
+                "description": item.description,
+                "prompt": item.prompt,
+            }
+            for item in payload.presets
+        }
+        save_prompt_presets(data)
+        return {
+            "status": "success",
+            "message": f"บันทึกแม่แบบ Prompt สำเร็จรูป {len(data)} รายการเรียบร้อย",
+            "count": len(data),
+            "presets": prompt_preset_list(),
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to save prompt presets: {exc}") from exc
+
+
+@app.post("/api/slm/prompts/reset")
+def reset_prompts() -> list[dict[str, Any]]:
+    try:
+        reset_prompt_presets()
+        return prompt_preset_list()
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to reset prompt presets: {exc}") from exc
 
 
 def get_prompt_config() -> dict[str, Any]:

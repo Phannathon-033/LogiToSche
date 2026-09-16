@@ -208,6 +208,32 @@ export async function getSlmPrompts(): Promise<SlmPromptPresetResponse[]> {
   return (await response.json()) as SlmPromptPresetResponse[];
 }
 
+export async function saveSlmPrompts(
+  presets: SlmPromptPresetResponse[]
+): Promise<{ status: string; message: string; count: number; presets: SlmPromptPresetResponse[] }> {
+  const response = await fetch("/api/slm/prompts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ presets }),
+  });
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(detail || `Save prompt presets failed with ${response.status}`);
+  }
+  return await response.json();
+}
+
+export async function resetSlmPrompts(): Promise<SlmPromptPresetResponse[]> {
+  const response = await fetch("/api/slm/prompts/reset", {
+    method: "POST",
+  });
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(detail || `Reset prompt presets failed with ${response.status}`);
+  }
+  return (await response.json()) as SlmPromptPresetResponse[];
+}
+
 export async function executeSlmPrompt({
   promptTemplateId,
   userInstruction,

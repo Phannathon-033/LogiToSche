@@ -1,27 +1,44 @@
 import {
+  AlertCircle,
+  BookmarkCheck,
   BrainCircuit,
   Check,
   CheckCircle2,
   Clock,
   Copy,
   Cpu,
+  Edit3,
+  Eye,
+  FileCode,
   FileText,
+  Filter,
+  FolderOpen,
+  HelpCircle,
+  Layers,
   LoaderCircle,
   Play,
   Plus,
   RefreshCw,
   RotateCcw,
   Save,
+  Search,
   Send,
   Settings,
   Sparkles,
+  Tag,
   Trash2,
+  X,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CORE_FIELDS_DEF, EMPTY_JSON_SCHEMA } from "../../types";
-import type { AdminDocumentRecord, AdminPromptLabState } from "../../types";
-import { executeSlmPrompt } from "../../services/slmApi";
+import type { AdminDocumentRecord, AdminPromptLabState, SlmPromptPresetResponse } from "../../types";
+import {
+  executeSlmPrompt,
+  getSlmPrompts,
+  resetSlmPrompts,
+  saveSlmPrompts,
+} from "../../services/slmApi";
 
 interface AdminPromptConfigProps {
   value: AdminPromptLabState;
@@ -32,54 +49,114 @@ interface AdminPromptConfigProps {
   saving?: boolean;
 }
 
-const PROMPT_TEMPLATES = [
+const DEFAULT_PRESETS_FALLBACK: SlmPromptPresetResponse[] = [
   {
-    id: "standard",
-    title: "1. มาตรฐานโลจิสติกส์ (11 ฟิลด์หลัก)",
-    badge: "Recommended",
-    systemPrompt:
-      "คุณคือผู้ช่วย AI ผู้เชี่ยวชาญด้านโลจิสติกส์ ทำหน้าที่สกัดข้อมูลจาก OCR Text เข้าสู่ JSON Schema 11 ฟิลด์หลักอย่างเคร่งครัด แยก sender, receiver, total_amount และ document_number ให้ถูกต้องแม่นยำ หากไม่มีข้อมูลให้ใส่ค่าว่างหรือ 0 ห้ามแต่งข้อมูลขึ้นมาเอง",
-    fallbackRules: [
-      "ถ้าเจอทั้ง Subtotal และ Total Amount ให้เลือก Total Amount เป็นยอดสุทธิ",
-      "Consignee, Ship To, Deliver To ให้ตีความเป็น receiver ตามบริบทเอกสาร",
-      "วันที่ต้อง normalize เป็น YYYY-MM-DD ตามมาตรฐาน ISO 8601",
-    ],
+    id: "standard_extraction",
+    category: "extraction" as any,
+    categoryLabel: "สกัด 11 ฟิลด์หลัก",
+    badge: "Core 11 Fields",
+    title: "มาตรฐานสกัด 11 ฟิลด์หลักโลจิสติกส์",
+    description: "สกัดข้อมูลเอกสารเข้าสู่ JSON Schema 11 ฟิลด์หลักอย่างเคร่งครัด แยก sender, receiver, total_amount, document_number ให้สมบูรณ์",
+    prompt: "คุณคือผู้ช่วยดึงข้อมูลโลจิสติกส์จาก OCR text ให้ map ข้อมูลเข้าสู่ JSON schema อย่างเคร่งครัด แยก sender, receiver, total amount และ document number ให้ชัดเจน หากไม่มีข้อมูลให้ใส่ค่าว่างหรือ 0 ห้ามแต่งข้อมูลขึ้นมาเอง",
   },
   {
-    id: "thai_english",
-    title: "2. เอกสารไทย-อังกฤษ (Bilingual Thai/English)",
-    badge: "Bilingual",
-    systemPrompt:
-      "คุณคือผู้ช่วยสกัดข้อมูลเอกสารใบกำกับภาษีและใบส่งของที่มีทั้งภาษาไทยและภาษาอังกฤษ ให้จับคู่คำไวพจน์ เช่น ผู้ขาย/Vendor/Shipper เข้ากับ sender และ ผู้ซื้อ/Customer/Consignee เข้ากับ receiver พร้อมแปลงวันที่ พ.ศ. เป็น ค.ศ. (YYYY-MM-DD)",
-    fallbackRules: [
-      "หากวันที่ระบุปี พ.ศ. (เช่น 2569) ให้ลบ 543 เพื่อแปลงเป็น ค.ศ. (2026)",
-      "ชื่อบริษัทภาษาไทยและภาษาอังกฤษให้เลือกชื่อหลักที่เป็นนิติบุคคล",
-      "ยอดเงินให้ตัดเครื่องหมายบาทหรือสกุลเงินออก เหลือเพียงตัวเลขทศนิยม",
-    ],
+    id: "bilingual_thai_en",
+    category: "extraction" as any,
+    categoryLabel: "สกัด 11 ฟิลด์หลัก",
+    badge: "Bilingual Thai/EN",
+    title: "สกัดเอกสารสองภาษา ไทย-อังกฤษ & แปลง พ.ศ. เป็น ค.ศ.",
+    description: "จัดการเอกสารใบกำกับภาษีไทยและใบขนส่งที่มีทั้งภาษาไทยและอังกฤษ พร้อมแปลงปี พ.ศ. เป็น ค.ศ. (YYYY-MM-DD)",
+    prompt: "สกัดข้อมูลเอกสารสองภาษาไทย-อังกฤษ แยกชื่อผู้ส่งและผู้รับให้ถูกต้องตามนิติบุคคลหลัก พร้อมตรวจสอบปี พ.ศ. หากพบให้แปลงเป็นปี ค.ศ. (YYYY-MM-DD) ตามมาตรฐาน ISO 8601",
   },
   {
-    id: "strict_math",
-    title: "3. ตรวจสอบตัวเลขและภาษีอย่างเข้มงวด (Strict Math & Tax)",
-    badge: "Financial",
-    systemPrompt:
-      "คุณคือผู้ตรวจสอบความถูกต้องของตัวเลขในเอกสารโลจิสติกส์ ให้ตรวจสอบว่า Subtotal + VAT = Total Amount หรือไม่ และสกัด unit_price กับ total_amount เป็นตัวเลขทศนิยมอย่างถูกต้อง",
-    fallbackRules: [
-      "ยอดรวมสุทธิ (Total Amount) ต้องเป็นยอดสุดท้ายหลังรวมภาษีมูลค่าเพิ่มแล้ว",
-      "ถ้ามีรายการส่วนลด (Discount) ให้ตรวจสอบยอดหักลบก่อนคำนวณ",
-      "สกุลเงินต้องระบุเป็นรหัสมาตรฐานสากล เช่น THB, USD, EUR",
-    ],
+    id: "shipping_bl_ocean",
+    category: "extraction" as any,
+    categoryLabel: "สกัด 11 ฟิลด์หลัก",
+    badge: "Maritime & Air",
+    title: "สกัดใบตราส่งสินค้าทางเรือ (B/L) และทางอากาศ (AWB)",
+    description: "สกัดข้อมูลเฉพาะทางโลจิสติกส์ เช่น B/L No, Shipper, Consignee, Port of Loading (origin), Port of Discharge (destination)",
+    prompt: "สกัดข้อมูลใบตราส่งสินค้าทางเรือ (Ocean Bill of Lading) และทางอากาศ (Air Waybill) โดย map Port of Loading เป็น origin และ Port of Discharge เป็น destination",
   },
   {
-    id: "shipping_bl",
-    title: "4. ใบตราส่งทางเรือและแอร์เวย์บิล (B/L & Air Waybill)",
-    badge: "Maritime",
-    systemPrompt:
-      "คุณคือผู้เชี่ยวชาญการสกัดข้อมูลใบตราส่งสินค้าทางเรือ (Ocean Bill of Lading) และทางอากาศ (Air Waybill) ให้สกัด B/L Number, Shipper, Consignee, Port of Loading (origin), Port of Discharge (destination) และค่าระวางขนส่ง",
-    fallbackRules: [
-      "Port of Loading / Airport of Departure ให้ map เป็น origin",
-      "Port of Discharge / Airport of Destination ให้ map เป็น destination",
-      "Booking Number หรือ Voyage No. ถ้าไม่ใช่ B/L No. ให้เก็บลง reference_number",
-    ],
+    id: "synonym_party",
+    category: "synonym",
+    categoryLabel: "ตรวจสอบคำความหมายเดียวกัน",
+    badge: "คู่ค้า & นิติบุคคล",
+    title: "จำแนกชื่อผู้ซื้อ / ผู้ขาย / ผู้รับสินค้า (Buyer, Seller, Consignee)",
+    description: "ตรวจสอบและจัดกลุ่มคำที่มีความหมายเดียวกัน เช่น ผู้ส่ง, Vendor, Shipper, ผู้ขาย เข้ากับ sender และ ผู้รับ, Consignee, Buyer เข้ากับ receiver",
+    prompt: "วิเคราะห์ข้อความ OCR และจำแนกชื่อนิติบุคคลหรือคู่ค้าที่มีความหมายเดียวกัน เช่น ผู้ส่ง/ผู้ขาย/Vendor/Shipper ให้เป็น sender และผู้ซื้อ/ผู้รับสินค้า/Consignee/Buyer ให้เป็น receiver พร้อมระบุว่าชื่อใดควรเป็น receiver หลัก",
+  },
+  {
+    id: "synonym_doc_no",
+    category: "synonym",
+    categoryLabel: "ตรวจสอบคำความหมายเดียวกัน",
+    badge: "เลขที่อ้างอิง",
+    title: "จำแนกเลขที่เอกสาร & เลขที่ใบสั่งซื้อ (Invoice No, PO No, Tax ID)",
+    description: "ตรวจสอบคำระบุเลขที่เอกสาร เช่น เลขที่, Tax Inv, Inv No, Reference No, P.O., Purchase Order, AWB No. และจัดคู่ค่าที่ถูกต้องลงในฟิลด์",
+    prompt: "ตรวจสอบคำระบุเลขที่เอกสาร เช่น เลขที่, Tax Inv, Inv No, Reference No, P.O., Purchase Order, Tax ID และจัดคู่ค่าที่ถูกต้องลงในฟิลด์ 11 ฟิลด์หลักและ other",
+  },
+  {
+    id: "synonym_vehicle",
+    category: "synonym",
+    categoryLabel: "ตรวจสอบคำความหมายเดียวกัน",
+    badge: "ยานพาหนะขนส่ง",
+    title: "ตรวจสอบทะเบียนรถ / ตู้คอนเทนเนอร์ (Truck Plate, Container No)",
+    description: "ตรวจสอบคำระบุข้อมูลยานพาหนะ เช่น ทะเบียนรถ, รถบรรทุก, ทะเบียนหัวลาก, Container No, Car Plate, Truck No. และสกัดค่าที่แท้จริง",
+    prompt: "ตรวจสอบคำระบุข้อมูลยานพาหนะและการขนส่ง เช่น ทะเบียนรถ, ทะเบียนหัวลาก, หมายเลขตู้คอนเทนเนอร์ (Container No.), ชื่อเรือ (Vessel) หรือทะเบียนรถส่งของ แล้วสรุปค่าที่พบ",
+  },
+  {
+    id: "summarize_short",
+    category: "summary",
+    categoryLabel: "วิเคราะห์ & สรุปกระชับ",
+    badge: "สรุป 1 ประโยค",
+    title: "สรุปใจความสำคัญของเอกสารให้สั้นกระชับใน 1-2 ประโยค",
+    description: "วิเคราะห์เนื้อหาเอกสารทั้งหมดและย่อความให้เหลือเพียง 1-2 ประโยคสั้นๆ เพื่อให้เจ้าหน้าที่หรือผู้บริหารเข้าใจได้ทันที",
+    prompt: "สรุปเนื้อหาหลักของเอกสารนี้ให้เหลือเพียง 1-2 ประโยคสั้นๆ กระชับ ระบุว่าใครส่งอะไรให้ใคร ยอดเงินเท่าไหร่ เพื่อใช้อ่านสรุปและส่งต่อให้ทีมงานอย่างรวดเร็ว",
+  },
+  {
+    id: "summarize_goods",
+    category: "summary",
+    categoryLabel: "วิเคราะห์ & สรุปกระชับ",
+    badge: "รายการสินค้า",
+    title: "สรุปรายการสินค้า ปริมาณ และราคารวมแบบกระชับ",
+    description: "ดึงเฉพาะรายการสินค้าหลัก, จำนวน (Quantity), หน่วยนับ และราคารวมออกมาสรุปเป็นข้อความสั้นๆ",
+    prompt: "สรุปเฉพาะรายการสินค้าหลัก, จำนวน (Quantity), หน่วยนับ และราคารวมในรูปแบบตารางย่อหรือสรุปข้อความ 2-3 บรรทัดที่เข้าใจง่าย",
+  },
+  {
+    id: "summarize_payment_terms",
+    category: "summary",
+    categoryLabel: "วิเคราะห์ & สรุปกระชับ",
+    badge: "เงื่อนไขชำระเงิน",
+    title: "สรุปเงื่อนไขการชำระเงินและข้อกำหนดการส่ง (Payment & Incoterms)",
+    description: "วิเคราะห์เงื่อนไขเครดิตเทอม วันครบกำหนดชำระ เลขที่บัญชีธนาคาร และเงื่อนไขการส่งสินค้า (Incoterms)",
+    prompt: "วิเคราะห์และสรุปเงื่อนไขการชำระเงิน (Credit Term, Due Date, Bank Account) และเงื่อนไขการจัดส่ง (Incoterms เช่น FOB, CIF, Door-to-Door) ให้กระชับเข้าใจง่าย",
+  },
+  {
+    id: "validate_numbers",
+    category: "validation",
+    categoryLabel: "ตรวจสอบความถูกต้อง",
+    badge: "ตรวจสอบตัวเลข",
+    title: "ตรวจสอบความสอดคล้องของผลรวมเงิน (Subtotal + VAT = Total)",
+    description: "ตรวจสอบตัวเลขว่ายอดก่อนภาษี รวมกับ VAT 7% แล้วเท่ากับ Total Amount สุทธิหรือไม่ และแจ้งเตือนหากมีส่วนต่าง",
+    prompt: "ตรวจสอบตัวเลขในเอกสารว่า Subtotal (ยอดก่อนภาษี), VAT (ภาษีมูลค่าเพิ่ม) และ Total Amount (ยอดสุทธิ) คำนวณถูกต้องตามหลักคณิตศาสตร์หรือไม่ และแจ้งหากพบข้อผิดพลาด",
+  },
+  {
+    id: "validate_core_fields",
+    category: "validation",
+    categoryLabel: "ตรวจสอบความถูกต้อง",
+    badge: "ความสมบูรณ์ของฟิลด์",
+    title: "ตรวจสอบความครบถ้วนของ 11 ฟิลด์หลัก (Core 11 Fields Quality Check)",
+    description: "ตรวจสอบว่าเอกสารนี้มีข้อมูลครบทั้ง 11 ฟิลด์หลักหรือไม่ และแนะนำข้อความใน OCR ที่สามารถนำมาเติมในฟิลด์ที่ขาดได้",
+    prompt: "ตรวจสอบว่าเอกสารนี้มีข้อมูลครบทั้ง 11 ฟิลด์หลักหรือไม่ (document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, currency) หากฟิลด์ไหนขาดหายไป ให้แนะนำข้อความที่น่าจะเป็นไปได้จาก OCR Text",
+  },
+  {
+    id: "translate_format",
+    category: "translation",
+    categoryLabel: "แปลภาษา & จัดรูปแบบ",
+    badge: "แปลภาษาไทย-อังกฤษ",
+    title: "แปลชื่อบริษัท รายการสินค้า และปรับรูปแบบวันที่สากล",
+    description: "แปลข้อมูลภาษาอังกฤษเป็นภาษาไทยที่ถูกต้องตามศัพท์โลจิสติกส์ พร้อมแปลงวันที่เป็นรูปแบบ ISO 8601",
+    prompt: "แปลชื่อบริษัท, ที่อยู่ และรายการสินค้าในเอกสารจากภาษาอังกฤษเป็นภาษาไทยที่ถูกต้องตามศัพท์โลจิสติกส์ พร้อมแปลงวันที่ทุกรูปแบบให้อยู่ในมาตรฐาน ISO 8601 (YYYY-MM-DD)",
   },
 ];
 
@@ -140,19 +217,250 @@ export function AdminPromptConfig({
   loading = false,
   saving = false,
 }: AdminPromptConfigProps) {
+  // Preset Library State
+  const [presets, setPresets] = useState<SlmPromptPresetResponse[]>(DEFAULT_PRESETS_FALLBACK);
+  const [loadingPresets, setLoadingPresets] = useState<boolean>(true);
+  const [savingPresets, setSavingPresets] = useState<boolean>(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  // Preset Editor Modal State
+  const [editingPreset, setEditingPreset] = useState<SlmPromptPresetResponse | null>(null);
+  const [isCreatingNew, setIsCreatingNew] = useState<boolean>(false);
+  const [editFormData, setEditFormData] = useState<{
+    id: string;
+    title: string;
+    category: string;
+    categoryLabel: string;
+    badge: string;
+    description: string;
+    prompt: string;
+  }>({
+    id: "",
+    title: "",
+    category: "custom",
+    categoryLabel: "กำหนดเอง",
+    badge: "Custom",
+    description: "",
+    prompt: "",
+  });
+
+  // Prompt Lab Playground State
   const [selectedSampleId, setSelectedSampleId] = useState<string>("inv1");
   const [customOcrInput, setCustomOcrInput] = useState<string>(SAMPLE_OCR_TEXTS[0].text);
+  const [activePlaygroundPresetId, setActivePlaygroundPresetId] = useState<string>("custom");
   const [isTestingPrompt, setIsTestingPrompt] = useState<boolean>(false);
   const [testResult, setTestResult] = useState<string>("");
   const [testElapsedSec, setTestElapsedSec] = useState<number | null>(null);
   const [copiedResult, setCopiedResult] = useState<boolean>(false);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
 
-  function handleApplyTemplate(tpl: (typeof PROMPT_TEMPLATES)[0]) {
+  useEffect(() => {
+    loadPresetsFromBackend();
+  }, []);
+
+  async function loadPresetsFromBackend() {
+    setLoadingPresets(true);
+    try {
+      const data = await getSlmPrompts();
+      if (Array.isArray(data) && data.length > 0) {
+        setPresets(data);
+      }
+    } catch (err) {
+      console.warn("Could not fetch remote presets, using defaults:", err);
+    } finally {
+      setLoadingPresets(false);
+    }
+  }
+
+  function showToast(msg: string) {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 3000);
+  }
+
+  // Filtered Presets
+  const filteredPresets = useMemo(() => {
+    return presets.filter((p) => {
+      const matchesCat = selectedCategory === "all" || p.category === selectedCategory;
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !q ||
+        p.title.toLowerCase().includes(q) ||
+        p.id.toLowerCase().includes(q) ||
+        p.badge.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        p.prompt.toLowerCase().includes(q);
+      return matchesCat && matchesSearch;
+    });
+  }, [presets, selectedCategory, searchQuery]);
+
+  // Open Edit Modal for a Preset
+  function handleOpenEditPreset(preset: SlmPromptPresetResponse) {
+    setEditingPreset(preset);
+    setIsCreatingNew(false);
+    setEditFormData({
+      id: preset.id,
+      title: preset.title,
+      category: preset.category,
+      categoryLabel: preset.categoryLabel,
+      badge: preset.badge,
+      description: preset.description,
+      prompt: preset.prompt,
+    });
+  }
+
+  // Open Create Modal
+  function handleOpenCreatePreset() {
+    const newId = `custom_prompt_${Date.now().toString().slice(-4)}`;
+    setEditingPreset(null);
+    setIsCreatingNew(true);
+    setEditFormData({
+      id: newId,
+      title: "แม่แบบพร้อมต์เฉพาะทางใหม่",
+      category: "custom",
+      categoryLabel: "กำหนดเอง",
+      badge: "กำหนดเอง",
+      description: "ระบุวัตถุประสงค์และกรณีการใช้งานของพร้อมต์นี้",
+      prompt: "คุณคือผู้ช่วย AI ด้านโลจิสติกส์ ให้วิเคราะห์ข้อความ OCR และจำแนกข้อมูลตามเงื่อนไขดังต่อไปนี้...",
+    });
+  }
+
+  // Save Modal Changes
+  async function handleSaveEditForm() {
+    if (!editFormData.title.trim() || !editFormData.prompt.trim()) {
+      alert("กรุณากรอกชื่อและเนื้อหา Prompt ให้ครบถ้วน");
+      return;
+    }
+
+    let updatedList: SlmPromptPresetResponse[];
+    if (isCreatingNew) {
+      const newPreset: SlmPromptPresetResponse = {
+        id: editFormData.id.trim(),
+        title: editFormData.title.trim(),
+        category: editFormData.category as any,
+        categoryLabel: editFormData.categoryLabel.trim(),
+        badge: editFormData.badge.trim(),
+        description: editFormData.description.trim(),
+        prompt: editFormData.prompt.trim(),
+      };
+      updatedList = [...presets, newPreset];
+    } else {
+      updatedList = presets.map((p) =>
+        p.id === editFormData.id
+          ? {
+              ...p,
+              title: editFormData.title.trim(),
+              category: editFormData.category as any,
+              categoryLabel: editFormData.categoryLabel.trim(),
+              badge: editFormData.badge.trim(),
+              description: editFormData.description.trim(),
+              prompt: editFormData.prompt.trim(),
+            }
+          : p
+      );
+    }
+
+    setPresets(updatedList);
+    setEditingPreset(null);
+    setIsCreatingNew(false);
+
+    // Auto-save to server
+    setSavingPresets(true);
+    try {
+      await saveSlmPrompts(updatedList);
+      showToast(`บันทึกแม่แบบ "${editFormData.title}" ลงเซิร์ฟเวอร์เรียบร้อยแล้ว`);
+    } catch (err) {
+      console.error("Failed to auto-save preset to backend:", err);
+      showToast("บันทึกเฉพาะในหน่วยความจำ (เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์)");
+    } finally {
+      setSavingPresets(false);
+    }
+  }
+
+  // Delete a Preset
+  async function handleDeletePreset(presetId: string) {
+    if (!confirm(`คุณแน่ใจหรือไม่ว่าต้องการลบแม่แบบพร้อมต์ "${presetId}"?`)) return;
+    const updatedList = presets.filter((p) => p.id !== presetId);
+    setPresets(updatedList);
+
+    setSavingPresets(true);
+    try {
+      await saveSlmPrompts(updatedList);
+      showToast(`ลบแม่แบบ "${presetId}" สำเร็จ`);
+    } catch (err) {
+      console.error("Failed to delete preset from backend:", err);
+      showToast("ลบแม่แบบในเครื่องแล้ว");
+    } finally {
+      setSavingPresets(false);
+    }
+  }
+
+  // Reset to Defaults
+  async function handleResetDefaults() {
+    if (!confirm("คุณต้องการรีเซ็ตแม่แบบพร้อมต์สำเร็จรูปทั้งหมดกลับเป็นค่าเริ่มต้นจากระบบหรือไม่?")) return;
+    setSavingPresets(true);
+    try {
+      const data = await resetSlmPrompts();
+      setPresets(data);
+      showToast("คืนค่าแม่แบบพร้อมต์ทั้งหมดเป็นค่าเริ่มต้นสำเร็จ");
+    } catch (err) {
+      console.error("Reset failed:", err);
+      setPresets(DEFAULT_PRESETS_FALLBACK);
+      showToast("รีเซ็ตเป็นค่าเริ่มต้นสำเร็จ");
+    } finally {
+      setSavingPresets(false);
+    }
+  }
+
+  // Save All Presets Button
+  async function handleSaveAllPresets() {
+    setSavingPresets(true);
+    try {
+      const res = await saveSlmPrompts(presets);
+      showToast(res.message || `บันทึกแม่แบบ Prompt ทั้งหมด ${presets.length} รายการสำเร็จ`);
+    } catch (err: any) {
+      console.error("Save all presets failed:", err);
+      showToast(`บันทึกไม่สำเร็จ: ${err?.message || "เกิดข้อผิดพลาด"}`);
+    } finally {
+      setSavingPresets(false);
+    }
+  }
+
+  // Load Preset directly into System Prompt
+  function handleApplyPresetAsSystemPrompt(preset: SlmPromptPresetResponse) {
     onChange({
       ...value,
-      systemPrompt: tpl.systemPrompt,
-      fallbackRules: [...tpl.fallbackRules],
+      systemPrompt: preset.prompt,
     });
+    showToast(`โหลดข้อความของ "${preset.title}" เข้าสู่คำสั่งหลัก (System Prompt) แล้ว`);
+  }
+
+  // Load Preset into Live Playground & Execute
+  async function handleTestPresetOnPlayground(preset: SlmPromptPresetResponse) {
+    setActivePlaygroundPresetId(preset.id);
+    setIsTestingPrompt(true);
+    setTestResult("");
+    const start = Date.now();
+    try {
+      showToast(`กำลังส่งแม่แบบ "${preset.title}" ไปรันบน GPU CUDA...`);
+      const res = await executeSlmPrompt({
+        promptTemplateId: preset.id,
+        systemInstruction: value.systemPrompt,
+        userInstruction: preset.prompt,
+        ocrText: customOcrInput,
+        jsonSchema: EMPTY_JSON_SCHEMA,
+      });
+      const elapsed = ((Date.now() - start) / 1000).toFixed(2);
+      setTestElapsedSec(Number(elapsed));
+      setTestResult(res.resultText);
+      showToast(`Qwen SLM ประมวลผลแม่แบบ "${preset.badge}" สำเร็จในเวลา ${elapsed}s!`);
+      // Scroll to playground
+      document.getElementById("live-playground-section")?.scrollIntoView({ behavior: "smooth" });
+    } catch (err: any) {
+      setTestResult(err instanceof Error ? `เกิดข้อผิดพลาด: ${err.message}` : "การเชื่อมต่อ SLM ล้มเหลว");
+    } finally {
+      setIsTestingPrompt(false);
+    }
   }
 
   function updateFallbackRule(index: number, nextValue: string) {
@@ -184,14 +492,14 @@ export function AdminPromptConfig({
     }
   }
 
-  async function handleExecuteTestPrompt() {
+  async function handleExecuteCustomTestPrompt() {
     if (!customOcrInput.trim()) return;
     setIsTestingPrompt(true);
     setTestResult("");
     const start = Date.now();
     try {
       const res = await executeSlmPrompt({
-        promptTemplateId: "custom",
+        promptTemplateId: activePlaygroundPresetId || "custom",
         systemInstruction: value.systemPrompt,
         userInstruction: "Extract 11 core logistics fields and explain mapping logic.",
         ocrText: customOcrInput,
@@ -216,50 +524,387 @@ export function AdminPromptConfig({
 
   return (
     <div className="space-y-6">
+      {/* Toast Notification */}
+      {toastMsg && (
+        <div className="fixed bottom-5 right-5 z-50 rounded-xl border border-indigo-200 bg-slate-900 px-4 py-3 text-xs font-bold text-white shadow-xl animate-in fade-in slide-in-from-bottom-2">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            <span>{toastMsg}</span>
+          </div>
+        </div>
+      )}
+
       {/* =================================================================== */}
-      {/* 1. QUICK TEMPLATES TOOLBAR                                          */}
+      {/* 1. PREDEFINED PROMPT PRESETS MANAGER (คลังพร้อมต์สำเร็จรูปทั้งหมด)    */}
       {/* =================================================================== */}
-      <div className="rounded-2xl border border-indigo-200/80 bg-gradient-to-r from-indigo-50/80 via-blue-50/40 to-white p-5 shadow-xs">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="rounded-2xl border border-indigo-200 bg-gradient-to-r from-indigo-50/90 via-blue-50/50 to-white p-5 sm:p-6 shadow-xs space-y-4">
+        {/* Header and Global Actions */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-indigo-100 pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-amber-500" />
-              <h3 className="text-xs font-black uppercase tracking-wider text-slate-900">
-                แม่แบบพร้อมต์สำเร็จรูป (Prompt Templates)
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-2xs">
+                <BrainCircuit className="h-4 w-4" />
+              </div>
+              <h3 className="text-sm font-black uppercase tracking-wider text-slate-900">
+                คลังแม่แบบพร้อมต์สำเร็จรูปสำหรับ SLM (Predefined Prompt Presets Library)
               </h3>
+              <span className="rounded-full bg-indigo-100 border border-indigo-300 px-2.5 py-0.5 text-[11px] font-black text-indigo-800">
+                {presets.length} แม่แบบพร้อมใช้
+              </span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">
-              เลือกโหลดแม่แบบพร้อมต์ที่ผ่านการปรับแต่งแล้วเพื่อนำไปใช้งานหรือดัดแปลงต่อได้ทันที:
+            <p className="text-xs text-slate-600 mt-1 max-w-3xl leading-relaxed">
+              ชุดคำสั่งพร้อมต์ที่ตัว SLM จะเลือกใช้อ่านเบื้องหลังอัตโนมัติตามบริบทของเอกสาร (ผู้ใช้จะไม่เห็น Prompt ในขั้นตอนทั่วไป) แอดมินสามารถดู แก้ไข ปรับแต่งข้อความคำสั่ง หรือเพิ่มแม่แบบเฉพาะทางใหม่ๆ ได้อย่างอิสระ:
             </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={handleOpenCreatePreset}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-3.5 py-2 text-xs font-black text-white shadow-sm hover:bg-indigo-700 transition"
+            >
+              <Plus className="h-4 w-4" />
+              <span>+ สร้างแม่แบบใหม่</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleSaveAllPresets}
+              disabled={savingPresets}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition disabled:opacity-50"
+              title="บันทึกการเปลี่ยนแปลงของทุกแม่แบบลงเซิร์ฟเวอร์"
+            >
+              {savingPresets ? <LoaderCircle className="h-3.5 w-3.5 animate-spin text-blue-600" /> : <Save className="h-3.5 w-3.5 text-blue-600" />}
+              <span>บันทึกทั้งหมด</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleResetDefaults}
+              disabled={savingPresets}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 shadow-2xs hover:bg-slate-50 transition disabled:opacity-50"
+              title="คืนค่าแม่แบบทั้งหมดเป็นค่าเริ่มต้นของระบบ"
+            >
+              <RotateCcw className="h-3.5 w-3.5 text-slate-400" />
+              <span>รีเซ็ต</span>
+            </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mt-3.5">
-          {PROMPT_TEMPLATES.map((tpl) => (
-            <button
-              key={tpl.id}
-              type="button"
-              onClick={() => handleApplyTemplate(tpl)}
-              className="text-left p-3 rounded-xl border border-slate-200 bg-white hover:border-indigo-300 hover:shadow-xs transition group"
-            >
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-bold text-xs text-slate-800 group-hover:text-indigo-600 transition">
-                  {tpl.title}
-                </span>
-                <span className="rounded bg-indigo-50 px-1.5 py-0.2 text-[9px] font-black uppercase text-indigo-700">
-                  {tpl.badge}
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
-                {tpl.systemPrompt}
-              </p>
-            </button>
-          ))}
+        {/* Search & Category Filter Pills */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+          <div className="flex flex-wrap items-center gap-1.5 text-xs">
+            {[
+              { id: "all", label: `ทั้งหมด (${presets.length})` },
+              { id: "extraction", label: "⚙️ สกัด 11 ฟิลด์" },
+              { id: "synonym", label: "🏷️ คำความหมายเดียวกัน" },
+              { id: "validation", label: "📊 ตรวจสอบตัวเลข" },
+              { id: "summary", label: "📝 วิเคราะห์ & สรุป" },
+              { id: "translation", label: "🌐 แปลภาษา & วันที่" },
+              { id: "custom", label: "✨ กำหนดเอง" },
+            ].map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+                  selectedCategory === cat.id
+                    ? "bg-indigo-600 text-white shadow-xs"
+                    : "bg-white text-slate-600 border border-slate-200/80 hover:bg-slate-50 hover:text-slate-900"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="ค้นหาตามชื่อ หรือคำสั่ง..."
+              className="w-full rounded-xl border border-slate-200 bg-white pl-8 pr-3 py-1.5 text-xs font-medium text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:outline-none transition shadow-2xs"
+            />
+          </div>
         </div>
+
+        {/* Grid of Presets */}
+        {loadingPresets ? (
+          <div className="flex items-center justify-center py-12 text-slate-400 text-xs font-bold gap-2">
+            <LoaderCircle className="h-4 w-4 animate-spin text-indigo-600" />
+            <span>กำลังโหลดคลังแม่แบบพร้อมต์...</span>
+          </div>
+        ) : filteredPresets.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-slate-300 bg-white/60 p-8 text-center text-slate-400 text-xs font-bold">
+            ไม่พบแม่แบบพร้อมต์ตรงตามหมวดหมู่หรือคำค้นหานี้
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-1">
+            {filteredPresets.map((preset) => (
+              <div
+                key={preset.id}
+                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 shadow-2xs hover:border-indigo-300 hover:shadow-xs transition"
+              >
+                <div className="space-y-2">
+                  {/* Category & Badge Header */}
+                  <div className="flex items-center justify-between gap-1">
+                    <span className="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-2 py-0.5 text-[10px] font-black uppercase text-indigo-700">
+                      {preset.badge}
+                    </span>
+                    <span className="font-mono text-[10px] font-bold text-slate-400">
+                      #{preset.id}
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <h4 className="text-xs font-black text-slate-900 group-hover:text-indigo-600 transition leading-snug">
+                    {preset.title}
+                  </h4>
+
+                  {/* Description */}
+                  <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
+                    {preset.description}
+                  </p>
+
+                  {/* Prompt Text Preview Box */}
+                  <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-2.5 font-mono text-[11px] text-slate-700 leading-relaxed max-h-20 overflow-hidden line-clamp-3 select-text">
+                    {preset.prompt}
+                  </div>
+                </div>
+
+                {/* Bottom Card Actions */}
+                <div className="mt-3.5 flex items-center justify-between border-t border-slate-100 pt-2.5">
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenEditPreset(preset)}
+                      className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-bold text-slate-700 hover:border-indigo-300 hover:text-indigo-600 transition shadow-2xs"
+                      title="เปิดหน้าต่างแก้ไขคำสั่ง Prompt นี้"
+                    >
+                      <Edit3 className="h-3 w-3 text-indigo-600" />
+                      <span>แก้ไข Prompt</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleTestPresetOnPlayground(preset)}
+                      className="inline-flex items-center gap-1 rounded-lg border border-indigo-200 bg-indigo-50/60 px-2.5 py-1 text-[11px] font-bold text-indigo-700 hover:bg-indigo-100 transition shadow-2xs"
+                      title="ส่ง Prompt นี้ไปทดสอบสดกับ Qwen SLM บน GPU"
+                    >
+                      <Play className="h-3 w-3 fill-indigo-600" />
+                      <span>ทดสอบสด</span>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(preset.prompt);
+                        showToast(`คัดลอกข้อความของ "${preset.title}" แล้ว`);
+                      }}
+                      className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition"
+                      title="คัดลอกคำสั่ง Prompt"
+                    >
+                      <Copy className="h-3.5 w-3.5" />
+                    </button>
+
+                    {preset.category === "custom" && (
+                      <button
+                        type="button"
+                        onClick={() => handleDeletePreset(preset.id)}
+                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                        title="ลบแม่แบบนี้"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* =================================================================== */}
-      {/* 2. MAIN CONFIGURATION 2-COLUMN GRID                                 */}
+      {/* PRESET EDITOR MODAL (หน้าต่างสำหรับแก้ไขหรือสร้างแม่แบบ PROMPT)      */}
+      {/* =================================================================== */}
+      {(editingPreset || isCreatingNew) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="relative w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl space-y-4 border border-slate-200">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white">
+                  <Edit3 className="h-4 w-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-slate-900">
+                    {isCreatingNew ? "สร้างแม่แบบ Prompt สำเร็จรูปใหม่" : `แก้ไขแม่แบบ Prompt: ${editFormData.title}`}
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    {isCreatingNew
+                      ? "กำหนดคำสั่งและเงื่อนไขสำหรับให้ SLM นำไปใช้อ่านเบื้องหลัง"
+                      : `รหัสแม่แบบ: #${editFormData.id} (SLM จะเลือกใช้ตามบริบทเอกสาร)`}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingPreset(null);
+                  setIsCreatingNew(false);
+                }}
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <div className="space-y-3.5 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                    ชื่อแม่แบบ (Title)
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.title}
+                    onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-800 focus:border-indigo-500 focus:outline-none transition shadow-2xs"
+                    placeholder="เช่น จำแนกชื่อผู้ซื้อ/ผู้ขาย"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                    ป้ายกำกับ (Badge)
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.badge}
+                    onChange={(e) => setEditFormData({ ...editFormData, badge: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-800 focus:border-indigo-500 focus:outline-none transition shadow-2xs"
+                    placeholder="เช่น คู่ค้า & นิติบุคคล"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                    หมวดหมู่ (Category)
+                  </label>
+                  <select
+                    value={editFormData.category}
+                    onChange={(e) => {
+                      const cat = e.target.value;
+                      const labels: Record<string, string> = {
+                        extraction: "สกัด 11 ฟิลด์หลัก",
+                        synonym: "ตรวจสอบคำความหมายเดียวกัน",
+                        validation: "ตรวจสอบความถูกต้อง",
+                        summary: "วิเคราะห์ & สรุปกระชับ",
+                        translation: "แปลภาษา & จัดรูปแบบ",
+                        custom: "กำหนดเอง",
+                      };
+                      setEditFormData({
+                        ...editFormData,
+                        category: cat,
+                        categoryLabel: labels[cat] || "กำหนดเอง",
+                      });
+                    }}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-800 focus:border-indigo-500 focus:outline-none transition shadow-2xs cursor-pointer"
+                  >
+                    <option value="extraction">⚙️ สกัด 11 ฟิลด์หลัก (Extraction)</option>
+                    <option value="synonym">🏷️ ตรวจสอบคำความหมายเดียวกัน (Synonym)</option>
+                    <option value="validation">📊 ตรวจสอบความถูกต้อง & ตัวเลข (Validation)</option>
+                    <option value="summary">📝 วิเคราะห์ & สรุปกระชับ (Summary)</option>
+                    <option value="translation">🌐 แปลภาษา & จัดรูปแบบ (Translation)</option>
+                    <option value="custom">✨ กำหนดเอง (Custom)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                    รหัสอ้างอิงภายใน (ID)
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.id}
+                    disabled={!isCreatingNew}
+                    onChange={(e) => setEditFormData({ ...editFormData, id: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-xs font-bold text-slate-600 focus:outline-none disabled:cursor-not-allowed"
+                    placeholder="เช่น custom_prompt_1"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
+                  คำอธิบายการทำงาน (Description)
+                </label>
+                <input
+                  type="text"
+                  value={editFormData.description}
+                  onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-800 focus:border-indigo-500 focus:outline-none transition shadow-2xs"
+                  placeholder="อธิบายสั้นๆ ว่าพร้อมต์นี้ใช้กับเอกสารประเภทใดและทำงานอย่างไร"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase">
+                    คำสั่ง Prompt ที่ SLM อ่านเบื้องหลัง (Prompt Content)
+                  </label>
+                  <span className="text-[10px] font-mono text-slate-400">
+                    {editFormData.prompt.length} ตัวอักษร
+                  </span>
+                </div>
+                <textarea
+                  value={editFormData.prompt}
+                  onChange={(e) => setEditFormData({ ...editFormData, prompt: e.target.value })}
+                  rows={6}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/80 p-3 font-mono text-xs leading-relaxed text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none transition shadow-inner"
+                  placeholder="ระบุข้อความคำสั่ง Prompt สำหรับ SLM ที่นี่..."
+                />
+                <p className="text-[11px] text-slate-400 mt-1">
+                  💡 คำสั่งนี้จะถูกส่งเข้าโมเดล Qwen2.5-1.5B ร่วมกับ OCR Text เพื่อบังคับให้สกัดค่าฟิลด์อย่างถูกต้อง
+                </p>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex items-center justify-end gap-2 border-t border-slate-100 pt-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingPreset(null);
+                  setIsCreatingNew(false);
+                }}
+                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 transition"
+              >
+                ยกเลิก
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveEditForm}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-indigo-700 transition"
+              >
+                <Save className="h-3.5 w-3.5" />
+                <span>บันทึกการแก้ไข</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =================================================================== */}
+      {/* 2. MAIN SYSTEM PROMPT & MODEL CONFIGURATION                         */}
       {/* =================================================================== */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* LEFT COLUMN: System Prompt Editor */}
@@ -430,15 +1075,15 @@ export function AdminPromptConfig({
       {/* =================================================================== */}
       {/* 3. INTERACTIVE LIVE PROMPT PLAYGROUND (TEST STUDIO)                 */}
       {/* =================================================================== */}
-      <div className="rounded-2xl border border-indigo-200/90 bg-white p-6 shadow-panel space-y-4">
+      <div id="live-playground-section" className="rounded-2xl border border-indigo-200/90 bg-white p-6 shadow-panel space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
           <div>
             <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-slate-900">
               <Play className="h-4 w-4 fill-indigo-600 text-indigo-600" />
-              <span>ห้องทดสอบพร้อมต์สด (Interactive Live Prompt Playground)</span>
+              <span>ห้องทดสอบพร้อมต์สดบน GPU (Interactive Live Prompt Playground)</span>
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
-              ทดสอบรัน System Prompt ที่ปรับแต่งด้านบนกับข้อความ OCR ตัวอย่างได้ทันทีบน GPU CUDA
+              ทดสอบรัน Prompt สำเร็จรูปด้านบนหรือ System Prompt ร่วมกับข้อความ OCR ตัวอย่างได้ทันทีบน GPU CUDA
             </p>
           </div>
           <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-700">
@@ -448,103 +1093,114 @@ export function AdminPromptConfig({
         </div>
 
         {/* Sample Selector Buttons */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-bold text-slate-500 mr-1">เลือกตัวอย่างข้อความ:</span>
-          {SAMPLE_OCR_TEXTS.map((sample) => (
-            <button
-              key={sample.id}
-              type="button"
-              onClick={() => handleSelectSample(sample.id)}
-              className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
-                selectedSampleId === sample.id
-                  ? "bg-indigo-600 text-white shadow-xs"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200/80"
-              }`}
-            >
-              {sample.label}
-            </button>
-          ))}
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-slate-700">
+            เลือกข้อความ OCR ตัวอย่าง หรือป้อนข้อความของคุณเอง:
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {SAMPLE_OCR_TEXTS.map((sample) => (
+              <button
+                key={sample.id}
+                type="button"
+                onClick={() => handleSelectSample(sample.id)}
+                className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+                  selectedSampleId === sample.id
+                    ? "bg-indigo-600 text-white shadow-xs"
+                    : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                }`}
+              >
+                {sample.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* OCR Input Area */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* 2-Column Playground: OCR Input & SLM Output */}
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* Left: OCR Text Area */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-700 flex items-center gap-1">
-                <FileText className="h-3.5 w-3.5 text-slate-400" />
-                <span>ข้อความดิบ OCR (Input OCR Text)</span>
-              </label>
-              <span className="text-[10px] text-slate-400">{customOcrInput.length} ตัวอักษร</span>
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                <FileText className="h-3.5 w-3.5 text-slate-500" />
+                <span>ข้อความดิบจาก OCR (Input OCR Text)</span>
+              </span>
+              <span className="text-[10px] text-slate-400 font-mono">
+                {customOcrInput.length} ตัวอักษร
+              </span>
             </div>
             <textarea
               value={customOcrInput}
               onChange={(e) => setCustomOcrInput(e.target.value)}
-              rows={8}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50/60 p-3 font-mono text-xs text-slate-800 leading-relaxed focus:border-indigo-500 focus:bg-white focus:outline-none transition shadow-inner"
-              placeholder="วางข้อความ OCR หรือพิมพ์ข้อความทดสอบ..."
+              rows={12}
+              className="w-full rounded-xl border border-slate-200 bg-slate-50/70 p-3 font-mono text-xs leading-relaxed text-slate-800 focus:border-indigo-500 focus:bg-white focus:outline-none transition shadow-inner"
+              placeholder="วางข้อความ OCR ที่ต้องการทดสอบที่นี่..."
             />
-            <button
-              type="button"
-              onClick={handleExecuteTestPrompt}
-              disabled={isTestingPrompt}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-2.5 text-xs font-black text-white shadow-md shadow-indigo-600/20 hover:from-indigo-700 hover:to-blue-700 transition disabled:opacity-50"
-            >
-              {isTestingPrompt ? (
-                <>
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                  <span>กำลังรัน Qwen SLM บน GPU...</span>
-                </>
-              ) : (
-                <>
-                  <Send className="h-4 w-4" />
-                  <span>🚀 ทดสอบรันด้วย System Prompt นี้ (Execute Prompt)</span>
-                </>
-              )}
-            </button>
+            <div className="flex items-center justify-between pt-1">
+              <button
+                type="button"
+                onClick={handleExecuteCustomTestPrompt}
+                disabled={isTestingPrompt || !customOcrInput.trim()}
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-2.5 text-xs font-black text-white shadow-md shadow-indigo-600/20 hover:from-indigo-700 hover:to-blue-700 transition disabled:opacity-50"
+              >
+                {isTestingPrompt ? (
+                  <>
+                    <LoaderCircle className="h-4 w-4 animate-spin text-white" />
+                    <span>กำลังรัน Qwen บน GPU...</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-4 w-4 fill-white text-white" />
+                    <span>รันการทดสอบทันที (Run Test on GPU)</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
-          {/* Test Result Display */}
-          <div className="space-y-1.5 flex flex-col">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-700 flex items-center gap-1">
-                <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
-                <span>ผลลัพธ์จากโมเดลภาษา (SLM Inference Output)</span>
-              </label>
-              {testElapsedSec !== null && (
-                <span className="inline-flex items-center gap-1 font-mono text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">
-                  <Clock className="h-3 w-3" />
-                  {testElapsedSec}s
-                </span>
-              )}
+          {/* Right: SLM Response Output */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                <Cpu className="h-3.5 w-3.5 text-indigo-600" />
+                <span>ผลลัพธ์การวิเคราะห์จาก Qwen SLM (Live Response)</span>
+              </span>
+              <div className="flex items-center gap-2">
+                {testElapsedSec !== null && (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">
+                    <Clock className="h-3 w-3" />
+                    {testElapsedSec}s
+                  </span>
+                )}
+                {testResult && (
+                  <button
+                    type="button"
+                    onClick={handleCopyResult}
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 hover:text-indigo-600 transition"
+                  >
+                    {copiedResult ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
+                    <span>{copiedResult ? "คัดลอกแล้ว" : "คัดลอก"}</span>
+                  </button>
+                )}
+              </div>
             </div>
 
-            <div className="flex-1 min-h-[190px] rounded-xl border border-slate-200 bg-slate-50/50 p-4 font-mono text-xs leading-relaxed text-slate-800 overflow-y-auto max-h-[220px]">
+            <div className="h-[275px] w-full overflow-y-auto rounded-xl border border-slate-200 bg-slate-900 p-4 font-mono text-xs leading-relaxed text-slate-100 shadow-inner">
               {isTestingPrompt ? (
-                <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
-                  <RefreshCw className="h-5 w-5 animate-spin text-indigo-600" />
-                  <span className="text-xs font-bold">โมเดลกำลังอ่านบริบทและคำสั่ง Prompt...</span>
+                <div className="flex h-full flex-col items-center justify-center gap-2 text-indigo-400">
+                  <RefreshCw className="h-6 w-6 animate-spin" />
+                  <span className="text-xs font-sans">กำลังส่งข้อความเข้าโมเดล Qwen2.5 บน CUDA:0...</span>
                 </div>
               ) : testResult ? (
-                <div className="whitespace-pre-wrap">{testResult}</div>
+                <pre className="whitespace-pre-wrap font-mono text-xs text-emerald-400">
+                  {testResult}
+                </pre>
               ) : (
-                <div className="flex h-full items-center justify-center text-slate-400 text-xs text-center font-bold">
-                  กดปุ่ม &quot;ทดสอบรันด้วย System Prompt นี้&quot; เพื่อดูการตอบสนองของโมเดลสดๆ
+                <div className="flex h-full flex-col items-center justify-center gap-1.5 text-slate-500 text-xs">
+                  <Play className="h-6 w-6 opacity-40" />
+                  <span>กดปุ่ม "รันการทดสอบทันที" เพื่อดูผลการสกัดจากโมเดล</span>
                 </div>
               )}
             </div>
-
-            {testResult && !isTestingPrompt && (
-              <div className="flex items-center justify-end gap-2 pt-1">
-                <button
-                  type="button"
-                  onClick={handleCopyResult}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition"
-                >
-                  {copiedResult ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
-                  <span>{copiedResult ? "คัดลอกแล้ว!" : "คัดลอกผลลัพธ์"}</span>
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>
