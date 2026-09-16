@@ -5,8 +5,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api/benchmark": "http://127.0.0.1:8001",
-      "/api/slm": "http://127.0.0.1:8001",
       "/api": "http://127.0.0.1:8000",
     },
   },

@@ -27,6 +27,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { apiFetch } from "../services/apiClient";
 
 interface GroundTruthViewerModalProps {
   isOpen: boolean;
@@ -47,6 +48,16 @@ interface KFoldReport {
   dataset: string;
   total_documents: number;
   k_splits: number;
+  prompt_config?: {
+    source: string;
+    snapshot: {
+      system_prompt: string;
+      fallback_rules: string[];
+      confidence_threshold: number;
+      selected_model: string;
+      monitored_fields: string[];
+    };
+  };
   metrics_summary: {
     mean_accuracy_pct: number;
     accuracy_std_dev: number;
@@ -125,9 +136,7 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
     setLoading(true);
     try {
       // 1. Fetch Ground Truth Dataset
-      const gtResp = await fetch("/api/benchmark/ground-truth").catch(() =>
-        fetch("http://127.0.0.1:8001/api/benchmark/ground-truth")
-      );
+      const gtResp = await apiFetch(`/api/benchmark/ground-truth`);
       if (gtResp.ok) {
         const data = await gtResp.json();
         const docs: GroundTruthDoc[] = data.documents || [];
@@ -138,9 +147,7 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
       }
 
       // 2. Fetch K-Fold Report
-      const kfResp = await fetch("/api/benchmark/kfold").catch(() =>
-        fetch("http://127.0.0.1:8001/api/benchmark/kfold")
-      );
+      const kfResp = await apiFetch(`/api/benchmark/kfold`);
       if (kfResp.ok) {
         const kfData = await kfResp.json();
         setKfoldReport(kfData);
@@ -155,9 +162,7 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
   async function handleRerunKFold() {
     setIsRerunningKFold(true);
     try {
-      const resp = await fetch("/api/benchmark/kfold?rerun=true").catch(() =>
-        fetch("http://127.0.0.1:8001/api/benchmark/kfold?rerun=true")
-      );
+      const resp = await apiFetch(`/api/benchmark/kfold?rerun=true`);
       if (resp.ok) {
         const data = await resp.json();
         setKfoldReport(data);
@@ -872,6 +877,25 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
                     <span className="text-[11px] text-slate-500">Levenshtein Token Distance</span>
                   </div>
                 </div>
+
+                {kfoldReport.prompt_config && (
+                  <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-4 shadow-2xs">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h3 className="text-xs font-extrabold text-amber-900">
+                        Prompt ที่ใช้ในการทดลอง
+                      </h3>
+                      <span className="rounded-full border border-amber-200 bg-white px-2.5 py-0.5 text-[11px] font-mono font-bold text-amber-800">
+                        {kfoldReport.prompt_config.snapshot.selected_model}
+                      </span>
+                    </div>
+                    <p className="mt-2 whitespace-pre-wrap text-xs text-amber-950">
+                      {kfoldReport.prompt_config.snapshot.system_prompt}
+                    </p>
+                    <p className="mt-2 text-[11px] font-semibold text-amber-800">
+                      Threshold {kfoldReport.prompt_config.snapshot.confidence_threshold}% · {kfoldReport.prompt_config.snapshot.fallback_rules.length} fallback rules · {kfoldReport.prompt_config.snapshot.monitored_fields.length} monitored fields
+                    </p>
+                  </div>
+                )}
 
                 {/* 5-Fold Benchmark Table */}
                 <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-2xs">

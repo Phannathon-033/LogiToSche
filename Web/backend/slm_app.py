@@ -16,27 +16,28 @@ from pydantic import BaseModel, Field
 try:
     from .prompts import (
         CORE_FIELDS as PROMPT_CORE_FIELDS,
-        DEFAULT_ADMIN_CONFIG,
         EXTRACTION_RULES,
         EXTRACTION_SYSTEM_PROMPT,
         MODEL_IDS,
         default_admin_config,
+        load_prompt_config,
         prompt_for_preset,
+        save_prompt_config as persist_prompt_config,
         prompt_preset_list,
     )
 except ImportError:
     from prompts import (
         CORE_FIELDS as PROMPT_CORE_FIELDS,
-        DEFAULT_ADMIN_CONFIG,
         EXTRACTION_RULES,
         EXTRACTION_SYSTEM_PROMPT,
         MODEL_IDS,
         default_admin_config,
+        load_prompt_config,
         prompt_for_preset,
+        save_prompt_config as persist_prompt_config,
         prompt_preset_list,
     )
 
-PROMPT_CONFIG_PATH = Path(__file__).resolve().parent / "prompt_config.json"
 MIN_PROMPT_LENGTH = 1
 MAX_PROMPT_LENGTH = 10000
 MAX_RULE_LENGTH = 1000
@@ -48,6 +49,9 @@ except ImportError:
     from logistics_field_parser import evaluate_11_fields, parse_grounded_amounts, parse_robust_quantity
 
 BASE_DIR = Path(__file__).resolve().parent
+DRIVE_ROOT = Path(os.environ.get("LOGIAI_DRIVE_ROOT", "/content/drive/MyDrive/LogiToSche"))
+GROUND_TRUTH_PATH = Path(os.environ.get("LOGIAI_GROUND_TRUTH_PATH", DRIVE_ROOT / "ground_truth" / "ground_truth_dataset.json"))
+REPORT_DIR = Path(os.environ.get("LOGIAI_REPORT_DIR", DRIVE_ROOT / "reports"))
 SITE_PACKAGES_DIR = (BASE_DIR / ".venv" / "Lib" / "site-packages").resolve()
 TORCH_LIB_DIR = SITE_PACKAGES_DIR / "torch" / "lib"
 if TORCH_LIB_DIR.exists() and hasattr(os, "add_dll_directory"):
@@ -57,6 +61,8 @@ if TORCH_LIB_DIR.exists() and hasattr(os, "add_dll_directory"):
         pass
 
 SLM_MODEL_ID = os.environ.get("LOGIAI_SLM_MODEL", "Qwen/Qwen2.5-1.5B-Instruct")
+GATEWAY_TOKEN = os.environ.get("LOGIAI_GATEWAY_TOKEN", "").strip()
+GATEWAY_HEADERS = {"X-LogiAI-Token": GATEWAY_TOKEN} if GATEWAY_TOKEN else {}
 
 try:
     import torch
@@ -136,6 +142,7 @@ class SlmExtractRequest(BaseModel):
     ocr_text: str = Field(default="", min_length=1)
     ocr_lines: list[OcrLine] = Field(default_factory=list)
     image_base64: str | None = None
+    prompt_config: SlmPromptConfig | None = None
 
 def fuse_image_ocr(payload: SlmExtractRequest) -> str:
     if not payload.image_base64:
@@ -147,6 +154,7 @@ def fuse_image_ocr(payload: SlmExtractRequest) -> str:
             "http://127.0.0.1:8000/api/ocr",
             files={"file": ("document.png", image_bytes, "image/png")},
             data={"lang": "th"},
+            headers=GATEWAY_HEADERS,
             timeout=15,
         )
         if response.status_code != 200:
@@ -213,14 +221,38 @@ class SlmPromptResponse(BaseModel):
 
 
 @app.get("/api/slm/health")
-def health() -> dict[str, str]:
-    cuda = bool(torch is not None and torch.cuda.is_available())
+def health() -> dict[str, Any]:
+    if torch is None:
+        return {
+            "status": "missing-dependencies",
+            "service": "slm",
+            "model": SLM_MODEL_ID,
+            "device": "cpu",
+            "cuda": False,
+            "model_loaded": False,
+            "error": str(IMPORT_ERROR),
+        }
+    cuda = torch.cuda.is_available()
+    if not cuda:
+        return {
+            "status": "missing-cuda",
+            "service": "slm",
+            "model": MODEL_IDS.get(get_prompt_config()["selected_model"], SLM_MODEL_ID),
+            "device": "cpu",
+            "cuda": False,
+            "model_loaded": False,
+            "error": "torch.cuda.is_available() returned False",
+        }
+    if os.environ.get("LOGIAI_PRELOAD_SLM", "false").lower() == "true":
+        get_slm()
+    loaded = _slm_model is not None and _slm_tokenizer is not None
     return {
-        "status": "ready" if cuda else "missing-cuda",
+        "status": "ready" if loaded else "missing-model",
         "service": "slm",
         "model": MODEL_IDS.get(get_prompt_config()["selected_model"], SLM_MODEL_ID),
-        "device": "cuda:0" if cuda else "cpu",
-        "cuda": str(cuda).lower(),
+        "device": "cuda:0",
+        "cuda": True,
+        "model_loaded": loaded,
     }
 
 
@@ -233,15 +265,14 @@ def get_prompt_config_route() -> dict[str, Any]:
 def save_prompt_config(payload: SlmPromptConfig) -> dict[str, Any]:
     try:
         normalized = payload.normalized()
+        saved = persist_prompt_config(normalized)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
-    try:
-        PROMPT_CONFIG_PATH.write_text(json.dumps(normalized, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     except OSError as exc:
         raise HTTPException(status_code=500, detail=f"Could not persist prompt configuration: {exc}") from exc
     global _active_prompt_config
-    _active_prompt_config = normalized
-    return normalized
+    _active_prompt_config = saved
+    return dict(saved)
 
 
 @app.get("/api/slm/prompts")
@@ -253,17 +284,14 @@ def get_prompt_config() -> dict[str, Any]:
     global _active_prompt_config
     if _active_prompt_config is not None:
         return dict(_active_prompt_config)
-    config = default_admin_config()
-    if PROMPT_CONFIG_PATH.exists():
-        try:
-            stored = json.loads(PROMPT_CONFIG_PATH.read_text(encoding="utf-8"))
-            config = {**config, **stored}
-        except (OSError, ValueError, TypeError):
-            config = default_admin_config()
     try:
+        loaded = load_prompt_config()
         validator = getattr(SlmPromptConfig, "model_validate", SlmPromptConfig.parse_obj)
-        _active_prompt_config = validator(config).normalized()
-    except (ValueError, TypeError):
+        _active_prompt_config = {
+            **loaded,
+            **validator(loaded).normalized(),
+        }
+    except (ValueError, TypeError, json.JSONDecodeError, OSError):
         _active_prompt_config = default_admin_config()
     return dict(_active_prompt_config)
 
@@ -273,13 +301,18 @@ def slm_extract(payload: SlmExtractRequest) -> SlmExtractResponse:
     enriched_payload = payload.model_copy(update={"ocr_text": fuse_image_ocr(payload)}) if hasattr(payload, "model_copy") else payload.copy(update={"ocr_text": fuse_image_ocr(payload)})
     try:
         data = generate_json(enriched_payload)
-        normalized = normalize_slm_output(data, enriched_payload.source_file)
+        normalized = normalize_slm_output(
+            data,
+            enriched_payload.source_file,
+            enriched_payload.prompt_config,
+        )
+        config = prompt_config_for_request(enriched_payload.prompt_config)
         return SlmExtractResponse(
             json_schema=normalized["json_schema"],
             fields=normalized["fields"],
             confidence=normalized["confidence"],
             review_items=normalized["review_items"],
-            model=get_active_model_id(),
+            model=get_active_model_id(config),
             device="cuda:0",
         )
     except Exception as exc:
@@ -290,7 +323,7 @@ def slm_extract(payload: SlmExtractRequest) -> SlmExtractResponse:
             confidence=fallback["confidence"],
             review_items=fallback["review_items"],
             performance=fallback["performance"],
-            model=f"{get_active_model_id()} (Fallback: {exc})",
+            model=f"{get_active_model_id(prompt_config_for_request(enriched_payload.prompt_config))} (Fallback: {exc})",
             device="cpu/fallback",
         )
 
@@ -298,9 +331,9 @@ def slm_extract(payload: SlmExtractRequest) -> SlmExtractResponse:
 @app.post("/api/slm/execute-prompt", response_model=SlmPromptResponse)
 def execute_slm_prompt(payload: SlmPromptRequest) -> SlmPromptResponse:
     try:
+        config = get_prompt_config()
         tokenizer, model = get_slm()
         context = json.dumps(payload.json_schema, ensure_ascii=False, indent=2)
-        config = get_prompt_config()
         preset_instruction = prompt_for_preset(payload.prompt_template_id)
         user_instruction = payload.user_instruction or preset_instruction
         system_instruction = build_assistant_system_prompt(payload.system_instruction, config)
@@ -323,9 +356,9 @@ def execute_slm_prompt(payload: SlmPromptRequest) -> SlmPromptResponse:
         return execute_rule_based_prompt(payload)
 
 
-def get_slm() -> tuple[Any, Any]:
+def get_slm(model_id: str | None = None) -> tuple[Any, Any]:
     global _slm_model, _slm_tokenizer, _loaded_model_id
-    model_id = get_active_model_id()
+    model_id = model_id or get_active_model_id()
     if _loaded_model_id != model_id or _slm_model is None or _slm_tokenizer is None:
         _slm_model = None
         _slm_tokenizer = None
@@ -348,10 +381,11 @@ def get_slm() -> tuple[Any, Any]:
 
 
 def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
-    tokenizer, model = get_slm()
+    config = prompt_config_for_request(payload.prompt_config)
+    tokenizer, model = get_model_for_request(payload.prompt_config)
     messages = [
-        {"role": "system", "content": build_extraction_system_prompt()},
-        {"role": "user", "content": build_slm_prompt(payload)},
+        {"role": "system", "content": build_extraction_system_prompt(config)},
+        {"role": "user", "content": build_slm_prompt(payload, config)},
     ]
     text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer([text], return_tensors="pt").to(model.device)
@@ -361,8 +395,13 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
     return parse_json_object(tokenizer.decode(output_ids, skip_special_tokens=True))
 
 
-def build_extraction_system_prompt() -> str:
-    config = get_prompt_config()
+def prompt_config_for_request(snapshot: SlmPromptConfig | None) -> dict[str, Any]:
+    return get_prompt_config() if snapshot is None else snapshot.normalized()
+
+
+
+def build_extraction_system_prompt(config: dict[str, Any] | None = None) -> str:
+    config = config or get_prompt_config()
     rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
     return f"{EXTRACTION_SYSTEM_PROMPT}\n{config['system_prompt']}\nAdditional admin rules:\n{rules}"
 
@@ -373,12 +412,19 @@ def build_assistant_system_prompt(system_instruction: str, config: dict[str, Any
     return f"{base}\nUse the canonical 11 fields and keep non-core values under other.\nAdditional admin rules:\n{rules}"
 
 
-def get_active_model_id() -> str:
-    return MODEL_IDS.get(get_prompt_config()["selected_model"], SLM_MODEL_ID)
+def get_active_model_id(config: dict[str, Any] | None = None) -> str:
+    active = config or get_prompt_config()
+    return MODEL_IDS.get(active["selected_model"], SLM_MODEL_ID)
 
 
-def apply_review_threshold(result: dict[str, Any]) -> dict[str, Any]:
-    config = get_prompt_config()
+def get_model_for_request(snapshot: SlmPromptConfig | None) -> tuple[Any, Any]:
+    return get_slm(MODEL_IDS.get(snapshot.selected_model) if snapshot else None)
+
+
+def apply_review_threshold(result: dict[str, Any], config: SlmPromptConfig | dict[str, Any] | None = None) -> dict[str, Any]:
+    if isinstance(config, SlmPromptConfig):
+        config = config.normalized()
+    config = config or get_prompt_config()
     threshold = config["confidence_threshold"]
     monitored = set(config["monitored_fields"])
     for item in result.get("fields", []):
@@ -390,8 +436,8 @@ def apply_review_threshold(result: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def build_slm_prompt(payload: SlmExtractRequest) -> str:
-    config = get_prompt_config()
+def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None = None) -> str:
+    config = config or prompt_config_for_request(payload.prompt_config)
     invariant_rules = "\n".join(f"- {rule}" for rule in EXTRACTION_RULES)
     admin_rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
     schema = {
@@ -455,7 +501,11 @@ def canonical_value(schema: dict[str, Any], field: str) -> Any:
     return 0 if field in NUMERIC_CORE_FIELDS else ""
 
 
-def normalize_slm_output(data: dict[str, Any], default_source_file: str = "document") -> dict[str, Any]:
+def normalize_slm_output(
+    data: dict[str, Any],
+    default_source_file: str = "document",
+    config: SlmPromptConfig | None = None,
+) -> dict[str, Any]:
     raw_schema = data.get("json_schema") if isinstance(data.get("json_schema"), dict) else {}
     other = raw_schema.get("other") if isinstance(raw_schema.get("other"), dict) else {}
     other = dict(other)
@@ -503,7 +553,10 @@ def normalize_slm_output(data: dict[str, Any], default_source_file: str = "docum
             "status": "review",
             "isOther": field not in CORE_FIELDS,
         })
-    return apply_review_threshold({"json_schema": json_schema, "fields": fields, "confidence": confidence, "review_items": review_items})
+    return apply_review_threshold(
+        {"json_schema": json_schema, "fields": fields, "confidence": confidence, "review_items": review_items},
+        config,
+    )
 
 
 
@@ -651,7 +704,7 @@ class GroundTruthEntry(BaseModel):
 
 @app.get("/api/benchmark/ground-truth")
 def get_benchmark_ground_truth() -> dict[str, Any]:
-    gt_path = BASE_DIR / "ground_truth_dataset.json"
+    gt_path = GROUND_TRUTH_PATH
     if not gt_path.exists():
         raise HTTPException(status_code=404, detail="Ground truth dataset not found")
     return json.loads(gt_path.read_text(encoding="utf-8"))
@@ -659,7 +712,7 @@ def get_benchmark_ground_truth() -> dict[str, Any]:
 
 @app.get("/api/benchmark/kfold")
 def get_kfold_report(k: int = 5, rerun: bool = False) -> dict[str, Any]:
-    report_path = BASE_DIR / "kfold_evaluation_report.json"
+    report_path = REPORT_DIR / "kfold_evaluation_report.json"
     if rerun or not report_path.exists():
         try:
             try:
@@ -676,7 +729,7 @@ def get_kfold_report(k: int = 5, rerun: bool = False) -> dict[str, Any]:
 
 @app.post("/api/benchmark/save-ground-truth")
 def save_ground_truth(entry: GroundTruthEntry) -> dict[str, Any]:
-    gt_path = BASE_DIR / "ground_truth_dataset.json"
+    gt_path = GROUND_TRUTH_PATH
     if gt_path.exists():
         data = json.loads(gt_path.read_text(encoding="utf-8"))
     else:
@@ -710,6 +763,7 @@ def save_ground_truth(entry: GroundTruthEntry) -> dict[str, Any]:
     else:
         documents.append(saved_entry)
     data["total_documents"] = len(documents)
+    gt_path.parent.mkdir(parents=True, exist_ok=True)
     gt_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     return {

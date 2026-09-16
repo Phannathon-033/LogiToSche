@@ -255,6 +255,25 @@
       }
     }
   ],
+  "prompt_config": {
+    "source": "prompts.py",
+    "snapshot": {
+      "system_prompt": "คุณคือผู้ช่วยดึงข้อมูลโลจิสติกส์จาก OCR text ให้ map ข้อมูลเข้าสู่ JSON schema อย่างเคร่งครัด แยก sender, receiver, total amount และ document number ให้ชัดเจน พร้อมระบุ field ที่ไม่มั่นใจลง review_items",
+      "fallback_rules": [
+        "ถ้าเจอทั้ง Subtotal และ Total Amount ให้เลือก Total Amount",
+        "Consignee, Ship To, Deliver To ให้ตีความเป็น receiver ตามบริบทเอกสาร",
+        "วันที่ต้อง normalize เป็น YYYY-MM-DD ถ้าตีความได้ชัดเจน"
+      ],
+      "confidence_threshold": 85,
+      "selected_model": "qwen-2.5-1.5b",
+      "monitored_fields": [
+        "document_number",
+        "document_date",
+        "receiver",
+        "total_amount"
+      ]
+    }
+  },
   "sample_size_verification": {
     "cochran_formula": "n0 = (Z^2 * p * (1-p)) / e^2",
     "z_value": 1.96,
@@ -434,167 +453,167 @@
     }
   },
   "baseline_model": {
-    "mean_accuracy_pct": 46.18,
-    "std_accuracy": 1.07,
-    "mean_f1_score_pct": 63.18,
-    "std_f1": 1.01,
+    "mean_accuracy_pct": 0.0,
+    "std_accuracy": 0.0,
+    "mean_f1_score_pct": 0.0,
+    "std_f1": 0.0,
     "folds": [
       {
         "fold": 1,
         "test_docs_count": 60,
-        "accuracy_pct": 46.82,
-        "f1_score_pct": 63.78,
-        "similarity_pct": 54.53
+        "accuracy_pct": 0.0,
+        "f1_score_pct": 0.0,
+        "similarity_pct": 0.0
       },
       {
         "fold": 2,
         "test_docs_count": 60,
-        "accuracy_pct": 46.67,
-        "f1_score_pct": 63.64,
-        "similarity_pct": 54.39
+        "accuracy_pct": 0.0,
+        "f1_score_pct": 0.0,
+        "similarity_pct": 0.0
       },
       {
         "fold": 3,
         "test_docs_count": 60,
-        "accuracy_pct": 47.27,
-        "f1_score_pct": 64.2,
-        "similarity_pct": 56.28
+        "accuracy_pct": 0.0,
+        "f1_score_pct": 0.0,
+        "similarity_pct": 0.0
       },
       {
         "fold": 4,
         "test_docs_count": 60,
-        "accuracy_pct": 45.91,
-        "f1_score_pct": 62.93,
-        "similarity_pct": 54.21
+        "accuracy_pct": 0.0,
+        "f1_score_pct": 0.0,
+        "similarity_pct": 0.0
       },
       {
         "fold": 5,
         "test_docs_count": 60,
-        "accuracy_pct": 44.24,
-        "f1_score_pct": 61.34,
-        "similarity_pct": 51.62
+        "accuracy_pct": 0.0,
+        "f1_score_pct": 0.0,
+        "similarity_pct": 0.0
       }
     ],
     "field_scores": {
       "document_type": {
-        "mean": 82.0,
-        "std": 5.21,
+        "mean": 0.0,
+        "std": 0.0,
         "per_fold": [
-          88.33,
-          76.67,
-          88.33,
-          78.33,
-          78.33
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
         ]
       },
       "document_number": {
-        "mean": 30.0,
-        "std": 6.91,
+        "mean": 0.0,
+        "std": 0.0,
         "per_fold": [
-          33.33,
-          38.33,
-          33.33,
-          26.67,
-          18.33
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
         ]
       },
       "document_date": {
-        "mean": 78.67,
-        "std": 5.52,
+        "mean": 0.0,
+        "std": 0.0,
         "per_fold": [
-          73.33,
-          81.67,
-          86.67,
-          71.67,
-          80.0
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
         ]
       },
       "sender": {
-        "mean": 57.33,
-        "std": 3.09,
+        "mean": 0.0,
+        "std": 0.0,
         "per_fold": [
-          61.67,
-          60.0,
-          53.33,
-          56.67,
-          55.0
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
         ]
       },
       "receiver": {
-        "mean": 7.67,
-        "std": 1.7,
+        "mean": 0.0,
+        "std": 0.0,
         "per_fold": [
-          6.67,
-          8.33,
-          5.0,
-          8.33,
-          10.0
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
         ]
       },
       "origin": {
-        "mean": 15.67,
-        "std": 1.34,
+        "mean": 0.0,
+        "std": 0.0,
         "per_fold": [
-          15.0,
-          16.67,
-          16.67,
-          16.67,
-          13.33
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
         ]
       },
       "destination": {
-        "mean": 0.67,
-        "std": 0.82,
+        "mean": 0.0,
+        "std": 0.0,
         "per_fold": [
           0.0,
-          1.67,
-          1.67,
+          0.0,
+          0.0,
           0.0,
           0.0
         ]
       },
       "reference_number": {
-        "mean": 11.33,
-        "std": 3.56,
+        "mean": 0.0,
+        "std": 0.0,
         "per_fold": [
-          8.33,
-          11.67,
-          6.67,
-          16.67,
-          13.33
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
         ]
       },
       "unit_price": {
-        "mean": 60.67,
-        "std": 5.23,
+        "mean": 0.0,
+        "std": 0.0,
         "per_fold": [
-          65.0,
-          60.0,
-          60.0,
-          66.67,
-          51.67
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
         ]
       },
       "total_amount": {
-        "mean": 66.67,
-        "std": 3.5,
+        "mean": 0.0,
+        "std": 0.0,
         "per_fold": [
-          68.33,
-          60.0,
-          70.0,
-          66.67,
-          68.33
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
         ]
       },
       "currency": {
-        "mean": 97.33,
-        "std": 1.33,
+        "mean": 0.0,
+        "std": 0.0,
         "per_fold": [
-          95.0,
-          98.33,
-          98.33,
-          96.67,
-          98.33
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
         ]
       }
     }

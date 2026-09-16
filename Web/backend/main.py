@@ -10,14 +10,31 @@ import types
 from pathlib import Path
 from typing import Any
 
+import hmac
+
 import requests
 from PIL import Image
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, Field
 
 BASE_DIR = Path(__file__).resolve().parent
+DRIVE_ROOT = Path(os.environ.get("LOGIAI_DRIVE_ROOT", "/content/drive/MyDrive/LogiToSche"))
+GROUND_TRUTH_PATH = Path(os.environ.get("LOGIAI_GROUND_TRUTH_PATH", DRIVE_ROOT / "ground_truth" / "ground_truth_dataset.json"))
+REPORT_DIR = Path(os.environ.get("LOGIAI_REPORT_DIR", DRIVE_ROOT / "reports"))
 CACHE_DIR = BASE_DIR / ".paddlex"
+
+
+def cors_origins() -> list[str]:
+    configured = os.environ.get("LOGIAI_CORS_ORIGINS", "http://127.0.0.1:5173,http://localhost:5173")
+    return [origin.strip() for origin in configured.split(",") if origin.strip()]
+
+
+CORS_ORIGINS = cors_origins()
+GATEWAY_TOKEN = os.environ.get("LOGIAI_GATEWAY_TOKEN", "").strip()
+
+
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 os.environ.setdefault("PADDLE_PDX_CACHE_HOME", str(CACHE_DIR))
 os.environ.setdefault("PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True")
@@ -48,9 +65,20 @@ else:
     IMPORT_ERROR = None
 
 app = FastAPI(title="LogiAI OCR Gateway", version="1.0.0")
+
+
+@app.middleware("http")
+async def require_gateway_token(request: Request, call_next: Any) -> Response:
+    if GATEWAY_TOKEN and request.url.path != "/api/health" and request.method != "OPTIONS":
+        provided = request.headers.get("X-LogiAI-Token", "")
+        if not hmac.compare_digest(provided, GATEWAY_TOKEN):
+            return JSONResponse(status_code=401, content={"detail": "Invalid or missing gateway token"})
+    return await call_next(request)
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -76,6 +104,7 @@ class SlmExtractRequest(BaseModel):
     ocr_text: str = Field(default="", min_length=1)
     ocr_lines: list[OcrLine] = Field(default_factory=list)
     image_base64: str | None = None
+    prompt_config: dict[str, Any] | None = None
 
 
 def convert_pdf_to_image(pdf_bytes: bytes, page_num: int = 0) -> tuple[Image.Image, int]:

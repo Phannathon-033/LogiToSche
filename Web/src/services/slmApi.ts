@@ -1,3 +1,4 @@
+import { apiFetch } from "./apiClient";
 import type {
   ConfidenceScore,
   ExtractedField,
@@ -110,7 +111,7 @@ export async function runSlmExtraction({
     }
   }
 
-  const response = await fetch("/api/slm/extract", {
+  const response = await apiFetch(`/api/slm/extract`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -178,13 +179,13 @@ function mapPromptConfig(data: {
 }
 
 export async function getSlmPromptConfig(): Promise<SlmPromptConfigResponse> {
-  const response = await fetch("/api/slm/prompt-config");
+  const response = await apiFetch(`/api/slm/prompt-config`);
   if (!response.ok) throw new Error(`Prompt config request failed with ${response.status}`);
   return mapPromptConfig(await response.json());
 }
 
 export async function saveSlmPromptConfig(config: SlmPromptConfig): Promise<SlmPromptConfigResponse> {
-  const response = await fetch("/api/slm/prompt-config", {
+  const response = await apiFetch(`/api/slm/prompt-config`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -203,7 +204,7 @@ export async function saveSlmPromptConfig(config: SlmPromptConfig): Promise<SlmP
 }
 
 export async function getSlmPrompts(): Promise<SlmPromptPresetResponse[]> {
-  const response = await fetch("/api/slm/prompts");
+  const response = await apiFetch(`/api/slm/prompts`);
   if (!response.ok) throw new Error(`Prompt presets request failed with ${response.status}`);
   return (await response.json()) as SlmPromptPresetResponse[];
 }
@@ -214,7 +215,7 @@ export async function executeSlmPrompt({
   ocrText,
   jsonSchema,
 }: SlmPromptRequest): Promise<SlmPromptResponse> {
-  const response = await fetch("/api/slm/execute-prompt", {
+  const response = await apiFetch(`/api/slm/execute-prompt`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

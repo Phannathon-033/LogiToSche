@@ -33,6 +33,7 @@ import {
   normalizeLogisticsJsonSchema,
 } from "../services/dataValidationService";
 import { Card } from "./Card";
+import { apiFetch } from "../services/apiClient";
 
 interface JSONOutputPanelProps {
   json: JsonSchemaOutput;
@@ -88,7 +89,7 @@ export function JSONOutputPanel({
         }
       };
 
-      const resp = await fetch("http://127.0.0.1:8001/api/benchmark/save-ground-truth", {
+      const resp = await apiFetch(`/api/benchmark/save-ground-truth`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -98,11 +99,11 @@ export function JSONOutputPanel({
         setGtSavedSuccess(true);
         setTimeout(() => setGtSavedSuccess(false), 4000);
       } else {
-        alert("ไม่สามารถบันทึก Ground Truth ได้ กรุณาตรวจสอบว่าเซิร์ฟเวอร์ SLM รันอยู่");
+        alert("ไม่สามารถบันทึก Ground Truth ได้ กรุณาตรวจสอบว่า Gateway ทำงานอยู่");
       }
     } catch (err) {
       console.error(err);
-      alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์ SLM (Port 8001)");
+      alert("เกิดข้อผิดพลาดในการเชื่อมต่อ Gateway");
     } finally {
       setIsSavingGt(false);
     }

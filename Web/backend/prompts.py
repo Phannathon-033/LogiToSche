@@ -1,7 +1,31 @@
 from __future__ import annotations
 
+import json
+import os
 from copy import deepcopy
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
+
+
+PROMPT_CONFIG_ENV = "LOGIAI_PROMPT_CONFIG_PATH"
+PROMPT_CONFIG_FILENAME = "prompts.json"
+
+
+def prompt_config_path() -> Path:
+    configured = os.environ.get(PROMPT_CONFIG_ENV)
+    return Path(configured).expanduser() if configured else Path(__file__).resolve().parent / "config" / PROMPT_CONFIG_FILENAME
+
+
+def prompt_config_metadata(config: dict[str, Any], version: int = 1) -> dict[str, Any]:
+    return {
+        "version": str(config.get("version") or f"v{version}"),
+        "updated_at": config.get("updated_at") or datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def prompt_config_snapshot(config: dict[str, Any]) -> dict[str, Any]:
+    return deepcopy(config)
 
 CORE_FIELDS = (
     "document_type",
@@ -125,6 +149,39 @@ DEFAULT_ADMIN_CONFIG = {
 
 def default_admin_config() -> dict[str, Any]:
     return deepcopy(DEFAULT_ADMIN_CONFIG)
+
+
+def load_prompt_config() -> dict[str, Any]:
+    path = prompt_config_path()
+    if not path.exists():
+        config = default_admin_config()
+        config.update(prompt_config_metadata(config))
+        return config
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError("Prompt configuration must be a JSON object")
+    config = default_admin_config()
+    config.update(data)
+    config.update(prompt_config_metadata(config))
+    return config
+
+
+def save_prompt_config(config: dict[str, Any]) -> dict[str, Any]:
+    path = prompt_config_path()
+    current = load_prompt_config()
+    try:
+        current_version = 0 if not path.exists() else int(str(current.get("version", "v0")).lstrip("v"))
+    except ValueError:
+        current_version = 0
+    saved = default_admin_config()
+    saved.update(config)
+    saved["version"] = f"v{current_version + 1}"
+    saved["updated_at"] = datetime.now(timezone.utc).isoformat()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(f"{path.suffix}.tmp")
+    temporary.write_text(json.dumps(saved, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    temporary.replace(path)
+    return deepcopy(saved)
 
 
 def prompt_preset_list() -> list[dict[str, Any]]:
