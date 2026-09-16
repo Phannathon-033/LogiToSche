@@ -132,6 +132,7 @@ export interface SlmPromptPreset {
 export interface SlmPromptRequest {
   promptTemplateId: string;
   userInstruction?: string;
+  systemInstruction?: string;
   ocrText?: string;
   jsonSchema?: JsonSchemaOutput;
 }

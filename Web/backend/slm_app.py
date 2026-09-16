@@ -467,6 +467,7 @@ def apply_review_threshold(result: dict[str, Any]) -> dict[str, Any]:
 
 def build_slm_prompt(payload: SlmExtractRequest) -> str:
     config = get_prompt_config()
+    system_prompt = config.get("system_prompt", "").strip()
     invariant_rules = "\n".join(f"- {rule}" for rule in EXTRACTION_RULES)
     admin_rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
     target_format = {
@@ -483,8 +484,10 @@ def build_slm_prompt(payload: SlmExtractRequest) -> str:
         "currency": "THB | USD | EUR | etc.",
         "other": {"source_file": payload.source_file},
     }
+    custom_sys = f"System Instructions:\n{system_prompt}\n" if system_prompt else ""
     return (
         "Extract 11 core logistics fields from the OCR text into this compact JSON contract.\n"
+        f"{custom_sys}"
         f"Rules:\n{invariant_rules}\n{admin_rules}\n"
         f"Document hint: {payload.document_type_hint}\n"
         f"Required JSON structure:\n{json.dumps(target_format, ensure_ascii=False, indent=2)}\n\n"

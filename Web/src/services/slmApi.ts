@@ -211,6 +211,7 @@ export async function getSlmPrompts(): Promise<SlmPromptPresetResponse[]> {
 export async function executeSlmPrompt({
   promptTemplateId,
   userInstruction,
+  systemInstruction,
   ocrText,
   jsonSchema,
 }: SlmPromptRequest): Promise<SlmPromptResponse> {
@@ -220,6 +221,7 @@ export async function executeSlmPrompt({
     body: JSON.stringify({
       prompt_template_id: promptTemplateId,
       user_instruction: userInstruction,
+      system_instruction: systemInstruction || "",
       ocr_text: ocrText || "",
       json_schema: jsonSchema || {},
     }),
