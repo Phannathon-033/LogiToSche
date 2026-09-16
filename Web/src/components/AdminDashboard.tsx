@@ -41,8 +41,9 @@ import { AdminJobsHistory } from "./admin/AdminJobsHistory";
 import { AdminActivityLogs } from "./admin/AdminActivityLogs";
 import { AdminUserSettings } from "./admin/AdminUserSettings";
 import { GroundTruthViewerModal } from "./GroundTruthViewerModal";
+import { KFoldEvaluationView } from "./KFoldEvaluationView";
 
-type AdminView = "dashboard" | "documents" | "document-detail" | "users" | "prompt";
+type AdminView = "dashboard" | "documents" | "document-detail" | "users" | "prompt" | "evaluation";
 type PromptQualityTab = "prompt" | "reports";
 type UsersSettingsTab = "users" | "activity";
 
@@ -258,22 +259,32 @@ export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDas
             <GroundTruthViewerModal isOpen={groundTruthOpen} onClose={() => setGroundTruthOpen(false)} />
           </>
         );
+      case "evaluation":
+        return (
+          <KFoldEvaluationView
+            onBack={() => setActiveView("dashboard")}
+            showToast={showToast}
+          />
+        );
     }
   }
 
   const activeMenuTitle =
     activeView === "dashboard"
       ? "Dashboard"
-      : activeView === "documents"
-        ? "Documents & Review Queue"
-        : activeView === "document-detail"
-          ? "Document Detail"
-          : activeView === "users"
-            ? "Users & Settings"
-            : "Prompt & Quality";
+      : activeView === "evaluation"
+        ? "K-Fold & Model Evaluation"
+        : activeView === "documents"
+          ? "Documents & Review Queue"
+          : activeView === "document-detail"
+            ? "Document Detail"
+            : activeView === "users"
+              ? "Users & Settings"
+              : "Prompt & Quality";
 
   const adminMenuItems = [
     { id: "dashboard" as const, name: "Dashboard", icon: LayoutDashboard },
+    { id: "evaluation" as const, name: "ทดสอบ K-Fold & F1", icon: BarChart3 },
     { id: "documents" as const, name: "Documents", icon: FileSearch },
     { id: "users" as const, name: "Users & Settings", icon: Users },
     { id: "prompt" as const, name: "Prompt & Quality", icon: Settings },

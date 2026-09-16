@@ -272,6 +272,8 @@ def run_kfold_evaluation(k_splits: int = 5, random_seed: int = 42):
     for f_res in slm_fold_results:
         f_idx = f_res["fold"] - 1
         f_accs = {f: slm_field_fold_scores[f][f_idx] for f in CORE_FIELDS}
+        base_f_accs = {f: baseline_field_fold_scores[f][f_idx] for f in CORE_FIELDS}
+        val_slice = [documents[i] for i in list(kf.split(doc_indices))[f_idx][1]]
         ui_folds.append({
             "fold": f_res["fold"],
             "val_samples_count": f_res["test_docs_count"],
@@ -279,14 +281,26 @@ def run_kfold_evaluation(k_splits: int = 5, random_seed: int = 42):
             "precision_pct": f_res["accuracy_pct"],
             "recall_pct": 100.0,
             "f1_score_pct": f_res["f1_score_pct"],
-            "field_accuracies": f_accs
+            "baseline_accuracy_pct": baseline_fold_results[f_idx]["accuracy_pct"],
+            "baseline_f1_pct": baseline_fold_results[f_idx]["f1_score_pct"],
+            "delta_f1_pct": round(f_res["f1_score_pct"] - baseline_fold_results[f_idx]["f1_score_pct"], 2),
+            "field_accuracies": f_accs,
+            "baseline_field_accuracies": base_f_accs,
+            "val_doc_ids": [d.get("id", f"DOC-{idx+1:03d}") for idx, d in enumerate(val_slice)],
         })
 
+    base_mean_acc = round(float(np.mean(base_accs)), 2)
+    base_std_acc = round(float(np.std(base_accs)), 2)
+    base_mean_f1 = round(float(np.mean(base_f1s)), 2)
+    base_std_f1 = round(float(np.std(base_f1s)), 2)
+    base_mean_sim = round(float(np.mean([f["similarity_pct"] for f in baseline_fold_results])), 2)
+
     summary_report = {
-        "method": "Standard 5-Fold Cross-Validation",
-        "dataset": "Logistics Invoice Benchmark Dataset (300 Documents)",
+        "method": f"Standard {k_splits}-Fold Cross-Validation",
+        "dataset": f"Logistics Invoice Benchmark Dataset ({total_docs} Documents)",
         "total_documents": total_docs,
         "k_splits": k_splits,
+        "random_seed": random_seed,
         "metrics_summary": {
             "mean_accuracy_pct": slm_mean_acc,
             "accuracy_std_dev": slm_std_acc,
@@ -296,7 +310,22 @@ def run_kfold_evaluation(k_splits: int = 5, random_seed: int = 42):
             "f1_display": f"{slm_mean_f1}% ± {slm_std_f1}%",
             "mean_similarity_pct": slm_mean_sim,
             "similarity_std_dev": slm_std_sim,
-            "similarity_display": f"{slm_mean_sim}% ± {slm_std_sim}%"
+            "similarity_display": f"{slm_mean_sim}% ± {slm_std_sim}%",
+        },
+        "baseline_metrics_summary": {
+            "mean_accuracy_pct": base_mean_acc,
+            "accuracy_std_dev": base_std_acc,
+            "accuracy_display": f"{base_mean_acc}% ± {base_std_acc}%",
+            "mean_f1_score_pct": base_mean_f1,
+            "f1_std_dev": base_std_f1,
+            "f1_display": f"{base_mean_f1}% ± {base_std_f1}%",
+            "mean_similarity_pct": base_mean_sim,
+            "similarity_display": f"{base_mean_sim}%",
+        },
+        "delta_improvement": {
+            "accuracy_delta_pct": round(slm_mean_acc - base_mean_acc, 2),
+            "f1_delta_pct": round(slm_mean_f1 - base_mean_f1, 2),
+            "similarity_delta_pct": round(slm_mean_sim - base_mean_sim, 2),
         },
         "field_performance": ui_field_performance,
         "folds": ui_folds,
@@ -328,10 +357,10 @@ def run_kfold_evaluation(k_splits: int = 5, random_seed: int = 42):
             }
         },
         "baseline_model": {
-            "mean_accuracy_pct": round(float(np.mean(base_accs)), 2),
-            "std_accuracy": round(float(np.std(base_accs)), 2),
-            "mean_f1_score_pct": round(float(np.mean(base_f1s)), 2),
-            "std_f1": round(float(np.std(base_f1s)), 2),
+            "mean_accuracy_pct": base_mean_acc,
+            "std_accuracy": base_std_acc,
+            "mean_f1_score_pct": base_mean_f1,
+            "std_f1": base_std_f1,
             "folds": baseline_fold_results,
             "field_scores": {
                 f: {

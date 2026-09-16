@@ -268,9 +268,21 @@ def get_benchmark_ground_truth() -> Any:
 
 
 @app.get("/api/benchmark/kfold")
-def get_benchmark_kfold(k: int = 5, rerun: bool = False) -> Any:
-    query = f"?k={k}&rerun={str(rerun).lower()}"
+def get_benchmark_kfold(k: int = 5, seed: int = 42, rerun: bool = False) -> Any:
+    query = f"?k={k}&seed={seed}&rerun={str(rerun).lower()}"
     return forward_slm_request(f"/api/benchmark/kfold{query}", {}, method="GET")
+
+
+@app.get("/api/benchmark/image/{file_name}")
+def get_benchmark_image(file_name: str) -> Any:
+    from fastapi.responses import FileResponse
+    base_testing_dir = Path(r"E:\Logistics To JSON\To_Testing")
+    safe_name = Path(file_name).name
+    img_path = base_testing_dir / safe_name
+    if not img_path.exists() or not img_path.is_file():
+        raise HTTPException(status_code=404, detail=f"Image {safe_name} not found")
+    media = "image/png" if safe_name.lower().endswith(".png") else "image/jpeg"
+    return FileResponse(str(img_path), media_type=media)
 
 
 class GroundTruthEntry(BaseModel):
@@ -289,7 +301,7 @@ def save_benchmark_ground_truth(payload: GroundTruthEntry) -> Any:
 def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -> Any:
     if method == "GET":
         try:
-            response = requests.get(f"{SLM_SERVICE_URL}{path}", timeout=10)
+            response = requests.get(f"{SLM_SERVICE_URL}{path}", timeout=60)
             response.raise_for_status()
             value = response.json()
             if isinstance(value, (dict, list)):

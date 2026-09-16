@@ -10,6 +10,7 @@ import { UploadedWorkspaceView } from "./components/UploadedWorkspaceView";
 import { FirebaseSaveSuccessModal } from "./components/FirebaseSaveSuccessModal";
 import { SlmPromptAssistantModal } from "./components/SlmPromptAssistantModal";
 import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
+import { KFoldEvaluationView } from "./components/KFoldEvaluationView";
 import { saveDocumentToFirebase } from "./services/firebase";
 import { createJsonDownload } from "./services/mockProcessingService";
 import {
@@ -57,6 +58,7 @@ export function App() {
     isAdminSession(userSession) ? "admin" : "user",
   );
   const [showPromptAssistantModal, setShowPromptAssistantModal] = useState(false);
+  const [showEvaluationView, setShowEvaluationView] = useState(false);
   const [firebaseSuccessModal, setFirebaseSuccessModal] = useState<{
     isOpen: boolean;
     fileName: string;
@@ -770,6 +772,15 @@ export function App() {
     );
   }
 
+  if (showEvaluationView) {
+    return (
+      <KFoldEvaluationView
+        onBack={() => setShowEvaluationView(false)}
+        showToast={showToast}
+      />
+    );
+  }
+
   if (viewMode === "admin") {
     return (
       <AdminDashboard
@@ -787,6 +798,9 @@ export function App() {
       <AppHeader
         user={userSession}
         onLogout={handleLogout}
+        onOpenEvaluation={() => setShowEvaluationView(true)}
+        onToggleAdmin={() => setViewMode("admin")}
+        isAdmin={isAdminSession(userSession)}
       />
       <main className="px-3 py-3.5 sm:px-5 lg:px-6">
         <div className="mx-auto flex w-full max-w-[1420px] flex-col gap-4">

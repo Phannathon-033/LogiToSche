@@ -787,7 +787,7 @@ def get_benchmark_ground_truth() -> dict[str, Any]:
 
 
 @app.get("/api/benchmark/kfold")
-def get_kfold_report(k: int = 5, rerun: bool = False) -> dict[str, Any]:
+def get_kfold_report(k: int = 5, seed: int = 42, rerun: bool = False) -> dict[str, Any]:
     report_path = BASE_DIR / "kfold_evaluation_report.json"
     if rerun or not report_path.exists():
         try:
@@ -795,12 +795,24 @@ def get_kfold_report(k: int = 5, rerun: bool = False) -> dict[str, Any]:
                 from .kfold_evaluator import run_kfold_evaluation
             except ImportError:
                 from kfold_evaluator import run_kfold_evaluation
-            run_kfold_evaluation(k_splits=k)
+            run_kfold_evaluation(k_splits=k, random_seed=seed)
         except Exception as exc:
             raise HTTPException(status_code=500, detail=f"K-Fold evaluation failed: {exc}") from exc
     if not report_path.exists():
         raise HTTPException(status_code=500, detail="Report generation failed")
     return json.loads(report_path.read_text(encoding="utf-8"))
+
+
+@app.get("/api/benchmark/image/{file_name}")
+def get_benchmark_image(file_name: str) -> Any:
+    from fastapi.responses import FileResponse
+    base_testing_dir = Path(r"E:\Logistics To JSON\To_Testing")
+    safe_name = Path(file_name).name
+    img_path = base_testing_dir / safe_name
+    if not img_path.exists() or not img_path.is_file():
+        raise HTTPException(status_code=404, detail=f"Image {safe_name} not found")
+    media = "image/png" if safe_name.lower().endswith(".png") else "image/jpeg"
+    return FileResponse(str(img_path), media_type=media)
 
 
 @app.post("/api/benchmark/save-ground-truth")
