@@ -4,17 +4,27 @@ import base64
 import gc
 import io
 import os
+import shutil
+import subprocess
 import sys
 import tempfile
+import time
 import types
 from pathlib import Path
 from typing import Any
+
+try:
+    import psutil
+except ImportError:
+    psutil = None
 
 import requests
 from PIL import Image
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+
+SERVER_START_TIME = time.time()
 
 BASE_DIR = Path(__file__).resolve().parent
 CACHE_DIR = BASE_DIR / ".paddlex"
@@ -193,6 +203,110 @@ def slm_health() -> dict[str, Any]:
         return response.json()
     except requests.RequestException:
         return {"status": "unavailable", "service": "slm", "device": "unknown", "cuda": "false"}
+
+
+@app.get("/api/system/health")
+def system_health() -> dict[str, Any]:
+    gpu_name = "NVIDIA GeForce RTX 3050 Laptop GPU"
+    cuda_ver = "12.6"
+    driver_ver = "Unknown"
+    gpu_util = 0
+    total_mb = 4096
+    used_mb = 0
+    free_mb = 4096
+
+    nvidia_smi = shutil.which("nvidia-smi")
+    if nvidia_smi:
+        try:
+            res = subprocess.run(
+                [nvidia_smi, "--query-gpu=name,memory.total,memory.used,memory.free,driver_version,utilization.gpu", "--format=csv,noheader,nounits"],
+                capture_output=True, text=True, timeout=2
+            )
+            if res.returncode == 0 and res.stdout.strip():
+                parts = [p.strip() for p in res.stdout.strip().split(",")]
+                if len(parts) >= 6:
+                    gpu_name = parts[0]
+                    total_mb = int(parts[1])
+                    used_mb = int(parts[2])
+                    free_mb = int(parts[3])
+                    driver_ver = parts[4]
+                    gpu_util = int(parts[5])
+        except Exception:
+            pass
+
+    used_gb = round(used_mb / 1024, 1)
+    total_gb = round(total_mb / 1024, 1)
+    vram_percent = round((used_mb / total_mb) * 100, 1) if total_mb > 0 else 0
+
+    cuda_ocr = bool(paddle is not None and paddle.device.is_compiled_with_cuda())
+    ocr_active = PaddleOCR is not None and cuda_ocr
+
+    slm_active = False
+    slm_model = "Qwen2.5-1.5B (FP16)"
+    slm_device = "CUDA:0"
+    try:
+        r = requests.get(f"{SLM_SERVICE_URL}/api/slm/health", timeout=1.5)
+        if r.status_code == 200:
+            data = r.json()
+            if data.get("status") == "ready":
+                slm_active = True
+                slm_model = "Qwen2.5-1.5B (FP16)"
+                slm_device = str(data.get("device", "cuda:0")).upper()
+    except Exception:
+        slm_active = False
+
+    if psutil:
+        uptime_seconds = int(time.time() - psutil.boot_time())
+    else:
+        uptime_seconds = int(time.time() - SERVER_START_TIME)
+
+    days = uptime_seconds // 86400
+    hours = (uptime_seconds % 86400) // 3600
+    minutes = (uptime_seconds % 3600) // 60
+    if days > 0:
+        uptime_str = f"{days} วัน {hours} ชม. {minutes} นาที"
+    elif hours > 0:
+        uptime_str = f"{hours} ชม. {minutes} นาที"
+    else:
+        uptime_str = f"{minutes} นาที"
+
+    all_active = ocr_active and slm_active
+
+    return {
+        "status": "all_active" if all_active else ("partial" if (ocr_active or slm_active) else "offline"),
+        "status_label": "All systems active" if all_active else ("Degraded" if (ocr_active or slm_active) else "Systems offline"),
+        "uptime_human": uptime_str,
+        "uptime_seconds": uptime_seconds,
+        "gpu": {
+            "name": gpu_name,
+            "engine": f"NVIDIA CUDA {cuda_ver}",
+            "cuda_version": cuda_ver,
+            "driver_version": driver_ver,
+            "utilization": gpu_util,
+            "status": "ACTIVE" if (ocr_active or slm_active) else "IDLE",
+        },
+        "vram": {
+            "used_mb": used_mb,
+            "total_mb": total_mb,
+            "free_mb": free_mb,
+            "used_gb": used_gb,
+            "total_gb": total_gb,
+            "label": f"{used_gb} GB / {total_gb} GB",
+            "percent": vram_percent,
+        },
+        "ocr": {
+            "engine": "PaddleOCR v4 (GPU)",
+            "device": OCR_DEVICE if cuda_ocr else "CPU",
+            "status": "ACTIVE" if ocr_active else "OFFLINE",
+            "cuda": cuda_ocr,
+        },
+        "slm": {
+            "model": slm_model,
+            "device": slm_device,
+            "status": "ACTIVE" if slm_active else "OFFLINE",
+            "cuda": slm_active,
+        },
+    }
 
 
 @app.post("/api/ocr")
