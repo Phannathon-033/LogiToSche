@@ -58,6 +58,44 @@ FIELD_LABELS_TH = {
     "currency": "11. สกุลเงิน (currency)"
 }
 
+ZERO_SHOT_SYSTEM_PROMPT = (
+    "You are a specialized Logistics Document Information Extraction AI.\n"
+    "Your task is to extract exactly 11 canonical logistics fields from the provided OCR text into a strictly formatted, valid JSON object.\n"
+    "Do NOT use external knowledge. Extract solely grounded on the OCR text.\n"
+    "If a field is not found, return an empty string \"\" or 0.0 for numbers.\n"
+    "Return ONLY raw JSON. Do NOT include markdown blocks or explanations."
+)
+
+def build_zero_shot_prompt(ocr_text: str) -> list[dict[str, str]]:
+    """Builds standard zero-shot chat message payload for Qwen2.5-Instruct evaluation."""
+    user_content = (
+        "Extract the 11 canonical logistics fields from the following OCR text into JSON:\n\n"
+        "Schema:\n"
+        "{\n"
+        '  "document_type": "string (e.g. Invoice, Tax Invoice, Bill of Lading)",\n'
+        '  "document_number": "string",\n'
+        '  "document_date": "YYYY-MM-DD",\n'
+        '  "sender": "string (Vendor/Shipper/Seller)",\n'
+        '  "receiver": "string (Customer/Consignee/Buyer)",\n'
+        '  "origin": "string (Loading place/Departure)",\n'
+        '  "destination": "string (Discharge place/Arrival)",\n'
+        '  "reference_number": "string (PO/Booking/Job Ref)",\n'
+        '  "unit_price": 0.0,\n'
+        '  "total_amount": 0.0,\n'
+        '  "currency": "string (e.g. THB, USD)"\n'
+        "}\n\n"
+        "Rules:\n"
+        "- Numbers must be numeric float without commas.\n"
+        "- Normalize dates to YYYY-MM-DD (convert B.E. to A.D. if present).\n"
+        "- If missing, use \"\" or 0.0. Do NOT hallucinate.\n\n"
+        f"OCR Text:\n{ocr_text[:3500]}\n\n"
+        "JSON:"
+    )
+    return [
+        {"role": "system", "content": ZERO_SHOT_SYSTEM_PROMPT},
+        {"role": "user", "content": user_content}
+    ]
+
 
 def levenshtein_similarity(s1: str, s2: str) -> float:
     """Computes normalized Levenshtein similarity ratio (0.0 to 1.0)."""

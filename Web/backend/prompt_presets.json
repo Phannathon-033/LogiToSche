@@ -1,4 +1,12 @@
 {
+  "kfold_zero_shot": {
+    "category": "extraction",
+    "categoryLabel": "สกัด 11 ฟิลด์หลัก",
+    "badge": "Zero-Shot Benchmark",
+    "title": "K-Fold Zero-Shot Extraction (Thesis Benchmark)",
+    "description": "แม่แบบสกัด 11 ฟิลด์หลักแบบไม่มีตัวอย่าง (0-shot) สำหรับการประเมินผล 5-Fold Cross Validation บนโมเดล Qwen SLM",
+    "prompt": "Extract the 11 canonical logistics fields from the OCR text into JSON: document_type, document_number, document_date (YYYY-MM-DD), sender, receiver, origin, destination, reference_number, unit_price (float), total_amount (float), currency. No explanations. Return strictly valid JSON."
+  },
   "standard_extraction": {
     "category": "extraction",
     "categoryLabel": "สกัด 11 ฟิลด์หลัก",
