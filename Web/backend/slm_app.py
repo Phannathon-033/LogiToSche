@@ -51,10 +51,20 @@ try:
 except ImportError:
     from logistics_field_parser import evaluate_11_fields, parse_grounded_amounts, parse_robust_quantity
 
+from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
+load_dotenv(BASE_DIR.parent / ".env")
+load_dotenv(BASE_DIR.parent / ".env.local")
+
 DRIVE_ROOT = Path(os.environ.get("LOGIAI_DRIVE_ROOT", "/content/drive/MyDrive/LogiToSche"))
-GROUND_TRUTH_PATH = Path(os.environ.get("LOGIAI_GROUND_TRUTH_PATH", DRIVE_ROOT / "ground_truth" / "ground_truth_dataset.json"))
-REPORT_DIR = Path(os.environ.get("LOGIAI_REPORT_DIR", DRIVE_ROOT / "reports"))
+DEFAULT_GT = (DRIVE_ROOT / "ground_truth" / "ground_truth_dataset.json") if DRIVE_ROOT.exists() else (BASE_DIR / "ground_truth_dataset.json")
+DEFAULT_REPORT_DIR = (DRIVE_ROOT / "reports") if DRIVE_ROOT.exists() else (BASE_DIR / "reports")
+
+GROUND_TRUTH_PATH = Path(os.environ.get("LOGIAI_GROUND_TRUTH_PATH", DEFAULT_GT))
+REPORT_DIR = Path(os.environ.get("LOGIAI_REPORT_DIR", DEFAULT_REPORT_DIR))
+REPORT_DIR.mkdir(parents=True, exist_ok=True)
 SITE_PACKAGES_DIR = (BASE_DIR / ".venv" / "Lib" / "site-packages").resolve()
 TORCH_LIB_DIR = SITE_PACKAGES_DIR / "torch" / "lib"
 if TORCH_LIB_DIR.exists() and hasattr(os, "add_dll_directory"):
@@ -760,6 +770,8 @@ def get_kfold_report(
     if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
         raise HTTPException(status_code=400, detail="Unsupported prompt variant")
     report_path = REPORT_DIR / "kfold_evaluation_report.json"
+    if not report_path.exists() and (BASE_DIR / "kfold_evaluation_report.json").exists():
+        report_path = BASE_DIR / "kfold_evaluation_report.json"
     cached_report: dict[str, Any] | None = None
     if report_path.exists() and not rerun:
         try:

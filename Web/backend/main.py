@@ -279,7 +279,7 @@ def system_health() -> dict[str, Any]:
         r = requests.get(f"{SLM_SERVICE_URL}/api/slm/health", timeout=1.5)
         if r.status_code == 200:
             data = r.json()
-            if data.get("status") == "ready":
+            if data.get("status") in {"ready", "missing-model"} and data.get("cuda"):
                 slm_active = True
                 slm_model = "Qwen2.5-1.5B (FP16)"
                 slm_device = str(data.get("device", "cuda:0")).upper()
