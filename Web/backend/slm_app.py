@@ -42,6 +42,9 @@ MIN_PROMPT_LENGTH = 1
 MAX_PROMPT_LENGTH = 10000
 MAX_RULE_LENGTH = 1000
 MAX_RULES = 20
+BENCHMARK_PROMPT_VARIANTS = {"zero-shot", "one-shot", "few-shot"}
+MAX_BENCHMARK_EXAMPLES = 5
+MAX_BENCHMARK_EXAMPLE_LENGTH = 20000
 
 try:
     from .logistics_field_parser import evaluate_11_fields, parse_grounded_amounts, parse_robust_quantity
@@ -143,6 +146,8 @@ class SlmExtractRequest(BaseModel):
     ocr_lines: list[OcrLine] = Field(default_factory=list)
     image_base64: str | None = None
     prompt_config: SlmPromptConfig | None = None
+    benchmark_prompt_variant: str = "zero-shot"
+    benchmark_examples: list[dict[str, Any]] = Field(default_factory=list)
 
 def fuse_image_ocr(payload: SlmExtractRequest) -> str:
     if not payload.image_base64:
@@ -298,6 +303,10 @@ def get_prompt_config() -> dict[str, Any]:
 
 @app.post("/api/slm/extract", response_model=SlmExtractResponse)
 def slm_extract(payload: SlmExtractRequest) -> SlmExtractResponse:
+    try:
+        benchmark_variant_for_request(payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     enriched_payload = payload.model_copy(update={"ocr_text": fuse_image_ocr(payload)}) if hasattr(payload, "model_copy") else payload.copy(update={"ocr_text": fuse_image_ocr(payload)})
     try:
         data = generate_json(enriched_payload)
@@ -381,6 +390,7 @@ def get_slm(model_id: str | None = None) -> tuple[Any, Any]:
 
 
 def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
+    benchmark_variant_for_request(payload)
     config = prompt_config_for_request(payload.prompt_config)
     tokenizer, model = get_model_for_request(payload.prompt_config)
     messages = [
@@ -398,6 +408,24 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
 def prompt_config_for_request(snapshot: SlmPromptConfig | None) -> dict[str, Any]:
     return get_prompt_config() if snapshot is None else snapshot.normalized()
 
+
+def benchmark_variant_for_request(payload: SlmExtractRequest) -> tuple[str, list[dict[str, Any]]]:
+    variant = payload.benchmark_prompt_variant.strip().lower()
+    if variant not in BENCHMARK_PROMPT_VARIANTS:
+        raise ValueError(f"Unsupported benchmark prompt variant: {variant}")
+    examples = payload.benchmark_examples
+    if variant == "zero-shot":
+        if examples:
+            raise ValueError("zero-shot cannot include benchmark examples")
+        return variant, []
+    required_count = 1 if variant == "one-shot" else 2
+    if len(examples) < required_count:
+        raise ValueError(f"{variant} requires at least {required_count} benchmark examples")
+    if len(examples) > MAX_BENCHMARK_EXAMPLES:
+        raise ValueError(f"At most {MAX_BENCHMARK_EXAMPLES} benchmark examples are supported")
+    if any(len(json.dumps(example, ensure_ascii=False)) > MAX_BENCHMARK_EXAMPLE_LENGTH for example in examples):
+        raise ValueError("Benchmark example is too large")
+    return variant, [dict(example) for example in examples[:required_count] if isinstance(example, dict)]
 
 
 def build_extraction_system_prompt(config: dict[str, Any] | None = None) -> str:
@@ -438,8 +466,19 @@ def apply_review_threshold(result: dict[str, Any], config: SlmPromptConfig | dic
 
 def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None = None) -> str:
     config = config or prompt_config_for_request(payload.prompt_config)
+    benchmark_variant, benchmark_examples = benchmark_variant_for_request(payload)
     invariant_rules = "\n".join(f"- {rule}" for rule in EXTRACTION_RULES)
     admin_rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
+    benchmark_instruction = ""
+    if benchmark_variant != "zero-shot":
+        benchmark_instruction = (
+            f"\nBenchmark prompt variant: {benchmark_variant}. "
+            "Use the following labeled examples only as formatting and mapping demonstrations; "
+            "do not copy values unless grounded in the current OCR text.\n"
+            f"Examples:\n{json.dumps(benchmark_examples, ensure_ascii=False, indent=2)}\n"
+        )
+
+
     schema = {
         "json_schema": {
             "document_type": "invoice | bill_of_lading | packing_list | purchase_order | unknown",
@@ -462,7 +501,8 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
     return (
         "Extract logistics fields from Thai or English OCR text into this exact JSON contract.\n"
         "The canonical fields are document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, and currency.\n"
-        f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n\n"
+        f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n"
+        f"{benchmark_instruction}\n"
         f"Document type hint: {payload.document_type_hint}\nSource filename: {payload.source_file}\n\n"
         f"Required output shape:\n{json.dumps(schema, ensure_ascii=False, indent=2)}\n\nOCR text:\n{payload.ocr_text}\n"
     )
@@ -711,15 +751,40 @@ def get_benchmark_ground_truth() -> dict[str, Any]:
 
 
 @app.get("/api/benchmark/kfold")
-def get_kfold_report(k: int = 5, rerun: bool = False) -> dict[str, Any]:
+def get_kfold_report(
+    k: int = 5,
+    seed: int = 42,
+    rerun: bool = False,
+    prompt_variant: str = "zero-shot",
+) -> dict[str, Any]:
+    if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
+        raise HTTPException(status_code=400, detail="Unsupported prompt variant")
     report_path = REPORT_DIR / "kfold_evaluation_report.json"
-    if rerun or not report_path.exists():
+    cached_report: dict[str, Any] | None = None
+    if report_path.exists() and not rerun:
+        try:
+            cached_report = json.loads(report_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            cached_report = None
+    report_matches_request = cached_report and all(
+        cached_report.get(key) == value
+        for key, value in {
+            "k_splits": k,
+            "random_seed": seed,
+            "prompt_variant": prompt_variant,
+        }.items()
+    )
+    if rerun or not report_matches_request:
         try:
             try:
                 from .kfold_evaluator import run_kfold_evaluation
             except ImportError:
                 from kfold_evaluator import run_kfold_evaluation
-            run_kfold_evaluation(k_splits=k)
+            run_kfold_evaluation(
+                k_splits=k,
+                random_seed=seed,
+                prompt_variant=prompt_variant,
+            )
         except Exception as exc:
             raise HTTPException(status_code=500, detail=f"K-Fold evaluation failed: {exc}") from exc
     if not report_path.exists():

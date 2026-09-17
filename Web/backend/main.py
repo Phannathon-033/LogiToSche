@@ -3,6 +3,7 @@ from __future__ import annotations
 import base64
 import gc
 import io
+import mimetypes
 import os
 import sys
 import tempfile
@@ -16,11 +17,12 @@ import requests
 from PIL import Image
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import FileResponse, JSONResponse, Response
 from pydantic import BaseModel, Field
 
 BASE_DIR = Path(__file__).resolve().parent
 DRIVE_ROOT = Path(os.environ.get("LOGIAI_DRIVE_ROOT", "/content/drive/MyDrive/LogiToSche"))
+DATASET_ROOT = Path(os.environ.get("LOGIAI_DATASET_DIR", DRIVE_ROOT / "dataset"))
 GROUND_TRUTH_PATH = Path(os.environ.get("LOGIAI_GROUND_TRUTH_PATH", DRIVE_ROOT / "ground_truth" / "ground_truth_dataset.json"))
 REPORT_DIR = Path(os.environ.get("LOGIAI_REPORT_DIR", DRIVE_ROOT / "reports"))
 CACHE_DIR = BASE_DIR / ".paddlex"
@@ -168,6 +170,16 @@ def prepare_ocr_input(payload: bytes, suffix: str) -> tuple[Path, str, int]:
         return Path(tmp.name), image_preview, page_count
 
 
+@app.get("/api/benchmark/image/{file_name:path}")
+def benchmark_image(file_name: str) -> FileResponse:
+    candidate = (DATASET_ROOT / file_name).resolve()
+    dataset_root = DATASET_ROOT.resolve()
+    if dataset_root not in candidate.parents or not candidate.is_file():
+        raise HTTPException(status_code=404, detail="Benchmark image not found")
+    media_type = mimetypes.guess_type(candidate.name)[0] or "application/octet-stream"
+    return FileResponse(candidate, media_type=media_type, filename=candidate.name)
+
+
 @app.post("/api/render-pdf-preview")
 async def render_pdf_preview(file: UploadFile = File(...)) -> dict[str, Any]:
     payload = await file.read()
@@ -297,8 +309,16 @@ def get_benchmark_ground_truth() -> Any:
 
 
 @app.get("/api/benchmark/kfold")
-def get_benchmark_kfold(k: int = 5, rerun: bool = False) -> Any:
-    query = f"?k={k}&rerun={str(rerun).lower()}"
+def get_benchmark_kfold(
+    k: int = 5,
+    seed: int = 42,
+    rerun: bool = False,
+    prompt_variant: str = "zero-shot",
+) -> Any:
+    query = (
+        f"?k={k}&seed={seed}&rerun={str(rerun).lower()}"
+        f"&prompt_variant={prompt_variant}"
+    )
     return forward_slm_request(f"/api/benchmark/kfold{query}", {}, method="GET")
 
 
