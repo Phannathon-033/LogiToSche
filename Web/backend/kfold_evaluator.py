@@ -16,9 +16,9 @@ import requests
 from sklearn.model_selection import KFold
 
 try:
-    from .prompts import load_prompt_config as read_prompt_config, prompt_config_snapshot
+    from .prompts import load_prompt_config as read_prompt_config, prompt_config_snapshot, prompt_for_preset
 except ImportError:
-    from prompts import load_prompt_config as read_prompt_config, prompt_config_snapshot
+    from prompts import load_prompt_config as read_prompt_config, prompt_config_snapshot, prompt_for_preset
 
 try:
     from .logistics_field_parser import evaluate_11_fields
@@ -226,37 +226,17 @@ def _get_ocr(document: dict[str, Any]) -> dict[str, Any]:
 
 
 def _extract(document: dict[str, Any], prompt_snapshot: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-    if os.environ.get("LOGIAI_FAST_BENCHMARK", "1") == "1":
-        gt = document.get("ground_truth", {})
-        pred = dict(gt)
-        fname = document.get("file_name", "")
-        import hashlib
-        h = int(hashlib.md5(fname.encode()).hexdigest(), 16)
-        if h % 100 >= 50 and "receiver" in pred:
-            pred["receiver"] = str(pred["receiver"])[:4] if len(str(pred["receiver"])) > 4 else "-"
-        if h % 100 < 23 and "destination" in pred:
-            pred["destination"] = "-"
-        if h % 100 >= 19 and "reference_number" in pred and pred["reference_number"] != "-":
-            pred["reference_number"] = "-"
-        if h % 100 < 10 and "document_number" in pred:
-            pred["document_number"] = "-"
-        if h % 100 < 3 and "sender" in pred:
-            pred["sender"] = "-"
-        if h % 100 < 5 and "origin" in pred:
-            pred["origin"] = "-"
-
-        ocr_info = {
-            "document_id": document.get("id"),
-            "filename": document.get("file_name"),
-            "ocr_text": "INVOICE " + fname,
-            "ocr_lines": [],
-            "engine": "PaddleOCR",
-            "device": "gpu:0",
-            "cached_at": datetime.now(timezone.utc).isoformat(),
-        }
-        return pred, {"ocr": ocr_info, "slm": {"source": "qwen_slm_calibrated"}}
+    if os.environ.get("LOGIAI_FAST_BENCHMARK", "0") == "1":
+        raise RuntimeError("LOGIAI_FAST_BENCHMARK is not allowed for K-Fold evaluation")
 
     ocr = _get_ocr(document)
+    prompt_text = prompt_snapshot["kfold_zero_shot_prompt"]
+    request_config = {
+        **prompt_snapshot,
+        "system_prompt": prompt_text,
+        "benchmark_prompt_variant": "zero-shot",
+        "benchmark_examples": [],
+    }
     response = requests.post(
         SLM_ENDPOINT,
         json={
@@ -264,9 +244,9 @@ def _extract(document: dict[str, Any], prompt_snapshot: dict[str, Any]) -> tuple
             "source_file": document.get("file_name", "document"),
             "ocr_text": ocr["ocr_text"],
             "ocr_lines": ocr["ocr_lines"],
-            "prompt_config": prompt_snapshot,
-            "benchmark_prompt_variant": prompt_snapshot["benchmark_prompt_variant"],
-            "benchmark_examples": prompt_snapshot["benchmark_examples"],
+            "prompt_config": request_config,
+            "benchmark_prompt_variant": "zero-shot",
+            "benchmark_examples": [],
         },
         headers=REQUEST_HEADERS,
         timeout=float(os.environ.get("LOGIAI_SLM_TIMEOUT", "300")),
@@ -274,6 +254,7 @@ def _extract(document: dict[str, Any], prompt_snapshot: dict[str, Any]) -> tuple
     response.raise_for_status()
     result = response.json()
     return result.get("json_schema", {}), {"ocr": ocr, "slm": result}
+
 
 
 def _baseline_prediction(ocr_text: str, baseline: dict[str, Any]) -> dict[str, Any]:
@@ -429,15 +410,17 @@ def run_kfold_evaluation(
 
     if k_splits < 2 or k_splits > len(documents):
         raise ValueError(f"K-Fold requires 2 <= k <= {len(documents)}, found {k_splits}")
-    if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
-        raise ValueError(f"Unsupported prompt variant: {prompt_variant}")
+    if prompt_variant != "zero-shot":
+        raise ValueError("K-Fold evaluation currently supports zero-shot only")
 
-    benchmark_examples = load_benchmark_examples(prompt_variant)
     prompt_snapshot = {
         **load_prompt_config(),
-        "benchmark_prompt_variant": prompt_variant,
-        "benchmark_examples": benchmark_examples,
+        "kfold_zero_shot_prompt": prompt_for_preset("kfold_zero_shot"),
+        "benchmark_prompt_variant": "zero-shot",
+        "benchmark_examples": [],
     }
+    if not prompt_snapshot["kfold_zero_shot_prompt"].strip():
+        raise ValueError("kfold_zero_shot prompt is empty")
     run_id = datetime.now(timezone.utc).strftime("run_%Y%m%d_%H%M%S_%f")
     kfold = KFold(n_splits=k_splits, shuffle=True, random_state=random_seed)
     baseline_map: dict[str, Any] = {}
@@ -471,6 +454,9 @@ def run_kfold_evaluation(
 
     _validate_fold_manifest(slm_folds, documents)
     _validate_fold_manifest(baseline_folds, documents)
+    assert prompt_snapshot["benchmark_prompt_variant"] == "zero-shot"
+    assert prompt_snapshot["benchmark_examples"] == []
+    assert all(item["ground_truth"] is None for item in predictions)
     slm_field_report = _field_summary(slm_folds)
     baseline_field_report = _field_summary(baseline_folds)
     slm_accuracy = [fold["accuracy_pct"] for fold in slm_folds]

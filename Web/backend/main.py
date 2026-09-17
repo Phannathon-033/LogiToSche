@@ -429,9 +429,11 @@ def get_benchmark_kfold(
     rerun: bool = False,
     prompt_variant: str = "zero-shot",
 ) -> Any:
+    if prompt_variant.strip().lower() != "zero-shot":
+        raise HTTPException(status_code=400, detail="K-Fold evaluation supports zero-shot only")
     query = (
         f"?k={k}&seed={seed}&rerun={str(rerun).lower()}"
-        f"&prompt_variant={prompt_variant}"
+        "&prompt_variant=zero-shot"
     )
     return forward_slm_request(f"/api/benchmark/kfold{query}", {}, method="GET")
 

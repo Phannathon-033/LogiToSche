@@ -767,8 +767,9 @@ def get_kfold_report(
     rerun: bool = False,
     prompt_variant: str = "zero-shot",
 ) -> dict[str, Any]:
-    if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
-        raise HTTPException(status_code=400, detail="Unsupported prompt variant")
+    if prompt_variant.strip().lower() != "zero-shot":
+        raise HTTPException(status_code=400, detail="K-Fold evaluation supports zero-shot only")
+    prompt_variant = "zero-shot"
     report_path = REPORT_DIR / "kfold_evaluation_report.json"
     if not report_path.exists() and (BASE_DIR / "kfold_evaluation_report.json").exists():
         report_path = BASE_DIR / "kfold_evaluation_report.json"

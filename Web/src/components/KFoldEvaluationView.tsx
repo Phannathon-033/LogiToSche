@@ -219,7 +219,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   const [activeTab, setActiveTab] = useState<"overview" | "folds" | "docs">("overview");
   const [kSplits, setKSplits] = useState<number>(5);
   const [randomSeed, setRandomSeed] = useState<number>(42);
-  const [promptVariant, setPromptVariant] = useState<"zero-shot" | "one-shot" | "few-shot">("zero-shot");
+  const promptVariant = "zero-shot" as const;
   const [kfoldReport, setKfoldReport] = useState<KFoldReport | null>(null);
   const [documents, setDocuments] = useState<GroundTruthDoc[]>([]);
   const [selectedDoc, setSelectedDoc] = useState<GroundTruthDoc | null>(null);
@@ -266,7 +266,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       if (!kfResp.ok) throw new Error(`K-Fold API error: ${kfResp.status}`);
       const kfData: KFoldReport = await kfResp.json();
       setKfoldReport(kfData);
-      setPromptVariant(kfData.prompt_variant === "one-shot" || kfData.prompt_variant === "few-shot" ? kfData.prompt_variant : "zero-shot");
 
       // 2. Load Ground Truth Docs
       const gtResp = await apiFetch("/api/benchmark/ground-truth");
@@ -285,7 +284,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     }
   }
 
-  async function handleRunKFold(targetK = kSplits, targetSeed = randomSeed, targetVariant = promptVariant) {
+  async function handleRunKFold(targetK = kSplits, targetSeed = randomSeed, targetVariant = "zero-shot") {
     if (isRunningTest) return;
     setIsRunningTest(true);
     setRunProgress({
@@ -689,25 +688,13 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 </div>
               </div>
 
-              {/* Prompt Variant Selector */}
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
                   Prompt Variant
                 </label>
-                <select
-                  value={promptVariant}
-                  disabled={isRunningTest}
-                  onChange={(e) => {
-                    const variant = e.target.value as typeof promptVariant;
-                    setPromptVariant(variant);
-                    handleRunKFold(kSplits, randomSeed, variant);
-                  }}
-                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs disabled:opacity-60"
-                >
-                  <option value="zero-shot">Zero-shot</option>
-                  <option value="one-shot">One-shot</option>
-                  <option value="few-shot">Few-shot</option>
-                </select>
+                <div className="inline-flex items-center rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800 shadow-2xs">
+                  Zero-shot (K-Fold only)
+                </div>
               </div>
 
               {/* Dataset Size Tag */}
