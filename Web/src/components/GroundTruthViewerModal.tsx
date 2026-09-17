@@ -27,6 +27,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { apiFetch } from "../services/apiClient";
 
 interface GroundTruthViewerModalProps {
   isOpen: boolean;
@@ -125,9 +126,7 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
     setLoading(true);
     try {
       // 1. Fetch Ground Truth Dataset
-      const gtResp = await fetch("/api/benchmark/ground-truth").catch(() =>
-        fetch("http://127.0.0.1:8001/api/benchmark/ground-truth")
-      );
+      const gtResp = await apiFetch("/api/benchmark/ground-truth");
       if (gtResp.ok) {
         const data = await gtResp.json();
         const docs: GroundTruthDoc[] = data.documents || [];
@@ -138,9 +137,7 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
       }
 
       // 2. Fetch K-Fold Report
-      const kfResp = await fetch("/api/benchmark/kfold").catch(() =>
-        fetch("http://127.0.0.1:8001/api/benchmark/kfold")
-      );
+      const kfResp = await apiFetch("/api/benchmark/kfold");
       if (kfResp.ok) {
         const kfData = await kfResp.json();
         setKfoldReport(kfData);
@@ -155,9 +152,7 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
   async function handleRerunKFold() {
     setIsRerunningKFold(true);
     try {
-      const resp = await fetch("/api/benchmark/kfold?rerun=true").catch(() =>
-        fetch("http://127.0.0.1:8001/api/benchmark/kfold?rerun=true")
-      );
+      const resp = await apiFetch("/api/benchmark/kfold?rerun=true");
       if (resp.ok) {
         const data = await resp.json();
         setKfoldReport(data);

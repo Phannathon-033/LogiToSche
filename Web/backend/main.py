@@ -19,10 +19,15 @@ except ImportError:
     psutil = None
 
 import requests
+from dotenv import load_dotenv
 from PIL import Image
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+
+load_dotenv(Path(__file__).resolve().parent / ".env")
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+load_dotenv(Path(__file__).resolve().parent.parent / ".env.local")
 
 SERVER_START_TIME = time.time()
 
@@ -64,7 +69,30 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def verify_gateway_token(request: Request, call_next):
+    if request.method == "OPTIONS":
+        return await call_next(request)
+
+    public_paths = {"/docs", "/redoc", "/openapi.json", "/api/health", "/favicon.ico"}
+    if request.url.path in public_paths:
+        return await call_next(request)
+
+    expected_token = os.environ.get("LOGIAI_GATEWAY_TOKEN", "").strip()
+    if expected_token:
+        token = request.headers.get("X-LogiAI-Token") or request.headers.get("x-logiai-token")
+        if not token or token.strip() != expected_token:
+            from fastapi.responses import JSONResponse
+            return JSONResponse(
+                status_code=401,
+                content={"detail": "Unauthorized: Invalid or missing X-LogiAI-Token header"},
+            )
+
+    return await call_next(request)
 
 SUPPORTED_LANGUAGES = {"th", "en"}
 OCR_DEVICE = os.environ.get("LOGIAI_OCR_DEVICE", "gpu:0")
@@ -362,7 +390,7 @@ def execute_slm_prompt(payload: SlmPromptRequest) -> dict[str, Any]:
 
 @app.get("/api/slm/prompt-config")
 def get_slm_prompt_config() -> dict[str, Any]:
-    return forward_slm_request("/api/slm/prompt-config", {})
+    return forward_slm_request("/api/slm/prompt-config", {}, method="GET")
 
 
 @app.post("/api/slm/prompt-config")
@@ -374,6 +402,16 @@ def save_slm_prompt_config(payload: SlmPromptConfig) -> dict[str, Any]:
 @app.get("/api/slm/prompts")
 def get_slm_prompts() -> list[dict[str, Any]]:
     return forward_slm_request("/api/slm/prompts", {}, method="GET")
+
+
+@app.post("/api/slm/prompts")
+def save_slm_prompts(payload: dict[str, Any]) -> dict[str, Any]:
+    return forward_slm_request("/api/slm/prompts", payload, method="POST")
+
+
+@app.post("/api/slm/prompts/reset")
+def reset_slm_prompts() -> Any:
+    return forward_slm_request("/api/slm/prompts/reset", {}, method="POST")
 
 
 @app.get("/api/benchmark/ground-truth")
@@ -427,7 +465,7 @@ def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -
         response = requests.post(f"{SLM_SERVICE_URL}{path}", json=body, timeout=120)
         response.raise_for_status()
         value = response.json()
-        if isinstance(value, dict):
+        if isinstance(value, (dict, list)):
             return value
     except (requests.RequestException, ValueError):
         pass

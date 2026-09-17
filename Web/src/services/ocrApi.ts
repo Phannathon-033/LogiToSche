@@ -25,6 +25,8 @@ export interface OcrApiResponse {
   page_count?: number;
 }
 
+import { apiFetch } from "./apiClient";
+
 export type OcrLanguage = "th" | "en";
 
 export async function runPaddleOcr(file: File, language: OcrLanguage): Promise<OcrApiResponse> {
@@ -32,7 +34,7 @@ export async function runPaddleOcr(file: File, language: OcrLanguage): Promise<O
   body.append("file", file);
   body.append("lang", language);
 
-  const response = await fetch("/api/ocr", {
+  const response = await apiFetch("/api/ocr", {
     method: "POST",
     body,
   });
@@ -49,7 +51,7 @@ export async function renderPdfPreview(file: File): Promise<string | null> {
   try {
     const body = new FormData();
     body.append("file", file);
-    const response = await fetch("/api/render-pdf-preview", {
+    const response = await apiFetch("/api/render-pdf-preview", {
       method: "POST",
       body,
     });

@@ -4,6 +4,7 @@ import type {
   AdminPromptLabState,
   JsonSchemaOutput,
 } from "../types";
+import { apiFetch } from "./apiClient";
 
 export interface AdminStatsResponse {
   totalDocs: number;
@@ -25,7 +26,7 @@ export interface AdminPromptLabResponse extends AdminPromptLabState {
 const API_BASE = "/api/admin";
 
 export async function getAdminOverviewStats(): Promise<AdminStatsResponse> {
-  const res = await fetch(`${API_BASE}/stats`);
+  const res = await apiFetch(`${API_BASE}/stats`);
   if (!res.ok) throw new Error("Failed to fetch admin statistics");
   return (await res.json()) as AdminStatsResponse;
 }
@@ -42,7 +43,7 @@ export async function getAdminDocuments(params?: {
   if (params?.type) query.append("type", params.type);
   if (params?.tag) query.append("tag", params.tag);
 
-  const res = await fetch(`${API_BASE}/documents?${query.toString()}`);
+  const res = await apiFetch(`${API_BASE}/documents?${query.toString()}`);
   if (!res.ok) throw new Error("Failed to fetch admin documents queue");
   return (await res.json()) as AdminDocumentRecord[];
 }
@@ -51,7 +52,7 @@ export async function updateAdminDocument(
   docId: string,
   payload: AdminDocumentUpdatePayload,
 ): Promise<{ success: boolean; message: string }> {
-  const res = await fetch(`${API_BASE}/documents/${docId}`, {
+  const res = await apiFetch(`${API_BASE}/documents/${docId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -61,7 +62,7 @@ export async function updateAdminDocument(
 }
 
 export async function getAdminPromptLab(): Promise<AdminPromptLabResponse> {
-  const res = await fetch(`${API_BASE}/prompt-lab`);
+  const res = await apiFetch(`${API_BASE}/prompt-lab`);
   if (!res.ok) throw new Error("Failed to fetch prompt lab settings");
   return (await res.json()) as AdminPromptLabResponse;
 }
@@ -69,7 +70,7 @@ export async function getAdminPromptLab(): Promise<AdminPromptLabResponse> {
 export async function saveAdminPromptLab(
   settings: AdminPromptLabState,
 ): Promise<{ success: boolean }> {
-  const res = await fetch(`${API_BASE}/prompt-lab`, {
+  const res = await apiFetch(`${API_BASE}/prompt-lab`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(settings),
@@ -79,7 +80,7 @@ export async function saveAdminPromptLab(
 }
 
 export async function getAdminErrorClusters(): Promise<AdminErrorCluster[]> {
-  const res = await fetch(`${API_BASE}/error-clusters`);
+  const res = await apiFetch(`${API_BASE}/error-clusters`);
   if (!res.ok) throw new Error("Failed to fetch admin error clusters");
   return (await res.json()) as AdminErrorCluster[];
 }
@@ -121,7 +122,7 @@ export interface SystemHealthData {
 }
 
 export async function getSystemHealth(): Promise<SystemHealthData> {
-  const res = await fetch("/api/system/health");
+  const res = await apiFetch("/api/system/health");
   if (!res.ok) throw new Error("Failed to fetch system health");
   return (await res.json()) as SystemHealthData;
 }
