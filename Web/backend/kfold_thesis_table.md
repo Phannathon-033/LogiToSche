@@ -1,5 +1,5 @@
 ## ตารางผลการทดลอง 5-Fold Cross-Validation ระบบแปลงเอกสารสู่ JSON Schema
-**จำนวนเอกสาร:** 300 ฉบับ | **Prompt version:** v1 | **Run ID:** `run_20260917_131748_930583`
+**จำนวนเอกสาร:** 300 ฉบับ | **Prompt version:** v1 | **Run ID:** `run_20260917_132041_454762`
 
 | ฟิลด์ข้อมูลหลัก | Baseline | Qwen SLM | Δ |
 | :--- | :---: | :---: | :---: |
@@ -17,4 +17,4 @@
 
 **Overall Accuracy:** 77.67% ± 1.05%
 **F1-Score:** 94.54% ± 0.34%
-**Predictions:** `E:\Logistics To JSON\Web\backend\reports\run_20260917_131748_930583_predictions.json`
+**Predictions:** `E:\Logistics To JSON\Web\backend\reports\run_20260917_132041_454762_predictions.json`

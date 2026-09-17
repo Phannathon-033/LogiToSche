@@ -1,6 +1,6 @@
 {
-  "run_id": "run_20260917_131748_930583",
-  "created_at": "2026-09-17T13:17:49.401229+00:00",
+  "run_id": "run_20260917_132041_454762",
+  "created_at": "2026-09-17T13:20:41.563881+00:00",
   "method": "Shuffled 5-Fold Cross-Validation",
   "prompt_variant": "zero-shot",
   "dataset": "Logistics Invoice Ground Truth Dataset (300 Documents - 11 Core Fields)",
@@ -1736,7 +1736,7 @@
         "total_amount"
       ],
       "version": "v1",
-      "updated_at": "2026-09-17T13:17:48.930583+00:00",
+      "updated_at": "2026-09-17T13:20:41.454762+00:00",
       "benchmark_prompt_variant": "zero-shot",
       "benchmark_examples": []
     }
@@ -4497,5 +4497,5 @@
       }
     }
   },
-  "prediction_file": "E:\\Logistics To JSON\\Web\\backend\\reports\\run_20260917_131748_930583_predictions.json"
+  "prediction_file": "E:\\Logistics To JSON\\Web\\backend\\reports\\run_20260917_132041_454762_predictions.json"
 }
