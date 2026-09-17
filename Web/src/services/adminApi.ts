@@ -122,7 +122,7 @@ export interface SystemHealthData {
 }
 
 export async function getSystemHealth(): Promise<SystemHealthData> {
-  const res = await fetch("/api/system/health");
+  const res = await apiFetch("/api/system/health");
   if (!res.ok) throw new Error("Failed to fetch system health");
   return (await res.json()) as SystemHealthData;
 }

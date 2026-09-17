@@ -212,7 +212,7 @@ export async function getSlmPrompts(): Promise<SlmPromptPresetResponse[]> {
 export async function saveSlmPrompts(
   presets: SlmPromptPresetResponse[]
 ): Promise<{ status: string; message: string; count: number; presets: SlmPromptPresetResponse[] }> {
-  const response = await fetch("/api/slm/prompts", {
+  const response = await apiFetch("/api/slm/prompts", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ presets }),
@@ -225,7 +225,7 @@ export async function saveSlmPrompts(
 }
 
 export async function resetSlmPrompts(): Promise<SlmPromptPresetResponse[]> {
-  const response = await fetch("/api/slm/prompts/reset", {
+  const response = await apiFetch("/api/slm/prompts/reset", {
     method: "POST",
   });
   if (!response.ok) {

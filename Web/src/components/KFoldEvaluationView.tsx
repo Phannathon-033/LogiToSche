@@ -40,6 +40,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { apiFetch } from "../services/apiClient";
 
 export interface KFoldEvaluationViewProps {
   onBack?: () => void;
@@ -199,18 +200,14 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     setLoading(true);
     try {
       // 1. Load K-Fold Report
-      const kfResp = await fetch(`/api/benchmark/kfold?k=${kSplits}&seed=${randomSeed}`).catch(() =>
-        fetch(`http://127.0.0.1:8001/api/benchmark/kfold?k=${kSplits}&seed=${randomSeed}`)
-      );
+      const kfResp = await apiFetch(`/api/benchmark/kfold?k=${kSplits}&seed=${randomSeed}`);
       if (kfResp.ok) {
         const kfData = await kfResp.json();
         setKfoldReport(kfData);
       }
 
       // 2. Load Ground Truth Docs
-      const gtResp = await fetch("/api/benchmark/ground-truth").catch(() =>
-        fetch("http://127.0.0.1:8001/api/benchmark/ground-truth")
-      );
+      const gtResp = await apiFetch("/api/benchmark/ground-truth");
       if (gtResp.ok) {
         const gtData = await gtResp.json();
         const docs = gtData.documents || [];
@@ -256,9 +253,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         });
       }, 500);
 
-      const resp = await fetch(`/api/benchmark/kfold?k=${targetK}&seed=${targetSeed}&rerun=true`).catch(() =>
-        fetch(`http://127.0.0.1:8001/api/benchmark/kfold?k=${targetK}&seed=${targetSeed}&rerun=true`)
-      );
+      const resp = await apiFetch(`/api/benchmark/kfold?k=${targetK}&seed=${targetSeed}&rerun=true`);
 
       clearTimeout(timer1);
       clearTimeout(timer2);
@@ -316,7 +311,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         .map(([k, v]) => `${k}: ${v}`)
         .join("\n");
 
-      const resp = await fetch("/api/slm/extract", {
+      const resp = await apiFetch("/api/slm/extract", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -324,17 +319,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           source_file: doc.file_name,
           document_type_hint: doc.category || "Invoice",
         }),
-      }).catch(() =>
-        fetch("http://127.0.0.1:8001/api/slm/extract", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ocr_text: mockOcrText || "INVOICE " + doc.file_name,
-            source_file: doc.file_name,
-            document_type_hint: doc.category || "Invoice",
-          }),
-        })
-      );
+      });
 
       const elapsed = Date.now() - start;
       setLiveSLMTimeMs(elapsed);
