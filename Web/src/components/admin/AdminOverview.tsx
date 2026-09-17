@@ -437,7 +437,7 @@ export function AdminOverview({
           </span>
           <span className="h-3 w-px bg-slate-200" />
           <span>
-            เครือข่าย AI Server: <span className="font-bold text-emerald-600">0.0.0.0 (พอร์ต 8000/8001)</span>
+            Gateway เครือข่าย: <span className="font-bold text-emerald-600">พอร์ต 8000</span><span className="ml-1 text-slate-500">(SLM localhost:8001)</span>
           </span>
         </div>
       </div>

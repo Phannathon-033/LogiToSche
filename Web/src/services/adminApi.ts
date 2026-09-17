@@ -1,10 +1,10 @@
+import { apiFetch } from "./apiClient";
 import type {
   AdminDocumentRecord,
   AdminErrorCluster,
   AdminPromptLabState,
   JsonSchemaOutput,
 } from "../types";
-import { apiFetch } from "./apiClient";
 
 export interface AdminStatsResponse {
   totalDocs: number;
@@ -126,4 +126,3 @@ export async function getSystemHealth(): Promise<SystemHealthData> {
   if (!res.ok) throw new Error("Failed to fetch system health");
   return (await res.json()) as SystemHealthData;
 }
-

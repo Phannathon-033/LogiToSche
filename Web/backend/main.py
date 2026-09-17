@@ -114,6 +114,9 @@ class SlmExtractRequest(BaseModel):
     ocr_text: str = Field(default="", min_length=1)
     ocr_lines: list[OcrLine] = Field(default_factory=list)
     image_base64: str | None = None
+    prompt_config: dict[str, Any] | None = None
+    benchmark_prompt_variant: str = "zero-shot"
+    benchmark_examples: list[dict[str, Any]] = Field(default_factory=list)
 
 
 def convert_pdf_to_image(pdf_bytes: bytes, page_num: int = 0) -> tuple[Image.Image, int]:
@@ -420,18 +423,29 @@ def get_benchmark_ground_truth() -> Any:
 
 
 @app.get("/api/benchmark/kfold")
-def get_benchmark_kfold(k: int = 5, seed: int = 42, rerun: bool = False) -> Any:
-    query = f"?k={k}&seed={seed}&rerun={str(rerun).lower()}"
+def get_benchmark_kfold(
+    k: int = 5,
+    seed: int = 42,
+    rerun: bool = False,
+    prompt_variant: str = "zero-shot",
+) -> Any:
+    query = (
+        f"?k={k}&seed={seed}&rerun={str(rerun).lower()}"
+        f"&prompt_variant={prompt_variant}"
+    )
     return forward_slm_request(f"/api/benchmark/kfold{query}", {}, method="GET")
 
 
 @app.get("/api/benchmark/image/{file_name}")
 def get_benchmark_image(file_name: str) -> Any:
     from fastapi.responses import FileResponse
-    base_testing_dir = Path(r"E:\Logistics To JSON\To_Testing")
+
+    base_testing_dir = Path(
+        os.environ.get("LOGIAI_DATASET_DIR", r"E:\Logistics To JSON\To_Testing")
+    ).resolve()
     safe_name = Path(file_name).name
-    img_path = base_testing_dir / safe_name
-    if not img_path.exists() or not img_path.is_file():
+    img_path = (base_testing_dir / safe_name).resolve()
+    if base_testing_dir not in img_path.parents or not img_path.is_file():
         raise HTTPException(status_code=404, detail=f"Image {safe_name} not found")
     media = "image/png" if safe_name.lower().endswith(".png") else "image/jpeg"
     return FileResponse(str(img_path), media_type=media)

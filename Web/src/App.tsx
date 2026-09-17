@@ -788,7 +788,8 @@ export function App() {
           setJobs((current) => current.map((job) => (job.id === updatedJob.id ? updatedJob : job)));
         }}
         showToast={showToast}
-        setViewMode={setViewMode}
+        onLogout={handleLogout}
+        onSwitchToUser={() => setViewMode("user")}
       />
     );
   }

@@ -34,6 +34,7 @@ const initialDocuments: AdminDocumentRecord[] = [];
 const initialAnalytics: AdminAnalyticsPoint[] = [];
 const initialErrorClusters: AdminErrorCluster[] = [];
 import { AdminOverview } from "./admin/AdminOverview";
+import { Logo } from "./Logo";
 import { AdminPromptConfig } from "./admin/AdminPromptConfig";
 import { AdminReports } from "./admin/AdminReports";
 import { AdminReviewQueue } from "./admin/AdminReviewQueue";
@@ -50,10 +51,11 @@ type UsersSettingsTab = "users" | "activity";
 interface AdminDashboardProps {
   onUpdateJob: (updatedJob: DocumentJob, updatedJson?: JsonSchemaOutput) => void;
   showToast: (message: string) => void;
-  setViewMode: (mode: "user" | "admin") => void;
+  onLogout: () => void;
+  onSwitchToUser: () => void;
 }
 
-export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDashboardProps) {
+export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUser }: AdminDashboardProps) {
   const [activeView, setActiveView] = useState<AdminView>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [documents, setDocuments] = useState<AdminDocumentRecord[]>(initialDocuments);
@@ -309,11 +311,8 @@ export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDas
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4">
-          <div className="min-w-0">
-            <p className="text-xl font-black leading-none text-slate-900">LogiAI</p>
-            <p className="mt-1 text-xs font-bold text-slate-500">Admin Console</p>
-          </div>
+        <div className="flex min-h-[56px] items-center justify-between border-b border-slate-200 px-4 py-2.5">
+          <Logo size="sm" />
           <button type="button" onClick={() => setSidebarOpen(false)} className="rounded-lg p-2 text-slate-400 hover:bg-blue-50 lg:hidden" aria-label="ปิดเมนู">
             <X className="h-5 w-5" aria-hidden="true" />
           </button>
@@ -353,7 +352,7 @@ export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDas
                 <p className="truncate text-[10px] font-medium text-slate-500">admin@logiai.com</p>
               </div>
             </div>
-            <button type="button" onClick={() => setViewMode("user")} className="rounded-lg p-1.5 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600" title="สลับไปยังมุมมองผู้ใช้" aria-label="สลับไปยังมุมมองผู้ใช้">
+            <button type="button" onClick={onLogout} className="rounded-lg p-1.5 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600" title="ออกจากระบบ" aria-label="ออกจากระบบ">
               <LogOut className="h-4 w-4" />
             </button>
           </div>
@@ -373,7 +372,7 @@ export function AdminDashboard({ onUpdateJob, showToast, setViewMode }: AdminDas
           </div>
 
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
-            <button type="button" onClick={() => setViewMode("user")} className="hidden rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-extrabold text-slate-700 transition hover:bg-slate-50 sm:inline-flex">
+            <button type="button" onClick={onSwitchToUser} className="hidden rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-extrabold text-slate-700 transition hover:bg-slate-50 sm:inline-flex">
               สลับมุมมองผู้ใช้
             </button>
             <button type="button" className="relative rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900" aria-label="การแจ้งเตือน">

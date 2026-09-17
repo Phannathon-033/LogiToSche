@@ -16,35 +16,35 @@ from pydantic import BaseModel, Field
 try:
     from .prompts import (
         CORE_FIELDS as PROMPT_CORE_FIELDS,
-        DEFAULT_ADMIN_CONFIG,
         EXTRACTION_RULES,
         EXTRACTION_SYSTEM_PROMPT,
         MODEL_IDS,
         default_admin_config,
+        load_prompt_config,
         prompt_for_preset,
+        save_prompt_config as persist_prompt_config,
         prompt_preset_list,
-        reset_prompt_presets,
-        save_prompt_presets,
     )
 except ImportError:
     from prompts import (
         CORE_FIELDS as PROMPT_CORE_FIELDS,
-        DEFAULT_ADMIN_CONFIG,
         EXTRACTION_RULES,
         EXTRACTION_SYSTEM_PROMPT,
         MODEL_IDS,
         default_admin_config,
+        load_prompt_config,
         prompt_for_preset,
+        save_prompt_config as persist_prompt_config,
         prompt_preset_list,
-        reset_prompt_presets,
-        save_prompt_presets,
     )
 
-PROMPT_CONFIG_PATH = Path(__file__).resolve().parent / "prompt_config.json"
 MIN_PROMPT_LENGTH = 1
 MAX_PROMPT_LENGTH = 10000
 MAX_RULE_LENGTH = 1000
 MAX_RULES = 20
+BENCHMARK_PROMPT_VARIANTS = {"zero-shot", "one-shot", "few-shot"}
+MAX_BENCHMARK_EXAMPLES = 5
+MAX_BENCHMARK_EXAMPLE_LENGTH = 20000
 
 try:
     from .logistics_field_parser import evaluate_11_fields, parse_grounded_amounts, parse_robust_quantity
@@ -52,6 +52,9 @@ except ImportError:
     from logistics_field_parser import evaluate_11_fields, parse_grounded_amounts, parse_robust_quantity
 
 BASE_DIR = Path(__file__).resolve().parent
+DRIVE_ROOT = Path(os.environ.get("LOGIAI_DRIVE_ROOT", "/content/drive/MyDrive/LogiToSche"))
+GROUND_TRUTH_PATH = Path(os.environ.get("LOGIAI_GROUND_TRUTH_PATH", DRIVE_ROOT / "ground_truth" / "ground_truth_dataset.json"))
+REPORT_DIR = Path(os.environ.get("LOGIAI_REPORT_DIR", DRIVE_ROOT / "reports"))
 SITE_PACKAGES_DIR = (BASE_DIR / ".venv" / "Lib" / "site-packages").resolve()
 TORCH_LIB_DIR = SITE_PACKAGES_DIR / "torch" / "lib"
 if TORCH_LIB_DIR.exists() and hasattr(os, "add_dll_directory"):
@@ -60,24 +63,12 @@ if TORCH_LIB_DIR.exists() and hasattr(os, "add_dll_directory"):
     except OSError:
         pass
 
-for package in ("cublas", "cuda_runtime", "cudnn", "cufft", "curand", "cusolver", "cusparse", "nvjitlink"):
-    dll_dir = SITE_PACKAGES_DIR / "nvidia" / package / "bin"
-    if dll_dir.exists() and hasattr(os, "add_dll_directory"):
-        try:
-            os.add_dll_directory(str(dll_dir))
-        except OSError:
-            pass
-        os.environ["PATH"] = f"{dll_dir}{os.pathsep}{os.environ.get('PATH', '')}"
-
 SLM_MODEL_ID = os.environ.get("LOGIAI_SLM_MODEL", "Qwen/Qwen2.5-1.5B-Instruct")
-LOCAL_QWEN_SNAPSHOT = Path(r"C:\Users\UNS_CT\.cache\huggingface\hub\models--Qwen--Qwen2.5-1.5B-Instruct\snapshots\989aa7980e4cf806f80c7fef2b1adb7bc71aa306")
+GATEWAY_TOKEN = os.environ.get("LOGIAI_GATEWAY_TOKEN", "").strip()
+GATEWAY_HEADERS = {"X-LogiAI-Token": GATEWAY_TOKEN} if GATEWAY_TOKEN else {}
 
 try:
     import torch
-    if torch.cuda.is_available():
-        torch.backends.cuda.matmul.allow_tf32 = True
-        torch.backends.cudnn.allow_tf32 = True
-        torch.backends.cudnn.benchmark = True
     from transformers import AutoModelForCausalLM, AutoTokenizer
 except Exception as exc:  # pragma: no cover - startup environment dependent
     torch = None  # type: ignore[assignment]
@@ -90,7 +81,7 @@ else:
 app = FastAPI(title="LogiAI Dedicated SLM Service", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=".*",
+    allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -154,11 +145,11 @@ class SlmExtractRequest(BaseModel):
     ocr_text: str = Field(default="", min_length=1)
     ocr_lines: list[OcrLine] = Field(default_factory=list)
     image_base64: str | None = None
+    prompt_config: SlmPromptConfig | None = None
+    benchmark_prompt_variant: str = "zero-shot"
+    benchmark_examples: list[dict[str, Any]] = Field(default_factory=list)
 
 def fuse_image_ocr(payload: SlmExtractRequest) -> str:
-    # If primary OCR text is already present from frontend OCR phase, use it directly (saves 5-10s)
-    if payload.ocr_text and len(payload.ocr_text.strip()) > 10:
-        return payload.ocr_text
     if not payload.image_base64:
         return payload.ocr_text
     try:
@@ -168,13 +159,17 @@ def fuse_image_ocr(payload: SlmExtractRequest) -> str:
             "http://127.0.0.1:8000/api/ocr",
             files={"file": ("document.png", image_bytes, "image/png")},
             data={"lang": "th"},
-            timeout=8,
+            headers=GATEWAY_HEADERS,
+            timeout=15,
         )
-        if response.status_code == 200:
-            return response.json().get("text", "") or payload.ocr_text
+        if response.status_code != 200:
+            return payload.ocr_text
+        image_text = response.json().get("text", "")
+        existing_lines = {line.strip().lower() for line in payload.ocr_text.splitlines() if line.strip()}
+        new_lines = [line for line in image_text.splitlines() if line.strip() and line.strip().lower() not in existing_lines]
+        return payload.ocr_text + ("\n" + "\n".join(new_lines) if new_lines else "")
     except (ValueError, TypeError, OSError, requests.RequestException):
-        pass
-    return payload.ocr_text
+        return payload.ocr_text
 
 
 class SlmField(BaseModel):
@@ -231,14 +226,38 @@ class SlmPromptResponse(BaseModel):
 
 
 @app.get("/api/slm/health")
-def health() -> dict[str, str]:
-    cuda = bool(torch is not None and torch.cuda.is_available())
+def health() -> dict[str, Any]:
+    if torch is None:
+        return {
+            "status": "missing-dependencies",
+            "service": "slm",
+            "model": SLM_MODEL_ID,
+            "device": "cpu",
+            "cuda": False,
+            "model_loaded": False,
+            "error": str(IMPORT_ERROR),
+        }
+    cuda = torch.cuda.is_available()
+    if not cuda:
+        return {
+            "status": "missing-cuda",
+            "service": "slm",
+            "model": MODEL_IDS.get(get_prompt_config()["selected_model"], SLM_MODEL_ID),
+            "device": "cpu",
+            "cuda": False,
+            "model_loaded": False,
+            "error": "torch.cuda.is_available() returned False",
+        }
+    if os.environ.get("LOGIAI_PRELOAD_SLM", "false").lower() == "true":
+        get_slm()
+    loaded = _slm_model is not None and _slm_tokenizer is not None
     return {
-        "status": "ready" if cuda else "missing-cuda",
+        "status": "ready" if loaded else "missing-model",
         "service": "slm",
         "model": MODEL_IDS.get(get_prompt_config()["selected_model"], SLM_MODEL_ID),
-        "device": "cuda:0" if cuda else "cpu",
-        "cuda": str(cuda).lower(),
+        "device": "cuda:0",
+        "cuda": True,
+        "model_loaded": loaded,
     }
 
 
@@ -251,15 +270,14 @@ def get_prompt_config_route() -> dict[str, Any]:
 def save_prompt_config(payload: SlmPromptConfig) -> dict[str, Any]:
     try:
         normalized = payload.normalized()
+        saved = persist_prompt_config(normalized)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
-    try:
-        PROMPT_CONFIG_PATH.write_text(json.dumps(normalized, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     except OSError as exc:
         raise HTTPException(status_code=500, detail=f"Could not persist prompt configuration: {exc}") from exc
     global _active_prompt_config
-    _active_prompt_config = normalized
-    return normalized
+    _active_prompt_config = saved
+    return dict(saved)
 
 
 @app.get("/api/slm/prompts")
@@ -267,126 +285,54 @@ def get_prompts() -> list[dict[str, Any]]:
     return prompt_preset_list()
 
 
-class PromptPresetItem(BaseModel):
-    id: str
-    category: str = "custom"
-    categoryLabel: str = "กำหนดเอง"
-    badge: str = "Custom"
-    title: str
-    description: str = ""
-    prompt: str
-
-
-class SavePromptPresetsPayload(BaseModel):
-    presets: list[PromptPresetItem]
-
-
-@app.post("/api/slm/prompts")
-def save_prompts(payload: SavePromptPresetsPayload) -> dict[str, Any]:
-    try:
-        data = {
-            item.id: {
-                "category": item.category,
-                "categoryLabel": item.categoryLabel,
-                "badge": item.badge,
-                "title": item.title,
-                "description": item.description,
-                "prompt": item.prompt,
-            }
-            for item in payload.presets
-        }
-        save_prompt_presets(data)
-        return {
-            "status": "success",
-            "message": f"บันทึกแม่แบบ Prompt สำเร็จรูป {len(data)} รายการเรียบร้อย",
-            "count": len(data),
-            "presets": prompt_preset_list(),
-        }
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Failed to save prompt presets: {exc}") from exc
-
-
-@app.post("/api/slm/prompts/reset")
-def reset_prompts() -> list[dict[str, Any]]:
-    try:
-        reset_prompt_presets()
-        return prompt_preset_list()
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Failed to reset prompt presets: {exc}") from exc
-
-
 def get_prompt_config() -> dict[str, Any]:
     global _active_prompt_config
     if _active_prompt_config is not None:
         return dict(_active_prompt_config)
-    config = default_admin_config()
-    if PROMPT_CONFIG_PATH.exists():
-        try:
-            stored = json.loads(PROMPT_CONFIG_PATH.read_text(encoding="utf-8"))
-            config = {**config, **stored}
-        except (OSError, ValueError, TypeError):
-            config = default_admin_config()
     try:
+        loaded = load_prompt_config()
         validator = getattr(SlmPromptConfig, "model_validate", SlmPromptConfig.parse_obj)
-        _active_prompt_config = validator(config).normalized()
-    except (ValueError, TypeError):
+        _active_prompt_config = {
+            **loaded,
+            **validator(loaded).normalized(),
+        }
+    except (ValueError, TypeError, json.JSONDecodeError, OSError):
         _active_prompt_config = default_admin_config()
     return dict(_active_prompt_config)
 
 
-def resolve_model_path(model_id: str) -> tuple[str, bool]:
-    if LOCAL_QWEN_SNAPSHOT.exists():
-        target_name = model_id.lower()
-        if "1.5b" in target_name or "qwen" in target_name:
-            return str(LOCAL_QWEN_SNAPSHOT), True
-    return model_id, False
-
-
-@app.on_event("startup")
-def preload_slm_model() -> None:
-    """Preload Qwen SLM onto CUDA GPU on startup so requests execute instantly without warmup delay."""
-    if torch is not None and torch.cuda.is_available():
-        try:
-            print("[SLM Startup] Preloading Qwen model onto CUDA GPU (RTX 3050)...")
-            tok, model = get_slm()
-            dummy = tok("warmup", return_tensors="pt").to("cuda:0")
-            with torch.inference_mode():
-                _ = model.generate(**dummy, max_new_tokens=1, use_cache=True)
-            print(f"[SLM Startup] Qwen CUDA ready on {model.device}! (VRAM: {torch.cuda.memory_allocated(0)/1e9:.2f} GB)")
-        except Exception as exc:
-            print(f"[SLM Startup Warning] Preload notice: {exc}")
-
-
 @app.post("/api/slm/extract", response_model=SlmExtractResponse)
 def slm_extract(payload: SlmExtractRequest) -> SlmExtractResponse:
-    import time
-    start_time = time.perf_counter()
+    try:
+        benchmark_variant_for_request(payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     enriched_payload = payload.model_copy(update={"ocr_text": fuse_image_ocr(payload)}) if hasattr(payload, "model_copy") else payload.copy(update={"ocr_text": fuse_image_ocr(payload)})
     try:
         data = generate_json(enriched_payload)
-        elapsed_sec = time.perf_counter() - start_time
-        normalized = normalize_slm_output(data, enriched_payload.source_file, elapsed_sec=elapsed_sec)
+        normalized = normalize_slm_output(
+            data,
+            enriched_payload.source_file,
+            enriched_payload.prompt_config,
+        )
+        config = prompt_config_for_request(enriched_payload.prompt_config)
         return SlmExtractResponse(
             json_schema=normalized["json_schema"],
             fields=normalized["fields"],
             confidence=normalized["confidence"],
             review_items=normalized["review_items"],
-            performance=normalized.get("performance"),
-            model=f"{get_active_model_id()} (CUDA:0)",
+            model=get_active_model_id(config),
             device="cuda:0",
         )
     except Exception as exc:
-        elapsed_sec = time.perf_counter() - start_time
         fallback = rule_based_fallback_extraction(enriched_payload)
-        fallback_perf = fallback.get("performance", {})
-        fallback_perf["inference_time_sec"] = round(elapsed_sec, 2)
         return SlmExtractResponse(
             json_schema=fallback["json_schema"],
             fields=fallback["fields"],
             confidence=fallback["confidence"],
             review_items=fallback["review_items"],
-            performance=fallback_perf,
-            model=f"{get_active_model_id()} (Fallback: {exc})",
+            performance=fallback["performance"],
+            model=f"{get_active_model_id(prompt_config_for_request(enriched_payload.prompt_config))} (Fallback: {exc})",
             device="cpu/fallback",
         )
 
@@ -394,35 +340,23 @@ def slm_extract(payload: SlmExtractRequest) -> SlmExtractResponse:
 @app.post("/api/slm/execute-prompt", response_model=SlmPromptResponse)
 def execute_slm_prompt(payload: SlmPromptRequest) -> SlmPromptResponse:
     try:
+        config = get_prompt_config()
         tokenizer, model = get_slm()
         context = json.dumps(payload.json_schema, ensure_ascii=False, indent=2)
-        config = get_prompt_config()
         preset_instruction = prompt_for_preset(payload.prompt_template_id)
         user_instruction = payload.user_instruction or preset_instruction
         system_instruction = build_assistant_system_prompt(payload.system_instruction, config)
-        user_content = f"{user_instruction}\n\nOCR text:\n{payload.ocr_text[:3000]}\n\nJSON schema:\n{context}"
+        user_content = f"{user_instruction}\n\nOCR text:\n{payload.ocr_text}\n\nJSON schema:\n{context}"
         messages = [{"role": "system", "content": system_instruction}, {"role": "user", "content": user_content}]
         text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         inputs = tokenizer([text], return_tensors="pt").to(model.device)
-        stop_tokens = [tokenizer.eos_token_id]
-        im_end_id = tokenizer.convert_tokens_to_ids("<|im_end|>")
-        if isinstance(im_end_id, int):
-            stop_tokens.append(im_end_id)
         with torch.inference_mode():
-            generated_ids = model.generate(
-                **inputs,
-                max_new_tokens=260,
-                do_sample=False,
-                use_cache=True,
-                pad_token_id=tokenizer.eos_token_id,
-                eos_token_id=stop_tokens,
-                repetition_penalty=1.05,
-            )
+            generated_ids = model.generate(**inputs, max_new_tokens=500, do_sample=False, repetition_penalty=1.05)
         output_ids = generated_ids[0][inputs.input_ids.shape[-1] :]
         result_text = tokenizer.decode(output_ids, skip_special_tokens=True).strip()
         return SlmPromptResponse(
             result_text=result_text,
-            reasoning="วิเคราะห์ด้วย Qwen SLM (GPU CUDA) จาก OCR และ JSON 11 ฟิลด์หลัก",
+            reasoning="วิเคราะห์ด้วย Qwen SLM จาก OCR และ JSON 11 ฟิลด์หลัก",
             category=payload.prompt_template_id,
             model=get_active_model_id(),
             device="cuda:0",
@@ -431,9 +365,9 @@ def execute_slm_prompt(payload: SlmPromptRequest) -> SlmPromptResponse:
         return execute_rule_based_prompt(payload)
 
 
-def get_slm() -> tuple[Any, Any]:
+def get_slm(model_id: str | None = None) -> tuple[Any, Any]:
     global _slm_model, _slm_tokenizer, _loaded_model_id
-    model_id = get_active_model_id()
+    model_id = model_id or get_active_model_id()
     if _loaded_model_id != model_id or _slm_model is None or _slm_tokenizer is None:
         _slm_model = None
         _slm_tokenizer = None
@@ -442,54 +376,60 @@ def get_slm() -> tuple[Any, Any]:
     if not torch.cuda.is_available():
         raise HTTPException(status_code=503, detail="CUDA is required for SLM but torch.cuda is not available")
     if _slm_model is None or _slm_tokenizer is None:
-        model_path, local_only = resolve_model_path(model_id)
-        _slm_tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, local_files_only=local_only)
-        kwargs: dict[str, Any] = {
-            "dtype": torch.float16,
-            "device_map": {"": "cuda:0"},
-            "trust_remote_code": True,
-            "low_cpu_mem_usage": True,
-        }
-        try:
-            kwargs["attn_implementation"] = "sdpa"
-        except Exception:
-            pass
-        _slm_model = AutoModelForCausalLM.from_pretrained(model_path, local_files_only=local_only, **kwargs)
+        _slm_tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
+        _slm_model = AutoModelForCausalLM.from_pretrained(
+            model_id,
+            torch_dtype=torch.float16,
+            device_map={"": "cuda:0"},
+            trust_remote_code=True,
+            low_cpu_mem_usage=True,
+        )
         _slm_model.eval()
         _loaded_model_id = model_id
     return _slm_tokenizer, _slm_model
 
 
 def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
-    tokenizer, model = get_slm()
+    benchmark_variant_for_request(payload)
+    config = prompt_config_for_request(payload.prompt_config)
+    tokenizer, model = get_model_for_request(payload.prompt_config)
     messages = [
-        {"role": "system", "content": build_extraction_system_prompt()},
-        {"role": "user", "content": build_slm_prompt(payload)},
+        {"role": "system", "content": build_extraction_system_prompt(config)},
+        {"role": "user", "content": build_slm_prompt(payload, config)},
     ]
     text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer([text], return_tensors="pt").to(model.device)
-
-    stop_tokens = [tokenizer.eos_token_id]
-    im_end_id = tokenizer.convert_tokens_to_ids("<|im_end|>")
-    if isinstance(im_end_id, int):
-        stop_tokens.append(im_end_id)
-
     with torch.inference_mode():
-        generated_ids = model.generate(
-            **inputs,
-            max_new_tokens=260,
-            do_sample=False,
-            use_cache=True,
-            pad_token_id=tokenizer.eos_token_id,
-            eos_token_id=stop_tokens,
-            repetition_penalty=1.05,
-        )
+        generated_ids = model.generate(**inputs, max_new_tokens=900, do_sample=False, repetition_penalty=1.05)
     output_ids = generated_ids[0][inputs.input_ids.shape[-1] :]
     return parse_json_object(tokenizer.decode(output_ids, skip_special_tokens=True))
 
 
-def build_extraction_system_prompt() -> str:
-    config = get_prompt_config()
+def prompt_config_for_request(snapshot: SlmPromptConfig | None) -> dict[str, Any]:
+    return get_prompt_config() if snapshot is None else snapshot.normalized()
+
+
+def benchmark_variant_for_request(payload: SlmExtractRequest) -> tuple[str, list[dict[str, Any]]]:
+    variant = payload.benchmark_prompt_variant.strip().lower()
+    if variant not in BENCHMARK_PROMPT_VARIANTS:
+        raise ValueError(f"Unsupported benchmark prompt variant: {variant}")
+    examples = payload.benchmark_examples
+    if variant == "zero-shot":
+        if examples:
+            raise ValueError("zero-shot cannot include benchmark examples")
+        return variant, []
+    required_count = 1 if variant == "one-shot" else 2
+    if len(examples) < required_count:
+        raise ValueError(f"{variant} requires at least {required_count} benchmark examples")
+    if len(examples) > MAX_BENCHMARK_EXAMPLES:
+        raise ValueError(f"At most {MAX_BENCHMARK_EXAMPLES} benchmark examples are supported")
+    if any(len(json.dumps(example, ensure_ascii=False)) > MAX_BENCHMARK_EXAMPLE_LENGTH for example in examples):
+        raise ValueError("Benchmark example is too large")
+    return variant, [dict(example) for example in examples[:required_count] if isinstance(example, dict)]
+
+
+def build_extraction_system_prompt(config: dict[str, Any] | None = None) -> str:
+    config = config or get_prompt_config()
     rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
     return f"{EXTRACTION_SYSTEM_PROMPT}\n{config['system_prompt']}\nAdditional admin rules:\n{rules}"
 
@@ -500,12 +440,19 @@ def build_assistant_system_prompt(system_instruction: str, config: dict[str, Any
     return f"{base}\nUse the canonical 11 fields and keep non-core values under other.\nAdditional admin rules:\n{rules}"
 
 
-def get_active_model_id() -> str:
-    return MODEL_IDS.get(get_prompt_config()["selected_model"], SLM_MODEL_ID)
+def get_active_model_id(config: dict[str, Any] | None = None) -> str:
+    active = config or get_prompt_config()
+    return MODEL_IDS.get(active["selected_model"], SLM_MODEL_ID)
 
 
-def apply_review_threshold(result: dict[str, Any]) -> dict[str, Any]:
-    config = get_prompt_config()
+def get_model_for_request(snapshot: SlmPromptConfig | None) -> tuple[Any, Any]:
+    return get_slm(MODEL_IDS.get(snapshot.selected_model) if snapshot else None)
+
+
+def apply_review_threshold(result: dict[str, Any], config: SlmPromptConfig | dict[str, Any] | None = None) -> dict[str, Any]:
+    if isinstance(config, SlmPromptConfig):
+        config = config.normalized()
+    config = config or get_prompt_config()
     threshold = config["confidence_threshold"]
     monitored = set(config["monitored_fields"])
     for item in result.get("fields", []):
@@ -517,33 +464,47 @@ def apply_review_threshold(result: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def build_slm_prompt(payload: SlmExtractRequest) -> str:
-    config = get_prompt_config()
-    system_prompt = config.get("system_prompt", "").strip()
+def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None = None) -> str:
+    config = config or prompt_config_for_request(payload.prompt_config)
+    benchmark_variant, benchmark_examples = benchmark_variant_for_request(payload)
     invariant_rules = "\n".join(f"- {rule}" for rule in EXTRACTION_RULES)
     admin_rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
-    target_format = {
-        "document_type": "invoice | bill_of_lading | packing_list | purchase_order | other",
-        "document_number": "Document or invoice number",
-        "document_date": "YYYY-MM-DD",
-        "sender": "Company or vendor name",
-        "receiver": "Customer or consignee name",
-        "origin": "Departure or loading location",
-        "destination": "Delivery or destination location",
-        "reference_number": "PO or reference number",
-        "unit_price": 0.0,
-        "total_amount": 0.0,
-        "currency": "THB | USD | EUR | etc.",
-        "other": {"source_file": payload.source_file},
+    benchmark_instruction = ""
+    if benchmark_variant != "zero-shot":
+        benchmark_instruction = (
+            f"\nBenchmark prompt variant: {benchmark_variant}. "
+            "Use the following labeled examples only as formatting and mapping demonstrations; "
+            "do not copy values unless grounded in the current OCR text.\n"
+            f"Examples:\n{json.dumps(benchmark_examples, ensure_ascii=False, indent=2)}\n"
+        )
+
+
+    schema = {
+        "json_schema": {
+            "document_type": "invoice | bill_of_lading | packing_list | purchase_order | unknown",
+            "document_number": "Document, invoice, B/L, or order number",
+            "document_date": "YYYY-MM-DD or empty string",
+            "sender": "Sender, seller, vendor, shipper, or issuer",
+            "receiver": "Receiver, buyer, consignee, customer, or ship-to party",
+            "origin": "Origin, loading port, pickup location, or place of receipt",
+            "destination": "Destination, discharge port, delivery location, or ship-to location",
+            "reference_number": "Reference, PO, booking, or related document number",
+            "unit_price": 0,
+            "total_amount": 0,
+            "currency": "THB | USD | EUR | JPY | SGD | CNY | GBP | empty string",
+            "other": {"source_file": payload.source_file},
+        },
+        "fields": [{"sourceText": "source text from OCR", "field": "document_number", "value": "normalized value", "confidence": 0, "status": "success | review | error | processing"}],
+        "confidence": {"overall": 0, "ocr": 0, "slm": 0, "mapping": 0, "completeness": 0},
+        "review_items": [{"field": "document_number", "ocrValue": "raw OCR value", "slmValue": "normalized value", "confidence": 0, "status": "review"}],
     }
-    custom_sys = f"System Instructions:\n{system_prompt}\n" if system_prompt else ""
     return (
-        "Extract 11 core logistics fields from the OCR text into this compact JSON contract.\n"
-        f"{custom_sys}"
-        f"Rules:\n{invariant_rules}\n{admin_rules}\n"
-        f"Document hint: {payload.document_type_hint}\n"
-        f"Required JSON structure:\n{json.dumps(target_format, ensure_ascii=False, indent=2)}\n\n"
-        f"OCR Text:\n{payload.ocr_text[:3500]}\n"
+        "Extract logistics fields from Thai or English OCR text into this exact JSON contract.\n"
+        "The canonical fields are document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, and currency.\n"
+        f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n"
+        f"{benchmark_instruction}\n"
+        f"Document type hint: {payload.document_type_hint}\nSource filename: {payload.source_file}\n\n"
+        f"Required output shape:\n{json.dumps(schema, ensure_ascii=False, indent=2)}\n\nOCR text:\n{payload.ocr_text}\n"
     )
 
 
@@ -580,8 +541,12 @@ def canonical_value(schema: dict[str, Any], field: str) -> Any:
     return 0 if field in NUMERIC_CORE_FIELDS else ""
 
 
-def normalize_slm_output(data: dict[str, Any], default_source_file: str = "document", elapsed_sec: float = 0.5) -> dict[str, Any]:
-    raw_schema = data.get("json_schema") if isinstance(data.get("json_schema"), dict) else data
+def normalize_slm_output(
+    data: dict[str, Any],
+    default_source_file: str = "document",
+    config: SlmPromptConfig | None = None,
+) -> dict[str, Any]:
+    raw_schema = data.get("json_schema") if isinstance(data.get("json_schema"), dict) else {}
     other = raw_schema.get("other") if isinstance(raw_schema.get("other"), dict) else {}
     other = dict(other)
     json_schema: dict[str, Any] = {}
@@ -597,97 +562,41 @@ def normalize_slm_output(data: dict[str, Any], default_source_file: str = "docum
     json_schema["other"] = other
 
     fields: list[dict[str, Any]] = []
-    if isinstance(data.get("fields"), list) and len(data["fields"]) > 0:
-        for item in data["fields"]:
-            if not isinstance(item, dict):
-                continue
-            field = canonical_field_name(item.get("field"))
-            is_other = field not in CORE_FIELDS
-            if is_other:
-                other.setdefault(field, item.get("value", ""))
-            fields.append({
-                "sourceText": str(item.get("sourceText", "")),
-                "field": field,
-                "value": str(item.get("value", "")),
-                "confidence": clamp_int(item.get("confidence"), 0, 100),
-                "status": normalize_status(item.get("status")),
-                "isOther": is_other,
-            })
-    else:
-        for field in CORE_FIELDS:
-            val = json_schema.get(field, "")
-            present = val not in ("", "-", None, 0)
-            fields.append({
-                "sourceText": str(val) if present else "-",
-                "field": field,
-                "value": str(val if val is not None else ""),
-                "confidence": 98 if present else 45,
-                "status": "success" if present else "review",
-                "isOther": False,
-            })
-        for k, v in other.items():
-            if v and v != "" and v != 0 and k != "source_file":
-                fields.append({
-                    "sourceText": str(v),
-                    "field": k,
-                    "value": str(v),
-                    "confidence": 92,
-                    "status": "success",
-                    "isOther": True,
-                })
+    for item in data.get("fields", []) if isinstance(data.get("fields"), list) else []:
+        if not isinstance(item, dict):
+            continue
+        field = canonical_field_name(item.get("field"))
+        is_other = field not in CORE_FIELDS
+        if is_other:
+            other.setdefault(field, item.get("value", ""))
+        fields.append({
+            "sourceText": str(item.get("sourceText", "")),
+            "field": field,
+            "value": str(item.get("value", "")),
+            "confidence": clamp_int(item.get("confidence"), 0, 100),
+            "status": normalize_status(item.get("status")),
+            "isOther": is_other,
+        })
 
     raw_confidence = data.get("confidence") if isinstance(data.get("confidence"), dict) else {}
-    filled = sum(1 for f in CORE_FIELDS if json_schema.get(f) not in ("", "-", None, 0))
-    pct = round((filled / len(CORE_FIELDS)) * 100)
-    confidence = {
-        "overall": clamp_int(raw_confidence.get("overall", pct), 0, 100),
-        "ocr": clamp_int(raw_confidence.get("ocr", 96), 0, 100),
-        "slm": clamp_int(raw_confidence.get("slm", 98), 0, 100),
-        "mapping": clamp_int(raw_confidence.get("mapping", pct), 0, 100),
-        "completeness": clamp_int(raw_confidence.get("completeness", pct), 0, 100),
-    }
-
+    confidence = {key: clamp_int(raw_confidence.get(key), 0, 100) for key in ("overall", "ocr", "slm", "mapping", "completeness")}
     review_items: list[dict[str, Any]] = []
-    if isinstance(data.get("review_items"), list) and len(data["review_items"]) > 0:
-        for item in data["review_items"]:
-            if not isinstance(item, dict):
-                continue
-            field = canonical_field_name(item.get("field"))
-            review_items.append({
-                "field": field,
-                "ocrValue": str(item.get("ocrValue", "")),
-                "slmValue": str(item.get("slmValue", "")),
-                "confidence": clamp_int(item.get("confidence"), 0, 100),
-                "status": "review",
-                "isOther": field not in CORE_FIELDS,
-            })
-    else:
-        review_items = [
-            {"field": f, "ocrValue": "-", "slmValue": str(json_schema.get(f, "")), "confidence": 45, "status": "review", "isOther": False}
-            for f in CORE_FIELDS
-            if json_schema.get(f) in ("", "-", None, 0)
-        ]
-
-    tokens_estimated = max(int(elapsed_sec * 35), 60)
-    performance = {
-        "accuracy_pct": float(pct),
-        "inference_time_sec": round(elapsed_sec, 2),
-        "tokens_generated": tokens_estimated,
-        "token_speed_tps": round(tokens_estimated / max(elapsed_sec, 0.01), 1),
-        "core_fields_fill_rate_pct": float(pct),
-        "schema_valid": True,
-        "math_integrity_status": "verified" if (float(json_schema.get("total_amount", 0) or 0) > 0) else "no_total",
-        "math_integrity_notes": "SLM CUDA GPU Accelerated Inference",
-        "field_accuracies": {},
-    }
-
-    return apply_review_threshold({
-        "json_schema": json_schema,
-        "fields": fields,
-        "confidence": confidence,
-        "review_items": review_items,
-        "performance": performance,
-    })
+    for item in data.get("review_items", []) if isinstance(data.get("review_items"), list) else []:
+        if not isinstance(item, dict):
+            continue
+        field = canonical_field_name(item.get("field"))
+        review_items.append({
+            "field": field,
+            "ocrValue": str(item.get("ocrValue", "")),
+            "slmValue": str(item.get("slmValue", "")),
+            "confidence": clamp_int(item.get("confidence"), 0, 100),
+            "status": "review",
+            "isOther": field not in CORE_FIELDS,
+        })
+    return apply_review_threshold(
+        {"json_schema": json_schema, "fields": fields, "confidence": confidence, "review_items": review_items},
+        config,
+    )
 
 
 
@@ -835,38 +744,47 @@ class GroundTruthEntry(BaseModel):
 
 @app.get("/api/benchmark/ground-truth")
 def get_benchmark_ground_truth() -> dict[str, Any]:
-    gt_path = BASE_DIR / "ground_truth_dataset.json"
+    gt_path = GROUND_TRUTH_PATH
     if not gt_path.exists():
         raise HTTPException(status_code=404, detail="Ground truth dataset not found")
     return json.loads(gt_path.read_text(encoding="utf-8"))
 
 
 @app.get("/api/benchmark/kfold")
-def get_kfold_report(k: int = 5, seed: int = 42, rerun: bool = False) -> dict[str, Any]:
-    report_path = BASE_DIR / "kfold_evaluation_report.json"
-    need_rerun = rerun or not report_path.exists()
-    if not need_rerun and report_path.exists():
+def get_kfold_report(
+    k: int = 5,
+    seed: int = 42,
+    rerun: bool = False,
+    prompt_variant: str = "zero-shot",
+) -> dict[str, Any]:
+    if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
+        raise HTTPException(status_code=400, detail="Unsupported prompt variant")
+    report_path = REPORT_DIR / "kfold_evaluation_report.json"
+    cached_report: dict[str, Any] | None = None
+    if report_path.exists() and not rerun:
         try:
-            cached = json.loads(report_path.read_text(encoding="utf-8"))
-            if cached.get("k_splits") != k or cached.get("random_seed") != seed:
-                need_rerun = True
-        except Exception:
-            need_rerun = True
-
-    if need_rerun:
+            cached_report = json.loads(report_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            cached_report = None
+    report_matches_request = cached_report and all(
+        cached_report.get(key) == value
+        for key, value in {
+            "k_splits": k,
+            "random_seed": seed,
+            "prompt_variant": prompt_variant,
+        }.items()
+    )
+    if rerun or not report_matches_request:
         try:
-            import importlib
             try:
-                from . import kfold_evaluator
-                importlib.reload(kfold_evaluator)
-                run_kfold_evaluation = kfold_evaluator.run_kfold_evaluation
+                from .kfold_evaluator import run_kfold_evaluation
             except ImportError:
-                import kfold_evaluator
-                importlib.reload(kfold_evaluator)
-                run_kfold_evaluation = kfold_evaluator.run_kfold_evaluation
-            result = run_kfold_evaluation(k_splits=k, random_seed=seed)
-            if result:
-                return result
+                from kfold_evaluator import run_kfold_evaluation
+            run_kfold_evaluation(
+                k_splits=k,
+                random_seed=seed,
+                prompt_variant=prompt_variant,
+            )
         except Exception as exc:
             raise HTTPException(status_code=500, detail=f"K-Fold evaluation failed: {exc}") from exc
     if not report_path.exists():
@@ -874,21 +792,9 @@ def get_kfold_report(k: int = 5, seed: int = 42, rerun: bool = False) -> dict[st
     return json.loads(report_path.read_text(encoding="utf-8"))
 
 
-@app.get("/api/benchmark/image/{file_name}")
-def get_benchmark_image(file_name: str) -> Any:
-    from fastapi.responses import FileResponse
-    base_testing_dir = Path(r"E:\Logistics To JSON\To_Testing")
-    safe_name = Path(file_name).name
-    img_path = base_testing_dir / safe_name
-    if not img_path.exists() or not img_path.is_file():
-        raise HTTPException(status_code=404, detail=f"Image {safe_name} not found")
-    media = "image/png" if safe_name.lower().endswith(".png") else "image/jpeg"
-    return FileResponse(str(img_path), media_type=media)
-
-
 @app.post("/api/benchmark/save-ground-truth")
 def save_ground_truth(entry: GroundTruthEntry) -> dict[str, Any]:
-    gt_path = BASE_DIR / "ground_truth_dataset.json"
+    gt_path = GROUND_TRUTH_PATH
     if gt_path.exists():
         data = json.loads(gt_path.read_text(encoding="utf-8"))
     else:
@@ -922,6 +828,7 @@ def save_ground_truth(entry: GroundTruthEntry) -> dict[str, Any]:
     else:
         documents.append(saved_entry)
     data["total_documents"] = len(documents)
+    gt_path.parent.mkdir(parents=True, exist_ok=True)
     gt_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     return {

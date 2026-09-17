@@ -9,6 +9,8 @@
 const RAW_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").trim().replace(/\/+$/, "");
 const RAW_TOKEN = (import.meta.env.VITE_API_TOKEN || "").trim();
 
+export const API_BASE_URL = RAW_BASE_URL;
+
 export function getApiBaseUrl(): string {
   return RAW_BASE_URL;
 }
