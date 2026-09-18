@@ -456,6 +456,28 @@ def _self_check_scoring() -> None:
 _self_check_scoring()
 
 
+def _get_document_ground_truth(document: dict[str, Any]) -> dict[str, Any]:
+    """Retrieve ground truth, prioritizing live individual label file in labels_json."""
+    file_name = document.get("file_name", "")
+    stem = pathlib.Path(file_name).stem if file_name else ""
+    doc_id = document.get("id", "")
+    labels_dir = DATASET_DIR / "labels_json"
+    candidates = []
+    if stem:
+        candidates.append(labels_dir / f"{stem}.json")
+    if doc_id:
+        candidates.append(labels_dir / f"{doc_id}.json")
+    for cand in candidates:
+        if cand.is_file():
+            try:
+                data = json.loads(cand.read_text(encoding="utf-8"))
+                if "ground_truth" in data and isinstance(data["ground_truth"], dict):
+                    return data["ground_truth"]
+            except Exception:
+                pass
+    return document.get("ground_truth", {})
+
+
 def run_kfold_evaluation(
     k_splits: int = 5,
     random_seed: int = 42,
@@ -517,7 +539,7 @@ def run_kfold_evaluation(
         baseline_scores = []
         for document in validation_documents:
             prediction, trace = _extract(document, prompt_snapshot, force_rerun=force_rerun)
-            truth = document.get("ground_truth", {})
+            truth = _get_document_ground_truth(document)
             baseline = _baseline_prediction(trace["ocr"]["ocr_text"], baseline_map.get(document.get("file_name", ""), {}))
             slm_score = _score(prediction, truth)
             baseline_score = _score(baseline, truth)

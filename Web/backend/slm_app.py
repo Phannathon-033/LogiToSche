@@ -1049,7 +1049,23 @@ def get_benchmark_ground_truth() -> dict[str, Any]:
     gt_path = GROUND_TRUTH_PATH
     if not gt_path.exists():
         raise HTTPException(status_code=404, detail="Ground truth dataset not found")
-    return json.loads(gt_path.read_text(encoding="utf-8"))
+    data = json.loads(gt_path.read_text(encoding="utf-8"))
+    labels_dir = pathlib.Path(r"E:\Logistics To JSON\To_Testing\labels_json")
+    if labels_dir.is_dir() and "documents" in data:
+        for doc in data["documents"]:
+            file_name = doc.get("file_name", "")
+            stem = pathlib.Path(file_name).stem if file_name else ""
+            doc_id = doc.get("id", "")
+            for candidate in [labels_dir / f"{stem}.json", labels_dir / f"{doc_id}.json"]:
+                if candidate.is_file():
+                    try:
+                        lbl_data = json.loads(candidate.read_text(encoding="utf-8"))
+                        if "ground_truth" in lbl_data and isinstance(lbl_data["ground_truth"], dict):
+                            doc["ground_truth"] = lbl_data["ground_truth"]
+                        break
+                    except Exception:
+                        pass
+    return data
 
 
 @app.get("/api/benchmark/kfold")
