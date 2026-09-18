@@ -496,6 +496,16 @@ def run_kfold_evaluation(
     elif document_limit:
         documents = documents[:document_limit]
 
+    # Safeguard: Keep only documents with an existing physical file
+    valid_documents = []
+    for d in documents:
+        try:
+            _document_path(d)
+            valid_documents.append(d)
+        except FileNotFoundError:
+            continue
+    documents = valid_documents
+
     is_single_doc = len(documents) == 1 or k_splits <= 1
     if is_single_doc:
         k_splits = 1
@@ -626,6 +636,7 @@ def run_kfold_evaluation(
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     report_file = REPORT_DIR / f"{run_id}_evaluation.json"
     prediction_file = REPORT_DIR / f"{run_id}_predictions.json"
+    report["prediction_file"] = str(prediction_file)
     _write_json(
         prediction_file,
         {
