@@ -334,7 +334,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         timer2 = setTimeout(() => {
           setRunProgress({
             step: 3,
-            stepText: `ขั้นตอนที่ 3/4: ประมวลผล Fold 1 ถึง Fold ${targetK} และคำนวณเมทริกซ์เปรียบเทียบ Baseline...`,
+            stepText: `ขั้นตอนที่ 3/4: ประมวลผล Fold 1 ถึง Fold ${targetK} และคำนวณเมทริกซ์ 11 ฟิลด์มาตรฐาน...`,
             progressPct: 80,
           });
         }, 500);
@@ -456,31 +456,25 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     const header =
       `| ฟิลด์ข้อมูล (Core Fields) | ` +
       kfoldReport.folds.map((f) => `Fold ${f.fold} (%)`).join(" | ") +
-      ` | แบบเดิม (Baseline) | โมเดลนำเสนอ (Qwen SLM) | ส่วนต่าง (Δ) |`;
-    const sep = `| :--- | ` + kfoldReport.folds.map(() => `:---:`).join(" | ") + ` | :---: | :---: | :---: |`;
+      ` | ค่าเฉลี่ยความแม่นยำ (Mean ± SD) | F1-Score (%) |`;
+    const sep = `| :--- | ` + kfoldReport.folds.map(() => `:---:`).join(" | ") + ` | :---: | :---: |`;
     lines.push(header);
     lines.push(sep);
 
     for (const [key, meta] of Object.entries(FIELD_LABELS)) {
       const perf = kfoldReport.field_performance[key];
-      const baseScores = kfoldReport.baseline_model?.field_scores[key];
       if (perf) {
         const scores = perf.scores_per_fold.map((s) => `${s.toFixed(1)}%`).join(" | ");
-        const baseDisplay = baseScores ? `${baseScores.mean.toFixed(1)}% ± ${baseScores.std.toFixed(1)}%` : "-";
-        const diff = baseScores ? (perf.mean_accuracy_pct - baseScores.mean).toFixed(1) : "-";
-        lines.push(`| ${meta.th} (${meta.en}) | ${scores} | ${baseDisplay} | **${perf.display}** | **+${diff}%** |`);
+        const f1Display = perf.mean_f1_score_pct ? `${perf.mean_f1_score_pct.toFixed(1)}%` : "-";
+        lines.push(`| ${meta.th} (${meta.en}) | ${scores} | **${perf.display}** | ${f1Display} |`);
       }
     }
 
     const foldAccs = kfoldReport.folds.map((f) => `**${f.accuracy_pct.toFixed(1)}%**`).join(" | ");
-    const baseMeanAcc = kfoldReport.baseline_metrics_summary?.accuracy_display || "-";
-    const deltaAcc = kfoldReport.delta_improvement?.accuracy_delta_pct;
-    lines.push(`| **ความแม่นยำภาพรวม (Overall Accuracy)** | ${foldAccs} | ${baseMeanAcc} | **${kfoldReport.metrics_summary.accuracy_display}** | **${displayDelta(deltaAcc ?? null)}** |`);
+    lines.push(`| **ความแม่นยำภาพรวม (Overall Accuracy)** | ${foldAccs} | **${kfoldReport.metrics_summary.accuracy_display}** | - |`);
 
     const foldF1s = kfoldReport.folds.map((f) => `${f.f1_score_pct.toFixed(1)}%`).join(" | ");
-    const baseMeanF1 = kfoldReport.baseline_metrics_summary?.f1_display || "-";
-    const deltaF1 = kfoldReport.delta_improvement?.f1_delta_pct;
-    lines.push(`| **F1-Score รวม (Overall F1-Score)** | ${foldF1s} | ${baseMeanF1} | **${kfoldReport.metrics_summary.f1_display}** | **${displayDelta(deltaF1 ?? null)}** |`);
+    lines.push(`| **F1-Score รวม (Overall F1-Score)** | ${foldF1s} | - | **${kfoldReport.metrics_summary.f1_display}** |`);
 
     navigator.clipboard.writeText(lines.join("\n"));
     setCopySuccess(true);
@@ -503,17 +497,17 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   function handleDownloadCsv() {
     if (!kfoldReport) return;
     const rows = [
-      ["Field", ...kfoldReport.folds.map((f) => `Fold ${f.fold}`), "Baseline Mean", "Proposed SLM Mean", "Delta Improvement"],
+      ["Field", ...kfoldReport.folds.map((f) => `Fold ${f.fold}`), "Mean Accuracy", "Precision", "Recall", "F1 Score"],
     ];
     for (const [key, meta] of Object.entries(FIELD_LABELS)) {
       const perf = kfoldReport.field_performance[key];
-      const baseScores = kfoldReport.baseline_model?.field_scores[key];
       if (perf) {
         const scores = perf.scores_per_fold.map((s) => s.toFixed(2));
-        const bMean = baseScores ? baseScores.mean.toFixed(2) : "-";
         const pMean = perf.mean_accuracy_pct.toFixed(2);
-        const diff = baseScores ? (perf.mean_accuracy_pct - baseScores.mean).toFixed(2) : "-";
-        rows.push([meta.en, ...scores, bMean, pMean, `+${diff}%`]);
+        const pPrec = (perf.mean_precision_pct ?? 0).toFixed(2);
+        const pRec = (perf.mean_recall_pct ?? 0).toFixed(2);
+        const pF1 = (perf.mean_f1_score_pct ?? 0).toFixed(2);
+        rows.push([meta.en, ...scores, `${pMean}%`, `${pPrec}%`, `${pRec}%`, `${pF1}%`]);
       }
     }
     const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + rows.map((e) => e.join(",")).join("\n");
@@ -944,7 +938,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             }`}
           >
             <BarChart3 className="h-4 w-4" />
-            <span>1. ภาพรวมผลการทดสอบ & เปรียบเทียบโมเดล (Overview & Comparison)</span>
+            <span>1. ภาพรวมผลการประเมินโมเดล Qwen SLM (Overview & Performance)</span>
           </button>
           <button
             type="button"
@@ -1355,14 +1349,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                           Fold {f.fold}
                         </th>
                       ))}
-                      <th className="p-3.5 text-center bg-slate-100/80 text-slate-700 min-w-[130px]">
-                        แบบเดิม (Baseline)
+                      <th className="p-3.5 text-center bg-blue-50/80 text-blue-950 font-black min-w-[160px]">
+                        ความแม่นยำเฉลี่ย (Mean ± SD)
                       </th>
-                      <th className="p-3.5 text-center bg-blue-50/80 text-blue-950 font-black min-w-[140px]">
-                        โมเดลนำเสนอ (Qwen SLM)
-                      </th>
-                      <th className="p-3.5 text-center bg-emerald-50/80 text-emerald-900 font-black min-w-[100px]">
-                        ส่วนต่าง (Δ)
+                      <th className="p-3.5 text-center bg-indigo-50/80 text-indigo-950 font-black min-w-[110px]">
+                        สถานะประเมิน
                       </th>
                     </tr>
                   </thead>
@@ -1370,8 +1361,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                     {Object.entries(FIELD_LABELS).map(([key, meta]) => {
                       const Icon = meta.icon;
                       const perf = kfoldReport?.field_performance[key];
-                      const baseScores = kfoldReport?.baseline_model?.field_scores[key];
-                      const diff = baseScores && perf ? perf.mean_accuracy_pct - baseScores.mean : null;
 
                       return (
                         <tr key={key} className="hover:bg-blue-50/20 transition">
@@ -1400,9 +1389,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                               -
                             </td>
                           )}
-                          <td className="p-3 text-center font-mono text-slate-600 bg-slate-50/50">
-                            {baseScores ? `${baseScores.mean.toFixed(1)}% ± ${baseScores.std.toFixed(1)}%` : "-"}
-                          </td>
                           <td className="p-3 text-center font-mono font-black text-blue-900 bg-blue-50/40">
                             <div>{perf?.display || "-"}</div>
                             {perf && (
@@ -1411,8 +1397,22 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                               </div>
                             )}
                           </td>
-                          <td className="p-3 text-center font-mono font-bold text-emerald-600 bg-emerald-50/30">
-                            {displayDelta(diff)}
+                          <td className="p-3 text-center">
+                            {perf ? (
+                              <span
+                                className={`font-mono text-[10.5px] font-black px-2 py-0.5 rounded-md border ${
+                                  perf.mean_accuracy_pct >= 85
+                                    ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+                                    : perf.mean_accuracy_pct >= 70
+                                    ? "text-blue-700 bg-blue-50 border-blue-200"
+                                    : "text-amber-700 bg-amber-50 border-amber-200"
+                                }`}
+                              >
+                                {perf.mean_accuracy_pct >= 85 ? "ดีเยี่ยม" : perf.mean_accuracy_pct >= 70 ? "ผ่านเกณฑ์" : "ต้องตรวจทาน"}
+                              </span>
+                            ) : (
+                              "-"
+                            )}
                           </td>
                         </tr>
                       );
@@ -1434,14 +1434,13 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                           {f.accuracy_pct.toFixed(1)}%
                         </td>
                       ))}
-                      <td className="p-3 text-center font-mono text-slate-700 bg-slate-100">
-                        {kfoldReport?.baseline_metrics_summary?.accuracy_display || "-"}
-                      </td>
                       <td className="p-3 text-center font-mono text-blue-900 bg-blue-100 font-bold">
                         🏆 {kfoldReport?.metrics_summary?.accuracy_display}
                       </td>
-                      <td className="p-3 text-center font-mono font-black text-emerald-700 bg-emerald-100">
-                        {displayDelta(deltaAcc)}
+                      <td className="p-3 text-center">
+                        <span className="rounded-md bg-emerald-100 border border-emerald-300 px-2 py-0.5 text-[11px] font-black text-emerald-800">
+                          ผ่านเกณฑ์ประเมิน
+                        </span>
                       </td>
                     </tr>
 
@@ -1461,14 +1460,13 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                           {f.f1_score_pct.toFixed(1)}%
                         </td>
                       ))}
-                      <td className="p-3 text-center font-mono text-slate-700 bg-indigo-50/30">
-                        {kfoldReport?.baseline_metrics_summary?.f1_display || "-"}
-                      </td>
                       <td className="p-3 text-center font-mono text-indigo-900 bg-indigo-100 font-bold">
                         🏆 {kfoldReport?.metrics_summary?.f1_display}
                       </td>
-                      <td className="p-3 text-center font-mono font-black text-emerald-700 bg-emerald-100">
-                        {displayDelta(deltaF1)}
+                      <td className="p-3 text-center">
+                        <span className="rounded-md bg-indigo-100 border border-indigo-300 px-2 py-0.5 text-[11px] font-black text-indigo-800">
+                          ประสิทธิภาพสูง
+                        </span>
                       </td>
                     </tr>
                   </tbody>
@@ -1483,7 +1481,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 <span>ข้อสรุปผลการทดลองทางวิทยาศาสตร์ (Research Finding & Thesis Note)</span>
               </h4>
               <p className="text-xs text-slate-700 leading-relaxed">
-                การทดสอบ <b>{kfoldReport?.method || "Shuffled K-Fold"}</b> รายงานค่า F1-Score เฉลี่ย <b>{kfoldReport?.metrics_summary?.f1_display || "-"}</b> เทียบกับ Baseline <b>{formatPercent(baseF1)}</b> (Δ = {displayDelta(deltaF1)}) โดยรายงานนี้เป็นผลจาก Run ID และ Fold manifest ที่แสดงด้านบน
+                การทดสอบ <b>{kfoldReport?.method || "Shuffled K-Fold"}</b> รายงานค่าความแม่นยำเฉลี่ย <b>{kfoldReport?.metrics_summary?.accuracy_display || "-"}</b> และ F1-Score เฉลี่ย <b>{kfoldReport?.metrics_summary?.f1_display || "-"}</b> ผ่านการประเมิน 11 ฟิลด์มาตรฐานจากโมเดล Qwen2.5-1.5B (CUDA) โดยรายงานนี้เป็นผลจาก Run ID และ Fold manifest ที่แสดงด้านบน
               </p>
             </div>
           </div>
