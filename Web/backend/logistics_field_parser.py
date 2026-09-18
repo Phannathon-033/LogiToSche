@@ -42,6 +42,7 @@ def repair_ocr_typos(text: str) -> str:
     t = re.sub(r'\b(datr|dtae|dats|datc|dare)\b', 'date', t, flags=re.I)
     t = re.sub(r'\b(inv[.\s]*datr|inv[.\s]*dare)\b', 'inv date', t, flags=re.I)
     t = re.sub(r'(?<=\b)(\d{1,2})[7/](\d{1,2})[7/](\d{2,4})(?=\b)', r'\1/\2/\3', t)
+    t = re.sub(r'(?:[ึ\s]|\b)(0?[1-9]|1[0-2])[7/ึ]([0-2][0-9]|3[0-1])[/7ึ](\d{2,4})\b', r'\1/\2/\3', t)
 
     # 3. Parties / Client / Customer / Agency Typos
     t = re.sub(r'\b(clibnt|clent|clint)\b', 'client', t, flags=re.I)
@@ -63,6 +64,8 @@ def repair_ocr_typos(text: str) -> str:
     t = re.sub(r'\b(sub\s*totai|subtotai)\b', 'subtotal', t, flags=re.I)
     t = re.sub(r'\b(amouht|amout)\b', 'amount', t, flags=re.I)
     t = re.sub(r'S\s*(\d+\.\d{2})', r'$\1', t)
+    t = re.sub(r'(?:US\s*S|US\$|U\.S\.\$)', 'USD ', t, flags=re.I)
+    t = re.sub(r'(?<=\s)S\s*(\d+)', r'$\1', t)
 
     # 6. Locations
     t = re.sub(r'\b(nev york)\b', 'new york', t, flags=re.I)
@@ -590,12 +593,16 @@ def parse_grounded_currency(text: str) -> tuple[str, str]:
         return "USD", "$"
 
     t = repair_ocr_typos(text)
-    m = re.search(r'(?:บาท|THB|฿|\bbaht\b)', t, re.IGNORECASE)
-    if m:
-        return "THB", m.group(0)
-    m = re.search(r'(?:\$|\bUSD\b|\bdollar\b)', t, re.IGNORECASE)
-    if m:
-        return "USD", m.group(0)
+    m_usd = re.search(r'(?:\$|\bUSD\b|\bdollar\b)', t, re.IGNORECASE)
+    m_thb = re.search(r'(?:บาท|\bTHB\b|฿|\bbaht\b)', t, re.IGNORECASE)
+    if m_usd and not m_thb:
+        return "USD", m_usd.group(0)
+    if m_thb and not m_usd:
+        return "THB", m_thb.group(0)
+    if m_usd and m_thb:
+        idx_usd = t.find("$") if "$" in t else t.lower().find("usd")
+        idx_thb = t.find("บาท") if "บาท" in t else (t.find("฿") if "฿" in t else t.lower().find("thb"))
+        return ("USD", "$") if (idx_usd != -1 and (idx_thb == -1 or idx_usd < idx_thb)) else ("THB", "THB")
     m = re.search(r'(?:€|\bEUR\b|\beuro\b)', t, re.IGNORECASE)
     if m:
         return "EUR", m.group(0)

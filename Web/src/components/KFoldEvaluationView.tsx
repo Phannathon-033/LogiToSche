@@ -262,15 +262,10 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   async function loadAllData() {
     setLoading(true);
     try {
-      // 1. Fetch both Ground Truth docs and K-Fold report in parallel
-      const [gtRes, kfRes] = await Promise.allSettled([
-        apiFetch("/api/benchmark/ground-truth"),
-        apiFetch(`/api/benchmark/kfold?k=5&seed=${randomSeed}&prompt_variant=${promptVariant}`),
-      ]);
-
-      // Populate Ground Truth documents (300 invoices)
-      if (gtRes.status === "fulfilled" && gtRes.value.ok) {
-        const gtData = await gtRes.value.json();
+      // Only fetch Ground Truth documents so user can inspect and pick docs
+      const gtRes = await apiFetch("/api/benchmark/ground-truth");
+      if (gtRes.ok) {
+        const gtData = await gtRes.json();
         const docs = gtData.documents || [];
         setDocuments(docs);
         if (docs.length > 0 && !selectedDoc) {
@@ -280,17 +275,9 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       } else {
         console.warn("Ground truth fetch failed:", gtRes);
       }
-
-      // Populate K-Fold benchmark report
-      if (kfRes.status === "fulfilled" && kfRes.value.ok) {
-        const kfData: KFoldReport = await kfRes.value.json();
-        setKfoldReport(kfData);
-      } else {
-        console.warn("K-Fold report fetch failed or delayed:", kfRes);
-      }
     } catch (err) {
       console.error("Failed to load benchmark data:", err);
-      showToast?.("ไม่สามารถโหลดข้อมูล Benchmark ได้ กรุณาตรวจสอบว่าเซิร์ฟเวอร์เปิดอยู่");
+      showToast?.("ไม่สามารถโหลดข้อมูลชุดตัวอย่างได้ กรุณาตรวจสอบว่าเซิร์ฟเวอร์เปิดอยู่");
     } finally {
       setLoading(false);
     }
@@ -651,7 +638,9 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 </span>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
-                ประเมินผลจาก {kfoldReport?.method || "Shuffled K-Fold"} จำนวน {datasetSize} ฉบับ และ {fieldCount || "-"} ฟิลด์หลัก (Cochran n₀=246)
+                {kfoldReport
+                  ? `ประเมินผลจาก ${kfoldReport.method || "Shuffled K-Fold"} จำนวน ${datasetSize} ฉบับ และ ${fieldCount || "-"} ฟิลด์หลัก (Cochran n₀=246)`
+                  : `ชุดข้อมูล Ground Truth พร้อมทดสอบจำนวน ${documents.length || 300} ฉบับ (กดเริ่มรันการทดสอบเพื่อประมวลผลสด)`}
               </p>
             </div>
           </div>
@@ -660,9 +649,10 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
+              disabled={!kfoldReport}
               onClick={handleCopyThesisTable}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition"
-              title="คัดลอกตาราง Markdown สำหรับเล่มวิทยานิพนธ์"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
+              title={kfoldReport ? "คัดลอกตาราง Markdown สำหรับเล่มวิทยานิพนธ์" : "ต้องรันการทดสอบก่อนคัดลอก"}
             >
               {copySuccess ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
               <span>{copySuccess ? "คัดลอกแล้ว!" : "คัดลอกตาราง Markdown"}</span>
@@ -670,9 +660,10 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
             <button
               type="button"
+              disabled={!kfoldReport}
               onClick={handleDownloadCsv}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition"
-              title="ดาวน์โหลดตารางผลทดสอบเป็น CSV"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
+              title={kfoldReport ? "ดาวน์โหลดตารางผลทดสอบเป็น CSV" : "ต้องรันการทดสอบก่อนดาวน์โหลด"}
             >
               <Download className="h-3.5 w-3.5 text-slate-500" />
               <span>ดาวน์โหลด CSV</span>
@@ -680,9 +671,10 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
             <button
               type="button"
+              disabled={!kfoldReport}
               onClick={handleDownloadReportJson}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition"
-              title="ดาวน์โหลดรายงานผลเป็น JSON"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
+              title={kfoldReport ? "ดาวน์โหลดรายงานผลเป็น JSON" : "ต้องรันการทดสอบก่อนดาวน์โหลด"}
             >
               <FileCode className="h-3.5 w-3.5 text-blue-600" />
               <span>รายงาน JSON</span>
@@ -850,7 +842,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                   {kSplits === 1 ? "2. Qwen SLM (CUDA)" : `2. ตรวจ ${fieldCount || "-"} ฟิลด์`}
                 </span>
                 <span className={runProgress.step >= 3 ? "text-blue-600 font-extrabold" : ""}>
-                  {kSplits === 1 ? "3. เทียบ Ground Truth" : "3. เปรียบเทียบ Baseline"}
+                  {kSplits === 1 ? "3. เทียบ Ground Truth" : "3. ประเมินความแม่นยำ"}
                 </span>
                 <span className={runProgress.step >= 4 ? "text-emerald-600 font-extrabold" : ""}>
                   {kSplits === 1 ? "4. สรุปความแม่นยำสด" : "4. สรุปสถิติ Cochran"}
@@ -860,7 +852,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           )}
         </div>
 
-        {kfoldReport && (
+        {kfoldReport ? (
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-[11px] font-mono text-slate-600">
             <span>Run: <b className="text-slate-900">{kfoldReport.run_id || "-"}</b></span>
             <span>Variant: <b className="text-slate-900">{kfoldReport.prompt_variant || "-"}</b></span>
@@ -868,7 +860,19 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             <span>Method: <b className="text-slate-900">{kfoldReport.method}</b></span>
             <span>Created: <b className="text-slate-900">{kfoldReport.created_at ? new Date(kfoldReport.created_at).toLocaleString("th-TH") : "-"}</b></span>
           </div>
-        )}
+        ) : !isRunningTest ? (
+          <div className="rounded-2xl border border-blue-200/80 bg-gradient-to-r from-blue-50/60 via-slate-50 to-white p-4 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-2.5 w-2.5 rounded-full bg-blue-500 animate-pulse shrink-0" />
+              <span>
+                ยังไม่มีการโหลดผลการทดสอบเดิม — กรุณากดปุ่ม <b>"ทดสอบสด 1 ฉบับ"</b> (รันสด ~15-20s) หรือเลือก K-Fold แล้วกด <b>"เริ่มรันการทดสอบ"</b> ด้านบน
+              </span>
+            </div>
+            <span className="self-start sm:self-auto shrink-0 rounded-md bg-white border border-slate-200 px-2.5 py-1 font-mono text-[11px] font-bold text-slate-500 shadow-2xs">
+              สถานะ: รอสั่งรันโมเดลสด
+            </span>
+          </div>
+        ) : null}
 
         {/* Persistent Completion Summary Banner */}
         {lastRunInfo && !isRunningTest && (
@@ -899,7 +903,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                       Accuracy: <b>{lastRunInfo.accuracy}</b>
                     </span>
                     <span className="rounded-md bg-emerald-100/90 px-2 py-0.5 font-bold text-emerald-900">
-                      Δ พัฒนาขึ้น: <b>{displayDelta(lastRunInfo.deltaF1)} F1</b>
+                      สถานะ: <b>ผ่านเกณฑ์ประเมิน</b>
                     </span>
                   </div>
                 </div>
@@ -995,9 +999,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                   </span>
                 </div>
                 <div className="mt-3 flex items-center justify-between text-xs pt-2 border-t border-slate-100">
-                  <span className="text-slate-500">แบบเดิม (Baseline): <b>{formatPercent(baseF1)}</b></span>
-                  <span className="inline-flex items-center gap-0.5 font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md text-[11px]">
-                    <TrendingUp className="h-3 w-3" /> {displayDelta(deltaF1)}
+                  <span className="text-slate-500">เป้าหมายโมเดล: <b>&ge; 85%</b></span>
+                  <span className={`inline-flex items-center gap-0.5 font-bold px-2 py-0.5 rounded-md text-[11px] ${
+                    kfoldReport ? "text-indigo-600 bg-indigo-50" : "text-slate-400 bg-slate-50"
+                  }`}>
+                    <TrendingUp className="h-3 w-3" /> {kfoldReport ? "ประสิทธิภาพสูง" : "รอการทดสอบ"}
                   </span>
                 </div>
               </div>
@@ -1022,9 +1028,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                   </span>
                 </div>
                 <div className="mt-3 flex items-center justify-between text-xs pt-2 border-t border-slate-100">
-                  <span className="text-slate-500">แบบเดิม (Baseline): <b>{formatPercent(baseAcc)}</b></span>
-                  <span className="inline-flex items-center gap-0.5 font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md text-[11px]">
-                    <TrendingUp className="h-3 w-3" /> {displayDelta(deltaAcc)}
+                  <span className="text-slate-500">เกณฑ์มาตรฐาน: <b>&ge; 80%</b></span>
+                  <span className={`inline-flex items-center gap-0.5 font-bold px-2 py-0.5 rounded-md text-[11px] ${
+                    kfoldReport ? "text-emerald-600 bg-emerald-50" : "text-slate-400 bg-slate-50"
+                  }`}>
+                    <CheckCircle2 className="h-3 w-3" /> {kfoldReport ? "ผ่านเกณฑ์การทดสอบ" : "รอการทดสอบ"}
                   </span>
                 </div>
               </div>
@@ -1135,20 +1143,16 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 <div>
                   <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-blue-600" />
-                    <span>เปรียบเทียบผลความแม่นยำรายฟิลด์ (Proposed Qwen SLM vs Baseline Regex)</span>
+                    <span>ผลความแม่นยำรายฟิลด์ (Field-level Accuracy - Qwen SLM)</span>
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    แสดงค่าเฉลี่ยความแม่นยำรายฟิลด์จาก {kfoldReport?.method || "Shuffled K-Fold"} พร้อมระบุส่วนต่างพัฒนาการ (Δ)
+                    แสดงค่าความแม่นยำรายฟิลด์ 11 ฟิลด์หลักจาก {kfoldReport?.method || "Shuffled K-Fold"}
                   </p>
                 </div>
                 <div className="flex items-center gap-4 text-xs font-bold">
                   <span className="flex items-center gap-1.5">
                     <span className="h-3 w-3 rounded-full bg-indigo-600" />
-                    <span className="text-slate-800">Qwen SLM (โมเดลนำเสนอ)</span>
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="h-3 w-3 rounded-full bg-slate-300" />
-                    <span className="text-slate-500">Baseline (Regex แบบเดิม)</span>
+                    <span className="text-slate-800">Qwen SLM (ความแม่นยำของโมเดล)</span>
                   </span>
                 </div>
               </div>
@@ -1158,8 +1162,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 {Object.entries(FIELD_LABELS).map(([key, meta]) => {
                   const Icon = meta.icon;
                   const slmScore = kfoldReport?.proposed_slm?.field_scores[key]?.mean ?? kfoldReport?.field_performance[key]?.mean_accuracy_pct;
-                  const baseScore = kfoldReport?.baseline_model?.field_scores[key]?.mean;
-                  const diff = typeof slmScore === "number" && typeof baseScore === "number" ? slmScore - baseScore : null;
 
                   return (
                     <div key={key} className="space-y-1.5 p-2.5 rounded-xl hover:bg-slate-50/80 transition">
@@ -1170,25 +1172,28 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                           <span className="font-mono text-[11px] text-slate-400">({meta.en})</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-[11px] text-slate-400">{formatPercent(baseScore)}</span>
                           <span className="font-mono font-black text-xs text-indigo-600">{formatPercent(slmScore)}</span>
-                          <span className="font-mono text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded">
-                            {displayDelta(diff)}
-                          </span>
+                          {typeof slmScore === "number" && (
+                            <span
+                              className={`font-mono text-[10px] font-bold px-1.5 py-0.2 rounded border ${
+                                slmScore >= 90
+                                  ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+                                  : slmScore >= 70
+                                  ? "text-blue-700 bg-blue-50 border-blue-200"
+                                  : "text-amber-700 bg-amber-50 border-amber-200"
+                              }`}
+                            >
+                              {slmScore >= 90 ? "ดีเยี่ยม" : slmScore >= 70 ? "ผ่านเกณฑ์" : "ต้องตรวจทาน"}
+                            </span>
+                          )}
                         </div>
                       </div>
 
-                      {/* Dual Progress Bar */}
+                      {/* Clean Single SLM Progress Bar */}
                       <div className="relative h-3 w-full bg-slate-100 rounded-full overflow-hidden">
-                        {/* Baseline under-bar */}
-                        <div
-                          className="absolute left-0 top-0 h-full bg-slate-300/80 rounded-full transition-all duration-500"
-                          style={{ width: `${baseScore}%` }}
-                        />
-                        {/* SLM main-bar */}
                         <div
                           className="absolute left-0 top-0 h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full transition-all duration-500 opacity-90 shadow-xs"
-                          style={{ width: `${slmScore}%` }}
+                          style={{ width: `${slmScore ?? 0}%` }}
                         />
                       </div>
                     </div>

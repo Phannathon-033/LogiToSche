@@ -48,9 +48,9 @@ MAX_BENCHMARK_EXAMPLES = 5
 MAX_BENCHMARK_EXAMPLE_LENGTH = 20000
 
 try:
-    from .logistics_field_parser import evaluate_11_fields, parse_grounded_amounts, parse_robust_quantity
+    from .logistics_field_parser import evaluate_11_fields, parse_grounded_amounts, parse_robust_quantity, repair_ocr_typos
 except ImportError:
-    from logistics_field_parser import evaluate_11_fields, parse_grounded_amounts, parse_robust_quantity
+    from logistics_field_parser import evaluate_11_fields, parse_grounded_amounts, parse_robust_quantity, repair_ocr_typos
 
 from dotenv import load_dotenv
 
@@ -497,8 +497,8 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
             f"Examples:\n{json.dumps(benchmark_examples, ensure_ascii=False, indent=2)}\n"
         )
 
-    # Incorporate line-level OCR confidence if present
-    ocr_text_to_use = payload.ocr_text
+    # Clean optical OCR typos and incorporate line-level OCR confidence
+    ocr_text_to_use = repair_ocr_typos(payload.ocr_text)
     low_conf_guidance = ""
     if payload.ocr_lines:
         annotated_lines = []
@@ -506,13 +506,14 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
         for line in payload.ocr_lines:
             c = float(line.confidence or 0)
             c_pct = round(c * 100 if c <= 1.0 else c)
-            if 0 < c_pct < 80 and line.text.strip():
-                annotated_lines.append(f"{line.text} [⚠️ OCR conf: {c_pct}%]")
+            rep_text = repair_ocr_typos(line.text)
+            if 0 < c_pct < 80 and rep_text.strip():
+                annotated_lines.append(f"{rep_text} [⚠️ OCR conf: {c_pct}%]")
                 low_count += 1
             else:
-                annotated_lines.append(line.text)
+                annotated_lines.append(rep_text)
+        ocr_text_to_use = "\n".join(annotated_lines)
         if low_count > 0:
-            ocr_text_to_use = "\n".join(annotated_lines)
             low_conf_guidance = "- Lines marked with [⚠️ OCR conf: <80%] have lower optical recognition clarity. Use semantic reasoning to correct obvious character misreadings (e.g. 0 vs O, 1 vs I, punctuation).\n"
 
     if benchmark_variant == "zero-shot":
@@ -527,14 +528,16 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
             "reference_number": "string",
             "unit_price": 0.0,
             "total_amount": 0.0,
-            "currency": "THB | USD | EUR | string",
+            "currency": "USD | THB | EUR | string",
         }
         return (
             "Extract the 11 canonical logistics fields from OCR text into JSON.\n"
             "Fields: document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, currency.\n"
             f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n"
             f"{low_conf_guidance}"
-            "Rules:\n- Numbers must be numeric float without commas.\n- Dates must be YYYY-MM-DD.\n- If missing, use \"\" or 0.0.\n\n"
+            "Rules:\n- Numbers must be numeric float without commas.\n- Dates must be YYYY-MM-DD.\n- If missing, use \"\" or 0.0.\n"
+            "- Currency must match OCR symbols ($/USD for dollar, ฿/THB/บาท for Thai baht). Do NOT default to THB if $ or USD is present.\n"
+            "- Bank names (e.g. ธ.กสิกรไทย, ธนาคาร, KBANK, SCB, BBL) are payment channels, NOT sender or receiver. Put bank info in other.\n\n"
             f"Document type hint: {payload.document_type_hint}\nSource filename: {payload.source_file}\n\n"
             f"Required output shape:\n{json.dumps(zero_shot_schema, ensure_ascii=False, indent=2)}\n\nOCR text:\n{ocr_text_to_use}\n"
         )
@@ -685,6 +688,27 @@ def normalize_slm_output(
             other.setdefault(key, value)
     json_schema["other"] = other
 
+    # Sanitize bank names from sender/receiver (banks are payment channels, not vendors/clients)
+    sender_val = str(json_schema.get("sender", ""))
+    if re.search(r'(?:ธนาคาร|ธ\.\s*|kbank|scb|bbl|krungthai|kasikorn)', sender_val, re.IGNORECASE):
+        other["payment_bank"] = sender_val
+        json_schema["sender"] = ""
+
+    receiver_val = str(json_schema.get("receiver", ""))
+    if re.search(r'(?:ธนาคาร|ธ\.\s*|kbank|scb|bbl|krungthai|kasikorn)', receiver_val, re.IGNORECASE):
+        other["payment_bank"] = receiver_val
+        json_schema["receiver"] = ""
+
+    # Currency Grounding & Disambiguation:
+    curr_val = str(json_schema.get("currency", "")).strip().upper()
+    ocr_combined_text = " ".join(getattr(l, "text", "") if hasattr(l, "text") else (l.get("text", "") if isinstance(l, dict) else "") for l in (ocr_lines or []))
+    has_usd = bool(re.search(r'(?:\$|\bUSD\b|\bdollar\b|S\s*\d)', ocr_combined_text, re.IGNORECASE))
+    has_thb = bool(re.search(r'(?:บาท|\bTHB\b|฿|\bbaht\b)', ocr_combined_text, re.IGNORECASE))
+    if (curr_val in ("THB", "บาท", "") or not curr_val) and has_usd and not has_thb:
+        json_schema["currency"] = "USD"
+    elif (curr_val in ("USD", "$", "") or not curr_val) and has_thb and not has_usd:
+        json_schema["currency"] = "THB"
+
     # Extract real OCR line confidence metrics from PaddleOCR
     valid_ocr_scores: list[int] = []
     if ocr_lines:
@@ -711,6 +735,21 @@ def normalize_slm_output(
         source_txt = str(item.get("sourceText", ""))
         base_c = clamp_int(item.get("confidence"), 0, 100)
         status = normalize_status(item.get("status"))
+
+        if field == "currency" and json_schema.get("currency"):
+            val = json_schema["currency"]
+            if "$" in ocr_combined_text and val == "USD":
+                source_txt = "$"
+        elif field == "sender" and not json_schema.get("sender"):
+            val = ""
+            source_txt = "-"
+            status = "review"
+            base_c = 40
+        elif field == "receiver" and not json_schema.get("receiver"):
+            val = ""
+            source_txt = "-"
+            status = "review"
+            base_c = 40
 
         ocr_match = find_ocr_line_for_value(val, ocr_lines) if val else None
         if ocr_match:
