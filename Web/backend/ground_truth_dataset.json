@@ -1,7 +1,7 @@
 {
   "dataset_name": "Logistics Invoice Ground Truth Dataset (300 Documents - 11 Core Fields)",
   "version": "1.0",
-  "total_documents": 300,
+  "total_documents": 301,
   "core_fields": [
     "document_type",
     "document_number",
@@ -8116,6 +8116,26 @@
         "completeness": 100
       },
       "annotated_at": "2026-09-14 15:39:35"
+    },
+    {
+      "id": "DOC-301",
+      "file_name": "document_1789701648934.png",
+      "category": "invoice",
+      "ground_truth": {
+        "document_type": "invoice",
+        "document_number": "87065032",
+        "document_date": "1987-08-01",
+        "sender": "HOME VIEWER PUBLICATIONS, INC",
+        "receiver": "CLIBNT",
+        "origin": "11 North 2nd Street, Philadelphia, PA 19106",
+        "destination": "NY, 666 Fifth Avenue, New York, NY 10103",
+        "reference_number": "LM 2565",
+        "unit_price": 0,
+        "total_amount": 12675,
+        "currency": "THB"
+      },
+      "annotated_at": "2026-09-18 10:20:49",
+      "status": "verified"
     }
   ]
 }

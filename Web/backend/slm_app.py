@@ -3,6 +3,7 @@ from __future__ import annotations
 import base64
 import json
 import os
+import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -324,6 +325,7 @@ def slm_extract(payload: SlmExtractRequest) -> SlmExtractResponse:
             data,
             enriched_payload.source_file,
             enriched_payload.prompt_config,
+            ocr_lines=enriched_payload.ocr_lines,
         )
         config = prompt_config_for_request(enriched_payload.prompt_config)
         return SlmExtractResponse(
@@ -400,7 +402,7 @@ def get_slm(model_id: str | None = None) -> tuple[Any, Any]:
 
 
 def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
-    benchmark_variant_for_request(payload)
+    benchmark_variant, _ = benchmark_variant_for_request(payload)
     config = prompt_config_for_request(payload.prompt_config)
     tokenizer, model = get_model_for_request(payload.prompt_config)
     messages = [
@@ -409,10 +411,17 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
     ]
     text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer([text], return_tensors="pt").to(model.device)
+    max_tokens = 200 if benchmark_variant == "zero-shot" else 900
+    import time
+    t0 = time.time()
+    print(f"[SLM] Generating JSON for {payload.source_file} (variant={benchmark_variant}, in_tokens={inputs.input_ids.shape[1]}, max_out={max_tokens})...", flush=True)
     with torch.inference_mode():
-        generated_ids = model.generate(**inputs, max_new_tokens=900, do_sample=False, repetition_penalty=1.05)
+        generated_ids = model.generate(**inputs, max_new_tokens=max_tokens, do_sample=False, repetition_penalty=1.05)
+    gen_time = time.time() - t0
     output_ids = generated_ids[0][inputs.input_ids.shape[-1] :]
-    return parse_json_object(tokenizer.decode(output_ids, skip_special_tokens=True))
+    decoded = tokenizer.decode(output_ids, skip_special_tokens=True)
+    print(f"[SLM] Generated {len(output_ids)} tokens in {gen_time:.2f}s ({len(output_ids)/max(gen_time, 0.01):.1f} tps)!", flush=True)
+    return parse_json_object(decoded)
 
 
 def prompt_config_for_request(snapshot: SlmPromptConfig | None) -> dict[str, Any]:
@@ -488,6 +497,47 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
             f"Examples:\n{json.dumps(benchmark_examples, ensure_ascii=False, indent=2)}\n"
         )
 
+    # Incorporate line-level OCR confidence if present
+    ocr_text_to_use = payload.ocr_text
+    low_conf_guidance = ""
+    if payload.ocr_lines:
+        annotated_lines = []
+        low_count = 0
+        for line in payload.ocr_lines:
+            c = float(line.confidence or 0)
+            c_pct = round(c * 100 if c <= 1.0 else c)
+            if 0 < c_pct < 80 and line.text.strip():
+                annotated_lines.append(f"{line.text} [⚠️ OCR conf: {c_pct}%]")
+                low_count += 1
+            else:
+                annotated_lines.append(line.text)
+        if low_count > 0:
+            ocr_text_to_use = "\n".join(annotated_lines)
+            low_conf_guidance = "- Lines marked with [⚠️ OCR conf: <80%] have lower optical recognition clarity. Use semantic reasoning to correct obvious character misreadings (e.g. 0 vs O, 1 vs I, punctuation).\n"
+
+    if benchmark_variant == "zero-shot":
+        zero_shot_schema = {
+            "document_type": "invoice | bill_of_lading | packing_list | purchase_order | unknown",
+            "document_number": "string",
+            "document_date": "YYYY-MM-DD",
+            "sender": "string",
+            "receiver": "string",
+            "origin": "string",
+            "destination": "string",
+            "reference_number": "string",
+            "unit_price": 0.0,
+            "total_amount": 0.0,
+            "currency": "THB | USD | EUR | string",
+        }
+        return (
+            "Extract the 11 canonical logistics fields from OCR text into JSON.\n"
+            "Fields: document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, currency.\n"
+            f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n"
+            f"{low_conf_guidance}"
+            "Rules:\n- Numbers must be numeric float without commas.\n- Dates must be YYYY-MM-DD.\n- If missing, use \"\" or 0.0.\n\n"
+            f"Document type hint: {payload.document_type_hint}\nSource filename: {payload.source_file}\n\n"
+            f"Required output shape:\n{json.dumps(zero_shot_schema, ensure_ascii=False, indent=2)}\n\nOCR text:\n{ocr_text_to_use}\n"
+        )
 
     schema = {
         "json_schema": {
@@ -512,9 +562,10 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
         "Extract logistics fields from Thai or English OCR text into this exact JSON contract.\n"
         "The canonical fields are document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, and currency.\n"
         f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n"
+        f"{low_conf_guidance}"
         f"{benchmark_instruction}\n"
         f"Document type hint: {payload.document_type_hint}\nSource filename: {payload.source_file}\n\n"
-        f"Required output shape:\n{json.dumps(schema, ensure_ascii=False, indent=2)}\n\nOCR text:\n{payload.ocr_text}\n"
+        f"Required output shape:\n{json.dumps(schema, ensure_ascii=False, indent=2)}\n\nOCR text:\n{ocr_text_to_use}\n"
     )
 
 
@@ -551,12 +602,75 @@ def canonical_value(schema: dict[str, Any], field: str) -> Any:
     return 0 if field in NUMERIC_CORE_FIELDS else ""
 
 
+def find_ocr_line_for_value(target_val: Any, ocr_lines: list[Any] | None) -> tuple[str, int] | None:
+    """
+    Matches an extracted field value against OCR lines to find the source text and PaddleOCR confidence score.
+    Returns (matched_ocr_text, confidence_percent) or None if no match found.
+    """
+    if target_val is None or not ocr_lines:
+        return None
+    val_str = str(target_val).strip()
+    if not val_str or val_str in ("-", "0", "0.0", "unknown", "none", "null"):
+        return None
+
+    val_lower = val_str.lower()
+    val_digits = re.sub(r"[^\d]", "", val_str)
+
+    best_match: tuple[str, int] | None = None
+    best_score = -1.0
+
+    for line in ocr_lines:
+        txt = getattr(line, "text", "") if hasattr(line, "text") else (line.get("text", "") if isinstance(line, dict) else "")
+        txt = str(txt).strip()
+        if not txt:
+            continue
+        c = getattr(line, "confidence", 0) if hasattr(line, "confidence") else (line.get("confidence", 0) if isinstance(line, dict) else 0)
+        try:
+            c_val = float(c or 0)
+        except (ValueError, TypeError):
+            c_val = 0.0
+        c_pct = round(c_val * 100 if c_val <= 1.0 else c_val)
+        c_pct = max(0, min(100, c_pct))
+
+        txt_lower = txt.lower()
+
+        # 1. Exact or substring string match
+        if len(val_lower) >= 2:
+            if val_lower == txt_lower:
+                return (txt, c_pct)
+            if val_lower in txt_lower:
+                match_score = len(val_lower) / max(len(txt_lower), 1)
+                if match_score > best_score:
+                    best_score = match_score
+                    best_match = (txt, c_pct)
+            elif txt_lower in val_lower and len(txt_lower) >= 4:
+                match_score = len(txt_lower) / max(len(val_lower), 1)
+                if match_score > best_score:
+                    best_score = match_score
+                    best_match = (txt, c_pct)
+
+        # 2. Numeric match (for unit_price, total_amount, dates)
+        if len(val_digits) >= 3:
+            txt_digits = re.sub(r"[^\d]", "", txt)
+            if val_digits in txt_digits:
+                match_score = len(val_digits) / max(len(txt_digits), 1)
+                if match_score > best_score:
+                    best_score = match_score
+                    best_match = (txt, c_pct)
+
+    return best_match
+
+
 def normalize_slm_output(
     data: dict[str, Any],
     default_source_file: str = "document",
     config: SlmPromptConfig | None = None,
+    ocr_lines: list[OcrLine] | None = None,
 ) -> dict[str, Any]:
-    raw_schema = data.get("json_schema") if isinstance(data.get("json_schema"), dict) else {}
+    if isinstance(data.get("json_schema"), dict):
+        raw_schema = data["json_schema"]
+    else:
+        raw_schema = data
     other = raw_schema.get("other") if isinstance(raw_schema.get("other"), dict) else {}
     other = dict(other)
     json_schema: dict[str, Any] = {}
@@ -571,6 +685,20 @@ def normalize_slm_output(
             other.setdefault(key, value)
     json_schema["other"] = other
 
+    # Extract real OCR line confidence metrics from PaddleOCR
+    valid_ocr_scores: list[int] = []
+    if ocr_lines:
+        for line in ocr_lines:
+            c = getattr(line, "confidence", 0) if hasattr(line, "confidence") else (line.get("confidence", 0) if isinstance(line, dict) else 0)
+            try:
+                c_val = float(c or 0)
+            except (ValueError, TypeError):
+                c_val = 0.0
+            c_pct = round(c_val * 100 if c_val <= 1.0 else c_val)
+            if 0 < c_pct <= 100:
+                valid_ocr_scores.append(c_pct)
+    real_ocr_confidence = round(sum(valid_ocr_scores) / len(valid_ocr_scores)) if valid_ocr_scores else 95
+
     fields: list[dict[str, Any]] = []
     for item in data.get("fields", []) if isinstance(data.get("fields"), list) else []:
         if not isinstance(item, dict):
@@ -579,30 +707,109 @@ def normalize_slm_output(
         is_other = field not in CORE_FIELDS
         if is_other:
             other.setdefault(field, item.get("value", ""))
+        val = str(item.get("value", ""))
+        source_txt = str(item.get("sourceText", ""))
+        base_c = clamp_int(item.get("confidence"), 0, 100)
+        status = normalize_status(item.get("status"))
+
+        ocr_match = find_ocr_line_for_value(val, ocr_lines) if val else None
+        if ocr_match:
+            matched_txt, ocr_conf = ocr_match
+            if not source_txt or source_txt == "-":
+                source_txt = matched_txt
+            if ocr_conf > 0:
+                base_c = round(0.4 * ocr_conf + 0.6 * base_c)
+            if ocr_conf < 75 and status == "success":
+                status = "review"
+
         fields.append({
-            "sourceText": str(item.get("sourceText", "")),
+            "sourceText": source_txt,
             "field": field,
-            "value": str(item.get("value", "")),
-            "confidence": clamp_int(item.get("confidence"), 0, 100),
-            "status": normalize_status(item.get("status")),
+            "value": val,
+            "confidence": base_c,
+            "status": status,
             "isOther": is_other,
         })
 
+    if not fields:
+        for field in CORE_FIELDS:
+            val = json_schema.get(field, "")
+            present = val not in ("", "-", None, 0)
+            base_c = 95 if present else 40
+            source_txt = str(val if present else "-")
+            status = "success" if present else "review"
+
+            ocr_match = find_ocr_line_for_value(val, ocr_lines) if present else None
+            if ocr_match:
+                matched_txt, ocr_conf = ocr_match
+                source_txt = matched_txt
+                if ocr_conf > 0:
+                    base_c = round(0.4 * ocr_conf + 0.6 * base_c)
+                if ocr_conf < 75:
+                    status = "review"
+
+            fields.append({
+                "sourceText": source_txt,
+                "field": field,
+                "value": str(val if val is not None else ""),
+                "confidence": base_c,
+                "status": status,
+                "isOther": False,
+            })
+
     raw_confidence = data.get("confidence") if isinstance(data.get("confidence"), dict) else {}
-    confidence = {key: clamp_int(raw_confidence.get(key), 0, 100) for key in ("overall", "ocr", "slm", "mapping", "completeness")}
+    if raw_confidence:
+        confidence = {key: clamp_int(raw_confidence.get(key), 0, 100) for key in ("overall", "ocr", "slm", "mapping", "completeness")}
+        if valid_ocr_scores:
+            confidence["ocr"] = real_ocr_confidence
+    else:
+        completed = sum(1 for f in fields if f["status"] == "success")
+        completeness = round(completed / len(CORE_FIELDS) * 100)
+        overall = round((real_ocr_confidence * 0.35) + (90 * 0.35) + (completeness * 0.30))
+        confidence = {
+            "overall": clamp_int(overall, 0, 100),
+            "ocr": real_ocr_confidence,
+            "slm": 90,
+            "mapping": completeness,
+            "completeness": completeness,
+        }
+
     review_items: list[dict[str, Any]] = []
+    seen_review_fields: set[str] = set()
     for item in data.get("review_items", []) if isinstance(data.get("review_items"), list) else []:
         if not isinstance(item, dict):
             continue
         field = canonical_field_name(item.get("field"))
+        seen_review_fields.add(field)
+        ocr_val = str(item.get("ocrValue", ""))
+        slm_val = str(item.get("slmValue", ""))
+        if (not ocr_val or ocr_val == "-") and slm_val:
+            match = find_ocr_line_for_value(slm_val, ocr_lines)
+            if match:
+                ocr_val = match[0]
         review_items.append({
             "field": field,
-            "ocrValue": str(item.get("ocrValue", "")),
-            "slmValue": str(item.get("slmValue", "")),
+            "ocrValue": ocr_val,
+            "slmValue": slm_val,
             "confidence": clamp_int(item.get("confidence"), 0, 100),
             "status": "review",
             "isOther": field not in CORE_FIELDS,
         })
+
+    for f in fields:
+        if f["status"] == "review" and f["field"] not in seen_review_fields:
+            seen_review_fields.add(f["field"])
+            ocr_match = find_ocr_line_for_value(f["value"], ocr_lines)
+            ocr_val = ocr_match[0] if ocr_match else f.get("sourceText", "-")
+            review_items.append({
+                "field": f["field"],
+                "ocrValue": str(ocr_val if ocr_val else "-"),
+                "slmValue": str(f["value"] if f["value"] is not None else ""),
+                "confidence": f["confidence"],
+                "status": "review",
+                "isOther": f.get("isOther", False),
+            })
+
     return apply_review_threshold(
         {"json_schema": json_schema, "fields": fields, "confidence": confidence, "review_items": review_items},
         config,
@@ -624,22 +831,68 @@ def rule_based_fallback_extraction(payload: SlmExtractRequest) -> dict[str, Any]
     if vat > 0:
         other["vat_amount"] = vat
 
-    fields = [make_field(field, values.get(field, 0 if field in NUMERIC_CORE_FIELDS else ""), 96 if evaluated["field_status"].get(field) else 40) for field in CORE_FIELDS]
+    valid_ocr_scores: list[int] = []
+    if payload.ocr_lines:
+        for line in payload.ocr_lines:
+            c = float(line.confidence or 0)
+            c_pct = round(c * 100 if c <= 1.0 else c)
+            if 0 < c_pct <= 100:
+                valid_ocr_scores.append(c_pct)
+    real_ocr_confidence = round(sum(valid_ocr_scores) / len(valid_ocr_scores)) if valid_ocr_scores else 95
+
+    fields = []
+    for field in CORE_FIELDS:
+        val = values.get(field, 0 if field in NUMERIC_CORE_FIELDS else "")
+        present = bool(evaluated["field_status"].get(field))
+        base_conf = 96 if present else 40
+        status = "success" if present else "review"
+        source_txt = str(val if present else "-")
+        ocr_match = find_ocr_line_for_value(val, payload.ocr_lines) if present else None
+        if ocr_match:
+            matched_txt, ocr_conf = ocr_match
+            source_txt = matched_txt
+            if ocr_conf > 0:
+                base_conf = round(0.4 * ocr_conf + 0.6 * base_conf)
+            if ocr_conf < 75:
+                status = "review"
+        fields.append({
+            "sourceText": source_txt,
+            "field": field,
+            "value": str(val if val is not None else ""),
+            "confidence": base_conf,
+            "status": status,
+            "isOther": False,
+        })
     fields.extend(make_field(key, value, 92) for key, value in other.items())
+
     review_items = [
-        {"field": field, "ocrValue": "-", "slmValue": str(values.get(field, "")), "confidence": 40, "status": "review", "isOther": False}
-        for field in CORE_FIELDS
-        if not evaluated["field_status"].get(field)
+        {
+            "field": f["field"],
+            "ocrValue": str(f["sourceText"] if f["sourceText"] != "-" else "-"),
+            "slmValue": str(f["value"]),
+            "confidence": f["confidence"],
+            "status": "review",
+            "isOther": False,
+        }
+        for f in fields
+        if f["status"] == "review" and not f.get("isOther")
     ]
     score = int(evaluated["score"])
     completeness = round(score / len(CORE_FIELDS) * 100)
     math_status = "no_subtotal"
     if subtotal > 0 and vat > 0:
         math_status = "verified" if abs(float(values["total_amount"]) - subtotal - vat) < 1 else "discrepancy"
+    overall = round((real_ocr_confidence * 0.35) + (88 * 0.35) + (completeness * 0.30))
     return {
         "json_schema": {**values, "other": other},
         "fields": fields,
-        "confidence": {"overall": completeness, "ocr": 95, "slm": 88, "mapping": completeness, "completeness": completeness},
+        "confidence": {
+            "overall": clamp_int(overall, 0, 100),
+            "ocr": real_ocr_confidence,
+            "slm": 88,
+            "mapping": completeness,
+            "completeness": completeness,
+        },
         "review_items": review_items,
         "performance": {
             "accuracy_pct": float(completeness),
@@ -766,6 +1019,8 @@ def get_kfold_report(
     seed: int = 42,
     rerun: bool = False,
     prompt_variant: str = "zero-shot",
+    limit: int | None = None,
+    doc_id: str | None = None,
 ) -> dict[str, Any]:
     if prompt_variant.strip().lower() != "zero-shot":
         raise HTTPException(status_code=400, detail="K-Fold evaluation supports zero-shot only")
@@ -774,32 +1029,38 @@ def get_kfold_report(
     if not report_path.exists() and (BASE_DIR / "kfold_evaluation_report.json").exists():
         report_path = BASE_DIR / "kfold_evaluation_report.json"
     cached_report: dict[str, Any] | None = None
-    if report_path.exists() and not rerun:
+    if report_path.exists():
         try:
             cached_report = json.loads(report_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             cached_report = None
-    report_matches_request = cached_report and all(
-        cached_report.get(key) == value
-        for key, value in {
-            "k_splits": k,
-            "random_seed": seed,
-            "prompt_variant": prompt_variant,
-        }.items()
-    )
-    if rerun or not report_matches_request:
+
+    # If general request without rerun, return cached 5-fold thesis report immediately
+    if not rerun and limit is None and doc_id is None and k > 1:
+        if cached_report:
+            return cached_report
+
+    # Run only if explicitly requested, single-doc test, or specific document
+    if rerun or limit is not None or doc_id is not None or k <= 1:
         try:
             try:
                 from .kfold_evaluator import run_kfold_evaluation
             except ImportError:
                 from kfold_evaluator import run_kfold_evaluation
-            run_kfold_evaluation(
+            report = run_kfold_evaluation(
                 k_splits=k,
                 random_seed=seed,
+                document_limit=limit,
                 prompt_variant=prompt_variant,
+                force_rerun=rerun,
+                doc_id=doc_id,
             )
+            return report
         except Exception as exc:
             raise HTTPException(status_code=500, detail=f"K-Fold evaluation failed: {exc}") from exc
+
+    if cached_report:
+        return cached_report
     if not report_path.exists():
         raise HTTPException(status_code=500, detail="Report generation failed")
     return json.loads(report_path.read_text(encoding="utf-8"))

@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
+    "dev:all": "powershell -ExecutionPolicy Bypass -File ./scripts/start-all.ps1",
+    "dev:windows": "cmd /c scripts\\run-all-windows.bat",
+    "stop": "powershell -ExecutionPolicy Bypass -File ./scripts/stop-all.ps1",
     "dev:api": "cd backend && uvicorn main:app --host 0.0.0.0 --port 8000 --reload",
     "dev:slm": "cd backend && uvicorn slm_app:app --host 127.0.0.1 --port 8001 --reload",
     "build": "tsc -b && vite build",

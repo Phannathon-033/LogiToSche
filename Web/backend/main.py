@@ -79,7 +79,7 @@ async def verify_gateway_token(request: Request, call_next):
         return await call_next(request)
 
     public_paths = {"/docs", "/redoc", "/openapi.json", "/api/health", "/favicon.ico"}
-    if request.url.path in public_paths:
+    if request.url.path in public_paths or request.url.path.startswith("/api/benchmark/image/"):
         return await call_next(request)
 
     expected_token = os.environ.get("LOGIAI_GATEWAY_TOKEN", "").strip()
@@ -428,6 +428,8 @@ def get_benchmark_kfold(
     seed: int = 42,
     rerun: bool = False,
     prompt_variant: str = "zero-shot",
+    limit: int | None = None,
+    doc_id: str | None = None,
 ) -> Any:
     if prompt_variant.strip().lower() != "zero-shot":
         raise HTTPException(status_code=400, detail="K-Fold evaluation supports zero-shot only")
@@ -435,6 +437,10 @@ def get_benchmark_kfold(
         f"?k={k}&seed={seed}&rerun={str(rerun).lower()}"
         "&prompt_variant=zero-shot"
     )
+    if limit is not None:
+        query += f"&limit={limit}"
+    if doc_id is not None:
+        query += f"&doc_id={doc_id}"
     return forward_slm_request(f"/api/benchmark/kfold{query}", {}, method="GET")
 
 
@@ -467,18 +473,19 @@ def save_benchmark_ground_truth(payload: GroundTruthEntry) -> Any:
 
 
 def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -> Any:
+    timeout = 300 if "benchmark" in path else (60 if method == "GET" else 120)
     if method == "GET":
         try:
-            response = requests.get(f"{SLM_SERVICE_URL}{path}", timeout=60)
+            response = requests.get(f"{SLM_SERVICE_URL}{path}", timeout=timeout)
             response.raise_for_status()
             value = response.json()
             if isinstance(value, (dict, list)):
                 return value
-        except (requests.RequestException, ValueError):
-            raise HTTPException(status_code=503, detail="SLM service is unavailable")
+        except (requests.RequestException, ValueError) as exc:
+            raise HTTPException(status_code=503, detail=f"SLM service is unavailable: {exc}")
 
     try:
-        response = requests.post(f"{SLM_SERVICE_URL}{path}", json=body, timeout=120)
+        response = requests.post(f"{SLM_SERVICE_URL}{path}", json=body, timeout=timeout)
         response.raise_for_status()
         value = response.json()
         if isinstance(value, (dict, list)):

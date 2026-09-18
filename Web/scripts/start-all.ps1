@@ -81,9 +81,9 @@ if (Test-Port $OcrPort) {
   Write-Host "OCR API already running on port $OcrPort"
 } else {
   Start-BackgroundCommand `
-    -Name "OCR API" `
+    -Name "OCR Gateway API" `
     -WorkingDirectory $Backend `
-    -Command "`"$Python`" -m uvicorn ocr_app:app --host $HostAddress --port $OcrPort" `
+    -Command "`"$Python`" -m uvicorn main:app --host $HostAddress --port $OcrPort" `
     -LogFile (Join-Path $Root "backend-ocr.log") `
     -ErrorLogFile (Join-Path $Root "backend-ocr.err.log")
 }

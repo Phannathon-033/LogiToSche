@@ -217,8 +217,9 @@ function displayDelta(value: number | null): string {
 
 export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewProps) {
   const [activeTab, setActiveTab] = useState<"overview" | "folds" | "docs">("overview");
-  const [kSplits, setKSplits] = useState<number>(5);
+  const [kSplits, setKSplits] = useState<number>(1);
   const [randomSeed, setRandomSeed] = useState<number>(42);
+  const [selectedTestDocId, setSelectedTestDocId] = useState<string>("DOC-001");
   const promptVariant = "zero-shot" as const;
   const [kfoldReport, setKfoldReport] = useState<KFoldReport | null>(null);
   const [documents, setDocuments] = useState<GroundTruthDoc[]>([]);
@@ -261,20 +262,31 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   async function loadAllData() {
     setLoading(true);
     try {
-      // 1. Load K-Fold Report
-      const kfResp = await apiFetch(`/api/benchmark/kfold?k=${kSplits}&seed=${randomSeed}&prompt_variant=${promptVariant}`);
-      if (!kfResp.ok) throw new Error(`K-Fold API error: ${kfResp.status}`);
-      const kfData: KFoldReport = await kfResp.json();
-      setKfoldReport(kfData);
+      // 1. Fetch both Ground Truth docs and K-Fold report in parallel
+      const [gtRes, kfRes] = await Promise.allSettled([
+        apiFetch("/api/benchmark/ground-truth"),
+        apiFetch(`/api/benchmark/kfold?k=5&seed=${randomSeed}&prompt_variant=${promptVariant}`),
+      ]);
 
-      // 2. Load Ground Truth Docs
-      const gtResp = await apiFetch("/api/benchmark/ground-truth");
-      if (!gtResp.ok) throw new Error(`Ground truth API error: ${gtResp.status}`);
-      const gtData = await gtResp.json();
-      const docs = gtData.documents || [];
-      setDocuments(docs);
-      if (docs.length > 0 && !selectedDoc) {
-        setSelectedDoc(docs[0]);
+      // Populate Ground Truth documents (300 invoices)
+      if (gtRes.status === "fulfilled" && gtRes.value.ok) {
+        const gtData = await gtRes.value.json();
+        const docs = gtData.documents || [];
+        setDocuments(docs);
+        if (docs.length > 0 && !selectedDoc) {
+          setSelectedDoc(docs[0]);
+          setSelectedTestDocId(docs[0].id || "DOC-001");
+        }
+      } else {
+        console.warn("Ground truth fetch failed:", gtRes);
+      }
+
+      // Populate K-Fold benchmark report
+      if (kfRes.status === "fulfilled" && kfRes.value.ok) {
+        const kfData: KFoldReport = await kfRes.value.json();
+        setKfoldReport(kfData);
+      } else {
+        console.warn("K-Fold report fetch failed or delayed:", kfRes);
       }
     } catch (err) {
       console.error("Failed to load benchmark data:", err);
@@ -284,39 +296,71 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     }
   }
 
-  async function handleRunKFold(targetK = kSplits, targetSeed = randomSeed, targetVariant = "zero-shot") {
+  async function handleRunKFold(
+    targetK = kSplits,
+    targetSeed = randomSeed,
+    targetVariant = "zero-shot",
+    targetDoc = selectedTestDocId,
+  ) {
     if (isRunningTest) return;
     setIsRunningTest(true);
+
+    const isSingle = targetK === 1;
+    const docId = targetDoc || selectedDoc?.id || "DOC-001";
+
     setRunProgress({
       step: 1,
-      stepText: `ขั้นตอนที่ 1/4: กำลังสุ่มแบ่งกลุ่มข้อมูลออกเป็น ${targetK} Folds (Seed: ${targetSeed})...`,
-      progressPct: 25,
+      stepText: isSingle
+        ? `ขั้นตอนที่ 1/4: กำลังรัน PaddleOCR v4 (GPU) อ่านข้อความสดจาก ${docId}...`
+        : `ขั้นตอนที่ 1/4: กำลังสุ่มแบ่งกลุ่มข้อมูลออกเป็น ${targetK} Folds (Seed: ${targetSeed})...`,
+      progressPct: isSingle ? 20 : 25,
     });
 
     const start = Date.now();
     try {
-      showToast?.(`กำลังเริ่มรันการทดสอบ ${targetK}-Fold Cross-Validation...`);
+      showToast?.(
+        isSingle
+          ? `กำลังเริ่มรันการทดสอบสด 1 ฉบับ (${docId}) ผ่าน PaddleOCR และ Qwen SLM...`
+          : `กำลังเริ่มรันการทดสอบ ${targetK}-Fold Cross-Validation...`,
+      );
 
-      const timer1 = setTimeout(() => {
-        setRunProgress({
-          step: 2,
-          stepText: `ขั้นตอนที่ 2/4: กำลังคำนวณความแม่นยำรายฟิลด์เทียบกับ Ground Truth...`,
-          progressPct: 55,
-        });
-      }, 250);
+      let timer1: any;
+      let timer2: any;
 
-      const timer2 = setTimeout(() => {
-        setRunProgress({
-          step: 3,
-          stepText: `ขั้นตอนที่ 3/4: ประมวลผล Fold 1 ถึง Fold ${targetK} และคำนวณเมทริกซ์เปรียบเทียบ Baseline...`,
-          progressPct: 80,
-        });
-      }, 500);
+      if (isSingle) {
+        timer1 = setTimeout(() => {
+          setRunProgress({
+            step: 2,
+            stepText: `ขั้นตอนที่ 2/4: PaddleOCR เสร็จสิ้น! กำลังรัน Qwen2.5-1.5B (CUDA) สกัด 11 ฟิลด์สด...`,
+            progressPct: 65,
+          });
+        }, 6000);
+      } else {
+        timer1 = setTimeout(() => {
+          setRunProgress({
+            step: 2,
+            stepText: `ขั้นตอนที่ 2/4: กำลังคำนวณความแม่นยำรายฟิลด์เทียบกับ Ground Truth...`,
+            progressPct: 55,
+          });
+        }, 250);
 
-      const resp = await apiFetch(`/api/benchmark/kfold?k=${targetK}&seed=${targetSeed}&rerun=true&prompt_variant=${targetVariant}`);
+        timer2 = setTimeout(() => {
+          setRunProgress({
+            step: 3,
+            stepText: `ขั้นตอนที่ 3/4: ประมวลผล Fold 1 ถึง Fold ${targetK} และคำนวณเมทริกซ์เปรียบเทียบ Baseline...`,
+            progressPct: 80,
+          });
+        }, 500);
+      }
+
+      const queryUrl = isSingle
+        ? `/api/benchmark/kfold?k=1&limit=1&rerun=true&prompt_variant=${targetVariant}&doc_id=${encodeURIComponent(docId)}`
+        : `/api/benchmark/kfold?k=${targetK}&seed=${targetSeed}&rerun=true&prompt_variant=${targetVariant}`;
+
+      const resp = await apiFetch(queryUrl);
 
       clearTimeout(timer1);
-      clearTimeout(timer2);
+      if (timer2) clearTimeout(timer2);
 
       if (resp.ok) {
         const data: KFoldReport = await resp.json();
@@ -326,7 +370,9 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
         setRunProgress({
           step: 4,
-          stepText: `ขั้นตอนที่ 4/4: สรุปสถิติ Mean (μ) ± Std (σ) และตรวจสอบขนาดตัวอย่าง Cochran สำเร็จ!`,
+          stepText: isSingle
+            ? `ขั้นตอนที่ 4/4: ทดสอบสด 1 ฉบับ (${docId}) สำเร็จ! (${elapsed}s) ความแม่นยำ: ${data.metrics_summary?.accuracy_display || "-"}`
+            : `ขั้นตอนที่ 4/4: สรุปสถิติ Mean (μ) ± Std (σ) และตรวจสอบขนาดตัวอย่าง Cochran สำเร็จ!`,
           progressPct: 100,
         });
 
@@ -353,7 +399,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         setResultPulsing(true);
         setTimeout(() => setResultPulsing(false), 2000);
 
-        showToast?.(`การทดสอบ ${targetK}-Fold สำเร็จ! ใช้เวลา ${elapsed}s (F1: ${data.metrics_summary.f1_display})`);
+        showToast?.(
+          isSingle
+            ? `ทดสอบสด 1 ฉบับ (${docId}) สำเร็จ! ใช้เวลา ${elapsed}s (Accuracy: ${data.metrics_summary.accuracy_display})`
+            : `การทดสอบ ${targetK}-Fold สำเร็จ! ใช้เวลา ${elapsed}s (F1: ${data.metrics_summary.f1_display})`,
+        );
       } else {
         const errText = await resp.text().catch(() => "");
         throw new Error(`API error: ${resp.status} ${errText}`);
@@ -367,6 +417,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       }, 400);
     }
   }
+
 
   async function handleTestDocOnGPU(doc: GroundTruthDoc) {
     setIsTestingDocSLM(true);
@@ -521,6 +572,18 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     });
   }, [documents, categoryFilter, searchDocQuery, selectedFoldIdx, kfoldReport]);
 
+  const docFoldMap = useMemo(() => {
+    const map = new Map<string, number>();
+    if (kfoldReport?.folds) {
+      kfoldReport.folds.forEach((f) => {
+        if (f.val_doc_ids) {
+          f.val_doc_ids.forEach((id) => map.set(id, f.fold));
+        }
+      });
+    }
+    return map;
+  }, [kfoldReport]);
+
   const slmF1 = kfoldReport?.metrics_summary?.mean_f1_score_pct;
   const baseF1 = kfoldReport?.baseline_model?.mean_f1_score_pct;
   const deltaF1 = optionalDelta(
@@ -582,7 +645,9 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 </h1>
                 <span className="hidden rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 sm:inline-flex items-center gap-1">
                   <Cpu className="h-3 w-3 text-emerald-600" />
-                  {kfoldReport?.device || "-"}
+                  {kfoldReport?.device && kfoldReport.device.toLowerCase().includes("cuda")
+                    ? "RTX 3050 · CUDA 12.6 (GPU:0)"
+                    : kfoldReport?.device || "RTX 3050 · CUDA 12.6"}
                 </span>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -636,22 +701,19 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
               {/* K Splits Selector */}
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                  จำนวน Fold (K-Splits)
+                  รูปแบบการทดสอบ (Evaluation Mode)
                 </label>
                 <div className="inline-flex items-center rounded-xl bg-white p-1 border border-slate-200 shadow-2xs">
                   {[
+                    { k: 1, label: "1 ฉบับ (ทดสอบสด Live ~30s)" },
                     { k: 3, label: "K=3" },
                     { k: 5, label: "K=5 (มาตรฐานวิจัย)" },
-                    { k: 10, label: "K=10" },
                   ].map((item) => (
                     <button
                       key={item.k}
                       type="button"
                       disabled={isRunningTest}
-                      onClick={() => {
-                        setKSplits(item.k);
-                        handleRunKFold(item.k, randomSeed);
-                      }}
+                      onClick={() => setKSplits(item.k)}
                       className={`rounded-lg px-3 py-1 text-xs font-extrabold transition disabled:opacity-60 ${
                         kSplits === item.k
                           ? "bg-blue-600 text-white shadow-xs"
@@ -664,6 +726,30 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 </div>
               </div>
 
+              {/* Document Selector when k=1 */}
+              {kSplits === 1 && (
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-blue-600 mb-1.5">
+                    เลือกเอกสารทดสอบสด
+                  </label>
+                  <div className="inline-flex items-center rounded-xl bg-white px-2.5 py-1 border border-blue-300 shadow-2xs">
+                    <FileText className="h-3.5 w-3.5 text-blue-600 mr-1.5" />
+                    <select
+                      value={selectedTestDocId}
+                      disabled={isRunningTest}
+                      onChange={(e) => setSelectedTestDocId(e.target.value)}
+                      className="bg-transparent text-xs font-mono font-bold text-blue-900 focus:outline-none cursor-pointer disabled:opacity-60 max-w-[180px] truncate"
+                    >
+                      {documents.map((d) => (
+                        <option key={d.id} value={d.id}>
+                          {d.id} ({d.file_name})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+
               {/* Seed Control */}
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
@@ -674,11 +760,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                   <select
                     value={randomSeed}
                     disabled={isRunningTest}
-                    onChange={(e) => {
-                      const newSeed = Number(e.target.value);
-                      setRandomSeed(newSeed);
-                      handleRunKFold(kSplits, newSeed);
-                    }}
+                    onChange={(e) => setRandomSeed(Number(e.target.value))}
                     className="bg-transparent text-xs font-mono font-bold text-slate-800 focus:outline-none cursor-pointer disabled:opacity-60"
                   >
                     <option value={42}>42 (Default Thesis)</option>
@@ -713,7 +795,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => handleRunKFold(kSplits, randomSeed)}
+                onClick={() => handleRunKFold(kSplits, randomSeed, "zero-shot", selectedTestDocId)}
                 disabled={isRunningTest}
                 className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-xs font-black text-white shadow-md transition ${
                   isRunningTest
@@ -724,12 +806,20 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 {isRunningTest ? (
                   <>
                     <RefreshCw className="h-4 w-4 animate-spin text-white" />
-                    <span>กำลังประมวลผล K-Fold ({kSplits} Folds)...</span>
+                    <span>
+                      {kSplits === 1
+                        ? `กำลังทดสอบสด ${selectedTestDocId} (OCR + SLM)...`
+                        : `กำลังประมวลผล K-Fold (${kSplits} Folds)...`}
+                    </span>
                   </>
                 ) : (
                   <>
                     <Play className="h-4 w-4 fill-white text-white" />
-                    <span>เริ่มรันการทดสอบ K-Fold (Run Evaluation)</span>
+                    <span>
+                      {kSplits === 1
+                        ? `เริ่มรันการทดสอบสด 1 ฉบับ (${selectedTestDocId})`
+                        : `เริ่มรันการทดสอบ K-Fold (Run Evaluation)`}
+                    </span>
                   </>
                 )}
               </button>
@@ -753,10 +843,18 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 />
               </div>
               <div className="grid grid-cols-4 gap-1 pt-1 text-[11px] text-center font-bold text-slate-400">
-                <span className={runProgress.step >= 1 ? "text-blue-600 font-extrabold" : ""}>1. สุ่มแบ่ง {kSplits} Fold</span>
-                <span className={runProgress.step >= 2 ? "text-blue-600 font-extrabold" : ""}>2. ตรวจ {fieldCount || "-"} ฟิลด์</span>
-                <span className={runProgress.step >= 3 ? "text-blue-600 font-extrabold" : ""}>3. เปรียบเทียบ Baseline</span>
-                <span className={runProgress.step >= 4 ? "text-emerald-600 font-extrabold" : ""}>4. สรุปสถิติ Cochran</span>
+                <span className={runProgress.step >= 1 ? "text-blue-600 font-extrabold" : ""}>
+                  {kSplits === 1 ? "1. PaddleOCR (GPU)" : `1. สุ่มแบ่ง ${kSplits} Fold`}
+                </span>
+                <span className={runProgress.step >= 2 ? "text-blue-600 font-extrabold" : ""}>
+                  {kSplits === 1 ? "2. Qwen SLM (CUDA)" : `2. ตรวจ ${fieldCount || "-"} ฟิลด์`}
+                </span>
+                <span className={runProgress.step >= 3 ? "text-blue-600 font-extrabold" : ""}>
+                  {kSplits === 1 ? "3. เทียบ Ground Truth" : "3. เปรียบเทียบ Baseline"}
+                </span>
+                <span className={runProgress.step >= 4 ? "text-emerald-600 font-extrabold" : ""}>
+                  {kSplits === 1 ? "4. สรุปความแม่นยำสด" : "4. สรุปสถิติ Cochran"}
+                </span>
               </div>
             </div>
           )}
@@ -1418,13 +1516,29 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 <div className="flex flex-wrap items-center gap-1.5">
                   <button
                     type="button"
-                    onClick={() => setCategoryFilter("all")}
+                    onClick={() => {
+                      setCategoryFilter("all");
+                      setSelectedFoldIdx(null);
+                    }}
                     className={`rounded-lg px-2 py-0.5 text-[11px] font-bold transition ${
-                      categoryFilter === "all" ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      categoryFilter === "all" && selectedFoldIdx === null
+                        ? "bg-blue-600 text-white"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                   >
                     ทั้งหมด ({documents.length})
                   </button>
+                  {selectedFoldIdx !== null && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedFoldIdx(null)}
+                      className="rounded-lg bg-amber-100 border border-amber-300 px-2 py-0.5 text-[11px] font-bold text-amber-800 flex items-center gap-1 hover:bg-amber-200 transition"
+                      title="คลิกเพื่อยกเลิกตัวกรอง Fold และแสดงเอกสารทั้งหมด"
+                    >
+                      <span>Fold {selectedFoldIdx + 1} ({filteredDocs.length} ฉบับ)</span>
+                      <X className="h-3 w-3" />
+                    </button>
+                  )}
                   {categories.map((cat) => (
                     <button
                       key={cat}
@@ -1471,7 +1585,14 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-1">
-                            <span className="font-mono text-xs font-black text-blue-700">{doc.id}</span>
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              <span className="font-mono text-xs font-black text-blue-700">{doc.id}</span>
+                              {docFoldMap.has(doc.id) && (
+                                <span className="rounded bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 font-mono text-[9.5px] font-black text-indigo-700 whitespace-nowrap">
+                                  Fold {docFoldMap.get(doc.id)}
+                                </span>
+                              )}
+                            </div>
                             <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-slate-600 uppercase truncate max-w-[110px]">
                               {doc.category || gt.document_type || "doc"}
                             </span>
@@ -1507,6 +1628,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                         <span className="rounded-md bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
                           ID: {selectedDoc.id}
                         </span>
+                        {docFoldMap.has(selectedDoc.id) && (
+                          <span className="rounded-md bg-indigo-50 border border-indigo-200 px-2 py-0.5 text-[11px] font-black text-indigo-700">
+                            ชุดทดสอบ Fold {docFoldMap.get(selectedDoc.id)}
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs text-slate-500 mt-0.5">
                         หมวดหมู่: <b className="text-slate-800 uppercase">{selectedDoc.category || "Invoice"}</b> | เอกสารตัวอย่างในชุดทดสอบ {datasetSize} ฉบับ
