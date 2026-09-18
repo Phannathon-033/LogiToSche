@@ -430,6 +430,7 @@ def get_benchmark_kfold(
     prompt_variant: str = "zero-shot",
     limit: int | None = None,
     doc_id: str | None = None,
+    single_fold: int | None = None,
 ) -> Any:
     if prompt_variant.strip().lower() != "zero-shot":
         raise HTTPException(status_code=400, detail="K-Fold evaluation supports zero-shot only")
@@ -441,6 +442,8 @@ def get_benchmark_kfold(
         query += f"&limit={limit}"
     if doc_id is not None:
         query += f"&doc_id={doc_id}"
+    if single_fold is not None:
+        query += f"&single_fold={single_fold}"
     return forward_slm_request(f"/api/benchmark/kfold{query}", {}, method="GET")
 
 

@@ -8,6 +8,7 @@ import {
   Calendar,
   Check,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
   Clock,
   Copy,
@@ -55,7 +56,24 @@ export interface KFoldReport {
   prompt_variant?: string;
   dataset: string;
   total_documents: number;
+  total_dataset_documents?: number;
   k_splits: number;
+  single_fold?: number | null;
+  round_info?: {
+    is_single_fold: boolean;
+    current_round: number;
+    total_rounds: number;
+    test_fold: number;
+    train_folds: number[];
+    train_count: number;
+    test_count: number;
+    total_dataset_count: number;
+    matches_vector: number[];
+    label_sample?: string[];
+    pred_sample?: string[];
+    total_checks: number;
+    matched_checks: number;
+  };
   random_seed?: number;
   metrics_summary: {
     mean_accuracy_pct: number;
@@ -114,6 +132,18 @@ export interface KFoldReport {
     fold: number;
     test_docs_count?: number;
     val_samples_count: number;
+    train_samples_count?: number;
+    document_evaluations?: Array<{
+      id: string;
+      file_name: string;
+      category?: string;
+      ground_truth: Record<string, any>;
+      prediction: Record<string, any>;
+      field_scores: Record<string, any>;
+      matched_fields_count: number;
+      total_fields: number;
+      accuracy_pct: number;
+    }>;
     accuracy_pct: number;
     document_accuracy_pct: number;
     precision_pct: number;
@@ -217,7 +247,10 @@ function displayDelta(value: number | null): string {
 
 export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewProps) {
   const [activeTab, setActiveTab] = useState<"overview" | "folds" | "docs">("overview");
-  const [kSplits, setKSplits] = useState<number>(1);
+  const [evaluationMode, setEvaluationMode] = useState<"round1" | "all_folds" | "single_doc">("round1");
+  const [selectedSingleFold, setSelectedSingleFold] = useState<number>(1);
+  const [expandedDocId, setExpandedDocId] = useState<string | null>(null);
+  const [kSplits, setKSplits] = useState<number>(5);
   const [randomSeed, setRandomSeed] = useState<number>(42);
   const [selectedTestDocId, setSelectedTestDocId] = useState<string>("DOC-001");
   const promptVariant = "zero-shot" as const;
@@ -284,6 +317,8 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   }
 
   async function handleRunKFold(
+    mode = evaluationMode,
+    singleFold = selectedSingleFold,
     targetK = kSplits,
     targetSeed = randomSeed,
     targetVariant = "zero-shot",
@@ -292,14 +327,20 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     if (isRunningTest) return;
     setIsRunningTest(true);
 
-    const isSingle = targetK === 1;
+    const isSingle = mode === "single_doc";
+    const isSingleFoldMode = mode === "round1";
     const docId = targetDoc || selectedDoc?.id || "DOC-001";
+
+    let step1Text = `ขั้นตอนที่ 1/4: กำลังสุ่มแบ่งกลุ่มข้อมูลออกเป็น ${targetK} Folds (Seed: ${targetSeed})...`;
+    if (isSingle) {
+      step1Text = `ขั้นตอนที่ 1/4: กำลังรัน PaddleOCR v4 (GPU) อ่านข้อความสดจาก ${docId}...`;
+    } else if (isSingleFoldMode) {
+      step1Text = `ขั้นตอนที่ 1/4: สุ่มแบ่ง 5-Fold: กำหนด Fold ${singleFold} เป็น TEST (60 ฉบับ) และที่เหลือเป็น TRAIN (240 ฉบับ)...`;
+    }
 
     setRunProgress({
       step: 1,
-      stepText: isSingle
-        ? `ขั้นตอนที่ 1/4: กำลังรัน PaddleOCR v4 (GPU) อ่านข้อความสดจาก ${docId}...`
-        : `ขั้นตอนที่ 1/4: กำลังสุ่มแบ่งกลุ่มข้อมูลออกเป็น ${targetK} Folds (Seed: ${targetSeed})...`,
+      stepText: step1Text,
       progressPct: isSingle ? 20 : 25,
     });
 
@@ -308,7 +349,9 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       showToast?.(
         isSingle
           ? `กำลังเริ่มรันการทดสอบสด 1 ฉบับ (${docId}) ผ่าน PaddleOCR และ Qwen SLM...`
-          : `กำลังเริ่มรันการทดสอบ ${targetK}-Fold Cross-Validation...`,
+          : isSingleFoldMode
+          ? `กำลังเริ่มรันการทดสอบ 5-Fold รอบที่ ${singleFold} (Fold ${singleFold} → TEST 60 ฉบับ | Fold 2-5 → TRAIN 240 ฉบับ)...`
+          : `กำลังเริ่มรันการทดสอบ ${targetK}-Fold Cross-Validation ครบทุก Fold...`,
       );
 
       let timer1: any;
@@ -322,6 +365,22 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             progressPct: 65,
           });
         }, 6000);
+      } else if (isSingleFoldMode) {
+        timer1 = setTimeout(() => {
+          setRunProgress({
+            step: 2,
+            stepText: `ขั้นตอนที่ 2/4: กำลังดึงผลสกัด 11 ฟิลด์ของชุดทดสอบ Fold ${singleFold} (60 ฉบับ)...`,
+            progressPct: 55,
+          });
+        }, 200);
+
+        timer2 = setTimeout(() => {
+          setRunProgress({
+            step: 3,
+            stepText: `ขั้นตอนที่ 3/4: เปรียบเทียบ Label (Ground Truth) กับ Predicted และคำนวณ Accuracy...`,
+            progressPct: 80,
+          });
+        }, 400);
       } else {
         timer1 = setTimeout(() => {
           setRunProgress({
@@ -340,9 +399,14 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         }, 500);
       }
 
-      const queryUrl = isSingle
-        ? `/api/benchmark/kfold?k=1&limit=1&rerun=true&prompt_variant=${targetVariant}&doc_id=${encodeURIComponent(docId)}`
-        : `/api/benchmark/kfold?k=${targetK}&seed=${targetSeed}&rerun=true&prompt_variant=${targetVariant}`;
+      let queryUrl = "";
+      if (isSingle) {
+        queryUrl = `/api/benchmark/kfold?k=1&limit=1&rerun=true&prompt_variant=${targetVariant}&doc_id=${encodeURIComponent(docId)}`;
+      } else if (isSingleFoldMode) {
+        queryUrl = `/api/benchmark/kfold?k=5&single_fold=${singleFold}&seed=${targetSeed}&rerun=true&prompt_variant=${targetVariant}`;
+      } else {
+        queryUrl = `/api/benchmark/kfold?k=${targetK}&seed=${targetSeed}&rerun=true&prompt_variant=${targetVariant}`;
+      }
 
       const resp = await apiFetch(queryUrl);
 
@@ -359,27 +423,21 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           step: 4,
           stepText: isSingle
             ? `ขั้นตอนที่ 4/4: ทดสอบสด 1 ฉบับ (${docId}) สำเร็จ! (${elapsed}s) ความแม่นยำ: ${data.metrics_summary?.accuracy_display || "-"}`
-            : `ขั้นตอนที่ 4/4: สรุปสถิติ Mean (μ) ± Std (σ) และตรวจสอบขนาดตัวอย่าง Cochran สำเร็จ!`,
+            : isSingleFoldMode
+            ? `ขั้นตอนที่ 4/4: ทดสอบรอบที่ ${singleFold} (Fold ${singleFold} TEST 60 ฉบับ) สำเร็จ! (${elapsed}s) ความแม่นยำ: ${data.metrics_summary?.accuracy_display || "-"}`
+            : `ขั้นตอนที่ 4/4: สรุปสถิติ 5-Fold และตรวจสอบขนาดตัวอย่าง Cochran สำเร็จ! (${elapsed}s)`,
           progressPct: 100,
         });
 
         setLastRunInfo({
           timestamp: new Date().toLocaleTimeString("th-TH"),
           elapsedSec: Number(elapsed),
-          k: targetK,
+          k: isSingle ? 1 : targetK,
           seed: targetSeed,
           f1: data.metrics_summary?.f1_display || `${data.metrics_summary?.mean_f1_score_pct}%`,
           accuracy: data.metrics_summary?.accuracy_display || `${data.metrics_summary?.mean_accuracy_pct}%`,
-          deltaF1: optionalDelta(
-            data.delta_improvement?.f1_delta_pct,
-            data.metrics_summary?.mean_f1_score_pct,
-            data.baseline_model?.mean_f1_score_pct,
-          ),
-          deltaAcc: optionalDelta(
-            data.delta_improvement?.accuracy_delta_pct,
-            data.metrics_summary?.mean_accuracy_pct,
-            data.baseline_model?.mean_accuracy_pct,
-          ),
+          deltaF1: null,
+          deltaAcc: null,
         });
 
         // Trigger pulse highlight animation on KPI cards
@@ -388,8 +446,10 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
         showToast?.(
           isSingle
-            ? `ทดสอบสด 1 ฉบับ (${docId}) สำเร็จ! ใช้เวลา ${elapsed}s (Accuracy: ${data.metrics_summary.accuracy_display})`
-            : `การทดสอบ ${targetK}-Fold สำเร็จ! ใช้เวลา ${elapsed}s (F1: ${data.metrics_summary.f1_display})`,
+            ? `ทดสอบสด ${docId} เสร็จสิ้น! ความแม่นยำ: ${data.metrics_summary?.accuracy_display || "-"}`
+            : isSingleFoldMode
+            ? `ทดสอบรอบที่ ${singleFold} สำเร็จ! ความแม่นยำ: ${data.metrics_summary?.accuracy_display || "-"}`
+            : `ทดสอบ ${targetK}-Fold สำเร็จครบทุกรอบ! ความแม่นยำ: ${data.metrics_summary?.accuracy_display || "-"}`,
         );
       } else {
         const errText = await resp.text().catch(() => "");
@@ -684,36 +744,89 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         <div className="rounded-2xl border border-blue-200/80 bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-white p-4 sm:p-5 shadow-xs">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-4">
-              {/* K Splits Selector */}
+              {/* Evaluation Mode Selector */}
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
                   รูปแบบการทดสอบ (Evaluation Mode)
                 </label>
                 <div className="inline-flex items-center rounded-xl bg-white p-1 border border-slate-200 shadow-2xs">
-                  {[
-                    { k: 1, label: "1 ฉบับ (ทดสอบสด Live ~30s)" },
-                    { k: 3, label: "K=3" },
-                    { k: 5, label: "K=5 (มาตรฐานวิจัย)" },
-                  ].map((item) => (
-                    <button
-                      key={item.k}
-                      type="button"
-                      disabled={isRunningTest}
-                      onClick={() => setKSplits(item.k)}
-                      className={`rounded-lg px-3 py-1 text-xs font-extrabold transition disabled:opacity-60 ${
-                        kSplits === item.k
-                          ? "bg-blue-600 text-white shadow-xs"
-                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
+                  <button
+                    type="button"
+                    disabled={isRunningTest}
+                    onClick={() => {
+                      setEvaluationMode("round1");
+                      setSelectedSingleFold(1);
+                      setKSplits(5);
+                    }}
+                    className={`rounded-lg px-3 py-1 text-xs font-extrabold transition disabled:opacity-60 ${
+                      evaluationMode === "round1"
+                        ? "bg-blue-600 text-white shadow-xs"
+                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    }`}
+                  >
+                    รอบที่ 1 (Fold 1 TEST: 60 | TRAIN: 240)
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isRunningTest}
+                    onClick={() => {
+                      setEvaluationMode("all_folds");
+                      setKSplits(5);
+                    }}
+                    className={`rounded-lg px-3 py-1 text-xs font-extrabold transition disabled:opacity-60 ${
+                      evaluationMode === "all_folds"
+                        ? "bg-blue-600 text-white shadow-xs"
+                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    }`}
+                  >
+                    5 Folds เต็มรูปแบบ (300 ฉบับ)
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isRunningTest}
+                    onClick={() => {
+                      setEvaluationMode("single_doc");
+                      setKSplits(1);
+                    }}
+                    className={`rounded-lg px-3 py-1 text-xs font-extrabold transition disabled:opacity-60 ${
+                      evaluationMode === "single_doc"
+                        ? "bg-blue-600 text-white shadow-xs"
+                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    }`}
+                  >
+                    1 ฉบับ (สด Live Demo ~20s)
+                  </button>
                 </div>
               </div>
 
-              {/* Document Selector when k=1 */}
-              {kSplits === 1 && (
+              {/* Fold Selector when round1 / single fold is active */}
+              {evaluationMode === "round1" && (
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-indigo-600 mb-1.5">
+                    เลือกรอบทดสอบ (Target Fold)
+                  </label>
+                  <div className="inline-flex items-center rounded-xl bg-white p-1 border border-indigo-200 shadow-2xs">
+                    {[1, 2, 3, 4, 5].map((f) => (
+                      <button
+                        key={f}
+                        type="button"
+                        disabled={isRunningTest}
+                        onClick={() => setSelectedSingleFold(f)}
+                        className={`rounded-lg px-2.5 py-1 text-xs font-extrabold transition disabled:opacity-60 ${
+                          selectedSingleFold === f
+                            ? "bg-indigo-600 text-white shadow-xs"
+                            : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                        }`}
+                      >
+                        รอบที่ {f} (Fold {f})
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Document Selector when single_doc is active */}
+              {evaluationMode === "single_doc" && (
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-blue-600 mb-1.5">
                     เลือกเอกสารทดสอบสด
@@ -781,7 +894,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => handleRunKFold(kSplits, randomSeed, "zero-shot", selectedTestDocId)}
+                onClick={() => handleRunKFold(evaluationMode, selectedSingleFold, kSplits, randomSeed, "zero-shot", selectedTestDocId)}
                 disabled={isRunningTest}
                 className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-xs font-black text-white shadow-md transition ${
                   isRunningTest
@@ -793,18 +906,22 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                   <>
                     <RefreshCw className="h-4 w-4 animate-spin text-white" />
                     <span>
-                      {kSplits === 1
+                      {evaluationMode === "single_doc"
                         ? `กำลังทดสอบสด ${selectedTestDocId} (OCR + SLM)...`
+                        : evaluationMode === "round1"
+                        ? `กำลังทดสอบรอบที่ ${selectedSingleFold} (Fold ${selectedSingleFold} TEST 60 ฉบับ)...`
                         : `กำลังประมวลผล K-Fold (${kSplits} Folds)...`}
                     </span>
                   </>
                 ) : (
                   <>
-                    <Play className="h-4 w-4 fill-white text-white" />
+                    <Play className="h-3.5 w-3.5 fill-white text-white" />
                     <span>
-                      {kSplits === 1
-                        ? `เริ่มรันการทดสอบสด 1 ฉบับ (${selectedTestDocId})`
-                        : `เริ่มรันการทดสอบ K-Fold (Run Evaluation)`}
+                      {evaluationMode === "single_doc"
+                        ? `เริ่มทดสอบสด 1 ฉบับ (${selectedTestDocId})`
+                        : evaluationMode === "round1"
+                        ? `เริ่มรันการทดสอบรอบที่ ${selectedSingleFold} (Fold ${selectedSingleFold}: TEST 60 | TRAIN 240)`
+                        : `เริ่มรัน 5-Fold ครบ 5 รอบ (300 ฉบับ)`}
                     </span>
                   </>
                 )}
@@ -971,6 +1088,269 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         {/* =================================================================== */}
         {activeTab === "overview" && (
           <div className="space-y-6">
+            {/* Dedicated Round Breakdown & Vector Comparison Panel */}
+            {kfoldReport?.round_info?.is_single_fold && (
+              <div className="rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/90 via-white to-blue-50/60 p-5 sm:p-6 shadow-xs space-y-6">
+                {/* Round Header & Fold Mapping */}
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-indigo-100 pb-5">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="rounded-lg bg-indigo-600 px-2.5 py-1 text-xs font-black text-white uppercase tracking-wider">
+                        การทดสอบรอบที่ {kfoldReport.round_info.current_round}
+                      </span>
+                      <h3 className="text-base font-black text-slate-900">
+                        5-Fold Cross-Validation: รอบที่ {kfoldReport.round_info.current_round}
+                      </h3>
+                    </div>
+                    <p className="text-xs text-slate-600 mt-1">
+                      การแบ่งกลุ่มข้อมูล 5 Fold: กำหนดให้ <b>Fold {kfoldReport.round_info.test_fold} เป็น TEST (ชุดทดสอบ)</b> และ <b>Fold {kfoldReport.round_info.train_folds.join(", ")} เป็น TRAIN (ชุดฝึกสอน)</b>
+                    </p>
+                  </div>
+
+                  {/* 5 Fold Badges */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((f) => {
+                      const isTest = f === kfoldReport.round_info?.test_fold;
+                      return (
+                        <div
+                          key={f}
+                          className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 border text-xs font-black transition ${
+                            isTest
+                              ? "bg-blue-600 border-blue-700 text-white shadow-xs ring-2 ring-blue-400/40"
+                              : "bg-white border-slate-200 text-slate-700 shadow-2xs"
+                          }`}
+                        >
+                          <span className="font-mono">Fold {f}</span>
+                          <span className={`rounded px-1.5 py-0.5 text-[10px] font-black uppercase ${
+                            isTest ? "bg-white text-blue-700" : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                          }`}>
+                            {isTest ? "TEST (60)" : "TRAIN (60)"}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Train / Test Counts */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="rounded-xl border border-emerald-200 bg-white p-4 shadow-2xs">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                      ชุดฝึกสอน (Train Set)
+                    </span>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-black font-mono text-emerald-600">
+                        Train: {kfoldReport.round_info.train_count}
+                      </span>
+                      <span className="text-xs font-bold text-slate-500">ฉบับ (80%)</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 mt-1">
+                      Fold {kfoldReport.round_info.train_folds.join(", Fold ")}
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-blue-200 bg-white p-4 shadow-2xs">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                      ชุดทดสอบ (Test Set)
+                    </span>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-black font-mono text-blue-600">
+                        Test: {kfoldReport.round_info.test_count}
+                      </span>
+                      <span className="text-xs font-bold text-slate-500">ฉบับ (20%)</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 mt-1">
+                      Fold {kfoldReport.round_info.test_fold} (60 ฉบับ × 11 ฟิลด์ = {kfoldReport.round_info.total_checks} จุดตรวจสอบ)
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-indigo-200 bg-white p-4 shadow-2xs">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                      ความแม่นยำรอบที่ {kfoldReport.round_info.current_round} (Accuracy)
+                    </span>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-black font-mono text-indigo-600">
+                        {kfoldReport.metrics_summary.accuracy_display}
+                      </span>
+                      <span className="text-xs font-bold text-slate-500">
+                        ({kfoldReport.round_info.matched_checks} / {kfoldReport.round_info.total_checks})
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-indigo-700 font-bold mt-1">
+                      คำนวณจากการเปรียบเทียบ Label vs Predicted
+                    </p>
+                  </div>
+                </div>
+
+                {/* Vector Comparison Box (Exact format requested by User) */}
+                <div className="rounded-xl border border-slate-700 bg-slate-900 p-4 sm:p-5 text-white font-mono text-xs shadow-inner space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-700 pb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                      <span className="font-bold text-slate-200">
+                        เวกเตอร์เปรียบเทียบ Label vs Predicted (Output Representation)
+                      </span>
+                    </div>
+                    <span className="text-[11px] text-slate-400">
+                      Train: {kfoldReport.round_info.train_count} | Test: {kfoldReport.round_info.test_count}
+                    </span>
+                  </div>
+
+                  <div className="space-y-2 text-[11px] leading-relaxed">
+                    <div>
+                      <span className="text-slate-400 font-bold block mb-0.5">Label (Ground Truth) :</span>
+                      <div className="bg-slate-950 p-2.5 rounded-lg text-emerald-400 overflow-x-auto whitespace-nowrap border border-slate-800">
+                        [ {kfoldReport.round_info.label_sample ? kfoldReport.round_info.label_sample.map((s) => `"${s}"`).join(", ") : "..."} ... ]
+                      </div>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-400 font-bold block mb-0.5">Predicted (Qwen SLM) :</span>
+                      <div className="bg-slate-950 p-2.5 rounded-lg text-cyan-300 overflow-x-auto whitespace-nowrap border border-slate-800">
+                        [ {kfoldReport.round_info.pred_sample ? kfoldReport.round_info.pred_sample.map((s) => `"${s}"`).join(", ") : "..."} ... ]
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-0.5">
+                        <span className="text-slate-400 font-bold">Matches Vector (1 = Exact Match ตรงกัน, 0 = ไม่ตรงกัน) :</span>
+                        <span className="text-emerald-400 font-bold">
+                          ตรงกัน {kfoldReport.round_info.matched_checks} / {kfoldReport.round_info.total_checks} จุดตรวจสอบ
+                        </span>
+                      </div>
+                      <div className="bg-slate-950 p-2.5 rounded-lg text-amber-300 overflow-x-auto whitespace-nowrap border border-slate-800 tracking-wider">
+                        [ {kfoldReport.round_info.matches_vector.join(" ")} ... ]
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+                      <span className="text-slate-300 font-sans">
+                        เอาทั้ง 2 ค่ามาเปรียบเทียบกันเพื่อคำนวณค่า Accuracy:
+                      </span>
+                      <span className="text-emerald-400 font-bold text-sm">
+                        Accuracy: {kfoldReport.metrics_summary.mean_accuracy_pct.toFixed(2)}% ({kfoldReport.round_info.matched_checks}/{kfoldReport.round_info.total_checks})
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 60 Documents List for Fold 1 */}
+                {kfoldReport.folds?.[0]?.document_evaluations && (
+                  <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-2xs">
+                    <div className="px-4 py-3 bg-slate-50/80 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <FileCheck className="h-4 w-4 text-blue-600" />
+                        <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">
+                          รายการเอกสารทดสอบทั้ง 60 ฉบับใน Fold {kfoldReport.round_info.test_fold} (Ground Truth vs Model Output)
+                        </h4>
+                      </div>
+                      <span className="text-[11px] font-bold text-slate-500">
+                        คลิกที่เอกสารเพื่อดูการเปรียบเทียบทั้ง 11 ฟิลด์
+                      </span>
+                    </div>
+
+                    <div className="max-h-[380px] overflow-y-auto divide-y divide-slate-100 text-xs">
+                      {kfoldReport.folds[0].document_evaluations.map((docEval, docIdx) => {
+                        const isExpanded = expandedDocId === docEval.id;
+                        return (
+                          <div key={docEval.id} className="transition">
+                            <div
+                              onClick={() => setExpandedDocId(isExpanded ? null : docEval.id)}
+                              className="flex items-center justify-between p-3 cursor-pointer hover:bg-slate-50/80 select-none"
+                            >
+                              <div className="flex items-center gap-3 min-w-0">
+                                <span className="font-mono text-slate-400 text-[11px] w-6 text-right">
+                                  #{docIdx + 1}
+                                </span>
+                                <span className="font-mono font-black text-blue-700">{docEval.id}</span>
+                                <span className="text-slate-800 font-bold truncate max-w-[280px]">
+                                  {docEval.file_name}
+                                </span>
+                              </div>
+
+                              <div className="flex items-center gap-3 shrink-0">
+                                <div className="text-right">
+                                  <span className="font-mono font-black text-slate-800">
+                                    {docEval.matched_fields_count} / {docEval.total_fields} ฟิลด์
+                                  </span>
+                                  <span className="text-[10px] text-slate-400 block font-mono">
+                                    ({docEval.accuracy_pct}%)
+                                  </span>
+                                </div>
+
+                                <span className={`rounded px-2 py-0.5 text-[10px] font-black uppercase ${
+                                  docEval.accuracy_pct >= 80
+                                    ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                    : docEval.accuracy_pct >= 50
+                                    ? "bg-blue-50 text-blue-700 border border-blue-200"
+                                    : "bg-amber-50 text-amber-700 border border-amber-200"
+                                }`}>
+                                  {docEval.accuracy_pct >= 80 ? "PASS" : "REVIEW"}
+                                </span>
+
+                                <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform ${
+                                  isExpanded ? "rotate-180" : ""
+                                }`} />
+                              </div>
+                            </div>
+
+                            {/* Expanded 11 Fields Comparison Table */}
+                            {isExpanded && (
+                              <div className="bg-slate-50/70 p-4 border-t border-slate-100">
+                                <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-2xs">
+                                  <table className="w-full text-left text-xs">
+                                    <thead>
+                                      <tr className="bg-slate-100 text-[10px] font-black uppercase text-slate-500 border-b border-slate-200">
+                                        <th className="py-2 px-3">ฟิลด์ข้อมูล</th>
+                                        <th className="py-2 px-3">Label (Ground Truth)</th>
+                                        <th className="py-2 px-3">Predicted (Qwen SLM)</th>
+                                        <th className="py-2 px-3 text-center">สถานะ</th>
+                                        <th className="py-2 px-3 text-right">Similarity</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100 font-mono text-[11px]">
+                                      {Object.entries(FIELD_LABELS).map(([fieldKey, meta]) => {
+                                        const fScore = docEval.field_scores?.[fieldKey];
+                                        const labelVal = docEval.ground_truth?.[fieldKey] ?? "-";
+                                        const predVal = docEval.prediction?.[fieldKey] ?? "-";
+                                        const isMatch = fScore?.exact_match;
+
+                                        return (
+                                          <tr key={fieldKey} className="hover:bg-slate-50/60">
+                                            <td className="py-1.5 px-3 font-sans font-bold text-slate-700">{meta.th}</td>
+                                            <td className="py-1.5 px-3 text-slate-900 font-bold">{String(labelVal)}</td>
+                                            <td className="py-1.5 px-3 text-indigo-700">{String(predVal)}</td>
+                                            <td className="py-1.5 px-3 text-center">
+                                              {isMatch ? (
+                                                <span className="inline-flex items-center gap-1 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-black text-emerald-700">
+                                                  <Check className="h-3 w-3" /> ตรงกัน
+                                                </span>
+                                              ) : (
+                                                <span className="inline-flex items-center gap-1 rounded bg-amber-50 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
+                                                  ไม่ตรงกัน
+                                                </span>
+                                              )}
+                                            </td>
+                                            <td className="py-1.5 px-3 text-right text-slate-600">
+                                              {((fScore?.similarity ?? 0) * 100).toFixed(0)}%
+                                            </td>
+                                          </tr>
+                                        );
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* 4 Hero KPI Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Card 1: F1-Score */}

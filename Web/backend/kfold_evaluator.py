@@ -485,6 +485,7 @@ def run_kfold_evaluation(
     prompt_variant: str = "zero-shot",
     force_rerun: bool = False,
     doc_id: str | None = None,
+    single_fold: int | None = None,
 ) -> dict[str, Any]:
     if not GT_FILE.is_file():
         raise FileNotFoundError(f"Ground truth dataset not found: {GT_FILE}")
@@ -537,16 +538,24 @@ def run_kfold_evaluation(
     predictions: list[dict[str, Any]] = []
 
     if is_single_doc:
-        splits = [(np.array([], dtype=int), np.array([0], dtype=int))]
+        target_splits = [(1, np.array([], dtype=int), np.array([0], dtype=int))]
     else:
         kfold = KFold(n_splits=k_splits, shuffle=True, random_state=random_seed)
         indices = np.arange(len(documents))
-        splits = list(kfold.split(indices))
+        all_splits = list(kfold.split(indices))
+        if single_fold is not None:
+            if single_fold < 1 or single_fold > len(all_splits):
+                raise ValueError(f"single_fold must be between 1 and {len(all_splits)}, got {single_fold}")
+            tr_idx, val_idx = all_splits[single_fold - 1]
+            target_splits = [(single_fold, tr_idx, val_idx)]
+        else:
+            target_splits = [(f_num, tr, val) for f_num, (tr, val) in enumerate(all_splits, start=1)]
 
-    for fold, (_, validation_indices) in enumerate(splits, start=1):
+    for fold, train_indices, validation_indices in target_splits:
         validation_documents = [documents[index] for index in validation_indices]
         slm_scores = []
         baseline_scores = []
+        document_evaluations = []
         for document in validation_documents:
             prediction, trace = _extract(document, prompt_snapshot, force_rerun=force_rerun)
             truth = _get_document_ground_truth(document)
@@ -557,13 +566,30 @@ def run_kfold_evaluation(
             baseline_scores.append(baseline_score)
             predictions.append({"run_id": run_id, "fold": fold, "id": document.get("id"), "file_name": document.get("file_name"), "prediction": deepcopy(prediction), "ground_truth": None})
 
+            matched_count = sum(1 for f in CORE_FIELDS if slm_score[f]["exact_match"])
+            document_evaluations.append({
+                "id": document.get("id"),
+                "file_name": document.get("file_name"),
+                "category": document.get("category", "invoice"),
+                "ground_truth": truth,
+                "prediction": deepcopy(prediction),
+                "field_scores": slm_score,
+                "matched_fields_count": matched_count,
+                "total_fields": len(CORE_FIELDS),
+                "accuracy_pct": round(100 * matched_count / len(CORE_FIELDS), 2),
+            })
+
         slm_fold = _fold_result(fold, validation_documents, slm_scores)
+        slm_fold["document_evaluations"] = document_evaluations
+        slm_fold["train_samples_count"] = len(train_indices)
         baseline_fold = _fold_result(fold, validation_documents, baseline_scores)
         slm_folds.append(slm_fold)
         baseline_folds.append(baseline_fold)
 
-    _validate_fold_manifest(slm_folds, documents)
-    _validate_fold_manifest(baseline_folds, documents)
+    if not is_single_doc and single_fold is None:
+        _validate_fold_manifest(slm_folds, documents)
+        _validate_fold_manifest(baseline_folds, documents)
+
     assert prompt_snapshot["benchmark_prompt_variant"] == "zero-shot"
     assert prompt_snapshot["benchmark_examples"] == []
     assert all(item["ground_truth"] is None for item in predictions)
@@ -578,14 +604,47 @@ def run_kfold_evaluation(
     slm_std_precision = float(np.std([fold["precision_pct"] for fold in slm_folds]))
     slm_mean_recall = float(np.mean([fold["recall_pct"] for fold in slm_folds]))
     slm_std_recall = float(np.std([fold["recall_pct"] for fold in slm_folds]))
+
+    train_folds_list = [f for f in range(1, k_splits + 1) if f != single_fold] if single_fold else []
+    all_matches_flat = [1 if doc_ev["field_scores"][f]["exact_match"] else 0 for fld in slm_folds for doc_ev in fld.get("document_evaluations", []) for f in CORE_FIELDS]
+    label_sample = [str(doc_ev["ground_truth"].get(f, "-"))[:15] for fld in slm_folds for doc_ev in fld.get("document_evaluations", []) for f in CORE_FIELDS][:30]
+    pred_sample = [str(doc_ev["prediction"].get(f, "-"))[:15] for fld in slm_folds for doc_ev in fld.get("document_evaluations", []) for f in CORE_FIELDS][:30]
+
+    round_info = {
+        "is_single_fold": single_fold is not None,
+        "current_round": single_fold or 1,
+        "total_rounds": k_splits,
+        "test_fold": single_fold or 1,
+        "train_folds": train_folds_list,
+        "train_count": len(train_indices) if single_fold else int(len(documents) * (k_splits - 1) / k_splits),
+        "test_count": len(validation_documents) if single_fold else len(documents),
+        "total_dataset_count": len(documents),
+        "matches_vector": all_matches_flat[:60],
+        "label_sample": label_sample,
+        "pred_sample": pred_sample,
+        "total_checks": len(all_matches_flat),
+        "matched_checks": sum(all_matches_flat),
+    }
+
+    if is_single_doc:
+        method_title = "Single Document Live Test (ทดสอบสด 1 ฉบับ)"
+    elif single_fold is not None:
+        train_str = ", ".join([f"Fold {f}" for f in train_folds_list])
+        method_title = f"5-Fold Cross-Validation: รอบที่ {single_fold} (Fold {single_fold} → TEST {len(validation_documents)} ฉบับ | {train_str} → TRAIN {len(train_indices)} ฉบับ)"
+    else:
+        method_title = f"Shuffled {k_splits}-Fold Cross-Validation ({k_splits} Folds, N={len(documents)} ฉบับ)"
+
     report = {
         "run_id": run_id,
         "created_at": datetime.now(timezone.utc).isoformat(),
-        "method": "Single Document Live Test (ทดสอบสด 1 ฉบับ)" if is_single_doc else f"Shuffled {k_splits}-Fold Cross-Validation",
+        "method": method_title,
         "prompt_variant": prompt_variant,
         "dataset": data.get("dataset_name", "Logistics Invoice Benchmark Dataset"),
-        "total_documents": len(documents),
+        "total_documents": len(validation_documents) if single_fold else len(documents),
+        "total_dataset_documents": len(documents),
         "k_splits": k_splits,
+        "single_fold": single_fold,
+        "round_info": round_info,
         "random_seed": random_seed,
         "metrics_summary": {
             "mean_accuracy_pct": round(float(np.mean(slm_accuracy)), 2),
@@ -610,7 +669,7 @@ def run_kfold_evaluation(
         "report_dir": str(REPORT_DIR),
         "prediction_count": len(predictions),
         "prediction_ground_truth_separated": True,
-        "fold_manifest": [{"fold": fold["fold"], "val_doc_ids": fold["val_doc_ids"]} for fold in slm_folds],
+        "fold_manifest": [{"fold": fold_item["fold"], "val_doc_ids": fold_item["val_doc_ids"]} for fold_item in slm_folds],
         "field_performance": slm_field_report,
         "folds": slm_folds,
         "prompt_config": {"source": "prompts.json", "snapshot": prompt_snapshot},
@@ -623,13 +682,13 @@ def run_kfold_evaluation(
             "mean_f1_score_pct": round(float(np.mean(baseline_f1)), 2),
             "f1_std_dev": round(float(np.std(baseline_f1)), 2),
             "f1_display": f"{np.mean(baseline_f1):.2f}% ± {np.std(baseline_f1):.2f}%",
-            "mean_similarity_pct": round(float(np.mean([fold['similarity_pct'] for fold in baseline_folds])), 2),
-            "similarity_display": f"{np.mean([fold['similarity_pct'] for fold in baseline_folds]):.2f}% ± {np.std([fold['similarity_pct'] for fold in baseline_folds]):.2f}%",
+            "mean_similarity_pct": round(float(np.mean([fold_item['similarity_pct'] for fold_item in baseline_folds])), 2),
+            "similarity_display": f"{np.mean([fold_item['similarity_pct'] for fold_item in baseline_folds]):.2f}% ± {np.std([fold_item['similarity_pct'] for fold_item in baseline_folds]):.2f}%",
         },
         "delta_improvement": {
             "accuracy_delta_pct": round(float(np.mean(slm_accuracy) - np.mean(baseline_accuracy)), 2),
             "f1_delta_pct": round(float(np.mean(slm_f1) - np.mean(baseline_f1)), 2),
-            "similarity_delta_pct": round(float(np.mean(slm_similarity) - np.mean([fold['similarity_pct'] for fold in baseline_folds])), 2),
+            "similarity_delta_pct": round(float(np.mean(slm_similarity) - np.mean([fold_item['similarity_pct'] for fold_item in baseline_folds])), 2),
         },
         "baseline_model": {"mean_accuracy_pct": round(float(np.mean(baseline_accuracy)), 2), "std_accuracy": round(float(np.std(baseline_accuracy)), 2), "mean_f1_score_pct": round(float(np.mean(baseline_f1)), 2), "std_f1": round(float(np.std(baseline_f1)), 2), "folds": baseline_folds, "field_scores": baseline_field_report},
     }
@@ -647,7 +706,7 @@ def run_kfold_evaluation(
         },
     )
     _write_json(report_file, report)
-    if not is_single_doc:
+    if not is_single_doc and single_fold is None:
         _write_json(REPORT_DIR / "kfold_evaluation_report.json", report)
         _write_json(BASE_DIR / "kfold_evaluation_report.json", report)
         (REPORT_DIR / "kfold_thesis_table.md").write_text(generate_markdown_thesis_table(report), encoding="utf-8")
@@ -657,24 +716,22 @@ def run_kfold_evaluation(
 
 def generate_markdown_thesis_table(report: dict[str, Any]) -> str:
     slm = report["proposed_slm"]
-    base = report["baseline_model"]
     lines = [
         f"## ตารางผลการทดลอง {report['k_splits']}-Fold Cross-Validation ระบบแปลงเอกสารสู่ JSON Schema",
         f"**จำนวนเอกสาร:** {report['total_documents']} ฉบับ | **Prompt version:** {report['prompt_config']['snapshot'].get('version', 'unknown')} | **Run ID:** `{report['run_id']}`",
         "",
-        "| ฟิลด์ข้อมูลหลัก | Baseline | Qwen SLM | Δ |",
-        "| :--- | :---: | :---: | :---: |",
+        "| ฟิลด์ข้อมูลหลัก | ความแม่นยำเฉลี่ย (Mean ± SD) | F1-Score |",
+        "| :--- | :---: | :---: |",
     ]
     for field in CORE_FIELDS:
         slm_field = slm["field_scores"][field]
-        base_field = base["field_scores"][field]
-        delta = slm_field["mean_accuracy_pct"] - base_field["mean_accuracy_pct"]
-        lines.append(f"| {FIELD_LABELS_TH[field]} | {base_field['mean_accuracy_pct']:.1f}% ± {base_field['std_accuracy_pct']:.1f}% | {slm_field['mean_accuracy_pct']:.1f}% ± {slm_field['std_accuracy_pct']:.1f}% | {delta:+.1f}% |")
+        f1 = slm_field.get("mean_f1_score_pct", 0.0)
+        lines.append(f"| {FIELD_LABELS_TH[field]} | {slm_field['mean_accuracy_pct']:.1f}% ± {slm_field['std_accuracy_pct']:.1f}% | {f1:.1f}% |")
     lines.extend([
         "",
         f"**Overall Accuracy:** {slm['mean_accuracy_pct']:.2f}% ± {slm['std_accuracy']:.2f}%",
         f"**F1-Score:** {slm['mean_f1_score_pct']:.2f}% ± {slm['std_f1']:.2f}%",
-        f"**Predictions:** `{report['prediction_file']}`",
+        f"**Predictions:** `{report.get('prediction_file', '-')}`",
     ])
     return "\n".join(lines)
 

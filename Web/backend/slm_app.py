@@ -1076,6 +1076,7 @@ def get_kfold_report(
     prompt_variant: str = "zero-shot",
     limit: int | None = None,
     doc_id: str | None = None,
+    single_fold: int | None = None,
 ) -> dict[str, Any]:
     if prompt_variant.strip().lower() != "zero-shot":
         raise HTTPException(status_code=400, detail="K-Fold evaluation supports zero-shot only")
@@ -1091,12 +1092,12 @@ def get_kfold_report(
             cached_report = None
 
     # If general request without rerun, return cached 5-fold thesis report immediately
-    if not rerun and limit is None and doc_id is None and k > 1:
+    if not rerun and limit is None and doc_id is None and k > 1 and single_fold is None:
         if cached_report:
             return cached_report
 
-    # Run only if explicitly requested, single-doc test, or specific document
-    if rerun or limit is not None or doc_id is not None or k <= 1:
+    # Run only if explicitly requested, single-doc test, specific document, or single_fold
+    if rerun or limit is not None or doc_id is not None or k <= 1 or single_fold is not None:
         try:
             try:
                 from .kfold_evaluator import run_kfold_evaluation
@@ -1109,6 +1110,7 @@ def get_kfold_report(
                 prompt_variant=prompt_variant,
                 force_rerun=rerun if (k <= 1 or doc_id is not None) else False,
                 doc_id=doc_id,
+                single_fold=single_fold,
             )
             return report
         except Exception as exc:
