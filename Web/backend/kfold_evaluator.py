@@ -167,8 +167,13 @@ def compare_field_values(pred_val: Any, true_val: Any) -> dict[str, Any]:
         exact = abs(predicted_number - truth_number) < 0.01
         similarity = 1.0 if exact else max(0.0, 1.0 - abs(predicted_number - truth_number) / (abs(truth_number) + 1e-6))
         return {"exact_match": exact, "similarity": round(similarity, 4), "pred": pred, "truth": truth}
-    exact = pred.lower() == truth.lower()
-    return {"exact_match": exact, "similarity": levenshtein_similarity(pred, truth), "pred": pred, "truth": truth}
+    if pred.lower() == truth.lower():
+        return {"exact_match": True, "similarity": 1.0, "pred": pred, "truth": truth}
+    norm_pred = re.sub(r'[\s\.,\-_/()]+', '', pred).lower()
+    norm_truth = re.sub(r'[\s\.,\-_/()]+', '', truth).lower()
+    if norm_pred and norm_pred == norm_truth:
+        return {"exact_match": True, "similarity": 1.0, "pred": pred, "truth": truth}
+    return {"exact_match": False, "similarity": levenshtein_similarity(pred, truth), "pred": pred, "truth": truth}
 
 
 def _document_path(document: dict[str, Any]) -> pathlib.Path:
