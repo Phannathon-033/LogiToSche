@@ -288,6 +288,75 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   const [liveSLMTimeMs, setLiveSLMTimeMs] = useState<number>(0);
   const [liveSLMError, setLiveSLMError] = useState<string | null>(null);
 
+  // Fresh GPU Inference Runner states (60 docs live re-inference)
+  const [freshRunStatus, setFreshRunStatus] = useState<any | null>(null);
+  const [isPollingFresh, setIsPollingFresh] = useState<boolean>(false);
+
+  useEffect(() => {
+    let interval: any;
+    if (isPollingFresh || freshRunStatus?.is_running) {
+      interval = setInterval(async () => {
+        try {
+          const res = await apiFetch("/api/benchmark/kfold/fresh-status");
+          if (res.ok) {
+            const data = await res.json();
+            setFreshRunStatus(data);
+            if (data.finished && data.final_report) {
+              setKfoldReport(data.final_report);
+              setIsPollingFresh(false);
+              showToast?.(`การรันสดบน GPU สำหรับ 60 ฉบับเสร็จสิ้นแล้ว! ความแม่นยำ: ${data.final_accuracy}`);
+            }
+            if (!data.is_running && !data.finished) {
+              setIsPollingFresh(false);
+            }
+          }
+        } catch (e) {
+          console.error("Poll fresh status error:", e);
+        }
+      }, 2500);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isPollingFresh, freshRunStatus?.is_running]);
+
+  async function handleStartFreshRun(maxDocs?: number) {
+    try {
+      setIsPollingFresh(true);
+      const url = `/api/benchmark/kfold/fresh-start?fold=${selectedSingleFold}&k=5${maxDocs ? `&max_docs=${maxDocs}` : ""}`;
+      showToast?.(maxDocs ? `กำลังเริ่มสั่งรันสดบน GPU สำหรับ ${maxDocs} ฉบับแรก...` : `กำลังเริ่มสั่งรัน AI สกัดสดบน GPU สำหรับ Fold ${selectedSingleFold} (60 ฉบับ)...`);
+      const resp = await apiFetch(url, {
+        method: "POST",
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        showToast?.(`ระบบเริ่มรันโมเดลบน GPU แล้ว (PID: ${data.pid || "Active"}) — ติดตามความคืบหน้าสดได้ทันที`);
+      } else {
+        showToast?.("ไม่สามารถเริ่มการรันสดได้");
+        setIsPollingFresh(false);
+      }
+    } catch (err: any) {
+      console.error("Fresh run start failed:", err);
+      showToast?.("เกิดข้อผิดพลาดในการเริ่มรันสด");
+      setIsPollingFresh(false);
+    }
+  }
+
+  async function handleStopFreshRun() {
+    try {
+      showToast?.("กำลังส่งคำสั่งหยุดการประมวลผลสด...");
+      const resp = await apiFetch("/api/benchmark/kfold/fresh-stop", { method: "POST" });
+      if (resp.ok) {
+        setIsPollingFresh(false);
+        setFreshRunStatus((prev: any) => prev ? { ...prev, is_running: false } : null);
+        showToast?.("หยุดการประมวลผลสดบน GPU เรียบร้อยแล้ว");
+      }
+    } catch (err: any) {
+      console.error("Fresh run stop failed:", err);
+      showToast?.("ไม่สามารถหยุดการรันสดได้");
+    }
+  }
+
   useEffect(() => {
     loadAllData();
   }, []);
@@ -307,6 +376,22 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         }
       } else {
         console.warn("Ground truth fetch failed:", gtRes);
+      }
+
+      // Check if fresh run is currently running or completed
+      try {
+        const freshRes = await apiFetch("/api/benchmark/kfold/fresh-status");
+        if (freshRes.ok) {
+          const freshData = await freshRes.json();
+          setFreshRunStatus(freshData);
+          if (freshData.is_running) {
+            setIsPollingFresh(true);
+          } else if (freshData.finished && freshData.final_report) {
+            setKfoldReport(freshData.final_report);
+          }
+        }
+      } catch (e) {
+        console.warn("Check fresh status on mount:", e);
       }
     } catch (err) {
       console.error("Failed to load benchmark data:", err);
@@ -929,6 +1014,64 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             </div>
           </div>
 
+          {/* Round 1 Special Fresh GPU Action Bar */}
+          {evaluationMode === "round1" && (
+            <div className="mt-4 pt-3 border-t border-indigo-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-gradient-to-r from-indigo-50/80 via-blue-50/50 to-white p-3.5 rounded-xl border border-indigo-100 shadow-2xs">
+              <div className="flex items-start sm:items-center gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-xs">
+                  <Zap className="h-4.5 w-4.5 text-amber-300" />
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-black text-indigo-950">
+                      โหมดประมวลผลสดบน GPU (Fresh GPU Re-inference · ไม่ดึงแคชเดิม)
+                    </span>
+                    <span className="rounded-md bg-indigo-100 text-indigo-800 text-[10px] font-black px-2 py-0.5 border border-indigo-200">
+                      Fold {selectedSingleFold} (TEST 60 ฉบับ)
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 mt-0.5">
+                    สั่งให้โมเดล <b>Qwen2.5-1.5B (CUDA:0)</b> รันประมวลผลและสกัด 11 ฟิลด์สดทีละฉบับใหม่ทั้งหมด ข้อมูลที่ได้จะสดใหม่ 100% ตรงตามสถานะโมเดล
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
+                {freshRunStatus?.is_running ? (
+                  <button
+                    type="button"
+                    onClick={handleStopFreshRun}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-red-300 bg-red-50 hover:bg-red-100 px-3.5 py-2 text-xs font-black text-red-700 transition shadow-2xs"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                    <span>หยุดการรันสด (Abort)</span>
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleStartFreshRun(5)}
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-indigo-200 bg-white hover:bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-700 transition shadow-2xs"
+                      title="ทดสอบรันสด 5 ฉบับแรกบน GPU เพื่อดูความเร็วและการสกัดสด"
+                    >
+                      <Play className="h-3.5 w-3.5 fill-indigo-600 text-indigo-600" />
+                      <span>รันสด 5 ฉบับแรก (~40s)</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleStartFreshRun()}
+                      className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-700 hover:from-indigo-700 hover:to-blue-800 px-4 py-2 text-xs font-black text-white hover:scale-[1.02] active:scale-[0.98] transition shadow-md shadow-indigo-600/20"
+                    >
+                      <Zap className="h-3.5 w-3.5 fill-amber-300 text-amber-300 animate-pulse" />
+                      <span>⚡ สั่งรัน AI ประมวลผลสดบน GPU ทั้ง 60 ฉบับ (Fresh Run)</span>
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Live Progress Stepper when running */}
           {isRunningTest && (
             <div className="mt-4 rounded-xl border border-blue-200 bg-white p-3.5 shadow-2xs space-y-2 animate-in fade-in duration-200">
@@ -962,6 +1105,159 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             </div>
           )}
         </div>
+
+        {/* =================================================================== */}
+        {/* LIVE GPU INFERENCE PROGRESS DASHBOARD                              */}
+        {/* =================================================================== */}
+        {freshRunStatus?.is_running && (
+          <div className="rounded-2xl border-2 border-indigo-500 bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 p-5 text-white shadow-xl animate-in fade-in duration-300 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-indigo-800/60 pb-3">
+              <div className="flex items-center gap-3">
+                <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/40">
+                  <Zap className="h-5 w-5 text-amber-300 animate-pulse" />
+                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                  </span>
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-sm font-black tracking-wide text-white">
+                      ระบบกำลังรัน AI สกัดข้อมูลสดบน GPU (Fresh GPU Re-inference)
+                    </h3>
+                    <span className="rounded-md bg-indigo-500/30 border border-indigo-400/30 px-2 py-0.5 font-mono text-[10px] font-bold text-indigo-200">
+                      CUDA:0 · RTX 3050
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-300 mt-0.5">
+                    โมเดล Qwen2.5-1.5B กำลังรันสกัด 11 ฟิลด์สดสำหรับ <b>Fold {freshRunStatus.fold} (ชุดทดสอบ Test Set: {freshRunStatus.total_docs} ฉบับ)</b>
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleStopFreshRun}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-red-400/40 bg-red-950/60 hover:bg-red-900/60 px-3 py-1.5 text-xs font-bold text-red-300 transition"
+                >
+                  <X className="h-3.5 w-3.5" />
+                  <span>ยกเลิกการรัน (Abort)</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Progress Bar & Current Document */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 text-indigo-300 font-mono min-w-0">
+                  <Loader2 className="h-4 w-4 animate-spin text-amber-400 shrink-0" />
+                  <span className="shrink-0">
+                    กำลังสกัดฉบับที่ <b>{freshRunStatus.current_index}</b> / {freshRunStatus.total_docs}:
+                  </span>
+                  <span className="text-white font-bold shrink-0">{freshRunStatus.current_doc_id}</span>
+                  <span className="text-slate-400 truncate max-w-[280px]">({freshRunStatus.current_file_name})</span>
+                </div>
+                <span className="font-mono text-sm font-black text-amber-400 shrink-0">
+                  {Math.round(((freshRunStatus.completed_docs || 0) / (freshRunStatus.total_docs || 1)) * 100)}%
+                </span>
+              </div>
+
+              <div className="h-3 w-full rounded-full bg-slate-800 overflow-hidden p-0.5 border border-slate-700">
+                <div
+                  className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-amber-400 rounded-full transition-all duration-300 shadow-sm"
+                  style={{ width: `${((freshRunStatus.completed_docs || 0) / (freshRunStatus.total_docs || 1)) * 100}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Live Stats Cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
+              <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3">
+                <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">ประมวลผลแล้ว (Completed)</span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-black text-white">{freshRunStatus.completed_docs}</span>
+                  <span className="text-slate-400">/ {freshRunStatus.total_docs} ฉบับ</span>
+                </div>
+              </div>
+
+              <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3">
+                <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">เวลาที่ใช้ไป (Elapsed)</span>
+                <div className="text-lg font-black text-white">
+                  {Math.floor((freshRunStatus.elapsed_seconds || 0) / 60)}m {Math.floor((freshRunStatus.elapsed_seconds || 0) % 60)}s
+                </div>
+              </div>
+
+              <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3">
+                <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">ความแม่นยำสด (Live Accuracy)</span>
+                <div className="text-lg font-black text-emerald-400">
+                  {typeof freshRunStatus.live_accuracy_pct === "number" ? freshRunStatus.live_accuracy_pct.toFixed(2) : "0.00"}%
+                </div>
+              </div>
+
+              <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3">
+                <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">สถานะ Qwen SLM (GPU)</span>
+                <div className="flex items-center gap-1.5 text-amber-300 font-bold">
+                  <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping" />
+                  <span>กำลัง Infer สด</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Live Terminal Stream of Inferred Docs */}
+            {freshRunStatus.recent_logs && freshRunStatus.recent_logs.length > 0 && (
+              <div className="rounded-xl bg-slate-950 border border-slate-800 p-3 font-mono text-xs space-y-1">
+                <div className="flex items-center justify-between text-[11px] text-slate-400 border-b border-slate-800/80 pb-1.5 mb-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                    <span className="font-bold text-slate-300">Live GPU Inference Log Stream:</span>
+                  </div>
+                  <span>ล่าสุด {freshRunStatus.recent_logs.length} ฉบับ</span>
+                </div>
+                <div className="space-y-1 max-h-28 overflow-y-auto font-mono text-[11px] text-emerald-400">
+                  {freshRunStatus.recent_logs.map((log: string, lIdx: number) => (
+                    <div key={lIdx} className="flex items-center gap-2">
+                      <span className="text-slate-500">&gt;</span>
+                      <span>{log}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Fresh Run Just Finished Notification Banner */}
+        {freshRunStatus?.finished && !freshRunStatus?.is_running && freshRunStatus?.completed_docs > 0 && (
+          <div className="rounded-2xl border border-emerald-300 bg-gradient-to-r from-emerald-50/90 via-teal-50/50 to-white p-4 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in duration-300">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-xs">
+                <CheckCircle2 className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h4 className="text-xs font-black text-slate-900">
+                    ประมวลผลสดบน GPU (CUDA:0) สำหรับ Fold {freshRunStatus.fold} ({freshRunStatus.completed_docs} ฉบับ) เสร็จสมบูรณ์แล้ว!
+                  </h4>
+                  <span className="rounded bg-emerald-100 text-emerald-800 font-mono font-bold text-[10px] px-2 py-0.5 border border-emerald-200">
+                    Fresh Inference 100%
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-600 mt-0.5">
+                  ผลลัพธ์ทั้งหมดด้านล่างคำนวณสดจากโมเดล Qwen2.5-1.5B โดยตรง ไม่ใช้แคชเดิม · ความแม่นยำรวม: <b className="text-emerald-700">{freshRunStatus.final_accuracy}</b>
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleStartFreshRun()}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-white px-3 py-1.5 text-xs font-black text-emerald-800 shadow-2xs hover:bg-emerald-50 transition"
+            >
+              <RefreshCw className="h-3.5 w-3.5" />
+              <span>สั่งรันสดใหม่อีกรอบ (Re-run Fresh)</span>
+            </button>
+          </div>
+        )}
 
         {kfoldReport ? (
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-[11px] font-mono text-slate-600">

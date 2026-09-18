@@ -4,6 +4,7 @@ import base64
 import json
 import os
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -1121,6 +1122,75 @@ def get_kfold_report(
     if not report_path.exists():
         raise HTTPException(status_code=500, detail="Report generation failed")
     return json.loads(report_path.read_text(encoding="utf-8"))
+
+
+_fresh_process = None
+
+
+@app.get("/api/benchmark/kfold/fresh-status")
+def get_fresh_run_status() -> dict[str, Any]:
+    progress_file = REPORT_DIR / "fresh_run_progress.json"
+    if progress_file.is_file():
+        try:
+            return json.loads(progress_file.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"is_running": False, "finished": False}
+
+
+@app.post("/api/benchmark/kfold/fresh-start")
+def start_fresh_run_endpoint(
+    fold: int = 1,
+    k: int = 5,
+    max_docs: int | None = None,
+    re_ocr: bool = False,
+) -> dict[str, Any]:
+    global _fresh_process
+    progress_file = REPORT_DIR / "fresh_run_progress.json"
+    if progress_file.is_file():
+        try:
+            curr = json.loads(progress_file.read_text(encoding="utf-8"))
+            if curr.get("is_running"):
+                return {"status": "already_running", "progress": curr}
+        except Exception:
+            pass
+
+    import subprocess
+    runner_script = BASE_DIR / "fresh_runner.py"
+    py_exec = sys.executable
+    cmd = [py_exec, str(runner_script), "--fold", str(fold), "--k", str(k)]
+    if max_docs:
+        cmd.extend(["--max", str(max_docs)])
+    if re_ocr:
+        cmd.append("--re-ocr")
+    _fresh_process = subprocess.Popen(
+        cmd,
+        cwd=str(BASE_DIR),
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    return {"status": "started", "fold": fold, "k": k, "max_docs": max_docs, "pid": _fresh_process.pid}
+
+
+@app.post("/api/benchmark/kfold/fresh-stop")
+def stop_fresh_run_endpoint() -> dict[str, Any]:
+    global _fresh_process
+    stopped = False
+    if _fresh_process and _fresh_process.poll() is None:
+        try:
+            _fresh_process.terminate()
+            stopped = True
+        except Exception:
+            pass
+    progress_file = REPORT_DIR / "fresh_run_progress.json"
+    if progress_file.is_file():
+        try:
+            curr = json.loads(progress_file.read_text(encoding="utf-8"))
+            curr["is_running"] = False
+            progress_file.write_text(json.dumps(curr, ensure_ascii=False, indent=2), encoding="utf-8")
+        except Exception:
+            pass
+    return {"status": "stopped", "process_terminated": stopped}
 
 
 @app.post("/api/benchmark/save-ground-truth")

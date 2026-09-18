@@ -447,6 +447,31 @@ def get_benchmark_kfold(
     return forward_slm_request(f"/api/benchmark/kfold{query}", {}, method="GET")
 
 
+@app.get("/api/benchmark/kfold/fresh-status")
+def get_benchmark_fresh_status() -> Any:
+    return forward_slm_request("/api/benchmark/kfold/fresh-status", {}, method="GET")
+
+
+@app.post("/api/benchmark/kfold/fresh-start")
+def post_benchmark_fresh_start(
+    fold: int = 1,
+    k: int = 5,
+    max_docs: int | None = None,
+    re_ocr: bool = False,
+) -> Any:
+    query = f"?fold={fold}&k={k}"
+    if max_docs:
+        query += f"&max_docs={max_docs}"
+    if re_ocr:
+        query += f"&re_ocr={str(re_ocr).lower()}"
+    return forward_slm_request(f"/api/benchmark/kfold/fresh-start{query}", {}, method="POST")
+
+
+@app.post("/api/benchmark/kfold/fresh-stop")
+def post_benchmark_fresh_stop() -> Any:
+    return forward_slm_request("/api/benchmark/kfold/fresh-stop", {}, method="POST")
+
+
 @app.get("/api/benchmark/image/{file_name}")
 def get_benchmark_image(file_name: str) -> Any:
     from fastapi.responses import FileResponse

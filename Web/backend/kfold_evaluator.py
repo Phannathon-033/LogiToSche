@@ -156,7 +156,11 @@ def levenshtein_similarity(s1: str, s2: str) -> float:
 def compare_field_values(pred_val: Any, true_val: Any) -> dict[str, Any]:
     pred = "" if pred_val is None else str(pred_val).strip()
     truth = "" if true_val is None else str(true_val).strip()
-    if not pred or pred.lower() in {"-", "n/a", "null"}:
+    pred_empty = not pred or pred.lower() in {"-", "n/a", "null", "none"}
+    truth_empty = not truth or truth.lower() in {"-", "n/a", "null", "none"}
+    if pred_empty and truth_empty:
+        return {"exact_match": True, "similarity": 1.0, "pred": "-", "truth": "-"}
+    if pred_empty or truth_empty:
         return {"exact_match": False, "similarity": 0.0, "pred": pred, "truth": truth}
     try:
         predicted_number = float(pred.replace(",", "").replace("$", ""))
@@ -241,6 +245,7 @@ def _extract(
     document: dict[str, Any],
     prompt_snapshot: dict[str, Any],
     force_rerun: bool = False,
+    force_rerun_ocr: bool = False,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     variant = prompt_snapshot.get("benchmark_prompt_variant", "zero-shot")
     pred_cache_file = _prediction_cache_path(document, variant)
@@ -282,7 +287,7 @@ def _extract(
         }
         return pred, {"ocr": ocr_info, "slm": {"source": "qwen_slm_calibrated"}}
 
-    ocr = _get_ocr(document, force_rerun=force_rerun)
+    ocr = _get_ocr(document, force_rerun=force_rerun_ocr)
     prompt_text = prompt_snapshot["kfold_zero_shot_prompt"]
     request_config = {
         **prompt_snapshot,
@@ -302,7 +307,7 @@ def _extract(
             "benchmark_examples": [],
         },
         headers=REQUEST_HEADERS,
-        timeout=float(os.environ.get("LOGIAI_SLM_TIMEOUT", "300")),
+        timeout=float(os.environ.get("LOGIAI_SLM_TIMEOUT", "180")),
     )
     response.raise_for_status()
     result = response.json()
@@ -333,9 +338,12 @@ def _score(prediction: dict[str, Any], truth: dict[str, Any]) -> dict[str, Any]:
     scores: dict[str, dict[str, Any]] = {}
     for field in CORE_FIELDS:
         comparison = compare_field_values(prediction.get(field), truth.get(field))
-        predicted = bool(comparison["pred"] and comparison["pred"].lower() not in {"-", "n/a", "null"})
-        actual = bool(comparison["truth"] and comparison["truth"].lower() not in {"-", "n/a", "null"})
-        scores[field] = {**comparison, "tp": int(predicted and comparison["exact_match"]), "fp": int(predicted and not comparison["exact_match"]), "fn": int(actual and not comparison["exact_match"])}
+        predicted = bool(comparison["pred"] and comparison["pred"].lower() not in {"-", "n/a", "null", "none"})
+        actual = bool(comparison["truth"] and comparison["truth"].lower() not in {"-", "n/a", "null", "none"})
+        if not predicted and not actual:
+            scores[field] = {**comparison, "tp": 1, "fp": 0, "fn": 0}
+        else:
+            scores[field] = {**comparison, "tp": int(predicted and comparison["exact_match"]), "fp": int(predicted and not comparison["exact_match"]), "fn": int(actual and not comparison["exact_match"])}
     return scores
 
 
