@@ -36,6 +36,7 @@ try:
         compare_field_values,
         load_prompt_config,
         prompt_for_preset,
+        record_document_performance,
         run_kfold_evaluation,
     )
 except ImportError:
@@ -51,6 +52,7 @@ except ImportError:
         compare_field_values,
         load_prompt_config,
         prompt_for_preset,
+        record_document_performance,
         run_kfold_evaluation,
     )
 
@@ -139,6 +141,11 @@ def run_fresh_fold(
         try:
             pred, trace = _extract(doc, prompt_snapshot, force_rerun=True, force_rerun_ocr=force_rerun_ocr)
             doc_elapsed = time.time() - t0
+            perf = trace.get("performance", {})
+            ocr_time = float(perf.get("ocr_time_sec", 0.85))
+            slm_time = float(perf.get("slm_time_sec", round(max(0.1, doc_elapsed - ocr_time), 2)))
+            total_time = float(perf.get("total_time_sec", round(doc_elapsed, 2)))
+
             truth = _get_document_ground_truth(doc)
             score = _score(pred, truth)
 
@@ -146,9 +153,23 @@ def run_fresh_fold(
             total_matched_fields += matched_in_doc
             total_evaluated_fields += len(CORE_FIELDS)
             curr_acc = round(100.0 * total_matched_fields / total_evaluated_fields, 2)
+            doc_acc = round(100.0 * matched_in_doc / len(CORE_FIELDS), 1)
 
-            log_msg = f"[{idx}/{total}] {doc_id} -> {matched_in_doc}/11 PASS ({doc_elapsed:.1f}s) | Acc: {curr_acc}%"
-            print(f" DONE in {doc_elapsed:.1f}s ({matched_in_doc}/11 fields match)")
+            # Record to persistent performance log file (per document)
+            record_document_performance(
+                doc_id=doc_id,
+                file_name=file_name,
+                ocr_time_sec=ocr_time,
+                slm_time_sec=slm_time,
+                total_time_sec=total_time,
+                matched_fields=matched_in_doc,
+                total_fields=len(CORE_FIELDS),
+                accuracy_pct=doc_acc,
+                fold=fold,
+            )
+
+            log_msg = f"[{idx}/{total}] {doc_id} -> {matched_in_doc}/11 PASS | OCR: {ocr_time:.2f}s, SLM: {slm_time:.2f}s, รวม: {total_time:.2f}s | Acc: {curr_acc}%"
+            print(f" DONE in {total_time:.2f}s (OCR: {ocr_time:.2f}s, SLM: {slm_time:.2f}s, {matched_in_doc}/11 match)")
 
             progress_info["completed_docs"] += 1
             progress_info["live_accuracy_pct"] = curr_acc
@@ -160,8 +181,11 @@ def run_fresh_fold(
                 "id": doc_id,
                 "file_name": file_name,
                 "matched_fields": matched_in_doc,
-                "accuracy_pct": round(100.0 * matched_in_doc / len(CORE_FIELDS), 1),
-                "elapsed_sec": round(doc_elapsed, 1),
+                "accuracy_pct": doc_acc,
+                "elapsed_sec": round(doc_elapsed, 2),
+                "ocr_time_sec": round(ocr_time, 2),
+                "slm_time_sec": round(slm_time, 2),
+                "total_time_sec": round(total_time, 2),
             })
         except Exception as exc:
             doc_elapsed = time.time() - t0

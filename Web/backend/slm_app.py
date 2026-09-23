@@ -1238,3 +1238,85 @@ def save_ground_truth(entry: GroundTruthEntry) -> dict[str, Any]:
         "doc_id": saved_entry["id"],
         "total_documents": len(documents),
     }
+
+
+@app.get("/api/benchmark/performance-log")
+def get_performance_log_endpoint() -> dict[str, Any]:
+    try:
+        from kfold_evaluator import get_performance_logs
+        return get_performance_logs()
+    except Exception as e:
+        return {"records": [], "summary": {}, "error": str(e)}
+
+
+@app.post("/api/benchmark/performance-log/clear")
+def clear_performance_log_endpoint() -> dict[str, Any]:
+    try:
+        from kfold_evaluator import PERF_LOG_FILE, PERF_CSV_FILE
+        if PERF_LOG_FILE.is_file():
+            PERF_LOG_FILE.unlink(missing_ok=True)
+        if PERF_CSV_FILE.is_file():
+            PERF_CSV_FILE.unlink(missing_ok=True)
+        return {"status": "success", "message": "Performance logs cleared"}
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
+
+
+# ---------------------------------------------------------------------------
+# Background Evaluation Job System (Immediate response, resume, OCR cache)
+# ---------------------------------------------------------------------------
+class StartEvaluationRequest(BaseModel):
+    mode: str = "5_fold"  # '5_fold' | 'single_fold' | 'single_doc'
+    fold: int = 1
+    k: int = 5
+    seed: int = 42
+    prompt_variant: str = "zero-shot"
+    resume: bool = True
+    force_rerun_ocr: bool = False
+    max_docs: int | None = None
+    doc_id: str | None = None
+
+
+@app.post("/api/evaluation/start")
+@app.post("/api/benchmark/evaluation/start")
+def start_evaluation_job(payload: StartEvaluationRequest | None = None) -> dict[str, Any]:
+    from evaluation_job_manager import job_manager
+    p = payload or StartEvaluationRequest()
+    return job_manager.start_job(
+        mode=p.mode,
+        single_fold=p.fold,
+        k_splits=p.k,
+        random_seed=p.seed,
+        prompt_variant=p.prompt_variant,
+        resume=p.resume,
+        force_rerun_ocr=p.force_rerun_ocr,
+        max_docs=p.max_docs,
+        doc_id=p.doc_id,
+    )
+
+
+@app.get("/api/evaluation/status")
+@app.get("/api/benchmark/evaluation/status")
+def get_current_evaluation_job_status() -> dict[str, Any]:
+    from evaluation_job_manager import job_manager
+    return job_manager.get_status(None)
+
+
+@app.get("/api/evaluation/{job_id}/status")
+def get_specific_evaluation_job_status(job_id: str) -> dict[str, Any]:
+    from evaluation_job_manager import job_manager
+    return job_manager.get_status(job_id)
+
+
+@app.post("/api/evaluation/stop")
+@app.post("/api/benchmark/evaluation/stop")
+def stop_current_evaluation_job() -> dict[str, Any]:
+    from evaluation_job_manager import job_manager
+    return job_manager.stop_job(None)
+
+
+@app.post("/api/evaluation/{job_id}/stop")
+def stop_specific_evaluation_job(job_id: str) -> dict[str, Any]:
+    from evaluation_job_manager import job_manager
+    return job_manager.stop_job(job_id)
+

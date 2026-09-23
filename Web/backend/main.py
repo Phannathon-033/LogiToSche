@@ -352,6 +352,7 @@ async def ocr_document(file: UploadFile = File(...), lang: str = Form("th")) -> 
 
     engine = get_engine(lang)
     tmp_path, image_preview, page_count = prepare_ocr_input(payload, suffix)
+    t_start = time.time()
     try:
         lines = extract_lines(predict(engine, tmp_path))
         text = "\n".join(line["text"] for line in lines if line["text"])
@@ -360,6 +361,7 @@ async def ocr_document(file: UploadFile = File(...), lang: str = Form("th")) -> 
             for line in lines
             if line["text"] and "position" in line and "tag" in line["position"]
         )
+        elapsed = round(time.time() - t_start, 3)
         return {
             "text": text,
             "spatial_text": spatial_text,
@@ -369,6 +371,7 @@ async def ocr_document(file: UploadFile = File(...), lang: str = Form("th")) -> 
             "device": OCR_DEVICE,
             "image_preview": image_preview,
             "page_count": page_count,
+            "inference_time_sec": elapsed,
         }
     finally:
         tmp_path.unlink(missing_ok=True)
@@ -470,6 +473,57 @@ def post_benchmark_fresh_start(
 @app.post("/api/benchmark/kfold/fresh-stop")
 def post_benchmark_fresh_stop() -> Any:
     return forward_slm_request("/api/benchmark/kfold/fresh-stop", {}, method="POST")
+
+
+@app.get("/api/benchmark/performance-log")
+def get_benchmark_performance_log() -> Any:
+    return forward_slm_request("/api/benchmark/performance-log", {}, method="GET")
+
+
+@app.get("/api/benchmark/performance-log/csv")
+def get_benchmark_performance_log_csv() -> Any:
+    from fastapi.responses import FileResponse, Response
+    csv_file = Path(__file__).resolve().parent / "reports" / "doc_performance_log.csv"
+    if csv_file.is_file():
+        return FileResponse(csv_file, media_type="text/csv", filename="doc_performance_log.csv")
+    headers_line = "timestamp,doc_id,file_name,fold,ocr_time_sec,slm_time_sec,total_time_sec,accuracy_pct,matched_fields,total_fields\n"
+    return Response(content=headers_line, media_type="text/csv", headers={"Content-Disposition": "attachment; filename=doc_performance_log.csv"})
+
+
+@app.post("/api/benchmark/performance-log/clear")
+def post_benchmark_performance_log_clear() -> Any:
+    return forward_slm_request("/api/benchmark/performance-log/clear", {}, method="POST")
+
+
+# ---------------------------------------------------------------------------
+# Background Evaluation Job System (Immediate response, resume, OCR cache)
+# ---------------------------------------------------------------------------
+@app.post("/api/evaluation/start")
+@app.post("/api/benchmark/evaluation/start")
+def post_evaluation_start(payload: dict[str, Any] | None = None) -> Any:
+    return forward_slm_request("/api/evaluation/start", payload or {}, method="POST")
+
+
+@app.get("/api/evaluation/status")
+@app.get("/api/benchmark/evaluation/status")
+def get_evaluation_status() -> Any:
+    return forward_slm_request("/api/evaluation/status", {}, method="GET")
+
+
+@app.get("/api/evaluation/{job_id}/status")
+def get_evaluation_job_status(job_id: str) -> Any:
+    return forward_slm_request(f"/api/evaluation/{job_id}/status", {}, method="GET")
+
+
+@app.post("/api/evaluation/stop")
+@app.post("/api/benchmark/evaluation/stop")
+def post_evaluation_stop() -> Any:
+    return forward_slm_request("/api/evaluation/stop", {}, method="POST")
+
+
+@app.post("/api/evaluation/{job_id}/stop")
+def post_evaluation_job_stop(job_id: str) -> Any:
+    return forward_slm_request(f"/api/evaluation/{job_id}/stop", {}, method="POST")
 
 
 @app.get("/api/benchmark/image/{file_name}")
