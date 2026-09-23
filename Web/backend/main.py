@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+from datetime import datetime
 import gc
 import io
 import os
@@ -78,13 +79,17 @@ async def verify_gateway_token(request: Request, call_next):
     if request.method == "OPTIONS":
         return await call_next(request)
 
-    public_paths = {"/docs", "/redoc", "/openapi.json", "/api/health", "/favicon.ico"}
+    public_paths = {
+        "/docs", "/redoc", "/openapi.json", "/api/health", "/favicon.ico",
+        "/api/benchmark/kfold/export-excel", "/api/evaluation/export-excel",
+        "/api/benchmark/performance-log/csv"
+    }
     if request.url.path in public_paths or request.url.path.startswith("/api/benchmark/image/"):
         return await call_next(request)
 
     expected_token = os.environ.get("LOGIAI_GATEWAY_TOKEN", "").strip()
     if expected_token:
-        token = request.headers.get("X-LogiAI-Token") or request.headers.get("x-logiai-token")
+        token = request.headers.get("X-LogiAI-Token") or request.headers.get("x-logiai-token") or request.query_params.get("token")
         if not token or token.strip() != expected_token:
             from fastapi.responses import JSONResponse
             return JSONResponse(
@@ -435,11 +440,12 @@ def get_benchmark_kfold(
     doc_id: str | None = None,
     single_fold: int | None = None,
 ) -> Any:
-    if prompt_variant.strip().lower() != "zero-shot":
-        raise HTTPException(status_code=400, detail="K-Fold evaluation supports zero-shot only")
+    cleaned_variant = prompt_variant.strip().lower()
+    if cleaned_variant not in {"zero-shot", "one-shot", "few-shot"}:
+        raise HTTPException(status_code=400, detail=f"Unsupported prompt variant: {prompt_variant}")
     query = (
         f"?k={k}&seed={seed}&rerun={str(rerun).lower()}"
-        "&prompt_variant=zero-shot"
+        f"&prompt_variant={cleaned_variant}"
     )
     if limit is not None:
         query += f"&limit={limit}"
@@ -495,6 +501,30 @@ def post_benchmark_performance_log_clear() -> Any:
     return forward_slm_request("/api/benchmark/performance-log/clear", {}, method="POST")
 
 
+@app.get("/api/benchmark/kfold/export-excel")
+@app.get("/api/evaluation/export-excel")
+def get_kfold_excel_report_endpoint() -> Any:
+    from fastapi.responses import FileResponse
+    from datetime import datetime
+    import sys
+    backend_dir = Path(__file__).resolve().parent
+    if str(backend_dir) not in sys.path:
+        sys.path.insert(0, str(backend_dir))
+    try:
+        from excel_report_generator import generate_kfold_excel_report
+        excel_path = generate_kfold_excel_report()
+        if not excel_path.is_file():
+            raise HTTPException(status_code=404, detail="Excel report not found")
+        date_str = datetime.now().strftime("%Y%m%d")
+        return FileResponse(
+            excel_path,
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            filename=f"LogiAI_KFold_Evaluation_Report_{date_str}.xlsx",
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate Excel report: {e}")
+
+
 # ---------------------------------------------------------------------------
 # Background Evaluation Job System (Immediate response, resume, OCR cache)
 # ---------------------------------------------------------------------------
@@ -524,6 +554,13 @@ def post_evaluation_stop() -> Any:
 @app.post("/api/evaluation/{job_id}/stop")
 def post_evaluation_job_stop(job_id: str) -> Any:
     return forward_slm_request(f"/api/evaluation/{job_id}/stop", {}, method="POST")
+
+
+@app.post("/api/evaluation/reset")
+@app.post("/api/benchmark/evaluation/reset")
+def post_evaluation_reset() -> Any:
+    return forward_slm_request("/api/evaluation/reset", {}, method="POST")
+
 
 
 @app.get("/api/benchmark/image/{file_name}")

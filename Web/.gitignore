@@ -8,6 +8,8 @@ backend/ocr_cache/
 backend/prediction_cache/
 backend/reports/
 backend/.env
+.env
+.env.*
 .env.local
 ocr-test.png
 

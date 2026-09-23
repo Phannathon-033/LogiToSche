@@ -21,6 +21,7 @@ import {
   FileCheck,
   FileCheck2,
   FileCode,
+  FileSpreadsheet,
   FileText,
   Filter,
   Flame,
@@ -33,6 +34,7 @@ import {
   Maximize2,
   Play,
   RefreshCw,
+  RotateCcw,
   Search,
   Sparkles,
   Table,
@@ -331,7 +333,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   const [kSplits, setKSplits] = useState<number>(5);
   const [randomSeed, setRandomSeed] = useState<number>(42);
   const [selectedTestDocId, setSelectedTestDocId] = useState<string>("DOC-001");
-  const promptVariant = "zero-shot" as const;
+  const [promptVariant, setPromptVariant] = useState<"zero-shot" | "one-shot" | "few-shot">("zero-shot");
   const [kfoldReport, setKfoldReport] = useState<KFoldReport | null>(null);
   const [documents, setDocuments] = useState<GroundTruthDoc[]>([]);
   const [selectedDoc, setSelectedDoc] = useState<GroundTruthDoc | null>(null);
@@ -365,7 +367,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   // Background Evaluation Job System (Immediate response, resume capability, OCR cache)
   const [evalJob, setEvalJob] = useState<EvaluationJobStatus | null>(null);
   const [isPollingJob, setIsPollingJob] = useState<boolean>(false);
-  const [autoResume, setAutoResume] = useState<boolean>(true);
+  const [autoResume, setAutoResume] = useState<boolean>(false);
 
   async function fetchPerformanceLogs() {
     setLoadingPerfLogs(true);
@@ -400,6 +402,29 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
   function handleDownloadPerfCsv() {
     window.open(`${API_BASE_URL}/api/benchmark/performance-log/csv`, "_blank");
+  }
+
+  async function handleDownloadExcelReport() {
+    try {
+      showToast?.("กำลังสร้างและดาวน์โหลดรายงานสรุป Excel อย่างละเอียด (.xlsx)...");
+      const resp = await apiFetch("/api/benchmark/kfold/export-excel");
+      if (!resp.ok) {
+        throw new Error(`Download failed with status ${resp.status}`);
+      }
+      const blob = await resp.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `LogiAI_KFold_Evaluation_Report_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      showToast?.("ดาวน์โหลดรายงาน Excel อย่างละเอียดสำเร็จเรียบร้อยแล้ว!");
+    } catch (err) {
+      console.error("Download Excel error:", err);
+      showToast?.("ไม่สามารถดาวน์โหลดไฟล์ Excel ได้ กรุณาลองใหม่อีกครั้ง");
+    }
   }
 
   // Polling effect for Background Evaluation Job
@@ -442,14 +467,32 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
     try {
       setIsPollingJob(true);
+      // Give instant UI feedback so button transforms immediately
+      setEvalJob({
+        job_id: "กำลังเริ่มงาน...",
+        status: "running",
+        is_running: true,
+        mode: modeToUse,
+        current_doc_id: modeToUse === "single_doc" ? selectedTestDocId : undefined,
+        overall_current: 0,
+        overall_total: modeToUse === "single_doc" ? 1 : modeToUse === "single_fold" ? (customMaxDocs || 60) : 300,
+        fold_current: 0,
+        fold_total: modeToUse === "single_doc" ? 1 : (customMaxDocs || 60),
+        current_fold: foldToUse,
+        total_folds: modeToUse === "5_fold" ? 5 : 1,
+        elapsed_seconds: 0,
+        recent_logs: [`กำลังเริ่มงานประเมินสด ${modeToUse === "single_doc" ? `1 ฉบับ (${selectedTestDocId}) บน GPU` : modeToUse}...`],
+        completed_items: [],
+      } as any);
+
       const payload = {
         mode: modeToUse,
         fold: foldToUse,
-        k: kSplits,
+        k: Math.max(2, kSplits),
         seed: randomSeed,
         prompt_variant: promptVariant,
-        resume: autoResume,
-        force_rerun_ocr: false, // ALWAYS reuse OCR cache!
+        resume: modeToUse === "single_doc" ? false : autoResume,
+        force_rerun_ocr: modeToUse === "single_doc" ? true : !autoResume,
         max_docs: customMaxDocs,
         doc_id: selectedTestDocId,
       };
@@ -459,7 +502,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           ? "กำลังเริ่มงานประเมิน 5-Fold ครบ 300 ฉบับใน Background..."
           : modeToUse === "single_fold"
           ? `กำลังเริ่มงานประเมิน Fold ${foldToUse} (${customMaxDocs ? `${customMaxDocs} ฉบับ` : "60 ฉบับ"}) ใน Background...`
-          : `กำลังเริ่มงานประเมินสด 1 ฉบับ (${selectedTestDocId})...`
+          : `กำลังเริ่มงานประเมินสด 1 ฉบับ (${selectedTestDocId}) บน GPU...`
       );
 
       const resp = await apiFetch("/api/evaluation/start", {
@@ -499,6 +542,19 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       }
     } catch (err) {
       showToast?.("ไม่สามารถส่งคำสั่งหยุดได้");
+    }
+  }
+
+  async function handleResetEvaluationJob() {
+    try {
+      const resp = await apiFetch("/api/evaluation/reset", { method: "POST" });
+      if (resp.ok) {
+        setEvalJob(null);
+        setIsPollingJob(false);
+        showToast?.("รีเซ็ตสถานะการประเมินผลเรียบร้อยแล้ว");
+      }
+    } catch (err) {
+      showToast?.("ไม่สามารถรีเซ็ตได้");
     }
   }
 
@@ -759,6 +815,16 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
               <FileCode className="h-3.5 w-3.5 text-blue-600" />
               <span>รายงาน JSON</span>
             </button>
+
+            <button
+              type="button"
+              onClick={handleDownloadExcelReport}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3.5 py-1.5 text-xs font-bold text-emerald-800 shadow-2xs hover:bg-emerald-100 transition active:scale-95"
+              title="ดาวน์โหลดรายงานสรุปผลการประเมินอย่างละเอียด 4 ชีตในรูปแบบ Excel (.xlsx)"
+            >
+              <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
+              <span>รายงาน Excel (.xlsx)</span>
+            </button>
           </div>
         </div>
       </div>
@@ -899,8 +965,25 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
                   Prompt Variant
                 </label>
-                <div className="inline-flex items-center rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800 shadow-2xs">
-                  Zero-shot
+                <div
+                  className={`inline-flex items-center rounded-xl border px-2.5 py-1 text-xs font-bold shadow-2xs transition ${
+                    promptVariant === "zero-shot"
+                      ? "border-emerald-300 bg-emerald-50 text-emerald-800"
+                      : promptVariant === "one-shot"
+                      ? "border-blue-300 bg-blue-50 text-blue-800"
+                      : "border-purple-300 bg-purple-50 text-purple-800"
+                  }`}
+                >
+                  <select
+                    value={promptVariant}
+                    disabled={evalJob?.is_running}
+                    onChange={(e) => setPromptVariant(e.target.value as "zero-shot" | "one-shot" | "few-shot")}
+                    className="bg-transparent text-xs font-bold focus:outline-none cursor-pointer disabled:opacity-60"
+                  >
+                    <option value="zero-shot" className="text-slate-900 bg-white">Zero-shot</option>
+                    <option value="one-shot" className="text-slate-900 bg-white">One-shot</option>
+                    <option value="few-shot" className="text-slate-900 bg-white">Few-shot</option>
+                  </select>
                 </div>
               </div>
 
@@ -1059,19 +1142,67 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                     <span>หยุดการประมวลผล (Stop)</span>
                   </button>
                 ) : (
-                  <button
-                    type="button"
-                    onClick={() => handleStartEvaluationJob(evalJob.mode, evalJob.current_fold)}
-                    className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-400/50 bg-emerald-950/80 hover:bg-emerald-900 px-3.5 py-1.5 text-xs font-bold text-emerald-200 transition shadow-xs active:scale-95"
-                  >
-                    <Play className="h-3.5 w-3.5 fill-emerald-400 text-emerald-400" />
-                    <span>
-                      {evalJob.status === "stopped" ? "ทำต่อจากจุดเดิม (Resume)" : "รันใหม่อีกรอบ (Re-run)"}
-                    </span>
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleStartEvaluationJob(evalJob.mode, evalJob.current_fold)}
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-400/50 bg-emerald-950/80 hover:bg-emerald-900 px-3.5 py-1.5 text-xs font-bold text-emerald-200 transition shadow-xs active:scale-95"
+                    >
+                      <Play className="h-3.5 w-3.5 fill-emerald-400 text-emerald-400" />
+                      <span>
+                        {evalJob.status === "stopped" ? "ทำต่อจากจุดเดิม (Resume)" : "รันใหม่อีกรอบ (Re-run)"}
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleResetEvaluationJob}
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 px-3 py-1.5 text-xs font-bold text-slate-300 transition shadow-xs active:scale-95"
+                      title="รีเซ็ตสถานะหน้าต่างประเมินผลกลับสู่เริ่มต้น"
+                    >
+                      <RotateCcw className="h-3.5 w-3.5 text-slate-400" />
+                      <span>รีเซ็ต (Reset)</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleDownloadExcelReport}
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/80 bg-emerald-600 hover:bg-emerald-500 px-3.5 py-1.5 text-xs font-bold text-white transition shadow-sm active:scale-95"
+                      title="ดาวน์โหลดรายงานสรุป Excel อย่างละเอียด (.xlsx)"
+                    >
+                      <FileSpreadsheet className="h-3.5 w-3.5" />
+                      <span>ดาวน์โหลด Excel (.xlsx)</span>
+                    </button>
+                  </>
                 )}
               </div>
             </div>
+
+            {/* Job Completion Banner */}
+            {evalJob.status === "completed" && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-xl bg-emerald-950/80 border border-emerald-500/50 text-emerald-100 shadow-sm animate-in fade-in">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400 shrink-0">
+                    <CheckCircle2 className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold block text-white">
+                      การประเมินผลเสร็จสิ้นสมบูรณ์ ({evalJob.completed_docs}/{evalJob.overall_total} ฉบับ)!
+                    </span>
+                    <span className="text-[11px] text-emerald-300">
+                      ระบบได้บันทึกคะแนนและสร้างไฟล์ Excel สรุปผล 4 ชีตอย่างละเอียดพร้อมให้ดาวน์โหลดแล้ว
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleDownloadExcelReport}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 px-3.5 py-2 text-xs font-black text-slate-950 transition shadow-md shrink-0 active:scale-95"
+                >
+                  <FileSpreadsheet className="h-4 w-4" />
+                  <span>ดาวน์โหลดรายงานสรุป Excel (.xlsx)</span>
+                </button>
+              </div>
+            )}
 
             {/* Dual Progress Bars */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1966,10 +2097,20 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                   <button
                     type="button"
                     onClick={handleDownloadPerfCsv}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition"
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition"
                   >
                     <Download className="h-3.5 w-3.5" />
-                    <span>ส่งออกเป็น CSV (.csv)</span>
+                    <span>ส่งออก CSV (.csv)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleDownloadExcelReport}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition"
+                    title="ดาวน์โหลดรายงานผลสรุปและบันทึกเวลาเป็นไฟล์ Excel (.xlsx)"
+                  >
+                    <FileSpreadsheet className="h-3.5 w-3.5" />
+                    <span>รายงานสรุป Excel (.xlsx)</span>
                   </button>
 
                   <button
