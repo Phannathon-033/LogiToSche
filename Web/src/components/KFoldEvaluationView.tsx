@@ -1,4 +1,5 @@
 import {
+  Activity,
   AlertCircle,
   ArrowLeft,
   Award,
@@ -335,24 +336,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   const [documents, setDocuments] = useState<GroundTruthDoc[]>([]);
   const [selectedDoc, setSelectedDoc] = useState<GroundTruthDoc | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isRunningTest, setIsRunningTest] = useState<boolean>(false);
-  const [runProgress, setRunProgress] = useState<{
-    step: number;
-    stepText: string;
-    progressPct: number;
-  }>({ step: 0, stepText: "", progressPct: 0 });
-  const [lastRunInfo, setLastRunInfo] = useState<{
-    timestamp: string;
-    elapsedSec: number;
-    k: number;
-    seed: number;
-    f1: string;
-    accuracy: string;
-    deltaF1: number | null;
-    deltaAcc: number | null;
-  } | null>(null);
   const [resultPulsing, setResultPulsing] = useState<boolean>(false);
-  const [testExecutionSec, setTestExecutionSec] = useState<number>(0);
   const [copySuccess, setCopySuccess] = useState<boolean>(false);
   const [selectedFoldIdx, setSelectedFoldIdx] = useState<number | null>(null);
   const [searchDocQuery, setSearchDocQuery] = useState<string>("");
@@ -377,16 +361,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         String(r.fold).includes(q)
     );
   }, [perfLogs.records, searchPerfQuery]);
-
-  // Live SLM Document Tester states
-  const [isTestingDocSLM, setIsTestingDocSLM] = useState<boolean>(false);
-  const [liveSLMResult, setLiveSLMResult] = useState<any | null>(null);
-  const [liveSLMTimeMs, setLiveSLMTimeMs] = useState<number>(0);
-  const [liveSLMError, setLiveSLMError] = useState<string | null>(null);
-
-  // Fresh GPU Inference Runner states (60 docs live re-inference)
-  const [freshRunStatus, setFreshRunStatus] = useState<any | null>(null);
-  const [isPollingFresh, setIsPollingFresh] = useState<boolean>(false);
 
   // Background Evaluation Job System (Immediate response, resume capability, OCR cache)
   const [evalJob, setEvalJob] = useState<EvaluationJobStatus | null>(null);
@@ -529,44 +503,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   }
 
   useEffect(() => {
-    let interval: any;
-    if (isPollingFresh || freshRunStatus?.is_running) {
-      interval = setInterval(async () => {
-        try {
-          const res = await apiFetch("/api/benchmark/kfold/fresh-status");
-          if (res.ok) {
-            const data = await res.json();
-            setFreshRunStatus(data);
-            if (data.finished && data.final_report) {
-              setKfoldReport(data.final_report);
-              setIsPollingFresh(false);
-              showToast?.(`การรันสดบน GPU สำหรับ 60 ฉบับเสร็จสิ้นแล้ว! ความแม่นยำ: ${data.final_accuracy}`);
-              fetchPerformanceLogs();
-            }
-            if (!data.is_running && !data.finished) {
-              setIsPollingFresh(false);
-            }
-          }
-        } catch (e) {
-          console.error("Poll fresh status error:", e);
-        }
-      }, 2500);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isPollingFresh, freshRunStatus?.is_running]);
-
-  async function handleStartFreshRun(maxDocs?: number) {
-    // Delegate to unified Background Evaluation Job
-    await handleStartEvaluationJob("single_fold", selectedSingleFold, maxDocs);
-  }
-
-  async function handleStopFreshRun() {
-    await handleStopEvaluationJob();
-  }
-
-  useEffect(() => {
     loadAllData();
     fetchPerformanceLogs();
   }, []);
@@ -574,7 +510,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   async function loadAllData() {
     setLoading(true);
     try {
-      // Only fetch Ground Truth documents so user can inspect and pick docs
+      // Fetch Ground Truth documents so user can inspect and pick docs
       const gtRes = await apiFetch("/api/benchmark/ground-truth");
       if (gtRes.ok) {
         const gtData = await gtRes.json();
@@ -584,8 +520,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           setSelectedDoc(docs[0]);
           setSelectedTestDocId(docs[0].id || "DOC-001");
         }
-      } else {
-        console.warn("Ground truth fetch failed:", gtRes);
       }
 
       // Check active Background Evaluation Job status on mount
@@ -603,219 +537,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       } catch (e) {
         console.warn("Check eval job on mount:", e);
       }
-
-      // Check if fresh run is currently running or completed
-      try {
-        const freshRes = await apiFetch("/api/benchmark/kfold/fresh-status");
-        if (freshRes.ok) {
-          const freshData = await freshRes.json();
-          setFreshRunStatus(freshData);
-          if (freshData.is_running) {
-            setIsPollingFresh(true);
-          } else if (freshData.finished && freshData.final_report) {
-            setKfoldReport(freshData.final_report);
-          }
-        }
-      } catch (e) {
-        console.warn("Check fresh status on mount:", e);
-      }
     } catch (err) {
       console.error("Failed to load benchmark data:", err);
       showToast?.("ไม่สามารถโหลดข้อมูลชุดตัวอย่างได้ กรุณาตรวจสอบว่าเซิร์ฟเวอร์เปิดอยู่");
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function handleRunKFold(
-    mode = evaluationMode,
-    singleFold = selectedSingleFold,
-    targetK = kSplits,
-    targetSeed = randomSeed,
-    targetVariant = "zero-shot",
-    targetDoc = selectedTestDocId,
-  ) {
-    if (isRunningTest) return;
-    setIsRunningTest(true);
-
-    const isSingle = mode === "single_doc";
-    const isSingleFoldMode = mode === "round1";
-    const docId = targetDoc || selectedDoc?.id || "DOC-001";
-
-    let step1Text = `ขั้นตอนที่ 1/4: กำลังสุ่มแบ่งกลุ่มข้อมูลออกเป็น ${targetK} Folds (Seed: ${targetSeed})...`;
-    if (isSingle) {
-      step1Text = `ขั้นตอนที่ 1/4: กำลังรัน PaddleOCR v4 (GPU) อ่านข้อความสดจาก ${docId}...`;
-    } else if (isSingleFoldMode) {
-      step1Text = `ขั้นตอนที่ 1/4: สุ่มแบ่ง 5-Fold: กำหนด Fold ${singleFold} เป็น TEST (60 ฉบับ) และที่เหลือเป็น TRAIN (240 ฉบับ)...`;
-    }
-
-    setRunProgress({
-      step: 1,
-      stepText: step1Text,
-      progressPct: isSingle ? 20 : 25,
-    });
-
-    const start = Date.now();
-    try {
-      showToast?.(
-        isSingle
-          ? `กำลังเริ่มรันการทดสอบสด 1 ฉบับ (${docId}) ผ่าน PaddleOCR และ Qwen SLM...`
-          : isSingleFoldMode
-          ? `กำลังเริ่มรันการทดสอบ 5-Fold รอบที่ ${singleFold} (Fold ${singleFold} → TEST 60 ฉบับ | Fold 2-5 → TRAIN 240 ฉบับ)...`
-          : `กำลังเริ่มรันการทดสอบ ${targetK}-Fold Cross-Validation ครบทุก Fold...`,
-      );
-
-      let timer1: any;
-      let timer2: any;
-
-      if (isSingle) {
-        timer1 = setTimeout(() => {
-          setRunProgress({
-            step: 2,
-            stepText: `ขั้นตอนที่ 2/4: PaddleOCR เสร็จสิ้น! กำลังรัน Qwen2.5-1.5B (CUDA) สกัด 11 ฟิลด์สด...`,
-            progressPct: 65,
-          });
-        }, 6000);
-      } else if (isSingleFoldMode) {
-        timer1 = setTimeout(() => {
-          setRunProgress({
-            step: 2,
-            stepText: `ขั้นตอนที่ 2/4: กำลังดึงผลสกัด 11 ฟิลด์ของชุดทดสอบ Fold ${singleFold} (60 ฉบับ)...`,
-            progressPct: 55,
-          });
-        }, 200);
-
-        timer2 = setTimeout(() => {
-          setRunProgress({
-            step: 3,
-            stepText: `ขั้นตอนที่ 3/4: เปรียบเทียบ Label (Ground Truth) กับ Predicted และคำนวณ Accuracy...`,
-            progressPct: 80,
-          });
-        }, 400);
-      } else {
-        timer1 = setTimeout(() => {
-          setRunProgress({
-            step: 2,
-            stepText: `ขั้นตอนที่ 2/4: กำลังคำนวณความแม่นยำรายฟิลด์เทียบกับ Ground Truth...`,
-            progressPct: 55,
-          });
-        }, 250);
-
-        timer2 = setTimeout(() => {
-          setRunProgress({
-            step: 3,
-            stepText: `ขั้นตอนที่ 3/4: ประมวลผล Fold 1 ถึง Fold ${targetK} และคำนวณเมทริกซ์ 11 ฟิลด์มาตรฐาน...`,
-            progressPct: 80,
-          });
-        }, 500);
-      }
-
-      let queryUrl = "";
-      if (isSingle) {
-        queryUrl = `/api/benchmark/kfold?k=1&limit=1&rerun=true&prompt_variant=${targetVariant}&doc_id=${encodeURIComponent(docId)}`;
-      } else if (isSingleFoldMode) {
-        queryUrl = `/api/benchmark/kfold?k=5&single_fold=${singleFold}&seed=${targetSeed}&rerun=true&prompt_variant=${targetVariant}`;
-      } else {
-        queryUrl = `/api/benchmark/kfold?k=${targetK}&seed=${targetSeed}&rerun=true&prompt_variant=${targetVariant}`;
-      }
-
-      const resp = await apiFetch(queryUrl);
-
-      clearTimeout(timer1);
-      if (timer2) clearTimeout(timer2);
-
-      if (resp.ok) {
-        const data: KFoldReport = await resp.json();
-        setKfoldReport(data);
-        const elapsed = ((Date.now() - start) / 1000).toFixed(2);
-        setTestExecutionSec(Number(elapsed));
-
-        setRunProgress({
-          step: 4,
-          stepText: isSingle
-            ? `ขั้นตอนที่ 4/4: ทดสอบสด 1 ฉบับ (${docId}) สำเร็จ! (${elapsed}s) ความแม่นยำ: ${data.metrics_summary?.accuracy_display || "-"}`
-            : isSingleFoldMode
-            ? `ขั้นตอนที่ 4/4: ทดสอบรอบที่ ${singleFold} (Fold ${singleFold} TEST 60 ฉบับ) สำเร็จ! (${elapsed}s) ความแม่นยำ: ${data.metrics_summary?.accuracy_display || "-"}`
-            : `ขั้นตอนที่ 4/4: สรุปสถิติ 5-Fold และตรวจสอบขนาดตัวอย่าง Cochran สำเร็จ! (${elapsed}s)`,
-          progressPct: 100,
-        });
-
-        setLastRunInfo({
-          timestamp: new Date().toLocaleTimeString("th-TH"),
-          elapsedSec: Number(elapsed),
-          k: isSingle ? 1 : targetK,
-          seed: targetSeed,
-          f1: data.metrics_summary?.f1_display || `${data.metrics_summary?.mean_f1_score_pct}%`,
-          accuracy: data.metrics_summary?.accuracy_display || `${data.metrics_summary?.mean_accuracy_pct}%`,
-          deltaF1: null,
-          deltaAcc: null,
-        });
-
-        // Trigger pulse highlight animation on KPI cards
-        setResultPulsing(true);
-        setTimeout(() => setResultPulsing(false), 2000);
-        fetchPerformanceLogs();
-
-        showToast?.(
-          isSingle
-            ? `ทดสอบสด ${docId} เสร็จสิ้น! ความแม่นยำ: ${data.metrics_summary?.accuracy_display || "-"}`
-            : isSingleFoldMode
-            ? `ทดสอบรอบที่ ${singleFold} สำเร็จ! ความแม่นยำ: ${data.metrics_summary?.accuracy_display || "-"}`
-            : `ทดสอบ ${targetK}-Fold สำเร็จครบทุกรอบ! ความแม่นยำ: ${data.metrics_summary?.accuracy_display || "-"}`,
-        );
-      } else {
-        const errText = await resp.text().catch(() => "");
-        throw new Error(`API error: ${resp.status} ${errText}`);
-      }
-    } catch (err) {
-      console.error("Run K-Fold failed:", err);
-      showToast?.("เกิดข้อผิดพลาดในการประมวลผล K-Fold กรุณาลองใหม่อีกครั้ง");
-    } finally {
-      setTimeout(() => {
-        setIsRunningTest(false);
-      }, 400);
-    }
-  }
-
-
-  async function handleTestDocOnGPU(doc: GroundTruthDoc) {
-    setIsTestingDocSLM(true);
-    setLiveSLMError(null);
-    setLiveSLMResult(null);
-    const start = Date.now();
-    try {
-      showToast?.(`กำลังส่งเอกสาร ${doc.file_name} ประมวลผลที่ Qwen SLM (GPU CUDA:0)...`);
-      const mockOcrText = Object.entries(doc.ground_truth)
-        .map(([k, v]) => `${k}: ${v}`)
-        .join("\n");
-
-      const resp = await apiFetch("/api/slm/extract", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ocr_text: mockOcrText || "INVOICE " + doc.file_name,
-          source_file: doc.file_name,
-          document_type_hint: doc.category || "Invoice",
-        }),
-      });
-
-      const elapsed = Date.now() - start;
-      setLiveSLMTimeMs(elapsed);
-
-      if (resp.ok) {
-        const data = await resp.json();
-        setLiveSLMResult(data);
-        showToast?.(`Qwen SLM ประมวลผลเอกสารสำเร็จบน GPU ในเวลา ${elapsed} ms!`);
-      } else {
-        const errText = await resp.text().catch(() => "");
-        throw new Error(`SLM API error: ${resp.status} ${errText}`);
-      }
-    } catch (err: any) {
-      console.error("Live test failed:", err);
-      setLiveSLMError(err?.message || "ไม่สามารถเชื่อมต่อ SLM ได้");
-      showToast?.("เกิดข้อผิดพลาดในการรัน SLM สด");
-    } finally {
-      setIsTestingDocSLM(false);
     }
   }
 
@@ -956,18 +682,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   const fieldCount = Object.keys(kfoldReport?.field_performance ?? {}).length;
   const datasetSize = kfoldReport?.total_documents ?? documents.length;
 
-  const difficultyGroups = useMemo(() => {
-    const fields = Object.entries(kfoldReport?.field_performance ?? {}).map(([field, value]) => ({
-      field,
-      score: value.mean_accuracy_pct,
-    }));
-    return {
-      high: fields.filter(({ score }) => score > 90),
-      medium: fields.filter(({ score }) => score >= 80 && score <= 90),
-      complex: fields.filter(({ score }) => score < 80),
-    };
-  }, [kfoldReport]);
-
   const COCHRAN = kfoldReport?.sample_size_verification;
 
   return (
@@ -990,11 +704,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             )}
             <div>
               <div className="flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-xs">
-                  <Sparkles className="h-4 w-4 text-amber-300" />
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700">
+                  <Activity className="h-4 w-4" />
                 </div>
                 <h1 className="text-base font-black tracking-tight text-slate-900 sm:text-lg">
-                  การทดสอบ K-Fold & F1-Score (Model Evaluation)
+                  การทดสอบโมเดล (Model Evaluation & K-Fold)
                 </h1>
                 <span className="hidden rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 sm:inline-flex items-center gap-1">
                   <Cpu className="h-3 w-3 text-emerald-600" />
@@ -1005,8 +719,8 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
                 {kfoldReport
-                  ? `ประเมินผลจาก ${kfoldReport.method || "Shuffled K-Fold"} จำนวน ${datasetSize} ฉบับ และ ${fieldCount || "-"} ฟิลด์หลัก (Cochran n₀=246)`
-                  : `ชุดข้อมูล Ground Truth พร้อมทดสอบจำนวน ${documents.length || 300} ฉบับ (กดเริ่มรันการทดสอบเพื่อประมวลผลสด)`}
+                  ? `ประเมินผลจาก ${kfoldReport.method || "Shuffled K-Fold"} (${datasetSize} ฉบับ · ${fieldCount || 11} ฟิลด์หลัก · Cochran n₀=246)`
+                  : `ชุดข้อมูล Ground Truth 300 ฉบับ · สกัด 11 ฟิลด์มาตรฐาน (กดเริ่มประเมินเพื่อประมวลผล)`}
               </p>
             </div>
           </div>
@@ -1018,10 +732,10 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
               disabled={!kfoldReport}
               onClick={handleCopyThesisTable}
               className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
-              title={kfoldReport ? "คัดลอกตาราง Markdown สำหรับเล่มวิทยานิพนธ์" : "ต้องรันการทดสอบก่อนคัดลอก"}
+              title={kfoldReport ? "คัดลอกตาราง Markdown สำหรับเล่มรายงาน" : "ต้องรันการทดสอบก่อนคัดลอก"}
             >
               {copySuccess ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
-              <span>{copySuccess ? "คัดลอกแล้ว!" : "คัดลอกตาราง Markdown"}</span>
+              <span>{copySuccess ? "คัดลอกแล้ว!" : "คัดลอก Markdown"}</span>
             </button>
 
             <button
@@ -1032,7 +746,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
               title={kfoldReport ? "ดาวน์โหลดตารางผลทดสอบเป็น CSV" : "ต้องรันการทดสอบก่อนดาวน์โหลด"}
             >
               <Download className="h-3.5 w-3.5 text-slate-500" />
-              <span>ดาวน์โหลด CSV</span>
+              <span>ส่งออก CSV</span>
             </button>
 
             <button
@@ -1051,7 +765,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
       <main className="mx-auto max-w-[1440px] px-4 sm:px-6 pt-5 space-y-5">
         {/* =================================================================== */}
-        {/* INTERACTIVE CONTROLS BAR: K-SPLITS & ONE-CLICK TEST RUNNER          */}
+        {/* INTERACTIVE CONTROLS BAR: K-SPLITS & RUNNER                         */}
         {/* =================================================================== */}
         <div className="rounded-2xl border border-blue-200/80 bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-white p-4 sm:p-5 shadow-xs">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -1064,7 +778,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 <div className="inline-flex items-center rounded-xl bg-white p-1 border border-slate-200 shadow-2xs">
                   <button
                     type="button"
-                    disabled={isRunningTest}
+                    disabled={evalJob?.is_running}
                     onClick={() => {
                       setEvaluationMode("round1");
                       setSelectedSingleFold(1);
@@ -1076,11 +790,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                         : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                     }`}
                   >
-                    รอบที่ 1 (Fold 1 TEST: 60 | TRAIN: 240)
+                    รอบที่ 1 (Fold 1: 60 ฉบับ)
                   </button>
                   <button
                     type="button"
-                    disabled={isRunningTest}
+                    disabled={evalJob?.is_running}
                     onClick={() => {
                       setEvaluationMode("all_folds");
                       setKSplits(5);
@@ -1091,11 +805,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                         : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                     }`}
                   >
-                    5 Folds เต็มรูปแบบ (300 ฉบับ)
+                    5-Fold ครบ 300 ฉบับ
                   </button>
                   <button
                     type="button"
-                    disabled={isRunningTest}
+                    disabled={evalJob?.is_running}
                     onClick={() => {
                       setEvaluationMode("single_doc");
                       setKSplits(1);
@@ -1106,7 +820,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                         : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                     }`}
                   >
-                    1 ฉบับ (สด Live Demo ~20s)
+                    1 ฉบับ (สด)
                   </button>
                 </div>
               </div>
@@ -1122,7 +836,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                       <button
                         key={f}
                         type="button"
-                        disabled={isRunningTest}
+                        disabled={evalJob?.is_running}
                         onClick={() => setSelectedSingleFold(f)}
                         className={`rounded-lg px-2.5 py-1 text-xs font-extrabold transition disabled:opacity-60 ${
                           selectedSingleFold === f
@@ -1130,7 +844,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                             : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                         }`}
                       >
-                        รอบที่ {f} (Fold {f})
+                        Fold {f}
                       </button>
                     ))}
                   </div>
@@ -1147,7 +861,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                     <FileText className="h-3.5 w-3.5 text-blue-600 mr-1.5" />
                     <select
                       value={selectedTestDocId}
-                      disabled={isRunningTest}
+                      disabled={evalJob?.is_running}
                       onChange={(e) => setSelectedTestDocId(e.target.value)}
                       className="bg-transparent text-xs font-mono font-bold text-blue-900 focus:outline-none cursor-pointer disabled:opacity-60 max-w-[180px] truncate"
                     >
@@ -1164,17 +878,17 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
               {/* Seed Control */}
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                  Random Seed (ความคงที่ผลลัพธ์)
+                  Random Seed
                 </label>
                 <div className="inline-flex items-center rounded-xl bg-white px-2.5 py-1 border border-slate-200 shadow-2xs">
                   <span className="font-mono text-xs font-bold text-slate-400 mr-1.5">Seed:</span>
                   <select
                     value={randomSeed}
-                    disabled={isRunningTest}
+                    disabled={evalJob?.is_running}
                     onChange={(e) => setRandomSeed(Number(e.target.value))}
                     className="bg-transparent text-xs font-mono font-bold text-slate-800 focus:outline-none cursor-pointer disabled:opacity-60"
                   >
-                    <option value={42}>42 (Default Thesis)</option>
+                    <option value={42}>42 (Default)</option>
                     <option value={123}>123</option>
                     <option value={999}>999</option>
                   </select>
@@ -1186,23 +900,23 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                   Prompt Variant
                 </label>
                 <div className="inline-flex items-center rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800 shadow-2xs">
-                  Zero-shot (K-Fold only)
+                  Zero-shot
                 </div>
               </div>
 
               {/* Dataset Size Tag */}
               <div className="hidden lg:block">
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                  ชุดข้อมูลตัวอย่าง
+                  ชุดข้อมูลทดสอบ
                 </label>
                 <div className="inline-flex items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 border border-slate-200 text-xs font-bold text-slate-700 shadow-2xs">
                   <Database className="h-3.5 w-3.5 text-indigo-600" />
-                  <span>{datasetSize} ฉบับ ({fieldCount || "-"} ฟิลด์หลัก)</span>
+                  <span>{datasetSize} ฉบับ ({fieldCount || 11} ฟิลด์หลัก)</span>
                 </div>
               </div>
             </div>
 
-            {/* Run Button */}
+            {/* Run CTA Button */}
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -1210,9 +924,9 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                   const targetMode = evaluationMode === "all_folds" ? "5_fold" : evaluationMode === "single_doc" ? "single_doc" : "single_fold";
                   handleStartEvaluationJob(targetMode, selectedSingleFold);
                 }}
-                disabled={evalJob?.is_running || isRunningTest}
+                disabled={evalJob?.is_running}
                 className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-xs font-black text-white shadow-md transition ${
-                  evalJob?.is_running || isRunningTest
+                  evalJob?.is_running
                     ? "bg-slate-700 cursor-not-allowed opacity-90"
                     : "bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 shadow-blue-600/25 hover:scale-[1.02] hover:from-blue-700 hover:to-indigo-800 active:scale-[0.98]"
                 }`}
@@ -1222,9 +936,9 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                     <RefreshCw className="h-4 w-4 animate-spin text-white" />
                     <span>
                       {evalJob.mode === "single_doc"
-                        ? `กำลังประมวลผล ${evalJob.current_doc_id} (Background)...`
+                        ? `กำลังประมวลผล ${evalJob.current_doc_id || "1 ฉบับ"}...`
                         : evalJob.mode === "single_fold"
-                        ? `กำลังประมวลผลรอบที่ ${evalJob.current_fold} (${evalJob.fold_current}/${evalJob.fold_total} ฉบับ)...`
+                        ? `กำลังประมวลผล Fold ${evalJob.current_fold} (${evalJob.fold_current}/${evalJob.fold_total} ฉบับ)...`
                         : `กำลังประมวลผล 5-Fold (${evalJob.overall_current}/${evalJob.overall_total} ฉบับ)...`}
                     </span>
                   </>
@@ -1235,48 +949,14 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                       {evaluationMode === "single_doc"
                         ? `เริ่มทดสอบสด 1 ฉบับ (${selectedTestDocId})`
                         : evaluationMode === "round1"
-                        ? `เริ่มรันการทดสอบรอบที่ ${selectedSingleFold} (Fold ${selectedSingleFold}: TEST 60 | TRAIN 240)`
-                        : `เริ่มรัน 5-Fold ครบ 5 รอบ (300 ฉบับ)`}
+                        ? `เริ่มประเมิน Fold ${selectedSingleFold} (60 ฉบับ)`
+                        : `เริ่มประเมิน 5-Fold ครบ 300 ฉบับ`}
                     </span>
                   </>
                 )}
               </button>
             </div>
           </div>
-
-
-          {/* Live Progress Stepper when running */}
-          {isRunningTest && (
-            <div className="mt-4 rounded-xl border border-blue-200 bg-white p-3.5 shadow-2xs space-y-2 animate-in fade-in duration-200">
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2 font-bold text-blue-700">
-                  <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
-                  <span>{runProgress.stepText || "กำลังประมวลผล..."}</span>
-                </div>
-                <span className="font-mono font-black text-blue-600">{runProgress.progressPct}%</span>
-              </div>
-              <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500 transition-all duration-300 rounded-full"
-                  style={{ width: `${runProgress.progressPct}%` }}
-                />
-              </div>
-              <div className="grid grid-cols-4 gap-1 pt-1 text-[11px] text-center font-bold text-slate-400">
-                <span className={runProgress.step >= 1 ? "text-blue-600 font-extrabold" : ""}>
-                  {kSplits === 1 ? "1. PaddleOCR (GPU)" : `1. สุ่มแบ่ง ${kSplits} Fold`}
-                </span>
-                <span className={runProgress.step >= 2 ? "text-blue-600 font-extrabold" : ""}>
-                  {kSplits === 1 ? "2. Qwen SLM (CUDA)" : `2. ตรวจ ${fieldCount || "-"} ฟิลด์`}
-                </span>
-                <span className={runProgress.step >= 3 ? "text-blue-600 font-extrabold" : ""}>
-                  {kSplits === 1 ? "3. เทียบ Ground Truth" : "3. ประเมินความแม่นยำ"}
-                </span>
-                <span className={runProgress.step >= 4 ? "text-emerald-600 font-extrabold" : ""}>
-                  {kSplits === 1 ? "4. สรุปความแม่นยำสด" : "4. สรุปสถิติ Cochran"}
-                </span>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* =================================================================== */}
@@ -1541,81 +1221,13 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           </div>
         )}
 
-        {kfoldReport ? (
+        {kfoldReport && (
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-[11px] font-mono text-slate-600">
             <span>Run: <b className="text-slate-900">{kfoldReport.run_id || "-"}</b></span>
             <span>Variant: <b className="text-slate-900">{kfoldReport.prompt_variant || "-"}</b></span>
             <span>Seed: <b className="text-slate-900">{kfoldReport.random_seed ?? "-"}</b></span>
             <span>Method: <b className="text-slate-900">{kfoldReport.method}</b></span>
             <span>Created: <b className="text-slate-900">{kfoldReport.created_at ? new Date(kfoldReport.created_at).toLocaleString("th-TH") : "-"}</b></span>
-          </div>
-        ) : !isRunningTest ? (
-          <div className="rounded-2xl border border-blue-200/80 bg-gradient-to-r from-blue-50/60 via-slate-50 to-white p-4 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-2.5 w-2.5 rounded-full bg-blue-500 animate-pulse shrink-0" />
-              <span>
-                ยังไม่มีการโหลดผลการทดสอบเดิม — กรุณากดปุ่ม <b>"ทดสอบสด 1 ฉบับ"</b> (รันสด ~15-20s) หรือเลือก K-Fold แล้วกด <b>"เริ่มรันการทดสอบ"</b> ด้านบน
-              </span>
-            </div>
-            <span className="self-start sm:self-auto shrink-0 rounded-md bg-white border border-slate-200 px-2.5 py-1 font-mono text-[11px] font-bold text-slate-500 shadow-2xs">
-              สถานะ: รอสั่งรันโมเดลสด
-            </span>
-          </div>
-        ) : null}
-
-        {/* Persistent Completion Summary Banner */}
-        {lastRunInfo && !isRunningTest && (
-          <div className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50/90 via-teal-50/40 to-white p-4 shadow-2xs animate-in fade-in slide-in-from-top-1 duration-300">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-xs">
-                  <CheckCircle2 className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h4 className="text-sm font-black text-slate-900">
-                      รันการทดสอบ Cross-Validation สำเร็จแล้ว!
-                    </h4>
-                    <span className="rounded-md bg-emerald-100 border border-emerald-300 px-2 py-0.5 text-[11px] font-black text-emerald-800">
-                      K={lastRunInfo.k} Folds · Seed {lastRunInfo.seed}
-                    </span>
-                    <span className="text-[11px] text-slate-500 font-mono">
-                      เสร็จสิ้นเมื่อ {lastRunInfo.timestamp} (ใช้เวลา {lastRunInfo.elapsedSec} วินาที)
-                    </span>
-                  </div>
-                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
-                    <span className="text-slate-600 font-bold">ผลสรุป:</span>
-                    <span className="rounded-md bg-blue-100/90 px-2 py-0.5 font-bold text-blue-900">
-                      F1: <b>{lastRunInfo.f1}</b>
-                    </span>
-                    <span className="rounded-md bg-indigo-100/90 px-2 py-0.5 font-bold text-indigo-900">
-                      Accuracy: <b>{lastRunInfo.accuracy}</b>
-                    </span>
-                    <span className="rounded-md bg-emerald-100/90 px-2 py-0.5 font-bold text-emerald-900">
-                      สถานะ: <b>ผ่านเกณฑ์ประเมิน</b>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("folds")}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-white px-3 py-1.5 text-xs font-black text-emerald-800 shadow-2xs hover:bg-emerald-50 transition"
-                >
-                  <Table className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>ดูตารางผลราย Fold</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCopyThesisTable}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-black text-white shadow-xs hover:bg-emerald-700 transition"
-                >
-                  <Copy className="h-3.5 w-3.5" />
-                  <span>คัดลอกตาราง Markdown</span>
-                </button>
-              </div>
-            </div>
           </div>
         )}
 
@@ -1633,7 +1245,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             }`}
           >
             <BarChart3 className="h-4 w-4" />
-            <span>1. ภาพรวมผลการประเมินโมเดล Qwen SLM (Overview & Performance)</span>
+            <span>ภาพรวมผลการประเมิน (Overview)</span>
           </button>
           <button
             type="button"
@@ -1645,7 +1257,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             }`}
           >
             <Clock className="h-4 w-4" />
-            <span>2. บันทึก Performance Log รายฉบับ (OCR / SLM Latency Logs)</span>
+            <span>Performance Log (เวลาประมวลผล)</span>
             {perfLogs.records.length > 0 && (
               <span className="rounded-full bg-blue-100 text-blue-800 text-[10px] px-1.5 py-0.2 font-bold font-mono">
                 {perfLogs.records.length}
@@ -1662,7 +1274,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             }`}
           >
             <Table className="h-4 w-4" />
-            <span>3. ผลการทดสอบราย Fold & เมทริกซ์ 11 ฟิลด์ (Fold Breakdown Matrix)</span>
+            <span>ผลการทดสอบราย Fold (Fold Matrix)</span>
           </button>
           <button
             type="button"
@@ -1674,7 +1286,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             }`}
           >
             <FileCheck2 className="h-4 w-4" />
-            <span>4. สำรวจเอกสารทดสอบ & เฉลย Ground Truth (300 Invoices Explorer)</span>
+            <span>สำรวจเอกสาร (Document Explorer)</span>
           </button>
         </div>
 
@@ -1683,6 +1295,231 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         {/* =================================================================== */}
         {activeTab === "overview" && (
           <div className="space-y-6">
+            {/* 4 Hero KPI Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Card 1: F1-Score */}
+              <div
+                className={`rounded-2xl border border-indigo-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-indigo-300 transition duration-500 ${
+                  resultPulsing ? "ring-4 ring-indigo-500/40 scale-[1.02]" : ""
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+                    คะแนน F1-Score รวม (Overall F1)
+                  </span>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                    <Award className="h-4 w-4" />
+                  </div>
+                </div>
+                <div className="mt-2 flex items-baseline gap-2">
+                  <span className="text-3xl font-black text-indigo-600 font-mono tracking-tight">
+                    {kfoldReport?.metrics_summary?.f1_display || "-"}
+                  </span>
+                </div>
+                <div className="mt-3 flex items-center justify-between text-xs pt-2 border-t border-slate-100">
+                  <span className="text-slate-500">เป้าหมายโมเดล: <b>&ge; 85%</b></span>
+                  <span className={`inline-flex items-center gap-0.5 font-bold px-2 py-0.5 rounded-md text-[11px] ${
+                    kfoldReport ? "text-indigo-600 bg-indigo-50" : "text-slate-400 bg-slate-50"
+                  }`}>
+                    <TrendingUp className="h-3 w-3" /> {kfoldReport ? "ประสิทธิภาพสูง" : "รอการทดสอบ"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 2: Overall Accuracy */}
+              <div
+                className={`rounded-2xl border border-emerald-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-emerald-300 transition duration-500 ${
+                  resultPulsing ? "ring-4 ring-emerald-500/40 scale-[1.02]" : ""
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+                    ความแม่นยำรวม (Overall Accuracy)
+                  </span>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                    <CheckCircle2 className="h-4 w-4" />
+                  </div>
+                </div>
+                <div className="mt-2 flex items-baseline gap-2">
+                  <span className="text-3xl font-black text-emerald-600 font-mono tracking-tight">
+                    {kfoldReport?.metrics_summary?.accuracy_display || "-"}
+                  </span>
+                </div>
+                <div className="mt-3 flex items-center justify-between text-xs pt-2 border-t border-slate-100">
+                  <span className="text-slate-500">เกณฑ์มาตรฐาน: <b>&ge; 80%</b></span>
+                  <span className={`inline-flex items-center gap-0.5 font-bold px-2 py-0.5 rounded-md text-[11px] ${
+                    kfoldReport ? "text-emerald-600 bg-emerald-50" : "text-slate-400 bg-slate-50"
+                  }`}>
+                    <CheckCircle2 className="h-3 w-3" /> {kfoldReport ? "ผ่านเกณฑ์การทดสอบ" : "รอการทดสอบ"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 3: Precision & Recall */}
+              <div
+                className={`rounded-2xl border border-blue-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-blue-300 transition duration-500 ${
+                  resultPulsing ? "ring-4 ring-blue-500/40 scale-[1.02]" : ""
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+                    Precision vs Recall
+                  </span>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                    <Zap className="h-4 w-4" />
+                  </div>
+                </div>
+                <div className="mt-2 space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-slate-600">Precision:</span>
+                    <span className="font-mono font-black text-blue-700">{formatPercent(slmPrecision)}</span>
+                  </div>
+                  <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-blue-600 h-full rounded-full" style={{ width: `${slmPrecision ?? 0}%` }} />
+                  </div>
+                  <div className="flex items-center justify-between text-xs pt-1">
+                    <span className="font-semibold text-slate-600">Recall:</span>
+                    <span className="font-mono font-black text-emerald-700">{formatPercent(slmRecall)}</span>
+                  </div>
+                  <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${slmRecall ?? 0}%` }} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 4: Levenshtein Similarity */}
+              <div
+                className={`rounded-2xl border border-sky-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-sky-300 transition duration-500 ${
+                  resultPulsing ? "ring-4 ring-sky-500/40 scale-[1.02]" : ""
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+                    ความเหมือนตัวอักษร (Similarity)
+                  </span>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
+                    <Layers className="h-4 w-4" />
+                  </div>
+                </div>
+                <div className="mt-2 flex items-baseline gap-2">
+                  <span className="text-3xl font-black text-sky-600 font-mono tracking-tight">
+                    {kfoldReport?.metrics_summary?.similarity_display || "-"}
+                  </span>
+                </div>
+                <p className="mt-3 text-[11px] text-slate-500 pt-2 border-t border-slate-100 truncate">
+                  คำนวณผ่าน Normalized Token Levenshtein Distance
+                </p>
+              </div>
+            </div>
+
+            {/* Statistical Rigor Card (Cochran's Formula) */}
+            {COCHRAN && (
+              <div className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50/90 via-teal-50/40 to-white p-5 shadow-xs">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center gap-1 rounded-md bg-emerald-600 px-2 py-0.5 text-[11px] font-black text-white uppercase tracking-wider">
+                        <Check className="h-3.5 w-3.5" /> ผ่านเกณฑ์ทางสถิติ
+                      </span>
+                      <h3 className="text-sm font-black text-slate-900">
+                        การพิสูจน์ขนาดกลุ่มตัวอย่างขั้นต่ำตามสูตรของคอแครน (Cochran's Formula)
+                      </h3>
+                    </div>
+                    <p className="text-xs text-slate-600 max-w-[850px] leading-relaxed">
+                      คำนวณขนาดตัวอย่างขั้นต่ำได้ <b>n₀ = {COCHRAN.calculated_n0 ?? "-"} ฉบับ</b> จากข้อมูลที่รายงานโดย runtime จริง
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white px-4 py-2.5 rounded-xl border border-emerald-200 shadow-2xs shrink-0">
+                    <div className="text-right">
+                      <span className="text-[10px] font-bold uppercase text-slate-400">ขนาดตัวอย่างจริง (Actual N)</span>
+                      <p className="text-lg font-mono font-black text-emerald-700">
+                        N = {COCHRAN.actual_dataset_size ?? "-"} ฉบับ
+                      </p>
+                    </div>
+                    <div className="h-8 w-px bg-slate-200" />
+                    <div className="text-left">
+                      <span className="text-[10px] font-bold uppercase text-slate-400">สถานะกลุ่มตัวอย่าง</span>
+                      <p className="text-xs font-black text-emerald-600 flex items-center gap-1">
+                        {COCHRAN.is_statistically_significant ? (
+                          <>
+                            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                            N &ge; n₀ (ครบถ้วน)
+                          </>
+                        ) : (
+                          "ไม่ถึงเกณฑ์ n₀"
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Visual Head-to-Head Comparison Chart (11 Core Fields) */}
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-xs space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-4">
+                <div>
+                  <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-blue-600" />
+                    <span>ผลความแม่นยำรายฟิลด์ (Field-level Accuracy - Qwen SLM)</span>
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    แสดงค่าความแม่นยำรายฟิลด์ 11 ฟิลด์หลักจาก {kfoldReport?.method || "Shuffled K-Fold"}
+                  </p>
+                </div>
+                <div className="flex items-center gap-4 text-xs font-bold">
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-3 w-3 rounded-full bg-indigo-600" />
+                    <span className="text-slate-800">Qwen SLM (ความแม่นยำของโมเดล)</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* 11 Fields Visual Meters Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                {Object.entries(FIELD_LABELS).map(([key, meta]) => {
+                  const Icon = meta.icon;
+                  const slmScore = kfoldReport?.proposed_slm?.field_scores[key]?.mean ?? kfoldReport?.field_performance[key]?.mean_accuracy_pct;
+
+                  return (
+                    <div key={key} className="space-y-1.5 p-2.5 rounded-xl hover:bg-slate-50/80 transition">
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-1.5">
+                          <Icon className={`h-3.5 w-3.5 ${meta.color}`} />
+                          <span className="font-bold text-slate-900">{meta.th}</span>
+                          <span className="font-mono text-[11px] text-slate-400">({meta.en})</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-black text-xs text-indigo-600">{formatPercent(slmScore)}</span>
+                          {typeof slmScore === "number" && (
+                            <span
+                              className={`font-mono text-[10px] font-bold px-1.5 py-0.2 rounded border ${
+                                slmScore >= 90
+                                  ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+                                  : slmScore >= 70
+                                  ? "text-blue-700 bg-blue-50 border-blue-200"
+                                  : "text-amber-700 bg-amber-50 border-amber-200"
+                              }`}
+                            >
+                              {slmScore >= 90 ? "ดีเยี่ยม" : slmScore >= 70 ? "ผ่านเกณฑ์" : "ต้องตรวจทาน"}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Clean Single SLM Progress Bar */}
+                      <div className="relative h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+                        <div
+                          className="absolute left-0 top-0 h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full transition-all duration-500 opacity-90 shadow-xs"
+                          style={{ width: `${slmScore ?? 0}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Dedicated Round Breakdown & Vector Comparison Panel */}
             {kfoldReport?.round_info?.is_single_fold && (
               <div className="rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/90 via-white to-blue-50/60 p-5 sm:p-6 shadow-xs space-y-6">
@@ -2085,297 +1922,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 )}
               </div>
             )}
-
-            {/* 4 Hero KPI Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Card 1: F1-Score */}
-              <div
-                className={`rounded-2xl border border-indigo-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-indigo-300 transition duration-500 ${
-                  resultPulsing ? "ring-4 ring-indigo-500/40 scale-[1.02]" : ""
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
-                    คะแนน F1-Score รวม (Overall F1)
-                  </span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
-                    <Award className="h-4 w-4" />
-                  </div>
-                </div>
-                <div className="mt-2 flex items-baseline gap-2">
-                  <span className="text-3xl font-black text-indigo-600 font-mono tracking-tight">
-                    {kfoldReport?.metrics_summary?.f1_display || "-"}
-                  </span>
-                </div>
-                <div className="mt-3 flex items-center justify-between text-xs pt-2 border-t border-slate-100">
-                  <span className="text-slate-500">เป้าหมายโมเดล: <b>&ge; 85%</b></span>
-                  <span className={`inline-flex items-center gap-0.5 font-bold px-2 py-0.5 rounded-md text-[11px] ${
-                    kfoldReport ? "text-indigo-600 bg-indigo-50" : "text-slate-400 bg-slate-50"
-                  }`}>
-                    <TrendingUp className="h-3 w-3" /> {kfoldReport ? "ประสิทธิภาพสูง" : "รอการทดสอบ"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 2: Overall Accuracy */}
-              <div
-                className={`rounded-2xl border border-emerald-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-emerald-300 transition duration-500 ${
-                  resultPulsing ? "ring-4 ring-emerald-500/40 scale-[1.02]" : ""
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
-                    ความแม่นยำรวม (Overall Accuracy)
-                  </span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                    <CheckCircle2 className="h-4 w-4" />
-                  </div>
-                </div>
-                <div className="mt-2 flex items-baseline gap-2">
-                  <span className="text-3xl font-black text-emerald-600 font-mono tracking-tight">
-                    {kfoldReport?.metrics_summary?.accuracy_display || "-"}
-                  </span>
-                </div>
-                <div className="mt-3 flex items-center justify-between text-xs pt-2 border-t border-slate-100">
-                  <span className="text-slate-500">เกณฑ์มาตรฐาน: <b>&ge; 80%</b></span>
-                  <span className={`inline-flex items-center gap-0.5 font-bold px-2 py-0.5 rounded-md text-[11px] ${
-                    kfoldReport ? "text-emerald-600 bg-emerald-50" : "text-slate-400 bg-slate-50"
-                  }`}>
-                    <CheckCircle2 className="h-3 w-3" /> {kfoldReport ? "ผ่านเกณฑ์การทดสอบ" : "รอการทดสอบ"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 3: Precision & Recall */}
-              <div
-                className={`rounded-2xl border border-blue-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-blue-300 transition duration-500 ${
-                  resultPulsing ? "ring-4 ring-blue-500/40 scale-[1.02]" : ""
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
-                    Precision vs Recall
-                  </span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-                    <Zap className="h-4 w-4" />
-                  </div>
-                </div>
-                <div className="mt-2 space-y-1.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-slate-600">Precision:</span>
-                    <span className="font-mono font-black text-blue-700">{formatPercent(slmPrecision)}</span>
-                  </div>
-                  <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-blue-600 h-full rounded-full" style={{ width: `${slmPrecision ?? 0}%` }} />
-                  </div>
-                  <div className="flex items-center justify-between text-xs pt-1">
-                    <span className="font-semibold text-slate-600">Recall:</span>
-                    <span className="font-mono font-black text-emerald-700">{formatPercent(slmRecall)}</span>
-                  </div>
-                  <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${slmRecall ?? 0}%` }} />
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 4: Levenshtein Similarity */}
-              <div
-                className={`rounded-2xl border border-sky-200/80 bg-white p-5 shadow-xs relative overflow-hidden group hover:border-sky-300 transition duration-500 ${
-                  resultPulsing ? "ring-4 ring-sky-500/40 scale-[1.02]" : ""
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
-                    ความเหมือนตัวอักษร (Similarity)
-                  </span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
-                    <Layers className="h-4 w-4" />
-                  </div>
-                </div>
-                <div className="mt-2 flex items-baseline gap-2">
-                  <span className="text-3xl font-black text-sky-600 font-mono tracking-tight">
-                    {kfoldReport?.metrics_summary?.similarity_display || "-"}
-                  </span>
-                </div>
-                <p className="mt-3 text-[11px] text-slate-500 pt-2 border-t border-slate-100 truncate">
-                  คำนวณผ่าน Normalized Token Levenshtein Distance
-                </p>
-              </div>
-            </div>
-
-            {/* Statistical Rigor Card (Cochran's Formula) */}
-            {COCHRAN && (
-              <div className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50/90 via-teal-50/40 to-white p-5 shadow-xs">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center gap-1 rounded-md bg-emerald-600 px-2 py-0.5 text-[11px] font-black text-white uppercase tracking-wider">
-                        <Check className="h-3.5 w-3.5" /> ผ่านเกณฑ์ทางสถิติ
-                      </span>
-                      <h3 className="text-sm font-black text-slate-900">
-                        การพิสูจน์ขนาดกลุ่มตัวอย่างขั้นต่ำตามสูตรของคอแครน (Cochran's Formula)
-                      </h3>
-                    </div>
-                    <p className="text-xs text-slate-600 max-w-[850px] leading-relaxed">
-                      คำนวณขนาดตัวอย่างขั้นต่ำได้ <b>n₀ = {COCHRAN.calculated_n0 ?? "-"} ฉบับ</b> จากข้อมูลที่รายงานโดย runtime จริง
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3 bg-white px-4 py-2.5 rounded-xl border border-emerald-200 shadow-2xs shrink-0">
-                    <div className="text-right">
-                      <span className="text-[10px] font-bold uppercase text-slate-400">ขนาดตัวอย่างจริง (Actual N)</span>
-                      <p className="text-lg font-mono font-black text-emerald-700">
-                        N = {COCHRAN.actual_dataset_size ?? "-"} ฉบับ
-                      </p>
-                    </div>
-                    <div className="h-8 w-px bg-slate-200" />
-                    <div className="text-left">
-                      <span className="text-[10px] font-bold uppercase text-slate-400">สถานะกลุ่มตัวอย่าง</span>
-                      <p className="text-xs font-black text-emerald-600 flex items-center gap-1">
-                        {COCHRAN.is_statistically_significant ? (
-                          <>
-                            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                            N &ge; n₀ (ครบถ้วน)
-                          </>
-                        ) : (
-                          "ไม่ถึงเกณฑ์ n₀"
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Visual Head-to-Head Comparison Chart (11 Core Fields) */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-xs space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-4">
-                <div>
-                  <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-blue-600" />
-                    <span>ผลความแม่นยำรายฟิลด์ (Field-level Accuracy - Qwen SLM)</span>
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    แสดงค่าความแม่นยำรายฟิลด์ 11 ฟิลด์หลักจาก {kfoldReport?.method || "Shuffled K-Fold"}
-                  </p>
-                </div>
-                <div className="flex items-center gap-4 text-xs font-bold">
-                  <span className="flex items-center gap-1.5">
-                    <span className="h-3 w-3 rounded-full bg-indigo-600" />
-                    <span className="text-slate-800">Qwen SLM (ความแม่นยำของโมเดล)</span>
-                  </span>
-                </div>
-              </div>
-
-              {/* 11 Fields Visual Meters Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                {Object.entries(FIELD_LABELS).map(([key, meta]) => {
-                  const Icon = meta.icon;
-                  const slmScore = kfoldReport?.proposed_slm?.field_scores[key]?.mean ?? kfoldReport?.field_performance[key]?.mean_accuracy_pct;
-
-                  return (
-                    <div key={key} className="space-y-1.5 p-2.5 rounded-xl hover:bg-slate-50/80 transition">
-                      <div className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-1.5">
-                          <Icon className={`h-3.5 w-3.5 ${meta.color}`} />
-                          <span className="font-bold text-slate-900">{meta.th}</span>
-                          <span className="font-mono text-[11px] text-slate-400">({meta.en})</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono font-black text-xs text-indigo-600">{formatPercent(slmScore)}</span>
-                          {typeof slmScore === "number" && (
-                            <span
-                              className={`font-mono text-[10px] font-bold px-1.5 py-0.2 rounded border ${
-                                slmScore >= 90
-                                  ? "text-emerald-700 bg-emerald-50 border-emerald-200"
-                                  : slmScore >= 70
-                                  ? "text-blue-700 bg-blue-50 border-blue-200"
-                                  : "text-amber-700 bg-amber-50 border-amber-200"
-                              }`}
-                            >
-                              {slmScore >= 90 ? "ดีเยี่ยม" : slmScore >= 70 ? "ผ่านเกณฑ์" : "ต้องตรวจทาน"}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Clean Single SLM Progress Bar */}
-                      <div className="relative h-3 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div
-                          className="absolute left-0 top-0 h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full transition-all duration-500 opacity-90 shadow-xs"
-                          style={{ width: `${slmScore ?? 0}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Field Complexity & Difficulty Matrix */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Group 1: High Accuracy */}
-              <div className="rounded-2xl border border-emerald-200 bg-emerald-50/30 p-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-black text-emerald-800 uppercase tracking-wider flex items-center gap-1">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                    กลุ่มความแม่นยำสูงพิเศษ (&gt; 90%)
-                  </span>
-                  <span className="text-[11px] font-bold text-emerald-700">{difficultyGroups.high.length} ฟิลด์</span>
-                </div>
-                <p className="text-[11px] text-slate-600">
-                  ฟิลด์ที่มีโครงสร้างชัดเจนและโมเดลสกัดได้แม่นยำสูงสุด
-                </p>
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {difficultyGroups.high.map(({ field, score }) => (
-                    <span key={field} className="rounded-lg bg-white border border-emerald-200 px-2 py-1 text-[11px] font-bold text-emerald-800 shadow-2xs">
-                      {field} ({score.toFixed(1)}%)
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Group 2: Moderate Accuracy */}
-              <div className="rounded-2xl border border-blue-200 bg-blue-50/30 p-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-black text-blue-800 uppercase tracking-wider flex items-center gap-1">
-                    <span className="h-2 w-2 rounded-full bg-blue-500" />
-                    กลุ่มความแม่นยำระดับดีมาก (80% - 90%)
-                  </span>
-                  <span className="text-[11px] font-bold text-blue-700">{difficultyGroups.medium.length} ฟิลด์</span>
-                </div>
-                <p className="text-[11px] text-slate-600">
-                  ฟิลด์ข้อมูลคู่ค้าและสถานที่ซึ่งมีบริบททางภาษาซับซ้อน
-                </p>
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {difficultyGroups.medium.map(({ field, score }) => (
-                    <span key={field} className="rounded-lg bg-white border border-blue-200 px-2 py-1 text-[11px] font-bold text-blue-800 shadow-2xs">
-                      {field} ({score.toFixed(1)}%)
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Group 3: Complex Fields */}
-              <div className="rounded-2xl border border-amber-200 bg-amber-50/30 p-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-black text-amber-800 uppercase tracking-wider flex items-center gap-1">
-                    <span className="h-2 w-2 rounded-full bg-amber-500" />
-                    กลุ่มที่ต้องใช้ Semantic Reasoning (70% - 80%)
-                  </span>
-                  <span className="text-[11px] font-bold text-amber-700">{difficultyGroups.complex.length} ฟิลด์</span>
-                </div>
-                <p className="text-[11px] text-slate-600">
-                  ฟิลด์ที่มีหลายบรรทัด หรือเอกสารบางฉบับไม่ได้ระบุไว้ตรงๆ
-                </p>
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {difficultyGroups.complex.map(({ field, score }) => (
-                    <span key={field} className="rounded-lg bg-white border border-amber-200 px-2 py-1 text-[11px] font-bold text-amber-800 shadow-2xs">
-                      {field} ({score.toFixed(1)}%)
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
           </div>
         )}
 
@@ -3085,109 +2631,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                         );
                       })}
                     </div>
-                  </div>
-
-                  {/* Live GPU Inference Tester for Selected Document */}
-                  <div className="rounded-2xl border border-indigo-200 bg-gradient-to-r from-indigo-50/80 via-blue-50/40 to-white p-4 shadow-xs space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <div className="flex items-center gap-2.5">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-2xs">
-                          <Cpu className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <h5 className="text-xs font-black text-slate-900 flex items-center gap-1.5">
-                            <span>ทดสอบ Qwen SLM แบบสาธิต (Live Demo — ไม่รวมใน Benchmark)</span>
-                            <span className="rounded bg-amber-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-amber-800">
-                              Demo only
-                            </span>
-                          </h5>
-                          <p className="text-[11px] text-slate-500">
-                            ใช้ข้อความจำลองจาก Ground Truth เพื่อสาธิตการเรียก SLM เท่านั้น ผลนี้ไม่ถูกนับใน K-Fold Benchmark
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleTestDocOnGPU(selectedDoc)}
-                        disabled={isTestingDocSLM}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-xs font-black text-white shadow-xs hover:from-indigo-700 hover:to-blue-700 transition disabled:opacity-60 shrink-0"
-                      >
-                        {isTestingDocSLM ? (
-                          <>
-                            <Loader2 className="h-4 w-4 animate-spin text-white" />
-                            <span>กำลังประมวลผลบน GPU...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Play className="h-3.5 w-3.5 fill-white text-white" />
-                            <span>รัน Qwen SLM สด</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-
-                    {liveSLMResult && (
-                      <div className="rounded-xl border border-blue-200 bg-white p-3.5 space-y-3 shadow-2xs animate-in fade-in duration-300">
-                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2 text-xs">
-                          <div className="flex items-center gap-2">
-                            <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md text-[11px]">
-                              <CheckCircle2 className="h-3.5 w-3.5" /> ประมวลผลสำเร็จ
-                            </span>
-                            <span className="font-mono text-slate-600 text-[11px]">
-                              เวลาประมวลผล: <b className="text-slate-900">{liveSLMTimeMs} ms</b>
-                            </span>
-                            <span className="font-mono text-slate-400 text-[11px]">·</span>
-                            <span className="font-mono text-slate-600 text-[11px]">
-                              Device: <b className="text-blue-700">{liveSLMResult.device || "-"}</b>
-                            </span>
-                          </div>
-                          <span className="font-mono text-[11px] text-slate-500">
-                            Model: {liveSLMResult.model || "-"}
-                          </span>
-                        </div>
-
-                        <div className="overflow-x-auto">
-                          <table className="w-full text-left text-xs border-collapse">
-                            <thead>
-                              <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-extrabold text-slate-500 uppercase">
-                                <th className="py-1.5 px-2">ฟิลด์ข้อมูลหลัก</th>
-                                <th className="py-1.5 px-2">ค่า Ground Truth</th>
-                                <th className="py-1.5 px-2">ค่าที่ Qwen SLM สกัดได้</th>
-                                <th className="py-1.5 px-2 text-center">สถานะ</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100 font-medium">
-                              {Object.entries(FIELD_LABELS).map(([key, meta]) => {
-                                const gtVal = selectedDoc.ground_truth[key];
-                                const slmVal = liveSLMResult.json_schema ? liveSLMResult.json_schema[key] : "-";
-                                const gtStr = gtVal !== undefined && gtVal !== null ? String(gtVal).trim() : "-";
-                                const slmStr = slmVal !== undefined && slmVal !== null ? String(slmVal).trim() : "-";
-                                const isMatch = gtStr.toLowerCase() === slmStr.toLowerCase();
-
-                                return (
-                                  <tr key={key} className="hover:bg-slate-50/60">
-                                    <td className="py-1.5 px-2 font-bold text-slate-700">{meta.th}</td>
-                                    <td className="py-1.5 px-2 text-slate-900 font-mono text-[11px]">{gtStr}</td>
-                                    <td className="py-1.5 px-2 text-indigo-700 font-mono text-[11px]">{slmStr}</td>
-                                    <td className="py-1.5 px-2 text-center">
-                                      {isMatch ? (
-                                        <span className="inline-flex items-center gap-1 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-black text-emerald-700">
-                                          <Check className="h-3 w-3" /> ตรงกัน 100%
-                                        </span>
-                                      ) : (
-                                        <span className="inline-flex items-center gap-1 rounded bg-amber-50 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
-                                          ส่วนต่าง OCR
-                                        </span>
-                                      )}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    )}
                   </div>
 
                   {/* JSON Syntax Viewer */}
