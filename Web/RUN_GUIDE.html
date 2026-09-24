@@ -327,53 +327,16 @@ copy backend\.env.example backend\.env</code></pre>
       <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
         <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm">3</span>
         <div>
-          <h2 class="text-lg sm:text-xl font-bold text-white">สร้าง Virtual Environment และติดตั้งไลบรารี Python</h2>
-          <span class="text-xs text-slate-400">ติดตั้ง PyTorch, PaddleOCR, Transformers, openpyxl ฯลฯ</span>
+          <h2 class="text-lg sm:text-xl font-bold text-white">สร้าง Virtual Environment และติดตั้งไลบรารี Python (คำสั่งเดียวจบ)</h2>
+          <span class="text-xs text-slate-400">สร้าง venv, อัปเกรด pip และติดตั้งไลบรารี AI ทั้งหมดในคำสั่งเดียว</span>
         </div>
       </div>
-
-      <!-- 3.1 Create venv -->
-      <div class="space-y-2">
-        <span class="text-xs font-bold text-slate-300 block">3.1 สร้าง Virtual Environment ในโฟลเดอร์ backend:</span>
-        <div class="code-box">
-          <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
-          <code class="text-xs sm:text-sm text-slate-200">python -m venv backend/.venv</code>
-        </div>
-      </div>
-
-      <!-- 3.2 Install Packages -->
-      <div class="space-y-3 pt-2">
-        <span class="text-xs font-bold text-slate-300 block">3.2 เลือกลักษณะการติดตั้งไลบรารีตามสเปกเครื่องของคุณ:</span>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- GPU Option -->
-          <div class="rounded-xl border border-emerald-500/40 bg-emerald-950/20 p-4 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-emerald-400">ทางเลือกที่ 1: เครื่องมี NVIDIA GPU (แนะนำ ⭐)</span>
-              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">CUDA 12.x</span>
-            </div>
-            <p class="text-xs text-slate-400">ติดตั้ง PyTorch GPU + PaddleOCR GPU เพื่อความเร็วสูงสุด (16 tokens/sec):</p>
-            <div class="code-box text-xs">
-              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
-              <pre class="text-emerald-300"><code>backend\.venv\Scripts\pip.exe install --upgrade pip
-backend\.venv\Scripts\pip.exe install -r backend\requirements.txt</code></pre>
-            </div>
-          </div>
-
-          <!-- CPU Option -->
-          <div class="rounded-xl border border-slate-700 bg-slate-900/40 p-4 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-slate-300">ทางเลือกที่ 2: โหมด CPU (ไม่มี NVIDIA GPU)</span>
-              <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">CPU Only</span>
-            </div>
-            <p class="text-xs text-slate-400">สำหรับแล็ปท็อปทั่วไปหรือ Mac ที่ต้องการรันแบบทดสอบพื้นฐาน:</p>
-            <div class="code-box text-xs">
-              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
-              <pre class="text-slate-300"><code>backend\.venv\Scripts\pip.exe install --upgrade pip
-backend\.venv\Scripts\pip.exe install -r backend\requirements-cpu.txt</code></pre>
-            </div>
-          </div>
-        </div>
+      <p class="text-xs sm:text-sm text-slate-300">
+        ในโฟลเดอร์ <code class="text-indigo-300 font-mono">Web</code> ให้วางคำสั่งนี้เพื่อสร้าง Virtual Environment และติดตั้งไลบรารีทั้งหมดรวดเดียวจบ:
+      </p>
+      <div class="code-box">
+        <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+        <pre class="text-xs sm:text-sm text-emerald-300"><code>python -m venv backend/.venv & "backend\.venv\Scripts\pip.exe" install --upgrade pip & "backend\.venv\Scripts\pip.exe" install -r backend/requirements.txt</code></pre>
       </div>
     </div>
 
