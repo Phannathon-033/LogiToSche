@@ -152,29 +152,88 @@
       <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
         <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-800 text-indigo-400 font-bold text-sm">0</span>
         <div>
-          <h2 class="text-lg sm:text-xl font-bold text-white">สิ่งที่ต้องติดตั้งก่อนเริ่ม (3 ซอฟต์แวร์หลัก + คำสั่งติดตั้งทันที)</h2>
-          <span class="text-xs text-slate-400">หากเครื่องยังไม่มี ให้คัดลอกคำสั่งด้านล่างไปรันใน PowerShell (Run as Administrator) เพื่อติดตั้งอัตโนมัติ</span>
+          <h2 class="text-lg sm:text-xl font-bold text-white">สิ่งที่ต้องติดตั้งก่อนเริ่ม (ติดตั้งผ่าน CMD ได้ทันที โดยไม่ต้องเตรียมอะไรพร้อม)</h2>
+          <span class="text-xs text-slate-400">เลือกวิธีที่สะดวกที่สุด รันผ่าน Command Prompt (CMD) หรือ PowerShell ได้เลย</span>
         </div>
       </div>
 
-      <!-- Quick 1-Command All-in-One Install Box -->
-      <div class="rounded-xl border border-indigo-500/40 bg-gradient-to-r from-indigo-950/60 via-slate-900 to-indigo-950/60 p-4 sm:p-5 space-y-2">
+      <!-- Quick 1-Command All-in-One Install Box via CMD (winget) -->
+      <div class="rounded-xl border border-indigo-500/40 bg-gradient-to-r from-indigo-950/60 via-slate-900 to-indigo-950/60 p-4 sm:p-5 space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span class="text-xs sm:text-sm font-bold text-indigo-300 flex items-center gap-1.5">
-            <span>⚡ คำสั่งติดตั้งรวดเดียวครบทั้ง 3 ซอฟต์แวร์ (All-in-One via Windows Package Manager: winget):</span>
+            <span>⚡ วิธีที่ 1: ติดตั้งผ่าน CMD ด้วยคำสั่งเดียว (ใช้ winget บน Windows 10/11)</span>
           </span>
-          <span class="text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 px-2 py-0.5 rounded font-mono">Windows 10 / 11</span>
+          <span class="text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 px-2 py-0.5 rounded font-mono">CMD / PowerShell</span>
         </div>
         <p class="text-xs text-slate-300">
-          เปิด <b>PowerShell</b> (แนะนำคลิกขวา Run as Administrator) แล้ววางคำสั่งนี้เพื่อดาวน์โหลดและติดตั้ง <b>Git + Python 3.10 + Node.js LTS</b> พร้อมกันในคำสั่งเดียว:
+          เปิด <b>Command Prompt (CMD)</b> หรือ <b>PowerShell</b> (แนะนำคลิกขวา Run as Administrator) แล้ววางคำสั่งนี้เพื่อดาวน์โหลดและติดตั้ง <b>Git + Python 3.10 + Node.js LTS</b> พร้อมกันทั้งหมด:
         </p>
         <div class="code-box text-xs">
-          <button class="copy-btn" onclick="copyCode(this, 'winget install --id Git.Git -e --source winget ; winget install --id Python.Python.3.10 -e --source winget ; winget install --id OpenJS.NodeJS.LTS -e --source winget')">📋 คัดลอก</button>
-          <code class="text-emerald-300 font-bold">winget install --id Git.Git -e --source winget ; winget install --id Python.Python.3.10 -e --source winget ; winget install --id OpenJS.NodeJS.LTS -e --source winget</code>
+          <button class="copy-btn" onclick="copyCode(this, 'winget install --id Git.Git -e --source winget && winget install --id Python.Python.3.10 -e --source winget && winget install --id OpenJS.NodeJS.LTS -e --source winget')">📋 คัดลอก</button>
+          <code class="text-emerald-300 font-bold">winget install --id Git.Git -e --source winget && winget install --id Python.Python.3.10 -e --source winget && winget install --id OpenJS.NodeJS.LTS -e --source winget</code>
         </div>
         <span class="text-[11px] text-slate-400 block italic">
-          *เมื่อติดตั้งเสร็จแล้ว ให้ปิดและเปิดหน้าต่าง PowerShell ใหม่ 1 ครั้งเพื่อให้ PATH มีผลทำงาน
+          *เมื่อติดตั้งเสร็จแล้ว ให้ปิดและเปิดหน้าต่าง CMD ใหม่ 1 ครั้งเพื่อให้คำสั่ง git, python, node มีผลทำงาน
         </span>
+      </div>
+
+      <!-- Zero-Prerequisite CMD Box (via built-in curl) -->
+      <div class="rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-950/30 via-slate-900 to-amber-950/30 p-4 sm:p-5 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="text-xs sm:text-sm font-bold text-amber-300 flex items-center gap-1.5">
+            <span>🌐 วิธีที่ 2: โหลดตรงผ่าน CMD ด้วย curl (สำหรับเครื่องที่ไม่มี winget หรือไม่มีอะไรพร้อมเลย)</span>
+          </span>
+          <span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded font-mono">Zero Prerequisite (Pure CMD)</span>
+        </div>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          ในกรณีที่เครื่องเป็น Windows รุ่นเก่าหรือไม่มีคำสั่ง winget คุณสามารถเปิด <b>Command Prompt (CMD)</b> แล้ววางคำสั่งดาวน์โหลดตัวติดตั้งทางการ (.exe / .msi) พร้อมติดตั้งแบบเงียบ (Silent Install) อัตโนมัติได้ทันที:
+        </p>
+        
+        <div class="space-y-2 text-xs">
+          <!-- Install Git via curl -->
+          <div>
+            <span class="text-[11px] font-bold text-orange-400 block mb-1">1. ติดตั้ง Git ผ่าน CMD:</span>
+            <div class="code-box text-xs py-2">
+              <button class="copy-btn" onclick="copyCode(this, 'curl -Lo \"%TEMP%\\git_setup.exe\" \"https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe\" && start /wait \"\" \"%TEMP%\\git_setup.exe\" /VERYSILENT /NORESTART')">📋 คัดลอก</button>
+              <code class="text-orange-300">curl -Lo "%TEMP%\git_setup.exe" "https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe" && start /wait "" "%TEMP%\git_setup.exe" /VERYSILENT /NORESTART</code>
+            </div>
+          </div>
+
+          <!-- Install Python via curl -->
+          <div>
+            <span class="text-[11px] font-bold text-cyan-400 block mb-1">2. ติดตั้ง Python 3.10 ผ่าน CMD (แอด PATH ให้อัตโนมัติ):</span>
+            <div class="code-box text-xs py-2">
+              <button class="copy-btn" onclick="copyCode(this, 'curl -Lo \"%TEMP%\\python_setup.exe\" \"https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe\" && start /wait \"\" \"%TEMP%\\python_setup.exe\" /quiet InstallAllUsers=1 PrependPath=1')">📋 คัดลอก</button>
+              <code class="text-cyan-300">curl -Lo "%TEMP%\python_setup.exe" "https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe" && start /wait "" "%TEMP%\python_setup.exe" /quiet InstallAllUsers=1 PrependPath=1</code>
+            </div>
+          </div>
+
+          <!-- Install Node via curl -->
+          <div>
+            <span class="text-[11px] font-bold text-emerald-400 block mb-1">3. ติดตั้ง Node.js LTS ผ่าน CMD:</span>
+            <div class="code-box text-xs py-2">
+              <button class="copy-btn" onclick="copyCode(this, 'curl -Lo \"%TEMP%\\node_setup.msi\" \"https://nodejs.org/dist/v20.12.2/node-v20.12.2-x64.msi\" && start /wait msiexec /i \"%TEMP%\\node_setup.msi\" /quiet /qn /norestart')">📋 คัดลอก</button>
+              <code class="text-emerald-300">curl -Lo "%TEMP%\node_setup.msi" "https://nodejs.org/dist/v20.12.2/node-v20.12.2-x64.msi" && start /wait msiexec /i "%TEMP%\node_setup.msi" /quiet /qn /norestart</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1-Click Install Script Box -->
+      <div class="rounded-xl border border-emerald-500/40 bg-gradient-to-r from-emerald-950/30 via-slate-900 to-emerald-950/30 p-4 sm:p-5 space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="text-xs sm:text-sm font-bold text-emerald-300 flex items-center gap-1.5">
+            <span>🚀 วิธีที่ 3: ดับเบิ้ลคลิกไฟล์สคริปต์ install-windows.bat (อัตโนมัติ 100%)</span>
+          </span>
+          <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded font-mono">1-Click Batch File</span>
+        </div>
+        <p class="text-xs text-slate-300">
+          หากโคลนโปรเจกต์มาแล้ว คุณสามารถรันสคริปต์ติดตั้งระบบทั้งหมดเบ็ดเสร็จในหน้าต่าง CMD เดียว โดยพิมพ์คำสั่งนี้:
+        </p>
+        <div class="code-box text-xs">
+          <button class="copy-btn" onclick="copyCode(this, 'install-windows.bat')">📋 คัดลอก</button>
+          <code class="text-emerald-300 font-bold">install-windows.bat</code>
+        </div>
       </div>
 
       <!-- Detailed 3 Software Cards -->
@@ -359,9 +418,9 @@ copy backend\.env.example backend\.env</code></pre>
             </div>
             <p class="text-xs text-slate-400">ติดตั้ง PyTorch GPU + PaddleOCR GPU เพื่อความเร็วสูงสุด (16 tokens/sec):</p>
             <div class="code-box text-xs">
-              <button class="copy-btn" onclick="copyCode(this, '& \"backend\\.venv\\Scripts\\pip.exe\" install --upgrade pip\n& \"backend\\.venv\\Scripts\\pip.exe\" install -r backend/requirements.txt')">📋 คัดลอก</button>
-              <pre class="text-emerald-300"><code>& "backend\.venv\Scripts\pip.exe" install --upgrade pip
-& "backend\.venv\Scripts\pip.exe" install -r backend/requirements.txt</code></pre>
+              <button class="copy-btn" onclick="copyCode(this, 'backend\\.venv\\Scripts\\pip.exe install --upgrade pip\nbackend\\.venv\\Scripts\\pip.exe install -r backend/requirements.txt')">📋 คัดลอก</button>
+              <pre class="text-emerald-300"><code>backend\.venv\Scripts\pip.exe install --upgrade pip
+backend\.venv\Scripts\pip.exe install -r backend\requirements.txt</code></pre>
             </div>
           </div>
 
@@ -373,9 +432,9 @@ copy backend\.env.example backend\.env</code></pre>
             </div>
             <p class="text-xs text-slate-400">สำหรับแล็ปท็อปทั่วไปหรือ Mac ที่ต้องการรันแบบทดสอบพื้นฐาน:</p>
             <div class="code-box text-xs">
-              <button class="copy-btn" onclick="copyCode(this, '& \"backend\\.venv\\Scripts\\pip.exe\" install --upgrade pip\n& \"backend\\.venv\\Scripts\\pip.exe\" install -r backend/requirements-cpu.txt')">📋 คัดลอก</button>
-              <pre class="text-slate-300"><code>& "backend\.venv\Scripts\pip.exe" install --upgrade pip
-& "backend\.venv\Scripts\pip.exe" install -r backend/requirements-cpu.txt</code></pre>
+              <button class="copy-btn" onclick="copyCode(this, 'backend\\.venv\\Scripts\\pip.exe install --upgrade pip\nbackend\\.venv\\Scripts\\pip.exe install -r backend/requirements-cpu.txt')">📋 คัดลอก</button>
+              <pre class="text-slate-300"><code>backend\.venv\Scripts\pip.exe install --upgrade pip
+backend\.venv\Scripts\pip.exe install -r backend\requirements-cpu.txt</code></pre>
             </div>
           </div>
         </div>
@@ -444,8 +503,8 @@ copy backend\.env.example backend\.env</code></pre>
               <span class="text-slate-500">โมเดล Qwen2.5-1.5B</span>
             </div>
             <div class="code-box text-xs">
-              <button class="copy-btn" onclick="copyCode(this, '& \"backend\\.venv\\Scripts\\python.exe\" -m uvicorn slm_app:app --host 0.0.0.0 --port 8001')">📋 คัดลอก</button>
-              <code class="text-indigo-200">& "backend\.venv\Scripts\python.exe" -m uvicorn slm_app:app --host 0.0.0.0 --port 8001</code>
+              <button class="copy-btn" onclick="copyCode(this, 'backend\\.venv\\Scripts\\python.exe -m uvicorn slm_app:app --host 0.0.0.0 --port 8001')">📋 คัดลอก</button>
+              <code class="text-indigo-200">backend\.venv\Scripts\python.exe -m uvicorn slm_app:app --host 0.0.0.0 --port 8001</code>
             </div>
           </div>
 
@@ -456,8 +515,8 @@ copy backend\.env.example backend\.env</code></pre>
               <span class="text-slate-500">PaddleOCR Engine</span>
             </div>
             <div class="code-box text-xs">
-              <button class="copy-btn" onclick="copyCode(this, '& \"backend\\.venv\\Scripts\\python.exe\" -m uvicorn main:app --host 0.0.0.0 --port 8000')">📋 คัดลอก</button>
-              <code class="text-blue-200">& "backend\.venv\Scripts\python.exe" -m uvicorn main:app --host 0.0.0.0 --port 8000</code>
+              <button class="copy-btn" onclick="copyCode(this, 'backend\\.venv\\Scripts\\python.exe -m uvicorn main:app --host 0.0.0.0 --port 8000')">📋 คัดลอก</button>
+              <code class="text-blue-200">backend\.venv\Scripts\python.exe -m uvicorn main:app --host 0.0.0.0 --port 8000</code>
             </div>
           </div>
 
