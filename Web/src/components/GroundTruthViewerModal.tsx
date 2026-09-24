@@ -136,11 +136,15 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
         }
       }
 
-      // 2. Fetch K-Fold Report
-      const kfResp = await apiFetch("/api/benchmark/kfold");
-      if (kfResp.ok) {
-        const kfData = await kfResp.json();
-        setKfoldReport(kfData);
+      // 2. Fetch the current evaluation job report
+      const evalResp = await apiFetch("/api/evaluation/status");
+      if (evalResp.ok) {
+        const evalData = await evalResp.json();
+        setKfoldReport(
+          evalData.status === "completed" && evalData.final_report
+            ? evalData.final_report
+            : null
+        );
       }
     } catch (err) {
       console.error("Failed to fetch benchmark data:", err);

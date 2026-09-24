@@ -1109,51 +1109,51 @@ def get_kfold_report(
     limit: int | None = None,
     doc_id: str | None = None,
     single_fold: int | None = None,
+    run_id: str | None = None,
 ) -> dict[str, Any]:
     cleaned_variant = prompt_variant.strip().lower()
     if cleaned_variant not in BENCHMARK_PROMPT_VARIANTS:
         raise HTTPException(status_code=400, detail=f"Unsupported prompt variant: {prompt_variant}")
     prompt_variant = cleaned_variant
-    report_path = REPORT_DIR / "kfold_evaluation_report.json"
-    if not report_path.exists() and (BASE_DIR / "kfold_evaluation_report.json").exists():
-        report_path = BASE_DIR / "kfold_evaluation_report.json"
-    cached_report: dict[str, Any] | None = None
-    if report_path.exists():
+
+    if run_id:
+        if not re.fullmatch(r"run_[A-Za-z0-9_-]+", run_id):
+            raise HTTPException(status_code=400, detail="Invalid run_id")
+        report_path = REPORT_DIR / f"{run_id}_evaluation.json"
+        if not report_path.is_file():
+            raise HTTPException(status_code=404, detail="Evaluation report not found")
         try:
-            cached_report = json.loads(report_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            cached_report = None
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(status_code=500, detail=f"Could not read evaluation report: {exc}") from exc
+        if not isinstance(report, dict) or not report.get("folds"):
+            raise HTTPException(status_code=422, detail="Evaluation report is incomplete")
+        return report
 
-    # If general request without rerun, return cached 5-fold thesis report immediately
-    if not rerun and limit is None and doc_id is None and k > 1 and single_fold is None:
-        if cached_report:
-            return cached_report
+    if not (rerun or limit is not None or doc_id is not None or k <= 1 or single_fold is not None):
+        raise HTTPException(
+            status_code=409,
+            detail="No evaluation report selected; provide run_id or set rerun=true",
+        )
 
-    # Run only if explicitly requested, single-doc test, specific document, or single_fold
-    if rerun or limit is not None or doc_id is not None or k <= 1 or single_fold is not None:
+    try:
         try:
-            try:
-                from .kfold_evaluator import run_kfold_evaluation
-            except ImportError:
-                from kfold_evaluator import run_kfold_evaluation
-            report = run_kfold_evaluation(
-                k_splits=k,
-                random_seed=seed,
-                document_limit=limit,
-                prompt_variant=prompt_variant,
-                force_rerun=rerun if (k <= 1 or doc_id is not None) else False,
-                doc_id=doc_id,
-                single_fold=single_fold,
-            )
-            return report
-        except Exception as exc:
-            raise HTTPException(status_code=500, detail=f"K-Fold evaluation failed: {exc}") from exc
+            from .kfold_evaluator import run_kfold_evaluation
+        except ImportError:
+            from kfold_evaluator import run_kfold_evaluation
+        return run_kfold_evaluation(
+            k_splits=k,
+            random_seed=seed,
+            document_limit=limit,
+            prompt_variant=prompt_variant,
+            force_rerun=rerun if (k <= 1 or doc_id is not None) else False,
+            doc_id=doc_id,
+            single_fold=single_fold,
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"K-Fold evaluation failed: {exc}") from exc
 
-    if cached_report:
-        return cached_report
-    if not report_path.exists():
-        raise HTTPException(status_code=500, detail="Report generation failed")
-    return json.loads(report_path.read_text(encoding="utf-8"))
+
 
 
 _fresh_process = None

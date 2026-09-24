@@ -440,6 +440,7 @@ def get_benchmark_kfold(
     limit: int | None = None,
     doc_id: str | None = None,
     single_fold: int | None = None,
+    run_id: str | None = None,
 ) -> Any:
     cleaned_variant = prompt_variant.strip().lower()
     if cleaned_variant not in {"zero-shot", "one-shot", "few-shot"}:
@@ -454,6 +455,8 @@ def get_benchmark_kfold(
         query += f"&doc_id={doc_id}"
     if single_fold is not None:
         query += f"&single_fold={single_fold}"
+    if run_id is not None:
+        query += f"&run_id={quote(run_id)}"
     return forward_slm_request(f"/api/benchmark/kfold{query}", {}, method="GET")
 
 

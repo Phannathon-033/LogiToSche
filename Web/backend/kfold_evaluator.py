@@ -918,8 +918,6 @@ def run_kfold_evaluation(
     )
     _write_json(report_file, report)
     if not is_single_doc and single_fold is None:
-        _write_json(REPORT_DIR / "kfold_evaluation_report.json", report)
-        _write_json(BASE_DIR / "kfold_evaluation_report.json", report)
         (REPORT_DIR / "kfold_thesis_table.md").write_text(generate_markdown_thesis_table(report), encoding="utf-8")
         (BASE_DIR / "kfold_thesis_table.md").write_text(generate_markdown_thesis_table(report), encoding="utf-8")
     return report

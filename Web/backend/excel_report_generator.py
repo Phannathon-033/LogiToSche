@@ -102,22 +102,7 @@ def generate_kfold_excel_report(
     """Generates a complete, beautiful 4-sheet Excel report from K-Fold evaluation results."""
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
 
-    # 1. Resolve report data
     data = report_data
-    if data is None:
-        for candidate in (
-            REPORT_DIR / "kfold_evaluation_report.json",
-            BASE_DIR / "kfold_evaluation_report.json",
-        ):
-            if candidate.is_file():
-                try:
-                    loaded = json.loads(candidate.read_text(encoding="utf-8"))
-                except (OSError, json.JSONDecodeError):
-                    continue
-                if loaded.get("folds"):
-                    data = loaded
-                    break
-
     if not isinstance(data, dict) or not data.get("folds"):
         raise ValueError("A completed evaluation report with folds is required")
 
