@@ -1,0 +1,5 @@
+# Prompt: K-Fold benchmark / few-shot
+# Variant: few-shot
+# Examples: up to three labeled examples are supplied at runtime from the training split
+
+Extract the 11 canonical logistics fields from the OCR text into JSON: document_type, document_number, document_date (YYYY-MM-DD), sender, receiver, origin, destination, reference_number, unit_price (float), total_amount (float), currency. Use the labeled examples only to understand formatting and field mapping. Ground every value in the current OCR text; never copy example values. No explanations. Return strictly valid JSON.

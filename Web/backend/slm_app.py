@@ -23,6 +23,7 @@ try:
         EXTRACTION_SYSTEM_PROMPT,
         MODEL_IDS,
         default_admin_config,
+        benchmark_prompt_for_variant,
         load_prompt_config,
         prompt_for_preset,
         save_prompt_config as persist_prompt_config,
@@ -35,6 +36,7 @@ except ImportError:
         EXTRACTION_SYSTEM_PROMPT,
         MODEL_IDS,
         default_admin_config,
+        benchmark_prompt_for_variant,
         load_prompt_config,
         prompt_for_preset,
         save_prompt_config as persist_prompt_config,
@@ -512,6 +514,7 @@ def apply_review_threshold(result: dict[str, Any], config: SlmPromptConfig | dic
 def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None = None) -> str:
     config = config or prompt_config_for_request(payload.prompt_config)
     benchmark_variant, benchmark_examples = benchmark_variant_for_request(payload)
+    benchmark_base_prompt = benchmark_prompt_for_variant(benchmark_variant)
     invariant_rules = "\n".join(f"- {rule}" for rule in EXTRACTION_RULES)
     admin_rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
     benchmark_instruction = ""
@@ -557,7 +560,7 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
             "currency": "USD | THB | EUR | string",
         }
         return (
-            "Extract the 11 canonical logistics fields from OCR text into JSON.\n"
+            f"Benchmark base prompt ({benchmark_variant}):\n{benchmark_base_prompt}\n"
             "Fields: document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, currency.\n"
             f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n"
             f"{low_conf_guidance}"
@@ -589,6 +592,7 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
         "review_items": [{"field": "document_number", "ocrValue": "raw OCR value", "slmValue": "normalized value", "confidence": 0, "status": "review"}],
     }
     return (
+        f"Benchmark base prompt ({benchmark_variant}):\n{benchmark_base_prompt}\n"
         "Extract logistics fields from Thai or English OCR text into this exact JSON contract.\n"
         "The canonical fields are document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, and currency.\n"
         f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n"
@@ -1077,12 +1081,16 @@ def get_benchmark_ground_truth() -> dict[str, Any]:
     if not gt_path.exists():
         raise HTTPException(status_code=404, detail="Ground truth dataset not found")
     data = json.loads(gt_path.read_text(encoding="utf-8"))
+    configured_dataset = os.environ.get("LOGIAI_DATASET_DIR", "").strip()
     repo_testing = BASE_DIR.parent.parent / "To_Testing"
-    labels_candidates = [
+    labels_candidates = []
+    if configured_dataset:
+        labels_candidates.append(Path(configured_dataset) / "labels_json")
+    labels_candidates.extend([
         repo_testing / "labels_json",
         BASE_DIR.parent / "To_Testing" / "labels_json",
         Path(r"E:\Logistics To JSON\To_Testing\labels_json"),
-    ]
+    ])
     labels_dir = next((d for d in labels_candidates if d.is_dir()), labels_candidates[0])
     if labels_dir.is_dir() and "documents" in data:
         for doc in data["documents"]:
@@ -1295,18 +1303,52 @@ def clear_performance_log_endpoint() -> dict[str, Any]:
         return {"status": "error", "error": str(e)}
 
 
+def resolve_export_report(job_id: str | None = None, run_id: str | None = None) -> dict[str, Any]:
+    if job_id:
+        if not re.fullmatch(r"eval_[A-Za-z0-9_-]+", job_id):
+            raise HTTPException(status_code=400, detail="Invalid job_id")
+        try:
+            from evaluation_job_manager import job_manager
+            job = job_manager.get_status(job_id)
+        except ImportError:
+            from .evaluation_job_manager import job_manager
+            job = job_manager.get_status(job_id)
+        if job.get("job_id") != job_id:
+            raise HTTPException(status_code=404, detail="Evaluation job not found")
+        if job.get("status") != "completed" or not isinstance(job.get("final_report"), dict):
+            raise HTTPException(status_code=409, detail="Evaluation job has not completed a report yet")
+        report = job["final_report"]
+        if run_id and report.get("run_id") != run_id:
+            raise HTTPException(status_code=409, detail="job_id and run_id refer to different reports")
+        return report
+
+    if not run_id:
+        raise HTTPException(status_code=400, detail="job_id or run_id is required")
+    if not re.fullmatch(r"run_[A-Za-z0-9_-]+", run_id):
+        raise HTTPException(status_code=400, detail="Invalid run_id")
+    report_path = REPORT_DIR / f"{run_id}_evaluation.json"
+    if not report_path.is_file():
+        raise HTTPException(status_code=404, detail="Evaluation report not found")
+    try:
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=500, detail=f"Could not read evaluation report: {exc}") from exc
+    if not isinstance(report, dict) or not report.get("folds"):
+        raise HTTPException(status_code=422, detail="Evaluation report is incomplete")
+    return report
+
+
 @app.get("/api/benchmark/kfold/export-excel")
 @app.get("/api/evaluation/export-excel")
-def export_kfold_excel_endpoint() -> Any:
+def export_kfold_excel_endpoint(
+    job_id: str | None = None,
+    run_id: str | None = None,
+) -> Any:
     from fastapi.responses import FileResponse
-    from fastapi import HTTPException
-    import sys
-    backend_dir = pathlib.Path(__file__).resolve().parent
-    if str(backend_dir) not in sys.path:
-        sys.path.insert(0, str(backend_dir))
     try:
         from excel_report_generator import generate_kfold_excel_report
-        excel_path = generate_kfold_excel_report()
+        report = resolve_export_report(job_id=job_id, run_id=run_id)
+        excel_path = generate_kfold_excel_report(report)
         if not excel_path.is_file():
             raise HTTPException(status_code=404, detail="Excel report not found")
         date_str = datetime.now().strftime("%Y%m%d")
@@ -1315,8 +1357,10 @@ def export_kfold_excel_endpoint() -> Any:
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             filename=f"LogiAI_KFold_Evaluation_Report_{date_str}.xlsx",
         )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to generate Excel report: {e}")
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to generate Excel report: {exc}") from exc
 
 
 # ---------------------------------------------------------------------------

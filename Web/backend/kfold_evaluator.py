@@ -17,9 +17,17 @@ import requests
 from sklearn.model_selection import KFold
 
 try:
-    from .prompts import load_prompt_config as read_prompt_config, prompt_config_snapshot, prompt_for_preset
+    from .prompts import (
+        benchmark_prompt_for_variant,
+        load_prompt_config as read_prompt_config,
+        prompt_config_snapshot,
+    )
 except ImportError:
-    from prompts import load_prompt_config as read_prompt_config, prompt_config_snapshot, prompt_for_preset
+    from prompts import (
+        benchmark_prompt_for_variant,
+        load_prompt_config as read_prompt_config,
+        prompt_config_snapshot,
+    )
 
 try:
     from .logistics_field_parser import evaluate_11_fields
@@ -38,7 +46,8 @@ load_dotenv(BASE_DIR / ".env")
 load_dotenv(BASE_DIR.parent / ".env")
 load_dotenv(BASE_DIR.parent / ".env.local")
 
-repo_testing = BASE_DIR.parent.parent / "To_Testing"
+PROJECT_ROOT = BASE_DIR.parent.parent
+repo_testing = PROJECT_ROOT / "To_Testing"
 web_testing = BASE_DIR.parent / "To_Testing"
 if repo_testing.exists():
     DEFAULT_DATASET = repo_testing
@@ -47,7 +56,7 @@ elif web_testing.exists():
 elif pathlib.Path(r"E:\Logistics To JSON\To_Testing").exists():
     DEFAULT_DATASET = pathlib.Path(r"E:\Logistics To JSON\To_Testing")
 else:
-    DEFAULT_DATASET = BASE_DIR
+    DEFAULT_DATASET = repo_testing
 
 GT_FILE = pathlib.Path(os.environ.get("LOGIAI_GROUND_TRUTH_PATH", BASE_DIR / "ground_truth_dataset.json"))
 DATASET_DIR = pathlib.Path(os.environ.get("LOGIAI_DATASET_DIR", DEFAULT_DATASET))
@@ -410,7 +419,7 @@ def _extract(
     ocr = _get_ocr(document, force_rerun=force_rerun_ocr)
     ocr_time_sec = float(ocr.get("ocr_time_sec", 0.85))
 
-    prompt_text = prompt_snapshot.get("kfold_zero_shot_prompt") or prompt_snapshot.get("system_prompt", "")
+    prompt_text = prompt_snapshot.get("benchmark_prompt") or prompt_snapshot.get("system_prompt", "")
     examples_to_send = benchmark_examples if benchmark_examples is not None else prompt_snapshot.get("benchmark_examples", [])
     request_config = {
         **prompt_snapshot,
@@ -663,12 +672,15 @@ def run_kfold_evaluation(
 
     prompt_snapshot = {
         **load_prompt_config(),
-        "kfold_zero_shot_prompt": prompt_for_preset("kfold_zero_shot"),
+        "benchmark_prompt": benchmark_prompt_for_variant(prompt_variant),
         "benchmark_prompt_variant": prompt_variant,
         "benchmark_examples": [],
     }
-    if not prompt_snapshot["kfold_zero_shot_prompt"].strip():
-        raise ValueError("kfold_zero_shot prompt is empty")
+    if not prompt_snapshot["benchmark_prompt"].strip():
+        raise ValueError(f"{prompt_variant} benchmark prompt is empty")
+    prompt_snapshot["prompt_file"] = str(
+        pathlib.Path("prompt_library") / "benchmark" / prompt_variant / "kfold_extraction.txt"
+    )
     run_id = datetime.now(timezone.utc).strftime("run_%Y%m%d_%H%M%S_%f")
     baseline_map: dict[str, Any] = {}
     if MANIFEST_FILE.is_file():
@@ -776,8 +788,9 @@ def run_kfold_evaluation(
         _validate_fold_manifest(slm_folds, documents)
         _validate_fold_manifest(baseline_folds, documents)
 
-    assert prompt_snapshot["benchmark_prompt_variant"] == "zero-shot"
-    assert prompt_snapshot["benchmark_examples"] == []
+    assert prompt_snapshot["benchmark_prompt_variant"] == prompt_variant
+    if prompt_variant == "zero-shot":
+        assert prompt_snapshot["benchmark_examples"] == []
     assert all(item["ground_truth"] is None for item in predictions)
     slm_field_report = _field_summary(slm_folds)
     baseline_field_report = _field_summary(baseline_folds)

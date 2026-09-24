@@ -18,7 +18,7 @@ try:
         _extract,
         _prediction_cache_path,
         load_prompt_config,
-        prompt_for_preset,
+        benchmark_prompt_for_variant,
         run_kfold_evaluation,
     )
 except ImportError:
@@ -28,7 +28,7 @@ except ImportError:
         _extract,
         _prediction_cache_path,
         load_prompt_config,
-        prompt_for_preset,
+        benchmark_prompt_for_variant,
         run_kfold_evaluation,
     )
 
@@ -51,7 +51,7 @@ def precache(start_index: int = 0, limit: int | None = None, update_report: bool
     print(f"[Pre-Cache] Processing {len(documents)} documents (start={start_index}, limit={limit})...")
     prompt_snapshot = {
         **load_prompt_config(),
-        "kfold_zero_shot_prompt": prompt_for_preset("kfold_zero_shot"),
+        "benchmark_prompt": benchmark_prompt_for_variant("zero-shot"),
         "benchmark_prompt_variant": "zero-shot",
         "benchmark_examples": [],
     }

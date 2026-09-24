@@ -28,7 +28,8 @@ except Exception:
     pass
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
-TEST_DIR = pathlib.Path(r"E:\Logistics To JSON\To_Testing")
+PROJECT_ROOT = BASE_DIR.parent.parent
+TEST_DIR = pathlib.Path(os.environ.get("LOGIAI_DATASET_DIR", PROJECT_ROOT / "To_Testing"))
 LABELS_JSON_DIR = TEST_DIR / "labels_json"
 LABELS_JSON_DIR.mkdir(parents=True, exist_ok=True)
 

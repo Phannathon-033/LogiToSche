@@ -14,8 +14,8 @@ transformers>=4.40.0
 accelerate>=0.30.0
 safetensors>=0.4.0
 huggingface_hub>=0.20.0
-
-# GPU Acceleration Indexes (NVIDIA CUDA 12.x)
+pypdfium2
+PyMuPDF
 --extra-index-url https://www.paddlepaddle.org.cn/packages/stable/cu129/
 --extra-index-url https://download.pytorch.org/whl/cu126
 paddlepaddle-gpu==3.3.1
