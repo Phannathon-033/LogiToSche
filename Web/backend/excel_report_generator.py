@@ -104,32 +104,22 @@ def generate_kfold_excel_report(
 
     # 1. Resolve report data
     data = report_data
-    if not data or not data.get("folds"):
-        # Attempt to load the best completed evaluation report JSON
-        candidate_files = [
+    if data is None:
+        for candidate in (
             REPORT_DIR / "kfold_evaluation_report.json",
             BASE_DIR / "kfold_evaluation_report.json",
-        ]
-        candidate_files.extend(sorted(REPORT_DIR.glob("*_evaluation.json"), reverse=True))
-
-        best_data = None
-        best_doc_count = -1
-        for f in candidate_files:
-            if f.is_file():
+        ):
+            if candidate.is_file():
                 try:
-                    loaded = json.loads(f.read_text(encoding="utf-8"))
-                    if loaded.get("folds"):
-                        doc_count = sum(len(fld.get("document_evaluations", [])) for fld in loaded.get("folds", []))
-                        if doc_count > best_doc_count:
-                            best_doc_count = doc_count
-                            best_data = loaded
-                except Exception:
+                    loaded = json.loads(candidate.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError):
                     continue
-        if best_data:
-            data = best_data
+                if loaded.get("folds"):
+                    data = loaded
+                    break
 
-    if not data:
-        data = {}
+    if not isinstance(data, dict) or not data.get("folds"):
+        raise ValueError("A completed evaluation report with folds is required")
 
     run_id = data.get("run_id", f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
     total_docs = data.get("total_documents", 0)
@@ -139,14 +129,23 @@ def generate_kfold_excel_report(
     folds = data.get("folds", [])
     field_performance = data.get("field_performance", {})
 
-    # Load performance logs for Sheet 4
+    # Load performance logs for Sheet 4, limited to this report's documents.
+    report_doc_ids = {
+        str(doc.get("id"))
+        for fold in folds
+        for doc in fold.get("document_evaluations", [])
+        if doc.get("id") is not None
+    }
     perf_records: list[dict[str, Any]] = []
     perf_file = REPORT_DIR / "doc_performance_log.json"
     if perf_file.is_file():
         try:
             perf_json = json.loads(perf_file.read_text(encoding="utf-8"))
-            perf_records = perf_json.get("records", [])
-        except Exception:
+            perf_records = [
+                record for record in perf_json.get("records", [])
+                if str(record.get("doc_id")) in report_doc_ids
+            ]
+        except (OSError, json.JSONDecodeError):
             pass
 
     wb = openpyxl.Workbook()

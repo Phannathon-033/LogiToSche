@@ -406,8 +406,27 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
   async function handleDownloadExcelReport() {
     try {
+      if (!kfoldReport) {
+        showToast?.("ต้องรันการประเมินก่อนดาวน์โหลดรายงาน Excel");
+        return;
+      }
+
+      const exportParams = new URLSearchParams();
+      const jobMatchesReport =
+        Boolean(evalJob?.job_id) &&
+        evalJob?.job_id !== "กำลังเริ่มงาน..." &&
+        evalJob?.final_report?.run_id === kfoldReport.run_id;
+      if (jobMatchesReport) {
+        exportParams.set("job_id", evalJob!.job_id!);
+      } else if (kfoldReport.run_id) {
+        exportParams.set("run_id", kfoldReport.run_id);
+      } else {
+        showToast?.("ไม่พบรหัสรายงานสำหรับ Export");
+        return;
+      }
+
       showToast?.("กำลังสร้างและดาวน์โหลดรายงานสรุป Excel อย่างละเอียด (.xlsx)...");
-      const resp = await apiFetch("/api/benchmark/kfold/export-excel");
+      const resp = await apiFetch(`/api/benchmark/kfold/export-excel?${exportParams.toString()}`);
       if (!resp.ok) {
         throw new Error(`Download failed with status ${resp.status}`);
       }

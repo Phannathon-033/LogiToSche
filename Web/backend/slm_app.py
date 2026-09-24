@@ -1294,18 +1294,52 @@ def clear_performance_log_endpoint() -> dict[str, Any]:
         return {"status": "error", "error": str(e)}
 
 
+def resolve_export_report(job_id: str | None = None, run_id: str | None = None) -> dict[str, Any]:
+    if job_id:
+        if not re.fullmatch(r"eval_[A-Za-z0-9_-]+", job_id):
+            raise HTTPException(status_code=400, detail="Invalid job_id")
+        try:
+            from evaluation_job_manager import job_manager
+            job = job_manager.get_status(job_id)
+        except ImportError:
+            from .evaluation_job_manager import job_manager
+            job = job_manager.get_status(job_id)
+        if job.get("job_id") != job_id:
+            raise HTTPException(status_code=404, detail="Evaluation job not found")
+        if job.get("status") != "completed" or not isinstance(job.get("final_report"), dict):
+            raise HTTPException(status_code=409, detail="Evaluation job has not completed a report yet")
+        report = job["final_report"]
+        if run_id and report.get("run_id") != run_id:
+            raise HTTPException(status_code=409, detail="job_id and run_id refer to different reports")
+        return report
+
+    if not run_id:
+        raise HTTPException(status_code=400, detail="job_id or run_id is required")
+    if not re.fullmatch(r"run_[A-Za-z0-9_-]+", run_id):
+        raise HTTPException(status_code=400, detail="Invalid run_id")
+    report_path = REPORT_DIR / f"{run_id}_evaluation.json"
+    if not report_path.is_file():
+        raise HTTPException(status_code=404, detail="Evaluation report not found")
+    try:
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=500, detail=f"Could not read evaluation report: {exc}") from exc
+    if not isinstance(report, dict) or not report.get("folds"):
+        raise HTTPException(status_code=422, detail="Evaluation report is incomplete")
+    return report
+
+
 @app.get("/api/benchmark/kfold/export-excel")
 @app.get("/api/evaluation/export-excel")
-def export_kfold_excel_endpoint() -> Any:
+def export_kfold_excel_endpoint(
+    job_id: str | None = None,
+    run_id: str | None = None,
+) -> Any:
     from fastapi.responses import FileResponse
-    from fastapi import HTTPException
-    import sys
-    backend_dir = pathlib.Path(__file__).resolve().parent
-    if str(backend_dir) not in sys.path:
-        sys.path.insert(0, str(backend_dir))
     try:
         from excel_report_generator import generate_kfold_excel_report
-        excel_path = generate_kfold_excel_report()
+        report = resolve_export_report(job_id=job_id, run_id=run_id)
+        excel_path = generate_kfold_excel_report(report)
         if not excel_path.is_file():
             raise HTTPException(status_code=404, detail="Excel report not found")
         date_str = datetime.now().strftime("%Y%m%d")
@@ -1314,8 +1348,10 @@ def export_kfold_excel_endpoint() -> Any:
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             filename=f"LogiAI_KFold_Evaluation_Report_{date_str}.xlsx",
         )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to generate Excel report: {e}")
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to generate Excel report: {exc}") from exc
 
 
 # ---------------------------------------------------------------------------

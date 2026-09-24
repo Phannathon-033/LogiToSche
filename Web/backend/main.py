@@ -503,26 +503,32 @@ def post_benchmark_performance_log_clear() -> Any:
 
 @app.get("/api/benchmark/kfold/export-excel")
 @app.get("/api/evaluation/export-excel")
-def get_kfold_excel_report_endpoint() -> Any:
-    from fastapi.responses import FileResponse
-    from datetime import datetime
-    import sys
-    backend_dir = Path(__file__).resolve().parent
-    if str(backend_dir) not in sys.path:
-        sys.path.insert(0, str(backend_dir))
+def get_kfold_excel_report_endpoint(
+    job_id: str | None = None,
+    run_id: str | None = None,
+) -> Any:
+    from fastapi.responses import Response
+    from urllib.parse import urlencode
+
+    query = urlencode({key: value for key, value in {"job_id": job_id, "run_id": run_id}.items() if value})
+    path = "/api/benchmark/kfold/export-excel"
     try:
-        from excel_report_generator import generate_kfold_excel_report
-        excel_path = generate_kfold_excel_report()
-        if not excel_path.is_file():
-            raise HTTPException(status_code=404, detail="Excel report not found")
-        date_str = datetime.now().strftime("%Y%m%d")
-        return FileResponse(
-            excel_path,
-            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            filename=f"LogiAI_KFold_Evaluation_Report_{date_str}.xlsx",
+        response = requests.get(
+            f"{SLM_SERVICE_URL}{path}?{query}" if query else f"{SLM_SERVICE_URL}{path}",
+            timeout=300,
         )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to generate Excel report: {e}")
+        if response.status_code >= 400:
+            detail = response.text[:500] or "SLM export failed"
+            raise HTTPException(status_code=response.status_code, detail=detail)
+        return Response(
+            content=response.content,
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": response.headers.get("Content-Disposition", "attachment")},
+        )
+    except HTTPException:
+        raise
+    except requests.RequestException as exc:
+        raise HTTPException(status_code=503, detail=f"SLM service is unavailable: {exc}") from exc
 
 
 # ---------------------------------------------------------------------------
