@@ -15,7 +15,7 @@
 ก่อนเริ่มรันโปรเจกต์ จำเป็นต้องมี 3 ซอฟต์แวร์หลัก สามารถดาวน์โหลดและติดตั้งผ่านลิงก์ทางการได้เลย:
 
 1. **Git (Version Control):** [ดาวน์โหลด Git for Windows (.exe)](https://git-scm.com/download/win)
-2. **Python 3.10 / 3.11 (Backend SLM & PaddleOCR):** [ดาวน์โหลด Python (.exe)](https://www.python.org/downloads/) *(สำคัญ: ตอนติดตั้งต้องติ๊กเลือก **"Add python.exe to PATH"**)*
+2. **Python (ต้องเป็นเวอร์ชัน 3.10.xx ลงมา เช่น 3.10.11):** [ดาวน์โหลด Python for Windows (.exe)](https://www.python.org/downloads/windows/) *(⚠️ สำคัญ: ต้องเลือกเวอร์ชัน 3.10.xx ลงมาเท่านั้น และตอนติดตั้งต้องติ๊กเลือก **"Add python.exe to PATH"**)*
 3. **Node.js 18+ LTS (React Web Frontend):** [ดาวน์โหลด Node.js LTS (.msi)](https://nodejs.org/en/download/)
 
 ---

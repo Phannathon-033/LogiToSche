@@ -185,31 +185,37 @@
         </div>
 
         <!-- Software 2: Python -->
-        <div class="rounded-2xl border border-slate-800 bg-slate-950/80 p-5 space-y-4 flex flex-col justify-between hover:border-cyan-500/40 transition">
+        <div class="rounded-2xl border-2 border-amber-500/50 bg-slate-950/90 p-5 space-y-4 flex flex-col justify-between hover:border-amber-400 transition shadow-lg shadow-amber-500/10">
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-sm font-bold text-cyan-400 flex items-center gap-2">
                 <span>🐍 2. Python</span>
               </span>
-              <span class="text-[10px] bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full font-mono">Backend SLM</span>
+              <span class="text-[10px] bg-red-500/20 text-red-300 border border-red-500/40 px-2 py-0.5 rounded-full font-bold font-mono">เวอร์ชัน 3.10.xx ลงมา ⚠️</span>
             </div>
             <p class="text-xs text-slate-300 leading-relaxed">
               สำหรับรันระบบหลังบ้าน FastAPI, PyTorch, Small Language Model (Qwen2.5) และ PaddleOCR
             </p>
-            <div class="rounded-lg bg-amber-500/10 border border-amber-500/30 p-2.5">
-              <span class="text-[11px] text-amber-300 font-semibold block leading-tight">
-                ⚠️ สำคัญ: ตอนเปิดตัวติดตั้ง ต้องติ๊กเลือก <b>"Add python.exe to PATH"</b> ก่อนกด Install
+            
+            <!-- Prominent Version Requirement Box -->
+            <div class="rounded-xl bg-amber-500/15 border border-amber-500/40 p-3 space-y-1.5">
+              <span class="text-xs text-amber-300 font-bold block flex items-center gap-1">
+                <span>🚨 ข้อกำหนดสำคัญ:</span>
               </span>
+              <ul class="text-[11px] text-amber-200/90 space-y-1 list-disc list-inside leading-snug">
+                <li>ต้องเลือกติดตั้ง <b>Python 3.10.xx ลงมา</b> เท่านั้น (แนะนำ <b>Python 3.10.11</b> หรือ 3.10 ซีรีส์) <i>*ห้ามใช้ 3.11 หรือ 3.12 ขึ้นไปเพราะไลบรารี PaddleOCR / PyTorch CUDA จะไม่รองรับ</i></li>
+                <li>ตอนเปิดตัวติดตั้ง ต้องติ๊กเลือก <b>"Add python.exe to PATH"</b> ก่อนกด Install</li>
+              </ul>
             </div>
           </div>
           
           <div class="space-y-3 pt-2 border-t border-slate-800">
-            <a href="https://www.python.org/downloads/" target="_blank" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-lg shadow-cyan-600/20 transition">
-              <span>📥 ดาวน์โหลด Python</span>
+            <a href="https://www.python.org/downloads/windows/" target="_blank" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-lg shadow-cyan-600/20 transition">
+              <span>📥 ดาวน์โหลด Python for Windows (เลือก 3.10.xx)</span>
             </a>
             <div class="flex items-center justify-between text-[11px] text-slate-400">
               <span>ลิงก์ทางการ:</span>
-              <a href="https://www.python.org/downloads/" target="_blank" class="text-cyan-400 hover:underline">python.org/downloads</a>
+              <a href="https://www.python.org/downloads/windows/" target="_blank" class="text-cyan-400 hover:underline">python.org/downloads/windows</a>
             </div>
           </div>
         </div>
