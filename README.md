@@ -12,34 +12,11 @@
 ---
 
 ## 📦 ซอฟต์แวร์ที่ต้องใช้และการติดตั้ง (Prerequisites)
-ก่อนเริ่มรันโปรเจกต์ จำเป็นต้องมี 3 ซอฟต์แวร์หลัก หากยังไม่มีสามารถติดตั้งได้ทันทีผ่าน PowerShell (Run as Administrator):
+ก่อนเริ่มรันโปรเจกต์ จำเป็นต้องมี 3 ซอฟต์แวร์หลัก สามารถดาวน์โหลดและติดตั้งผ่านลิงก์ทางการได้เลย:
 
-### ⚡ คำสั่งติดตั้งรวดเดียวครบทั้ง 3 ซอฟต์แวร์ (All-in-One via winget):
-```powershell
-winget install --id Git.Git -e --source winget ; winget install --id Python.Python.3.10 -e --source winget ; winget install --id OpenJS.NodeJS.LTS -e --source winget
-```
-
-### หรือเลือกติดตั้งและตรวจเช็คทีละโปรแกรม:
-1. **Git (Version Control):**
-   ```powershell
-   winget install --id Git.Git -e --source winget
-   git --version
-   ```
-   *(หรือดาวน์โหลดตัวติดตั้ง .exe จาก [git-scm.com](https://git-scm.com/download/win))*
-
-2. **Python 3.10 / 3.11 (Backend SLM & PaddleOCR):**
-   ```powershell
-   winget install --id Python.Python.3.10 -e --source winget
-   python --version
-   ```
-   *(หรือดาวน์โหลดตัวติดตั้ง .exe จาก [python.org](https://www.python.org/downloads/) - สำคัญ: หากติดตั้งผ่าน .exe ต้องติ๊ก **"Add python.exe to PATH"**)*
-
-3. **Node.js 18+ LTS (React Web Frontend):**
-   ```powershell
-   winget install --id OpenJS.NodeJS.LTS -e --source winget
-   node -v
-   ```
-   *(หรือดาวน์โหลดตัวติดตั้ง .msi จาก [nodejs.org](https://nodejs.org/))*
+1. **Git (Version Control):** [ดาวน์โหลด Git for Windows (.exe)](https://git-scm.com/download/win)
+2. **Python 3.10 / 3.11 (Backend SLM & PaddleOCR):** [ดาวน์โหลด Python (.exe)](https://www.python.org/downloads/) *(สำคัญ: ตอนติดตั้งต้องติ๊กเลือก **"Add python.exe to PATH"**)*
+3. **Node.js 18+ LTS (React Web Frontend):** [ดาวน์โหลด Node.js LTS (.msi)](https://nodejs.org/en/download/)
 
 ---
 

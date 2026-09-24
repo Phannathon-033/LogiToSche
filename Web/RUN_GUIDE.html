@@ -147,197 +147,98 @@
   <!-- Step by Step Guide -->
   <main class="max-w-6xl mx-auto px-4 sm:px-6 pb-20 space-y-10" id="quick-start">
 
-    <!-- Step 0: Prerequisites & Installation Commands -->
+    <!-- Step 0: Prerequisites (Download Links Only) -->
     <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-6">
       <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
         <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-800 text-indigo-400 font-bold text-sm">0</span>
         <div>
-          <h2 class="text-lg sm:text-xl font-bold text-white">สิ่งที่ต้องติดตั้งก่อนเริ่ม (ติดตั้งผ่าน CMD ได้ทันที โดยไม่ต้องเตรียมอะไรพร้อม)</h2>
-          <span class="text-xs text-slate-400">เลือกวิธีที่สะดวกที่สุด รันผ่าน Command Prompt (CMD) หรือ PowerShell ได้เลย</span>
+          <h2 class="text-lg sm:text-xl font-bold text-white">สิ่งที่ต้องติดตั้งก่อนเริ่ม (ดาวน์โหลดผ่านลิงก์ทางการ 3 โปรแกรม)</h2>
+          <span class="text-xs text-slate-400">คลิกลิงก์ด้านล่างเพื่อดาวน์โหลดตัวติดตั้ง (.exe / .msi) และติดตั้งลงเครื่องของคุณให้เรียบร้อย</span>
         </div>
       </div>
 
-      <!-- Quick 1-Command All-in-One Install Box via CMD (winget) -->
-      <div class="rounded-xl border border-indigo-500/40 bg-gradient-to-r from-indigo-950/60 via-slate-900 to-indigo-950/60 p-4 sm:p-5 space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <span class="text-xs sm:text-sm font-bold text-indigo-300 flex items-center gap-1.5">
-            <span>⚡ วิธีที่ 1: ติดตั้งผ่าน CMD ด้วยคำสั่งเดียว (ใช้ winget บน Windows 10/11)</span>
-          </span>
-          <span class="text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 px-2 py-0.5 rounded font-mono">CMD / PowerShell</span>
-        </div>
-        <p class="text-xs text-slate-300">
-          เปิด <b>Command Prompt (CMD)</b> หรือ <b>PowerShell</b> (แนะนำคลิกขวา Run as Administrator) แล้ววางคำสั่งนี้เพื่อดาวน์โหลดและติดตั้ง <b>Git + Python 3.10 + Node.js LTS</b> พร้อมกันทั้งหมด:
-        </p>
-        <div class="code-box text-xs">
-          <button class="copy-btn" onclick="copyCode(this, 'winget install --id Git.Git -e --source winget && winget install --id Python.Python.3.10 -e --source winget && winget install --id OpenJS.NodeJS.LTS -e --source winget')">📋 คัดลอก</button>
-          <code class="text-emerald-300 font-bold">winget install --id Git.Git -e --source winget && winget install --id Python.Python.3.10 -e --source winget && winget install --id OpenJS.NodeJS.LTS -e --source winget</code>
-        </div>
-        <span class="text-[11px] text-slate-400 block italic">
-          *เมื่อติดตั้งเสร็จแล้ว ให้ปิดและเปิดหน้าต่าง CMD ใหม่ 1 ครั้งเพื่อให้คำสั่ง git, python, node มีผลทำงาน
-        </span>
-      </div>
-
-      <!-- Zero-Prerequisite CMD Box (via built-in curl) -->
-      <div class="rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-950/30 via-slate-900 to-amber-950/30 p-4 sm:p-5 space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <span class="text-xs sm:text-sm font-bold text-amber-300 flex items-center gap-1.5">
-            <span>🌐 วิธีที่ 2: โหลดตรงผ่าน CMD ด้วย curl (สำหรับเครื่องที่ไม่มี winget หรือไม่มีอะไรพร้อมเลย)</span>
-          </span>
-          <span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded font-mono">Zero Prerequisite (Pure CMD)</span>
-        </div>
-        <p class="text-xs text-slate-300 leading-relaxed">
-          ในกรณีที่เครื่องเป็น Windows รุ่นเก่าหรือไม่มีคำสั่ง winget คุณสามารถเปิด <b>Command Prompt (CMD)</b> แล้ววางคำสั่งดาวน์โหลดตัวติดตั้งทางการ (.exe / .msi) พร้อมติดตั้งแบบเงียบ (Silent Install) อัตโนมัติได้ทันที:
-        </p>
-        
-        <div class="space-y-2 text-xs">
-          <!-- Install Git via curl -->
-          <div>
-            <span class="text-[11px] font-bold text-orange-400 block mb-1">1. ติดตั้ง Git ผ่าน CMD:</span>
-            <div class="code-box text-xs py-2">
-              <button class="copy-btn" onclick="copyCode(this, 'curl -Lo \"%TEMP%\\git_setup.exe\" \"https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe\" && start /wait \"\" \"%TEMP%\\git_setup.exe\" /VERYSILENT /NORESTART')">📋 คัดลอก</button>
-              <code class="text-orange-300">curl -Lo "%TEMP%\git_setup.exe" "https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe" && start /wait "" "%TEMP%\git_setup.exe" /VERYSILENT /NORESTART</code>
-            </div>
-          </div>
-
-          <!-- Install Python via curl -->
-          <div>
-            <span class="text-[11px] font-bold text-cyan-400 block mb-1">2. ติดตั้ง Python 3.10 ผ่าน CMD (แอด PATH ให้อัตโนมัติ):</span>
-            <div class="code-box text-xs py-2">
-              <button class="copy-btn" onclick="copyCode(this, 'curl -Lo \"%TEMP%\\python_setup.exe\" \"https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe\" && start /wait \"\" \"%TEMP%\\python_setup.exe\" /quiet InstallAllUsers=1 PrependPath=1')">📋 คัดลอก</button>
-              <code class="text-cyan-300">curl -Lo "%TEMP%\python_setup.exe" "https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe" && start /wait "" "%TEMP%\python_setup.exe" /quiet InstallAllUsers=1 PrependPath=1</code>
-            </div>
-          </div>
-
-          <!-- Install Node via curl -->
-          <div>
-            <span class="text-[11px] font-bold text-emerald-400 block mb-1">3. ติดตั้ง Node.js LTS ผ่าน CMD:</span>
-            <div class="code-box text-xs py-2">
-              <button class="copy-btn" onclick="copyCode(this, 'curl -Lo \"%TEMP%\\node_setup.msi\" \"https://nodejs.org/dist/v20.12.2/node-v20.12.2-x64.msi\" && start /wait msiexec /i \"%TEMP%\\node_setup.msi\" /quiet /qn /norestart')">📋 คัดลอก</button>
-              <code class="text-emerald-300">curl -Lo "%TEMP%\node_setup.msi" "https://nodejs.org/dist/v20.12.2/node-v20.12.2-x64.msi" && start /wait msiexec /i "%TEMP%\node_setup.msi" /quiet /qn /norestart</code>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 1-Click Install Script Box -->
-      <div class="rounded-xl border border-emerald-500/40 bg-gradient-to-r from-emerald-950/30 via-slate-900 to-emerald-950/30 p-4 sm:p-5 space-y-2">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <span class="text-xs sm:text-sm font-bold text-emerald-300 flex items-center gap-1.5">
-            <span>🚀 วิธีที่ 3: ดับเบิ้ลคลิกไฟล์สคริปต์ install-windows.bat (อัตโนมัติ 100%)</span>
-          </span>
-          <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded font-mono">1-Click Batch File</span>
-        </div>
-        <p class="text-xs text-slate-300">
-          หากโคลนโปรเจกต์มาแล้ว คุณสามารถรันสคริปต์ติดตั้งระบบทั้งหมดเบ็ดเสร็จในหน้าต่าง CMD เดียว โดยพิมพ์คำสั่งนี้:
-        </p>
-        <div class="code-box text-xs">
-          <button class="copy-btn" onclick="copyCode(this, 'install-windows.bat')">📋 คัดลอก</button>
-          <code class="text-emerald-300 font-bold">install-windows.bat</code>
-        </div>
-      </div>
-
-      <!-- Detailed 3 Software Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+      <!-- 3 Software Cards with Direct Download Buttons -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- Software 1: Git -->
-        <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-4 space-y-3 flex flex-col justify-between">
-          <div class="space-y-2">
+        <div class="rounded-2xl border border-slate-800 bg-slate-950/80 p-5 space-y-4 flex flex-col justify-between hover:border-orange-500/40 transition">
+          <div class="space-y-3">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-orange-400 flex items-center gap-1.5">
-                <span>📦 1. Git (Version Control)</span>
+              <span class="text-sm font-bold text-orange-400 flex items-center gap-2">
+                <span>📦 1. Git</span>
               </span>
-              <span class="text-[10px] bg-orange-500/10 text-orange-300 border border-orange-500/30 px-1.5 py-0.5 rounded font-mono">จำเป็น</span>
+              <span class="text-[10px] bg-orange-500/10 text-orange-300 border border-orange-500/30 px-2 py-0.5 rounded-full font-mono">จำเป็น</span>
             </div>
-            <p class="text-xs text-slate-400">สำหรับโคลนและดึงซอร์สโค้ดโปรเจกต์จาก GitHub</p>
-            
-            <div class="space-y-1">
-              <span class="text-[11px] font-semibold text-slate-300 block">คำสั่งติดตั้ง (Install):</span>
-              <div class="code-box text-xs py-2">
-                <button class="copy-btn" onclick="copyCode(this, 'winget install --id Git.Git -e --source winget')">📋 คัดลอก</button>
-                <code class="text-orange-300">winget install --id Git.Git -e --source winget</code>
-              </div>
-            </div>
-
-            <div class="space-y-1">
-              <span class="text-[11px] font-semibold text-slate-300 block">คำสั่งตรวจเช็ค (Verify):</span>
-              <div class="code-box text-xs py-2">
-                <button class="copy-btn" onclick="copyCode(this, 'git --version')">📋 คัดลอก</button>
-                <code class="text-slate-300">git --version</code>
-              </div>
-            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              เครื่องมือจัดการเวอร์ชัน สำหรับโคลนและดึงซอร์สโค้ดโปรเจกต์จาก GitHub ลงเครื่อง
+            </p>
           </div>
-          <div class="pt-2 border-t border-slate-800/80">
-            <a href="https://git-scm.com/download/win" target="_blank" class="text-[11px] text-cyan-400 hover:text-cyan-300 underline flex items-center gap-1">
-              <span>🔗 ลิงก์ดาวน์โหลดตัวติดตั้ง (.exe) จากเว็บทางการ</span>
+          
+          <div class="space-y-3 pt-2 border-t border-slate-800">
+            <a href="https://git-scm.com/download/win" target="_blank" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs shadow-lg shadow-orange-600/20 transition">
+              <span>📥 ดาวน์โหลด Git for Windows</span>
             </a>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>ลิงก์ทางการ:</span>
+              <a href="https://git-scm.com/download/win" target="_blank" class="text-orange-400 hover:underline">git-scm.com</a>
+            </div>
           </div>
         </div>
 
         <!-- Software 2: Python -->
-        <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-4 space-y-3 flex flex-col justify-between">
-          <div class="space-y-2">
+        <div class="rounded-2xl border border-slate-800 bg-slate-950/80 p-5 space-y-4 flex flex-col justify-between hover:border-cyan-500/40 transition">
+          <div class="space-y-3">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
-                <span>🐍 2. Python 3.10 / 3.11</span>
+              <span class="text-sm font-bold text-cyan-400 flex items-center gap-2">
+                <span>🐍 2. Python</span>
               </span>
-              <span class="text-[10px] bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5 rounded font-mono">Backend SLM & OCR</span>
+              <span class="text-[10px] bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full font-mono">Backend SLM</span>
             </div>
-            <p class="text-xs text-slate-400">สำหรับรัน FastAPI, PyTorch, Qwen2.5 และ PaddleOCR</p>
-            
-            <div class="space-y-1">
-              <span class="text-[11px] font-semibold text-slate-300 block">คำสั่งติดตั้ง (Install):</span>
-              <div class="code-box text-xs py-2">
-                <button class="copy-btn" onclick="copyCode(this, 'winget install --id Python.Python.3.10 -e --source winget')">📋 คัดลอก</button>
-                <code class="text-cyan-300">winget install --id Python.Python.3.10 -e --source winget</code>
-              </div>
-            </div>
-
-            <div class="space-y-1">
-              <span class="text-[11px] font-semibold text-slate-300 block">คำสั่งตรวจเช็ค (Verify):</span>
-              <div class="code-box text-xs py-2">
-                <button class="copy-btn" onclick="copyCode(this, 'python --version')">📋 คัดลอก</button>
-                <code class="text-slate-300">python --version</code>
-              </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              สำหรับรันระบบหลังบ้าน FastAPI, PyTorch, Small Language Model (Qwen2.5) และ PaddleOCR
+            </p>
+            <div class="rounded-lg bg-amber-500/10 border border-amber-500/30 p-2.5">
+              <span class="text-[11px] text-amber-300 font-semibold block leading-tight">
+                ⚠️ สำคัญ: ตอนเปิดตัวติดตั้ง ต้องติ๊กเลือก <b>"Add python.exe to PATH"</b> ก่อนกด Install
+              </span>
             </div>
           </div>
-          <div class="pt-2 border-t border-slate-800/80 space-y-1">
-            <a href="https://www.python.org/downloads/" target="_blank" class="text-[11px] text-cyan-400 hover:text-cyan-300 underline flex items-center gap-1">
-              <span>🔗 ลิงก์ดาวน์โหลดตัวติดตั้ง Python (python.org)</span>
+          
+          <div class="space-y-3 pt-2 border-t border-slate-800">
+            <a href="https://www.python.org/downloads/" target="_blank" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-lg shadow-cyan-600/20 transition">
+              <span>📥 ดาวน์โหลด Python</span>
             </a>
-            <span class="text-[10px] text-amber-300/90 block">*หากติดตั้งผ่าน .exe ต้องติ๊ก <b>"Add python.exe to PATH"</b></span>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>ลิงก์ทางการ:</span>
+              <a href="https://www.python.org/downloads/" target="_blank" class="text-cyan-400 hover:underline">python.org/downloads</a>
+            </div>
           </div>
         </div>
 
         <!-- Software 3: Node.js -->
-        <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-4 space-y-3 flex flex-col justify-between">
-          <div class="space-y-2">
+        <div class="rounded-2xl border border-slate-800 bg-slate-950/80 p-5 space-y-4 flex flex-col justify-between hover:border-emerald-500/40 transition">
+          <div class="space-y-3">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                <span>🟢 3. Node.js 18+ (LTS)</span>
+              <span class="text-sm font-bold text-emerald-400 flex items-center gap-2">
+                <span>🟢 3. Node.js (LTS)</span>
               </span>
-              <span class="text-[10px] bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded font-mono">Vite Web UI</span>
+              <span class="text-[10px] bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">Frontend Web</span>
             </div>
-            <p class="text-xs text-slate-400">สำหรับรัน React Web Frontend และแพ็กเกจ npm</p>
-            
-            <div class="space-y-1">
-              <span class="text-[11px] font-semibold text-slate-300 block">คำสั่งติดตั้ง (Install):</span>
-              <div class="code-box text-xs py-2">
-                <button class="copy-btn" onclick="copyCode(this, 'winget install --id OpenJS.NodeJS.LTS -e --source winget')">📋 คัดลอก</button>
-                <code class="text-emerald-300">winget install --id OpenJS.NodeJS.LTS -e --source winget</code>
-              </div>
-            </div>
-
-            <div class="space-y-1">
-              <span class="text-[11px] font-semibold text-slate-300 block">คำสั่งตรวจเช็ค (Verify):</span>
-              <div class="code-box text-xs py-2">
-                <button class="copy-btn" onclick="copyCode(this, 'node -v\nnpm -v')">📋 คัดลอก</button>
-                <code class="text-slate-300">node -v && npm -v</code>
-              </div>
-            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              สำหรับรันระบบหน้าบ้าน React 18, Tailwind CSS, Lucide Icons และ Vite Web UI
+            </p>
+            <span class="text-[11px] text-slate-400 block">
+              *แนะนำให้ดาวน์โหลดเวอร์ชันที่เป็น <b>LTS (Long Term Support)</b>
+            </span>
           </div>
-          <div class="pt-2 border-t border-slate-800/80">
-            <a href="https://nodejs.org/en/download/" target="_blank" class="text-[11px] text-cyan-400 hover:text-cyan-300 underline flex items-center gap-1">
-              <span>🔗 ลิงก์ดาวน์โหลดตัวติดตั้ง Node.js LTS (.msi)</span>
+          
+          <div class="space-y-3 pt-2 border-t border-slate-800">
+            <a href="https://nodejs.org/en/download/" target="_blank" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/20 transition">
+              <span>📥 ดาวน์โหลด Node.js LTS</span>
             </a>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>ลิงก์ทางการ:</span>
+              <a href="https://nodejs.org/en/download/" target="_blank" class="text-emerald-400 hover:underline">nodejs.org/en/download</a>
+            </div>
           </div>
         </div>
       </div>
