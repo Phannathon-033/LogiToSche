@@ -1077,7 +1077,13 @@ def get_benchmark_ground_truth() -> dict[str, Any]:
     if not gt_path.exists():
         raise HTTPException(status_code=404, detail="Ground truth dataset not found")
     data = json.loads(gt_path.read_text(encoding="utf-8"))
-    labels_dir = Path(r"E:\Logistics To JSON\To_Testing\labels_json")
+    repo_testing = BASE_DIR.parent.parent / "To_Testing"
+    labels_candidates = [
+        repo_testing / "labels_json",
+        BASE_DIR.parent / "To_Testing" / "labels_json",
+        Path(r"E:\Logistics To JSON\To_Testing\labels_json"),
+    ]
+    labels_dir = next((d for d in labels_candidates if d.is_dir()), labels_candidates[0])
     if labels_dir.is_dir() and "documents" in data:
         for doc in data["documents"]:
             file_name = doc.get("file_name", "")

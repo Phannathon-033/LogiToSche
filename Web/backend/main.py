@@ -567,9 +567,21 @@ def post_evaluation_reset() -> Any:
 def get_benchmark_image(file_name: str) -> Any:
     from fastapi.responses import FileResponse
 
-    base_testing_dir = Path(
-        os.environ.get("LOGIAI_DATASET_DIR", r"E:\Logistics To JSON\To_Testing")
-    ).resolve()
+    backend_dir = Path(__file__).resolve().parent
+    repo_testing = backend_dir.parent.parent / "To_Testing"
+    web_testing = backend_dir.parent / "To_Testing"
+    configured_dir = os.environ.get("LOGIAI_DATASET_DIR", "").strip()
+
+    if configured_dir and Path(configured_dir).exists():
+        base_testing_dir = Path(configured_dir).resolve()
+    elif repo_testing.exists():
+        base_testing_dir = repo_testing.resolve()
+    elif web_testing.exists():
+        base_testing_dir = web_testing.resolve()
+    elif Path(r"E:\Logistics To JSON\To_Testing").exists():
+        base_testing_dir = Path(r"E:\Logistics To JSON\To_Testing").resolve()
+    else:
+        base_testing_dir = backend_dir.resolve()
     safe_name = Path(file_name).name
     img_path = (base_testing_dir / safe_name).resolve()
     if base_testing_dir not in img_path.parents or not img_path.is_file():

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>คู่มือการติดตั้งและรันระบบ LogiAI (Step-by-Step Setup Guide)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            thai: ['Sarabun', 'sans-serif'],
+            display: ['Chakra Petch', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Sarabun', sans-serif; }
+    h1, h2, h3, .heading-font { font-family: 'Chakra Petch', sans-serif; }
+    code, pre, .mono-font { font-family: 'JetBrains Mono', monospace; }
+    
+    .code-box {
+      position: relative;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+    }
+    
+    .copy-btn {
+      position: absolute;
+      top: 0.65rem;
+      right: 0.65rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 0.5rem;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(71, 85, 105, 0.6);
+      color: #94a3b8;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+    .copy-btn:hover {
+      background: #334155;
+      color: #f8fafc;
+      border-color: #64748b;
+    }
+    .copy-btn.copied {
+      background: #065f46;
+      border-color: #10b981;
+      color: #34d399;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Top Sticky Navigation -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
+          LA
+        </div>
+        <div>
+          <span class="font-bold text-sm tracking-wide text-white block heading-font">LogiAI Framework</span>
+          <span class="text-[11px] text-slate-400 block -mt-1">คู่มือติดตั้งและรันระบบฉบับสมบูรณ์ (Setup & Run Guide)</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 text-xs">
+        <a href="#quick-start" class="px-3 py-1.5 rounded-lg bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-600 hover:text-white transition font-semibold">
+          🚀 เริ่มต้นด่วน (Quick Start)
+        </a>
+        <a href="#troubleshooting" class="hidden sm:inline-block px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition">
+          🛠️ แก้ปัญหา (Troubleshooting)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-8">
+    <div class="rounded-3xl border border-indigo-500/30 bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-950 p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+      <div class="absolute -right-16 -top-16 w-72 h-72 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 max-w-3xl space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-400/30 text-indigo-300 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Ready to Clone & Run · Python 3.10+ & Node.js 18+
+        </div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+          คู่มือการติดตั้งและรันระบบ <span class="bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">LogiAI</span> สำหรับเพื่อนร่วมทีม
+        </h1>
+        <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
+          เอกสารนี้จัดทำขึ้นเพื่อให้ผู้ที่เพิ่ง <b>git clone / pull</b> โปรเจกต์นี้เป็นครั้งแรก สามารถติดตั้ง dependencies และเริ่มรันระบบสกัดข้อมูลเอกสารโลจิสติกส์สู่ 11 ฟิลด์มาตรฐาน (JSON Schema) พร้อมทดสอบ <b>5-Fold Cross-Validation (300 ฉบับ)</b> และดาวน์โหลดผลสรุป <b>Excel (.xlsx)</b> ได้ทันที
+        </p>
+
+        <!-- System Architecture Badges -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex items-center gap-3">
+            <div class="h-8 w-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-xs">8000</div>
+            <div>
+              <span class="text-xs font-bold text-slate-200 block">AI Gateway & OCR</span>
+              <span class="text-[11px] text-slate-400 block">FastAPI + PaddleOCR</span>
+            </div>
+          </div>
+          <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex items-center gap-3">
+            <div class="h-8 w-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs">8001</div>
+            <div>
+              <span class="text-xs font-bold text-slate-200 block">Dedicated SLM Engine</span>
+              <span class="text-[11px] text-slate-400 block">Qwen2.5-1.5B (CUDA GPU)</span>
+            </div>
+          </div>
+          <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex items-center gap-3">
+            <div class="h-8 w-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">5173</div>
+            <div>
+              <span class="text-xs font-bold text-slate-200 block">Modern Web UI</span>
+              <span class="text-[11px] text-slate-400 block">React 18 + Vite + Tailwind</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step by Step Guide -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 pb-20 space-y-10" id="quick-start">
+
+    <!-- Step 0: Prerequisites & Installation Commands -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-6">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-800 text-indigo-400 font-bold text-sm">0</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">สิ่งที่ต้องติดตั้งก่อนเริ่ม (3 ซอฟต์แวร์หลัก + คำสั่งติดตั้งทันที)</h2>
+          <span class="text-xs text-slate-400">หากเครื่องยังไม่มี ให้คัดลอกคำสั่งด้านล่างไปรันใน PowerShell (Run as Administrator) เพื่อติดตั้งอัตโนมัติ</span>
+        </div>
+      </div>
+
+      <!-- Quick 1-Command All-in-One Install Box -->
+      <div class="rounded-xl border border-indigo-500/40 bg-gradient-to-r from-indigo-950/60 via-slate-900 to-indigo-950/60 p-4 sm:p-5 space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="text-xs sm:text-sm font-bold text-indigo-300 flex items-center gap-1.5">
+            <span>⚡ คำสั่งติดตั้งรวดเดียวครบทั้ง 3 ซอฟต์แวร์ (All-in-One via Windows Package Manager: winget):</span>
+          </span>
+          <span class="text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 px-2 py-0.5 rounded font-mono">Windows 10 / 11</span>
+        </div>
+        <p class="text-xs text-slate-300">
+          เปิด <b>PowerShell</b> (แนะนำคลิกขวา Run as Administrator) แล้ววางคำสั่งนี้เพื่อดาวน์โหลดและติดตั้ง <b>Git + Python 3.10 + Node.js LTS</b> พร้อมกันในคำสั่งเดียว:
+        </p>
+        <div class="code-box text-xs">
+          <button class="copy-btn" onclick="copyCode(this, 'winget install --id Git.Git -e --source winget ; winget install --id Python.Python.3.10 -e --source winget ; winget install --id OpenJS.NodeJS.LTS -e --source winget')">📋 คัดลอก</button>
+          <code class="text-emerald-300 font-bold">winget install --id Git.Git -e --source winget ; winget install --id Python.Python.3.10 -e --source winget ; winget install --id OpenJS.NodeJS.LTS -e --source winget</code>
+        </div>
+        <span class="text-[11px] text-slate-400 block italic">
+          *เมื่อติดตั้งเสร็จแล้ว ให้ปิดและเปิดหน้าต่าง PowerShell ใหม่ 1 ครั้งเพื่อให้ PATH มีผลทำงาน
+        </span>
+      </div>
+
+      <!-- Detailed 3 Software Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+        <!-- Software 1: Git -->
+        <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-4 space-y-3 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-orange-400 flex items-center gap-1.5">
+                <span>📦 1. Git (Version Control)</span>
+              </span>
+              <span class="text-[10px] bg-orange-500/10 text-orange-300 border border-orange-500/30 px-1.5 py-0.5 rounded font-mono">จำเป็น</span>
+            </div>
+            <p class="text-xs text-slate-400">สำหรับโคลนและดึงซอร์สโค้ดโปรเจกต์จาก GitHub</p>
+            
+            <div class="space-y-1">
+              <span class="text-[11px] font-semibold text-slate-300 block">คำสั่งติดตั้ง (Install):</span>
+              <div class="code-box text-xs py-2">
+                <button class="copy-btn" onclick="copyCode(this, 'winget install --id Git.Git -e --source winget')">📋 คัดลอก</button>
+                <code class="text-orange-300">winget install --id Git.Git -e --source winget</code>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <span class="text-[11px] font-semibold text-slate-300 block">คำสั่งตรวจเช็ค (Verify):</span>
+              <div class="code-box text-xs py-2">
+                <button class="copy-btn" onclick="copyCode(this, 'git --version')">📋 คัดลอก</button>
+                <code class="text-slate-300">git --version</code>
+              </div>
+            </div>
+          </div>
+          <div class="pt-2 border-t border-slate-800/80">
+            <a href="https://git-scm.com/download/win" target="_blank" class="text-[11px] text-cyan-400 hover:text-cyan-300 underline flex items-center gap-1">
+              <span>🔗 ลิงก์ดาวน์โหลดตัวติดตั้ง (.exe) จากเว็บทางการ</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Software 2: Python -->
+        <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-4 space-y-3 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                <span>🐍 2. Python 3.10 / 3.11</span>
+              </span>
+              <span class="text-[10px] bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5 rounded font-mono">Backend SLM & OCR</span>
+            </div>
+            <p class="text-xs text-slate-400">สำหรับรัน FastAPI, PyTorch, Qwen2.5 และ PaddleOCR</p>
+            
+            <div class="space-y-1">
+              <span class="text-[11px] font-semibold text-slate-300 block">คำสั่งติดตั้ง (Install):</span>
+              <div class="code-box text-xs py-2">
+                <button class="copy-btn" onclick="copyCode(this, 'winget install --id Python.Python.3.10 -e --source winget')">📋 คัดลอก</button>
+                <code class="text-cyan-300">winget install --id Python.Python.3.10 -e --source winget</code>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <span class="text-[11px] font-semibold text-slate-300 block">คำสั่งตรวจเช็ค (Verify):</span>
+              <div class="code-box text-xs py-2">
+                <button class="copy-btn" onclick="copyCode(this, 'python --version')">📋 คัดลอก</button>
+                <code class="text-slate-300">python --version</code>
+              </div>
+            </div>
+          </div>
+          <div class="pt-2 border-t border-slate-800/80 space-y-1">
+            <a href="https://www.python.org/downloads/release/python-31011/" target="_blank" class="text-[11px] text-cyan-400 hover:text-cyan-300 underline flex items-center gap-1">
+              <span>🔗 ลิงก์ดาวน์โหลดตัวติดตั้ง Python 3.10.11 (.exe)</span>
+            </a>
+            <span class="text-[10px] text-amber-300/90 block">*หากติดตั้งผ่าน .exe ต้องติ๊ก <b>"Add python.exe to PATH"</b></span>
+          </div>
+        </div>
+
+        <!-- Software 3: Node.js -->
+        <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-4 space-y-3 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                <span>🟢 3. Node.js 18+ (LTS)</span>
+              </span>
+              <span class="text-[10px] bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded font-mono">Vite Web UI</span>
+            </div>
+            <p class="text-xs text-slate-400">สำหรับรัน React Web Frontend และแพ็กเกจ npm</p>
+            
+            <div class="space-y-1">
+              <span class="text-[11px] font-semibold text-slate-300 block">คำสั่งติดตั้ง (Install):</span>
+              <div class="code-box text-xs py-2">
+                <button class="copy-btn" onclick="copyCode(this, 'winget install --id OpenJS.NodeJS.LTS -e --source winget')">📋 คัดลอก</button>
+                <code class="text-emerald-300">winget install --id OpenJS.NodeJS.LTS -e --source winget</code>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <span class="text-[11px] font-semibold text-slate-300 block">คำสั่งตรวจเช็ค (Verify):</span>
+              <div class="code-box text-xs py-2">
+                <button class="copy-btn" onclick="copyCode(this, 'node -v\nnpm -v')">📋 คัดลอก</button>
+                <code class="text-slate-300">node -v && npm -v</code>
+              </div>
+            </div>
+          </div>
+          <div class="pt-2 border-t border-slate-800/80">
+            <a href="https://nodejs.org/en/download/" target="_blank" class="text-[11px] text-cyan-400 hover:text-cyan-300 underline flex items-center gap-1">
+              <span>🔗 ลิงก์ดาวน์โหลดตัวติดตั้ง Node.js LTS (.msi)</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1: Clone Repository -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-4">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm">1</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">โคลนโปรเจกต์ (Git Clone) และเข้าสู่โฟลเดอร์ Web</h2>
+          <span class="text-xs text-slate-400">ดาวน์โหลดซอร์สโค้ดทั้งหมดลงในเครื่องของคุณ</span>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-300">
+        เปิด Terminal หรือ PowerShell ในโฟลเดอร์ที่คุณต้องการบันทึกโปรเจกต์ แล้วรันคำสั่ง:
+      </p>
+      <div class="code-box">
+        <button class="copy-btn" onclick="copyCode(this, 'git clone https://github.com/Phannathon-033/LogiToSche.git\ncd LogiToSche/Web')">📋 คัดลอก</button>
+        <pre class="text-xs sm:text-sm text-indigo-300"><code>git clone https://github.com/Phannathon-033/LogiToSche.git
+cd LogiToSche/Web</code></pre>
+      </div>
+    </div>
+
+    <!-- Step 2: Setup Environment Variables (.env) -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-4">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm">2</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">ตั้งค่าคอนฟิก Environment Variables (.env)</h2>
+          <span class="text-xs text-slate-400">คัดลอกไฟล์คอนฟิกพื้นฐานสำหรับ Frontend และ Backend</span>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-300">
+        คัดลอกไฟล์ <code class="text-amber-300">.env.example</code> ไปเป็น <code class="text-amber-300">.env</code> ทั้งใน Root และ Backend (ค่าเริ่มต้นเป็น Open Dev Mode รันได้ทันทีโดยไม่ต้องใส่ Token):
+      </p>
+      
+      <!-- Windows CMD/PowerShell Copy -->
+      <div class="space-y-2">
+        <span class="text-xs font-semibold text-slate-400 block">สำหรับ Windows (PowerShell หรือ CMD):</span>
+        <div class="code-box">
+          <button class="copy-btn" onclick="copyCode(this, 'copy .env.example .env\ncopy backend\\.env.example backend\\.env')">📋 คัดลอก</button>
+          <pre class="text-xs sm:text-sm text-emerald-300"><code>copy .env.example .env
+copy backend\.env.example backend\.env</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Install Backend Dependencies -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-4">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm">3</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">สร้าง Virtual Environment และติดตั้งไลบรารี Python</h2>
+          <span class="text-xs text-slate-400">ติดตั้ง PyTorch, PaddleOCR, Transformers, openpyxl ฯลฯ</span>
+        </div>
+      </div>
+
+      <!-- 3.1 Create venv -->
+      <div class="space-y-2">
+        <span class="text-xs font-bold text-slate-300 block">3.1 สร้าง Virtual Environment ในโฟลเดอร์ backend:</span>
+        <div class="code-box">
+          <button class="copy-btn" onclick="copyCode(this, 'python -m venv backend/.venv')">📋 คัดลอก</button>
+          <code class="text-xs sm:text-sm text-slate-200">python -m venv backend/.venv</code>
+        </div>
+      </div>
+
+      <!-- 3.2 Install Packages -->
+      <div class="space-y-3 pt-2">
+        <span class="text-xs font-bold text-slate-300 block">3.2 เลือกลักษณะการติดตั้งไลบรารีตามสเปกเครื่องของคุณ:</span>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- GPU Option -->
+          <div class="rounded-xl border border-emerald-500/40 bg-emerald-950/20 p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-400">ทางเลือกที่ 1: เครื่องมี NVIDIA GPU (แนะนำ ⭐)</span>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">CUDA 12.x</span>
+            </div>
+            <p class="text-xs text-slate-400">ติดตั้ง PyTorch GPU + PaddleOCR GPU เพื่อความเร็วสูงสุด (16 tokens/sec):</p>
+            <div class="code-box text-xs">
+              <button class="copy-btn" onclick="copyCode(this, '& \"backend\\.venv\\Scripts\\pip.exe\" install --upgrade pip\n& \"backend\\.venv\\Scripts\\pip.exe\" install -r backend/requirements.txt')">📋 คัดลอก</button>
+              <pre class="text-emerald-300"><code>& "backend\.venv\Scripts\pip.exe" install --upgrade pip
+& "backend\.venv\Scripts\pip.exe" install -r backend/requirements.txt</code></pre>
+            </div>
+          </div>
+
+          <!-- CPU Option -->
+          <div class="rounded-xl border border-slate-700 bg-slate-900/40 p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-300">ทางเลือกที่ 2: โหมด CPU (ไม่มี NVIDIA GPU)</span>
+              <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">CPU Only</span>
+            </div>
+            <p class="text-xs text-slate-400">สำหรับแล็ปท็อปทั่วไปหรือ Mac ที่ต้องการรันแบบทดสอบพื้นฐาน:</p>
+            <div class="code-box text-xs">
+              <button class="copy-btn" onclick="copyCode(this, '& \"backend\\.venv\\Scripts\\pip.exe\" install --upgrade pip\n& \"backend\\.venv\\Scripts\\pip.exe\" install -r backend/requirements-cpu.txt')">📋 คัดลอก</button>
+              <pre class="text-slate-300"><code>& "backend\.venv\Scripts\pip.exe" install --upgrade pip
+& "backend\.venv\Scripts\pip.exe" install -r backend/requirements-cpu.txt</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Install Frontend Dependencies -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-4">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm">4</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">ติดตั้งไลบรารี Frontend (Node.js Modules)</h2>
+          <span class="text-xs text-slate-400">ติดตั้ง React, Tailwind, Lucide Icons และ Vite</span>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-300">
+        ในโฟลเดอร์ <code class="text-cyan-300">Web</code> ให้รันคำสั่ง:
+      </p>
+      <div class="code-box">
+        <button class="copy-btn" onclick="copyCode(this, 'npm install')">📋 คัดลอก</button>
+        <code class="text-xs sm:text-sm text-cyan-300">npm install</code>
+      </div>
+    </div>
+
+    <!-- Step 5: Run the Services -->
+    <div class="rounded-2xl border-2 border-indigo-500/50 bg-gradient-to-br from-slate-900 via-indigo-950/30 to-slate-900 p-6 sm:p-8 space-y-5 shadow-xl">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 to-emerald-400 text-slate-950 font-black text-sm">5</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">วิธีรันระบบ (Starting Services)</h2>
+          <span class="text-xs text-emerald-400 font-semibold">เลือกวิธีที่สะดวกที่สุดสำหรับคุณ</span>
+        </div>
+      </div>
+
+      <!-- Option 1: 1-Click Batch File -->
+      <div class="rounded-xl border border-indigo-500/40 bg-indigo-950/40 p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-bold text-white flex items-center gap-2">
+            <span>✨ วิธีที่ 1 (สะดวกที่สุด - 1-Click เปิด 3 หน้าต่างอัตโนมัติ)</span>
+          </span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-indigo-500 text-white">แนะนำ</span>
+        </div>
+        <p class="text-xs text-slate-300">
+          ดับเบิ้ลคลิกไฟล์ <code class="text-amber-300 font-bold">scripts\run-all-windows.bat</code> หรือพิมพ์คำสั่งนี้ใน Terminal:
+        </p>
+        <div class="code-box">
+          <button class="copy-btn" onclick="copyCode(this, 'npm run dev:windows')">📋 คัดลอก</button>
+          <code class="text-xs sm:text-sm text-emerald-300 font-bold">npm run dev:windows</code>
+        </div>
+        <p class="text-[11px] text-slate-400 italic">
+          *คำสั่งนี้จะเปิด 3 หน้าต่าง CMD แยกกันให้ทันที: (1) Frontend 5173, (2) Gateway 8000, (3) SLM Model 8001
+        </p>
+      </div>
+
+      <!-- Option 2: 3 Separate Terminals -->
+      <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-5 space-y-4">
+        <span class="text-sm font-bold text-slate-200 block">
+          💻 วิธีที่ 2: รันแยก 3 Terminal (สำหรับผู้ที่ต้องการดู Log แต่ละส่วนอย่างละเอียด)
+        </span>
+        
+        <div class="space-y-3">
+          <!-- Terminal 1 -->
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="font-bold text-indigo-400">Terminal 1: รัน SLM Model Service (Port 8001)</span>
+              <span class="text-slate-500">โมเดล Qwen2.5-1.5B</span>
+            </div>
+            <div class="code-box text-xs">
+              <button class="copy-btn" onclick="copyCode(this, '& \"backend\\.venv\\Scripts\\python.exe\" -m uvicorn slm_app:app --host 0.0.0.0 --port 8001')">📋 คัดลอก</button>
+              <code class="text-indigo-200">& "backend\.venv\Scripts\python.exe" -m uvicorn slm_app:app --host 0.0.0.0 --port 8001</code>
+            </div>
+          </div>
+
+          <!-- Terminal 2 -->
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="font-bold text-blue-400">Terminal 2: รัน AI Gateway & OCR Service (Port 8000)</span>
+              <span class="text-slate-500">PaddleOCR Engine</span>
+            </div>
+            <div class="code-box text-xs">
+              <button class="copy-btn" onclick="copyCode(this, '& \"backend\\.venv\\Scripts\\python.exe\" -m uvicorn main:app --host 0.0.0.0 --port 8000')">📋 คัดลอก</button>
+              <code class="text-blue-200">& "backend\.venv\Scripts\python.exe" -m uvicorn main:app --host 0.0.0.0 --port 8000</code>
+            </div>
+          </div>
+
+          <!-- Terminal 3 -->
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="font-bold text-emerald-400">Terminal 3: รัน Vite Frontend (Port 5173)</span>
+              <span class="text-slate-500">Web UI</span>
+            </div>
+            <div class="code-box text-xs">
+              <button class="copy-btn" onclick="copyCode(this, 'npm run dev')">📋 คัดลอก</button>
+              <code class="text-emerald-200">npm run dev</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6: How to Evaluate K-Fold & Download Excel -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-600 text-white font-bold text-sm">6</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">การทดสอบประเมินผล K-Fold และดาวน์โหลด Excel (.xlsx)</h2>
+          <span class="text-xs text-slate-400">ขั้นตอนการรันประเมิน 300 ฉบับและนำผลไปเขียนรายงานวิทยานิพนธ์</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+        <div class="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-2">
+          <span class="h-6 w-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">1</span>
+          <span class="font-bold text-slate-200 block">เปิดหน้าเว็บ</span>
+          <p class="text-slate-400">เปิดบราวเซอร์ไปที่ <a href="http://localhost:5173" target="_blank" class="text-cyan-400 underline font-mono">http://localhost:5173</a> แล้วกดเลือกเมนู <b>"ประเมินผล K-Fold Cross-Validation"</b></p>
+        </div>
+        <div class="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-2">
+          <span class="h-6 w-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">2</span>
+          <span class="font-bold text-slate-200 block">เลือกโหมดประเมิน</span>
+          <p class="text-slate-400">เลือกโหมด <b>5-Fold Cross-Validation (ครบ 300 ฉบับ)</b> หรือทดลองแบบ <b>ทดสอบสด 1 ฉบับ (Single Doc)</b> เพื่อดูความเร็ว</p>
+        </div>
+        <div class="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-2">
+          <span class="h-6 w-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">3</span>
+          <span class="font-bold text-slate-200 block">กดเริ่มและปล่อยรัน</span>
+          <p class="text-slate-400">คลิกปุ่ม <b>"เริ่มประเมิน 5-Fold ครบ 300 ฉบับ"</b> ระบบจะรันใน Background ปล่อยเครื่องทิ้งไว้ประมาณ 1 ชม. ได้เลย ไม่หลุด timeout</p>
+        </div>
+        <div class="rounded-xl border border-emerald-500/40 bg-emerald-950/30 p-4 space-y-2">
+          <span class="h-6 w-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold">4</span>
+          <span class="font-bold text-emerald-300 block">ดาวน์โหลด Excel</span>
+          <p class="text-slate-300">เมื่อครบ 300 ฉบับ จะมีปุ่มสีเขียว <b>"ดาวน์โหลดรายงานสรุป Excel (.xlsx)"</b> ปรากฏขึ้นมา สามารถกดรับไฟล์สรุป 4 ชีตได้ทันที</p>
+        </div>
+      </div>
+
+      <!-- Direct API Download URL -->
+      <div class="rounded-xl border border-slate-800 bg-slate-950 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div>
+          <span class="text-xs font-bold text-slate-200 block">💡 หรือดาวน์โหลดไฟล์ Excel รายงานล่าสุดผ่าน Direct URL:</span>
+          <span class="text-[11px] text-slate-400">สามารถคลิกลิงก์เพื่อดาวน์โหลดไฟล์ผลการประเมิน 4 ชีตได้โดยตรง:</span>
+        </div>
+        <a href="http://localhost:5173/api/benchmark/kfold/export-excel" target="_blank" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition whitespace-nowrap">
+          📥 ดาวน์โหลด Excel จาก API
+        </a>
+      </div>
+    </div>
+
+    <!-- Troubleshooting Section -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-4" id="troubleshooting">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-600 text-white font-bold text-sm">🛠️</span>
+        <h2 class="text-lg sm:text-xl font-bold text-white">คำถามและวิธีแก้ปัญหาที่พบบ่อย (Troubleshooting & FAQs)</h2>
+      </div>
+
+      <div class="space-y-3 text-xs sm:text-sm">
+        <!-- Issue 1: Port in use -->
+        <details class="group rounded-xl border border-slate-800 bg-slate-950 p-4">
+          <summary class="font-bold text-slate-200 cursor-pointer flex items-center justify-between">
+            <span>🔴 ปัญหาที่ 1: พอร์ตถูกใช้งานอยู่ (Port 8000, 8001 หรือ 5173 in use)</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-2 border-t border-slate-900 pt-3">
+            <p>เกิดจากมีเซอร์วิสเดิมค้างอยู่ ให้รันคำสั่ง PowerShell นี้เพื่อปิดโปรเซสที่ค้าง:</p>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this, 'npm run stop')">📋 คัดลอก</button>
+              <code>npm run stop</code>
+            </div>
+            <p>หรือค้นหาและปิดพอร์ตเฉพาะเจาะจง:</p>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this, 'Get-NetTCPConnection -LocalPort 8000, 8001, 5173 -ErrorAction SilentlyContinue | Select-Object LocalPort, OwningProcess')">📋 คัดลอก</button>
+              <code>Get-NetTCPConnection -LocalPort 8000, 8001, 5173 -ErrorAction SilentlyContinue | Select-Object LocalPort, OwningProcess</code>
+            </div>
+          </div>
+        </details>
+
+        <!-- Issue 2: PowerShell Execution Policy -->
+        <details class="group rounded-xl border border-slate-800 bg-slate-950 p-4">
+          <summary class="font-bold text-slate-200 cursor-pointer flex items-center justify-between">
+            <span>🔴 ปัญหาที่ 2: Activate.ps1 cannot be loaded (Execution Policy Error)</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-2 border-t border-slate-900 pt-3">
+            <p>เป็นระบบความปลอดภัยเริ่มต้นของ Windows PowerShell ให้แก้โดยรันคำสั่งนี้ครั้งเดียวใน PowerShell:</p>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this, 'Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass')">📋 คัดลอก</button>
+              <code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass</code>
+            </div>
+          </div>
+        </details>
+
+        <!-- Issue 3: CUDA VRAM / Out of Memory -->
+        <details class="group rounded-xl border border-slate-800 bg-slate-950 p-4">
+          <summary class="font-bold text-slate-200 cursor-pointer flex items-center justify-between">
+            <span>🔴 ปัญหาที่ 3: CUDA Out of Memory (การ์ดจอ VRAM ไม่พอ)</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-2 border-t border-slate-900 pt-3">
+            <p>โมเดล Qwen2.5-1.5B (FP16) ใช้ VRAM ประมาณ <b>3.0 GB</b> หากในเครื่องมีโปรแกรมอื่นกินการ์ดจอ (เช่น เกม, โปรแกรมจำลอง, แท็บบราวเซอร์จำนวนมาก) ให้ปิดโปรแกรมเหล่านั้นก่อนรัน หรือปรับใน <code class="text-amber-300">backend/.env</code>:</p>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this, 'LOGIAI_SLM_DEVICE=cpu\nLOGIAI_OCR_DEVICE=cpu')">📋 คัดลอก</button>
+              <code>LOGIAI_SLM_DEVICE=cpu
+LOGIAI_OCR_DEVICE=cpu</code>
+            </div>
+          </div>
+        </details>
+
+        <!-- Issue 4: First time HuggingFace Model Download -->
+        <details class="group rounded-xl border border-slate-800 bg-slate-950 p-4">
+          <summary class="font-bold text-slate-200 cursor-pointer flex items-center justify-between">
+            <span>ℹ️ ข้อมูล: การดาวน์โหลดโมเดลครั้งแรก (Initial Model Download)</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-2 border-t border-slate-900 pt-3">
+            <p>เมื่อรันเซอร์วิสครั้งแรก ระบบจะดาวน์โหลดน้ำหนักโมเดล <b>Qwen/Qwen2.5-1.5B-Instruct</b> ขนาด ~3.1 GB จาก Hugging Face และโมเดล <b>PaddleOCR Thai+English</b> โดยอัตโนมัติ ซึ่งจะถูกบันทึกแคชไว้ในเครื่อง ทำให้ในการเปิดรอบถัดไปโมเดลจะโหลดขึ้นมาได้ทันทีในเวลาเพียง 2–4 วินาที</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 bg-slate-950 py-8 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 space-y-2">
+      <p class="font-semibold text-slate-400">LogiAI Document Intelligence Architecture · Final Thesis & Production Evaluation</p>
+      <p>ระบบแปลงเอกสารโลจิสติกส์สู่โครงสร้างข้อมูลมาตรฐาน JSON Schema ด้วยสถาปัตยกรรม Small Language Model</p>
+    </div>
+  </footer>
+
+  <!-- Interactive JavaScript for Copy Buttons -->
+  <script>
+    function copyCode(btn, text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => showCopied(btn)).catch(() => fallbackCopy(btn, text));
+      } else {
+        fallbackCopy(btn, text);
+      }
+    }
+
+    function fallbackCopy(btn, text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showCopied(btn);
+      } catch (err) {
+        console.error('Copy failed', err);
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function showCopied(btn) {
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '✅ คัดลอกแล้ว!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

@@ -38,7 +38,16 @@ load_dotenv(BASE_DIR / ".env")
 load_dotenv(BASE_DIR.parent / ".env")
 load_dotenv(BASE_DIR.parent / ".env.local")
 
-DEFAULT_DATASET = pathlib.Path(r"E:\Logistics To JSON\To_Testing") if pathlib.Path(r"E:\Logistics To JSON\To_Testing").exists() else BASE_DIR
+repo_testing = BASE_DIR.parent.parent / "To_Testing"
+web_testing = BASE_DIR.parent / "To_Testing"
+if repo_testing.exists():
+    DEFAULT_DATASET = repo_testing
+elif web_testing.exists():
+    DEFAULT_DATASET = web_testing
+elif pathlib.Path(r"E:\Logistics To JSON\To_Testing").exists():
+    DEFAULT_DATASET = pathlib.Path(r"E:\Logistics To JSON\To_Testing")
+else:
+    DEFAULT_DATASET = BASE_DIR
 
 GT_FILE = pathlib.Path(os.environ.get("LOGIAI_GROUND_TRUTH_PATH", BASE_DIR / "ground_truth_dataset.json"))
 DATASET_DIR = pathlib.Path(os.environ.get("LOGIAI_DATASET_DIR", DEFAULT_DATASET))
