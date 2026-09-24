@@ -1392,14 +1392,16 @@ def export_kfold_excel_endpoint(
     try:
         from excel_report_generator import generate_kfold_excel_report
         report = resolve_export_report(fresh_run_id=fresh_run_id, job_id=job_id, run_id=run_id)
-        excel_path = generate_kfold_excel_report(report)
+        resolved_run_id = str(report.get("run_id", "unknown"))
+        excel_path = REPORT_DIR / f"{resolved_run_id}_detailed_report.xlsx"
+        generate_kfold_excel_report(report, output_path=excel_path)
         if not excel_path.is_file():
             raise HTTPException(status_code=404, detail="Excel report not found")
-        date_str = datetime.now().strftime("%Y%m%d")
         return FileResponse(
             excel_path,
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            filename=f"LogiAI_KFold_Evaluation_Report_{date_str}.xlsx",
+            filename=f"LogiAI_KFold_Evaluation_Report_{resolved_run_id}.xlsx",
+            headers={"Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache"},
         )
     except HTTPException:
         raise

@@ -526,7 +526,11 @@ def get_kfold_excel_report_endpoint(
         return Response(
             content=response.content,
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={"Content-Disposition": response.headers.get("Content-Disposition", "attachment")},
+            headers={
+                "Content-Disposition": response.headers.get("Content-Disposition", "attachment"),
+                "Cache-Control": "no-store, no-cache, must-revalidate",
+                "Pragma": "no-cache",
+            },
         )
     except HTTPException:
         raise

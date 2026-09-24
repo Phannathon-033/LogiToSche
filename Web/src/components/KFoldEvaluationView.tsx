@@ -460,7 +460,10 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       }
 
       showToast?.("กำลังสร้างและดาวน์โหลดรายงานสรุป Excel อย่างละเอียด (.xlsx)...");
-      const resp = await apiFetch(`/api/benchmark/kfold/export-excel?${exportParams.toString()}`);
+      exportParams.set("_", `${Date.now()}`);
+      const resp = await apiFetch(`/api/benchmark/kfold/export-excel?${exportParams.toString()}`, {
+        cache: "no-store",
+      });
       if (!resp.ok) {
         throw new Error(`Download failed with status ${resp.status}`);
       }
@@ -468,7 +471,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `LogiAI_KFold_Evaluation_Report_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      a.download = `LogiAI_KFold_Evaluation_Report_${kfoldReport.run_id || "latest"}.xlsx`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -706,6 +709,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       }
 
       // Check active Background Evaluation Job status on mount
+      let restoredEvaluationReport: KFoldReport | null = null;
       try {
         const evalRes = await apiFetch("/api/evaluation/status");
         if (evalRes.ok) {
@@ -714,6 +718,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           if (evalData.is_running) {
             setIsPollingJob(true);
           } else if (evalData.status === "completed" && evalData.final_report) {
+            restoredEvaluationReport = evalData.final_report;
             setKfoldReport(evalData.final_report);
             setReportSource("evaluation");
           }
@@ -731,7 +736,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             setFreshStatus(freshData);
             if (freshData.is_running) {
               setIsPollingFresh(true);
-            } else if (freshData.finished && freshData.final_report) {
+            } else if (!restoredEvaluationReport && freshData.finished && freshData.final_report) {
               setKfoldReport(freshData.final_report);
               setReportSource("fresh");
             }
