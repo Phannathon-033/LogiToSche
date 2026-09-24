@@ -473,6 +473,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         status: "running",
         is_running: true,
         mode: modeToUse,
+        prompt_variant: promptVariant,
         current_doc_id: modeToUse === "single_doc" ? selectedTestDocId : undefined,
         overall_current: 0,
         overall_total: modeToUse === "single_doc" ? 1 : modeToUse === "single_fold" ? (customMaxDocs || 60) : 300,
@@ -1086,6 +1087,19 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                     <span className="rounded-md bg-indigo-500/30 border border-indigo-400/30 px-2 py-0.5 font-mono text-[10px] font-bold text-indigo-200">
                       Job: {evalJob.job_id}
                     </span>
+                    {evalJob.prompt_variant && (
+                      <span
+                        className={`rounded-md px-2 py-0.5 font-mono text-[10px] font-bold border uppercase ${
+                          evalJob.prompt_variant === "one-shot"
+                            ? "bg-blue-500/25 text-blue-200 border-blue-400/50"
+                            : evalJob.prompt_variant === "few-shot"
+                            ? "bg-purple-500/25 text-purple-200 border-purple-400/50"
+                            : "bg-teal-500/25 text-teal-200 border-teal-400/50"
+                        }`}
+                      >
+                        Variant: {evalJob.prompt_variant}
+                      </span>
+                    )}
                     <span
                       className={`rounded-md px-2 py-0.5 font-mono text-[10px] font-bold border ${
                         evalJob.is_running
