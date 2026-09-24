@@ -46,10 +46,12 @@ try:
         _prediction_cache_path,
         _score,
         compare_field_values,
+        benchmark_prompt_snapshot,
         load_prompt_config,
-        benchmark_prompt_for_variant,
+        extraction_base_prompt,
         record_document_performance,
         run_kfold_evaluation,
+        select_training_examples,
     )
 except ImportError:
     from .kfold_evaluator import (
@@ -63,10 +65,12 @@ except ImportError:
         _prediction_cache_path,
         _score,
         compare_field_values,
+        benchmark_prompt_snapshot,
         load_prompt_config,
-        benchmark_prompt_for_variant,
+        extraction_base_prompt,
         record_document_performance,
         run_kfold_evaluation,
+        select_training_examples,
     )
 
 
@@ -321,9 +325,17 @@ class EvaluationJobManager:
         start_time = time.time()
         prompt_snapshot = {
             **load_prompt_config(),
-            "benchmark_prompt": benchmark_prompt_for_variant(prompt_variant),
+            "base_prompt": extraction_base_prompt(load_prompt_config()),
+            "benchmark_prompt": extraction_base_prompt(load_prompt_config()),
             "benchmark_prompt_variant": prompt_variant,
             "benchmark_examples": [],
+            "example_selection": {},
+            "example_selection_by_fold": {},
+            "prompt_source": {
+                "module": "prompts.py",
+                "config_file": str(BASE_DIR / "prompt_config.json"),
+                "variant": "K-Fold composition",
+            },
         }
 
         overall_matched_fields = 0
@@ -344,19 +356,43 @@ class EvaluationJobManager:
             fold_docs = [documents[idx] for idx in validation_indices]
             fold_total = len(fold_docs)
 
-            # In-context demonstration examples from train split (Strictly prevent data leakage)
-            benchmark_examples: list[dict[str, Any]] = []
-            if prompt_variant in ("one-shot", "few-shot"):
-                pool = [documents[i] for i in train_indices] if len(train_indices) > 0 else [d for d in documents if d.get("id") != fold_docs[0].get("id")]
-                ex_count = 1 if prompt_variant == "one-shot" else min(3, len(pool))
-                for ex_doc in pool[:ex_count]:
-                    ex_ocr = _get_ocr(ex_doc).get("ocr_text", "")
-                    ex_gt = _get_document_ground_truth(ex_doc)
-                    benchmark_examples.append({
-                        "source_file": ex_doc.get("file_name", ""),
-                        "ocr_text": ex_ocr[:1000],
-                        "json_schema": {k: ex_gt.get(k, "") for k in CORE_FIELDS},
-                    })
+            training_documents = [documents[index] for index in train_indices]
+            benchmark_examples, example_selection = select_training_examples(
+                training_documents,
+                prompt_variant,
+            )
+            if prompt_variant == "one-shot" and len(benchmark_examples) != 1:
+                raise ValueError("one-shot requires one training example")
+            if prompt_variant == "few-shot" and len(training_documents) >= 3 and len(benchmark_examples) < 3:
+                raise ValueError("few-shot requires at least three training examples")
+
+            fold_prompt_snapshot = benchmark_prompt_snapshot(
+                prompt_variant,
+                config=prompt_snapshot,
+                examples=benchmark_examples,
+                selection=example_selection,
+            )
+            fold_prompt_snapshot["benchmark_prompt"] = fold_prompt_snapshot["base_prompt"]
+            prompt_snapshot["example_selection_by_fold"][str(fold)] = example_selection
+            prompt_snapshot.update(fold_prompt_snapshot)
+            prompt_snapshot["example_selection_by_fold"] = prompt_snapshot.get(
+                "example_selection_by_fold", {}
+            )
+            prompt_snapshot["benchmark_examples"] = benchmark_examples
+            prompt_snapshot["example_selection"] = example_selection
+
+            if any(
+                str(example.get("document_id")) in {str(doc.get("id")) for doc in fold_docs}
+                for example in benchmark_examples
+            ):
+                raise RuntimeError("Training example leaked into validation documents")
+
+            job_state["current_fold"] = fold
+            job_state["prompt_source"] = prompt_snapshot.get("prompt_source")
+            job_state["example_selection_by_fold"] = prompt_snapshot["example_selection_by_fold"]
+            job_state["current_example_selection"] = example_selection
+            job_state["benchmark_examples"] = benchmark_examples
+            job_state["training_document_ids"] = [str(doc.get("id")) for doc in training_documents]
 
             job_state["current_fold"] = fold
             job_state["fold_total"] = fold_total

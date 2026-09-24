@@ -18,13 +18,15 @@ from sklearn.model_selection import KFold
 
 try:
     from .prompts import (
-        benchmark_prompt_for_variant,
+        benchmark_prompt_snapshot,
+        extraction_base_prompt,
         load_prompt_config as read_prompt_config,
         prompt_config_snapshot,
     )
 except ImportError:
     from prompts import (
-        benchmark_prompt_for_variant,
+        benchmark_prompt_snapshot,
+        extraction_base_prompt,
         load_prompt_config as read_prompt_config,
         prompt_config_snapshot,
     )
@@ -173,67 +175,80 @@ FIELD_LABELS_TH = {
     "currency": "11. สกุลเงิน (currency)",
 }
 
-ZERO_SHOT_SYSTEM_PROMPT = (
-    "You are a specialized Logistics Document Information Extraction AI.\n"
-    "Your task is to extract exactly 11 canonical logistics fields from the provided OCR text into a strictly formatted, valid JSON object.\n"
-    "Do NOT use external knowledge. Extract solely grounded on the OCR text.\n"
-    "If a field is not found, return an empty string \"\" or 0.0 for numbers.\n"
-    "Return ONLY raw JSON. Do NOT include markdown blocks or explanations."
-)
-
-def build_zero_shot_prompt(ocr_text: str) -> list[dict[str, str]]:
-    """Builds standard zero-shot chat message payload for Qwen2.5-Instruct evaluation."""
-    user_content = (
-        "Extract the 11 canonical logistics fields from the following OCR text into JSON:\n\n"
-        "Schema:\n"
-        "{\n"
-        '  "document_type": "string (e.g. Invoice, Tax Invoice, Bill of Lading)",\n'
-        '  "document_number": "string",\n'
-        '  "document_date": "YYYY-MM-DD",\n'
-        '  "sender": "string (Vendor/Shipper/Seller)",\n'
-        '  "receiver": "string (Customer/Consignee/Buyer)",\n'
-        '  "origin": "string (Loading place/Departure)",\n'
-        '  "destination": "string (Discharge place/Arrival)",\n'
-        '  "reference_number": "string (PO/Booking/Job Ref)",\n'
-        '  "unit_price": 0.0,\n'
-        '  "total_amount": 0.0,\n'
-        '  "currency": "string (e.g. THB, USD)"\n'
-        "}\n\n"
-        "Rules:\n"
-        "- Numbers must be numeric float without commas.\n"
-        "- Normalize dates to YYYY-MM-DD (convert B.E. to A.D. if present).\n"
-        "- If missing, use \"\" or 0.0. Do NOT hallucinate.\n\n"
-        f"OCR Text:\n{ocr_text[:3500]}\n\n"
-        "JSON:"
-    )
-    return [
-        {"role": "system", "content": ZERO_SHOT_SYSTEM_PROMPT},
-        {"role": "user", "content": user_content}
-    ]
-
-
 def load_prompt_config() -> dict[str, Any]:
     return prompt_config_snapshot(read_prompt_config())
 
 
 def load_benchmark_examples(prompt_variant: str) -> list[dict[str, Any]]:
-    if prompt_variant == "zero-shot":
-        return []
-    configured_path = os.environ.get("LOGIAI_BENCHMARK_EXAMPLES_PATH", "").strip()
-    if not configured_path:
-        raise ValueError(f"{prompt_variant} requires LOGIAI_BENCHMARK_EXAMPLES_PATH")
-    path = pathlib.Path(configured_path).expanduser()
-    if not path.is_file():
-        raise FileNotFoundError(f"Benchmark examples not found: {path}")
-    examples = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(examples, list) or not examples:
-        raise ValueError("Benchmark examples must be a non-empty JSON array")
-    required_count = 1 if prompt_variant == "one-shot" else 2
-    if len(examples) < required_count:
-        raise ValueError(f"{prompt_variant} requires at least {required_count} benchmark examples")
-    if any(not isinstance(example, dict) for example in examples):
-        raise ValueError("Each benchmark example must be a JSON object")
-    return deepcopy(examples[:required_count] if prompt_variant == "one-shot" else examples[:5])
+    raise ValueError("K-Fold examples must be selected from the current training split")
+
+
+def _ocr_confidence_percent(ocr: dict[str, Any]) -> float:
+    scores = []
+    for line in ocr.get("ocr_lines", []):
+        try:
+            value = float(line.get("confidence", 0) if isinstance(line, dict) else getattr(line, "confidence", 0))
+        except (TypeError, ValueError):
+            continue
+        percent = value * 100 if value <= 1 else value
+        if 0 < percent <= 100:
+            scores.append(percent)
+    return round(float(np.mean(scores)), 2) if scores else 0.0
+
+
+def select_training_examples(
+    training_documents: list[dict[str, Any]],
+    prompt_variant: str,
+    ocr_loader: Any | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    normalized = prompt_variant.strip().lower()
+    if normalized == "zero-shot":
+        return [], {
+            "method": "none",
+            "confidence_aggregation": "not applicable",
+            "requested_count": 0,
+            "actual_count": 0,
+            "training_document_ids": [str(doc.get("id")) for doc in training_documents],
+            "selected": [],
+        }
+    if normalized not in {"one-shot", "few-shot"}:
+        raise ValueError(f"Unsupported prompt variant: {prompt_variant}")
+
+    requested_count = 1 if normalized == "one-shot" else 5
+    ocr_loader = ocr_loader or _get_ocr
+    ranked: list[tuple[float, str, dict[str, Any], dict[str, Any]]] = []
+    for document in training_documents:
+        ocr = ocr_loader(document)
+        confidence = _ocr_confidence_percent(ocr)
+        doc_id = str(document.get("id") or document.get("file_name") or "")
+        ranked.append((confidence, doc_id, document, ocr))
+    ranked.sort(key=lambda item: (-item[0], item[1]))
+    selected_count = min(requested_count, len(ranked))
+    if normalized == "few-shot" and len(ranked) >= 3:
+        selected_count = min(5, len(ranked))
+
+    examples = []
+    selected = []
+    for confidence, doc_id, document, ocr in ranked[:selected_count]:
+        truth = _get_document_ground_truth(document)
+        examples.append({
+            "document_id": doc_id,
+            "source_file": document.get("file_name", ""),
+            "ocr_text": str(ocr.get("ocr_text", ""))[:1000],
+            "ocr_confidence": confidence,
+            "json_schema": {field: truth.get(field, "") for field in CORE_FIELDS},
+        })
+        selected.append({"document_id": doc_id, "ocr_confidence": confidence})
+
+    metadata = {
+        "method": "highest_average_ocr_line_confidence",
+        "confidence_aggregation": "mean of valid OCR line confidence percentages",
+        "requested_count": requested_count,
+        "actual_count": len(examples),
+        "training_document_ids": [str(doc.get("id")) for doc in training_documents],
+        "selected": selected,
+    }
+    return examples, metadata
 
 
 def levenshtein_similarity(s1: str, s2: str) -> float:
@@ -410,14 +425,23 @@ def _extract(
     ocr = _get_ocr(document, force_rerun=force_rerun_ocr)
     ocr_time_sec = float(ocr.get("ocr_time_sec", 0.85))
 
-    prompt_text = prompt_snapshot.get("benchmark_prompt") or prompt_snapshot.get("system_prompt", "")
     examples_to_send = benchmark_examples if benchmark_examples is not None else prompt_snapshot.get("benchmark_examples", [])
     request_config = {
-        **prompt_snapshot,
-        "system_prompt": prompt_text,
+        key: prompt_snapshot[key]
+        for key in (
+            "system_prompt",
+            "fallback_rules",
+            "confidence_threshold",
+            "selected_model",
+            "monitored_fields",
+        )
+        if key in prompt_snapshot
+    }
+    request_config.update({
         "benchmark_prompt_variant": variant,
         "benchmark_examples": examples_to_send,
-    }
+        "benchmark_example_selection": prompt_snapshot.get("example_selection", {}),
+    })
 
     t_slm_start = time.time()
     response = requests.post(
@@ -430,6 +454,7 @@ def _extract(
             "prompt_config": request_config,
             "benchmark_prompt_variant": variant,
             "benchmark_examples": examples_to_send,
+            "benchmark_example_selection": prompt_snapshot.get("example_selection", {}),
         },
         headers=REQUEST_HEADERS,
         timeout=float(os.environ.get("LOGIAI_SLM_TIMEOUT", "300")),
@@ -620,6 +645,25 @@ def _get_document_ground_truth(document: dict[str, Any]) -> dict[str, Any]:
     return document.get("ground_truth", {})
 
 
+def _self_check_example_selection() -> None:
+    docs = [
+        {"id": "low", "ground_truth": {}},
+        {"id": "high", "ground_truth": {}},
+        {"id": "mid", "ground_truth": {}},
+    ]
+    ocr = {
+        "low": {"ocr_lines": [{"confidence": 0.5}], "ocr_text": "low"},
+        "high": {"ocr_lines": [{"confidence": 0.99}], "ocr_text": "high"},
+        "mid": {"ocr_lines": [{"confidence": 0.8}], "ocr_text": "mid"},
+    }
+    examples, metadata = select_training_examples(docs, "few-shot", lambda doc: ocr[doc["id"]])
+    assert [item["document_id"] for item in examples] == ["high", "mid", "low"]
+    assert metadata["actual_count"] == 3
+
+
+_self_check_example_selection()
+
+
 def run_kfold_evaluation(
     k_splits: int = 5,
     random_seed: int = 42,
@@ -663,15 +707,23 @@ def run_kfold_evaluation(
     if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
         raise ValueError(f"K-Fold evaluation unsupported variant: {prompt_variant}")
 
+    active_prompt_config = load_prompt_config()
     prompt_snapshot = {
-        **load_prompt_config(),
-        "benchmark_prompt": benchmark_prompt_for_variant(prompt_variant),
+        **active_prompt_config,
+        "base_prompt": extraction_base_prompt(active_prompt_config),
+        "benchmark_prompt": extraction_base_prompt(active_prompt_config),
         "benchmark_prompt_variant": prompt_variant,
         "benchmark_examples": [],
+        "example_selection": {},
+        "example_selection_by_fold": {},
+        "prompt_source": {
+            "module": "prompts.py",
+            "config_file": str(pathlib.Path(__file__).with_name("prompt_config.json")),
+            "variant": "K-Fold composition",
+        },
     }
-    if not prompt_snapshot["benchmark_prompt"].strip():
-        raise ValueError(f"{prompt_variant} benchmark prompt is empty")
-    prompt_snapshot["prompt_file"] = str(
+    prompt_snapshot["benchmark_prompt"] = prompt_snapshot["base_prompt"]
+    prompt_snapshot["variant_instruction_file"] = str(
         pathlib.Path("prompt_library") / "benchmark" / prompt_variant / "kfold_extraction.txt"
     )
     run_id = datetime.now(timezone.utc).strftime("run_%Y%m%d_%H%M%S_%f")
@@ -709,19 +761,43 @@ def run_kfold_evaluation(
     for fold, train_indices, validation_indices in target_splits:
         validation_documents = [documents[index] for index in validation_indices]
 
-        # In-context demonstration examples from train split (Strictly prevent data leakage)
-        benchmark_examples: list[dict[str, Any]] = []
-        if prompt_variant in ("one-shot", "few-shot"):
-            pool = [documents[i] for i in train_indices] if len(train_indices) > 0 else [d for d in documents if d.get("id") != validation_documents[0].get("id")]
-            ex_count = 1 if prompt_variant == "one-shot" else min(3, len(pool))
-            for ex_doc in pool[:ex_count]:
-                ex_ocr = _get_ocr(ex_doc).get("ocr_text", "")
-                ex_gt = _get_document_ground_truth(ex_doc)
-                benchmark_examples.append({
-                    "source_file": ex_doc.get("file_name", ""),
-                    "ocr_text": ex_ocr[:1000],
-                    "json_schema": {k: ex_gt.get(k, "") for k in CORE_FIELDS},
-                })
+        training_documents = [documents[index] for index in train_indices]
+        benchmark_examples, example_selection = select_training_examples(
+            training_documents,
+            prompt_variant,
+        )
+        prompt_snapshot["example_selection_by_fold"][str(fold)] = example_selection
+        prompt_snapshot["benchmark_examples"] = benchmark_examples
+        prompt_snapshot["example_selection"] = example_selection
+        prompt_snapshot["benchmark_prompt"] = prompt_snapshot["base_prompt"]
+        prompt_snapshot["benchmark_examples"] = benchmark_examples
+        if prompt_variant == "one-shot" and len(benchmark_examples) != 1:
+            raise ValueError("one-shot requires one training example")
+        if prompt_variant == "few-shot" and len(training_documents) >= 3 and len(benchmark_examples) < 3:
+            raise ValueError("few-shot requires at least three training examples")
+        if prompt_variant == "zero-shot":
+            assert not benchmark_examples
+
+        fold_prompt_snapshot = benchmark_prompt_snapshot(
+            prompt_variant,
+            config=prompt_snapshot,
+            examples=benchmark_examples,
+            selection=example_selection,
+        )
+        prompt_snapshot.update(fold_prompt_snapshot)
+        prompt_snapshot["benchmark_prompt"] = prompt_snapshot["base_prompt"]
+        prompt_snapshot["benchmark_examples"] = benchmark_examples
+        prompt_snapshot["example_selection_by_fold"] = prompt_snapshot.get("example_selection_by_fold", {})
+
+        # Examples are selected entirely from training_documents before validation inference.
+        if any(str(example.get("document_id")) in {str(doc.get("id")) for doc in validation_documents} for example in benchmark_examples):
+            raise RuntimeError("Training example leaked into validation documents")
+
+        prompt_snapshot_for_fold = dict(prompt_snapshot)
+        prompt_snapshot_for_fold["benchmark_examples"] = benchmark_examples
+        prompt_snapshot_for_fold["example_selection"] = example_selection
+        prompt_snapshot_for_fold["benchmark_prompt_variant"] = prompt_variant
+        prompt_snapshot = prompt_snapshot_for_fold
 
         slm_scores = []
         baseline_scores = []
@@ -785,6 +861,14 @@ def run_kfold_evaluation(
         slm_fold = _fold_result(fold, validation_documents, slm_scores)
         slm_fold["document_evaluations"] = document_evaluations
         slm_fold["train_samples_count"] = len(train_indices)
+        slm_fold["prompt_variant"] = prompt_variant
+        slm_fold["example_selection"] = deepcopy(example_selection)
+        slm_fold["benchmark_example_ids"] = [
+            str(example.get("document_id")) for example in benchmark_examples
+        ]
+        slm_fold["benchmark_example_confidences"] = [
+            example.get("ocr_confidence") for example in benchmark_examples
+        ]
         baseline_fold = _fold_result(fold, validation_documents, baseline_scores)
         slm_folds.append(slm_fold)
         baseline_folds.append(baseline_fold)
@@ -883,7 +967,10 @@ def run_kfold_evaluation(
         "fold_manifest": [{"fold": fold_item["fold"], "val_doc_ids": fold_item["val_doc_ids"]} for fold_item in slm_folds],
         "field_performance": slm_field_report,
         "folds": slm_folds,
-        "prompt_config": {"source": "prompts.json", "snapshot": prompt_snapshot},
+        "prompt_config": {
+            "source": prompt_snapshot["prompt_source"],
+            "snapshot": prompt_snapshot,
+        },
         "sample_size_verification": {"calculated_n0": 246, "actual_dataset_size": len(documents), "is_statistically_significant": len(documents) >= 246},
         "proposed_slm": {"mean_accuracy_pct": round(float(np.mean(slm_accuracy)), 2), "std_accuracy": round(float(np.std(slm_accuracy)), 2), "mean_f1_score_pct": round(float(np.mean(slm_f1)), 2), "std_f1": round(float(np.std(slm_f1)), 2), "mean_similarity_pct": round(float(np.mean(slm_similarity)), 2), "std_similarity": round(float(np.std(slm_similarity)), 2), "folds": slm_folds, "field_scores": slm_field_report},
         "baseline_metrics_summary": {

@@ -9,12 +9,12 @@ from pathlib import Path
 from typing import Any
 
 PROMPT_CONFIG_ENV = "LOGIAI_PROMPT_CONFIG_PATH"
-PROMPT_CONFIG_FILENAME = "prompts.json"
+PROMPT_CONFIG_FILENAME = "prompt_config.json"
 
 
 def prompt_config_path() -> Path:
     configured = os.environ.get(PROMPT_CONFIG_ENV)
-    return Path(configured).expanduser() if configured else Path(__file__).resolve().parent / "config" / PROMPT_CONFIG_FILENAME
+    return Path(configured).expanduser() if configured else Path(__file__).resolve().parent / PROMPT_CONFIG_FILENAME
 
 
 def prompt_config_metadata(config: dict[str, Any], version: int = 1) -> dict[str, Any]:
@@ -40,6 +40,7 @@ CORE_FIELDS = (
     "total_amount",
     "currency",
 )
+BENCHMARK_VARIANTS = {"zero-shot", "one-shot", "few-shot"}
 
 MODEL_IDS = {
     "qwen-2.5-1.5b": "Qwen/Qwen2.5-1.5B-Instruct",
@@ -62,16 +63,59 @@ EXTRACTION_RULES = (
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 PROMPT_LIBRARY_DIR = BASE_DIR / "prompt_library"
 PRESETS_FILE = PROMPT_LIBRARY_DIR / "admin" / "presets.json"
-BENCHMARK_PROMPT_FILES = {
-    "zero-shot": PROMPT_LIBRARY_DIR / "benchmark" / "zero-shot" / "kfold_extraction.txt",
-    "one-shot": PROMPT_LIBRARY_DIR / "benchmark" / "one-shot" / "kfold_extraction.txt",
-    "few-shot": PROMPT_LIBRARY_DIR / "benchmark" / "few-shot" / "kfold_extraction.txt",
-}
 DEFAULT_BENCHMARK_PROMPTS = {
-    "zero-shot": "Extract the 11 canonical logistics fields from the OCR text into JSON: document_type, document_number, document_date (YYYY-MM-DD), sender, receiver, origin, destination, reference_number, unit_price (float), total_amount (float), currency. No explanations. Return strictly valid JSON.",
-    "one-shot": "Extract the 11 canonical logistics fields from the OCR text into JSON: document_type, document_number, document_date (YYYY-MM-DD), sender, receiver, origin, destination, reference_number, unit_price (float), total_amount (float), currency. Use the one labeled example only to understand formatting and field mapping. Ground every value in the current OCR text. No explanations. Return strictly valid JSON.",
-    "few-shot": "Extract the 11 canonical logistics fields from the OCR text into JSON: document_type, document_number, document_date (YYYY-MM-DD), sender, receiver, origin, destination, reference_number, unit_price (float), total_amount (float), currency. Use the labeled examples only to understand formatting and field mapping. Ground every value in the current OCR text; never copy example values. No explanations. Return strictly valid JSON.",
+    "zero-shot": "Use the main extraction prompt without labeled examples.",
+    "one-shot": "Use the main extraction prompt with exactly one labeled example selected from the training split by OCR confidence.",
+    "few-shot": "Use the main extraction prompt with 3 to 5 labeled examples selected from the training split by OCR confidence.",
 }
+
+
+def extraction_base_prompt(config: dict[str, Any] | None = None) -> str:
+    active = config or load_prompt_config()
+    rules = "\n".join(f"- {rule}" for rule in EXTRACTION_RULES)
+    fallback_rules = "\n".join(f"- {rule}" for rule in active.get("fallback_rules", []))
+    return (
+        f"{EXTRACTION_SYSTEM_PROMPT}\n"
+        f"{active.get('system_prompt', '').strip()}\n"
+        f"Canonical extraction rules:\n{rules}\n"
+        f"Additional admin rules:\n{fallback_rules}"
+    ).strip()
+
+
+def benchmark_prompt_snapshot(
+    variant: str,
+    config: dict[str, Any] | None = None,
+    examples: list[dict[str, Any]] | None = None,
+    selection: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    normalized = variant.strip().lower()
+    if normalized not in BENCHMARK_VARIANTS:
+        raise ValueError(f"Unsupported benchmark prompt variant: {variant}")
+    selected = deepcopy(examples or [])
+    if normalized == "zero-shot" and selected:
+        raise ValueError("zero-shot cannot include benchmark examples")
+    if normalized == "one-shot" and len(selected) != 1:
+        raise ValueError("one-shot requires exactly one benchmark example")
+    if normalized == "few-shot":
+        training_ids = (selection or {}).get("training_document_ids", [])
+        minimum = min(3, len(training_ids))
+        if not minimum <= len(selected) <= 5:
+            raise ValueError("few-shot requires between 3 and 5 examples when the training split has at least 3 documents")
+    active = prompt_config_snapshot(config or load_prompt_config())
+    return {
+        **active,
+        "base_prompt": extraction_base_prompt(active),
+        "benchmark_prompt_variant": normalized,
+        "benchmark_instruction": DEFAULT_BENCHMARK_PROMPTS[normalized],
+        "benchmark_examples": selected,
+        "example_selection": deepcopy(selection or {}),
+        "prompt_source": {
+            "module": "prompts.py",
+            "config_file": str(prompt_config_path()),
+            "variant": "K-Fold composition",
+        },
+    }
+
 
 DEFAULT_PROMPT_PRESETS: dict[str, dict[str, Any]] = {
     # 1. Extraction Core Presets
@@ -207,16 +251,8 @@ def save_prompt_presets(presets: dict[str, dict[str, Any]]) -> None:
 
 def benchmark_prompt_for_variant(variant: str) -> str:
     normalized = variant.strip().lower()
-    if normalized not in BENCHMARK_PROMPT_FILES:
+    if normalized not in BENCHMARK_VARIANTS:
         raise ValueError(f"Unsupported benchmark prompt variant: {variant}")
-    path = BENCHMARK_PROMPT_FILES[normalized]
-    if path.is_file():
-        prompt = "\n".join(
-            line for line in path.read_text(encoding="utf-8").splitlines()
-            if not line.lstrip().startswith("#")
-        ).strip()
-        if prompt:
-            return prompt
     return DEFAULT_BENCHMARK_PROMPTS[normalized]
 
 

@@ -58,8 +58,6 @@ slm_resp = requests.post(
         "source_file": doc.get("file_name"),
         "ocr_text": ocr_text,
         "ocr_lines": ocr_lines,
-        "benchmark_prompt_variant": "zero-shot",
-        "benchmark_examples": [],
     },
     timeout=60,
 )

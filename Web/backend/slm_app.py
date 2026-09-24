@@ -22,8 +22,9 @@ try:
         EXTRACTION_RULES,
         EXTRACTION_SYSTEM_PROMPT,
         MODEL_IDS,
+        DEFAULT_BENCHMARK_PROMPTS,
         default_admin_config,
-        benchmark_prompt_for_variant,
+        extraction_base_prompt,
         load_prompt_config,
         prompt_for_preset,
         save_prompt_config as persist_prompt_config,
@@ -35,8 +36,9 @@ except ImportError:
         EXTRACTION_RULES,
         EXTRACTION_SYSTEM_PROMPT,
         MODEL_IDS,
+        DEFAULT_BENCHMARK_PROMPTS,
         default_admin_config,
-        benchmark_prompt_for_variant,
+        extraction_base_prompt,
         load_prompt_config,
         prompt_for_preset,
         save_prompt_config as persist_prompt_config,
@@ -49,6 +51,7 @@ MAX_RULE_LENGTH = 1000
 MAX_RULES = 20
 BENCHMARK_PROMPT_VARIANTS = {"zero-shot", "one-shot", "few-shot"}
 MAX_BENCHMARK_EXAMPLES = 5
+NORMAL_PROMPT_VARIANT = "normal"
 MAX_BENCHMARK_EXAMPLE_LENGTH = 20000
 
 try:
@@ -161,8 +164,9 @@ class SlmExtractRequest(BaseModel):
     ocr_lines: list[OcrLine] = Field(default_factory=list)
     image_base64: str | None = None
     prompt_config: SlmPromptConfig | None = None
-    benchmark_prompt_variant: str = "zero-shot"
+    benchmark_prompt_variant: str | None = None
     benchmark_examples: list[dict[str, Any]] = Field(default_factory=list)
+    benchmark_example_selection: dict[str, Any] = Field(default_factory=dict)
 
 def fuse_image_ocr(payload: SlmExtractRequest) -> str:
     if not payload.image_base64:
@@ -457,22 +461,77 @@ def prompt_config_for_request(snapshot: SlmPromptConfig | None) -> dict[str, Any
 
 
 def benchmark_variant_for_request(payload: SlmExtractRequest) -> tuple[str, list[dict[str, Any]]]:
-    variant = payload.benchmark_prompt_variant.strip().lower()
+    variant = (payload.benchmark_prompt_variant or NORMAL_PROMPT_VARIANT).strip().lower()
+    if variant == NORMAL_PROMPT_VARIANT:
+        if payload.benchmark_examples:
+            raise ValueError("normal extraction cannot include benchmark examples")
+        return variant, []
     if variant not in BENCHMARK_PROMPT_VARIANTS:
         raise ValueError(f"Unsupported benchmark prompt variant: {variant}")
-    examples = payload.benchmark_examples
+    examples = [dict(example) for example in payload.benchmark_examples if isinstance(example, dict)]
     if variant == "zero-shot":
         if examples:
             raise ValueError("zero-shot cannot include benchmark examples")
-        return variant, []
-    required_count = 1 if variant == "one-shot" else 2
-    if len(examples) < required_count:
-        raise ValueError(f"{variant} requires at least {required_count} benchmark examples")
+    elif variant == "one-shot" and len(examples) != 1:
+        raise ValueError("one-shot requires exactly one benchmark example")
+    elif variant == "few-shot":
+        training_count = len(payload.benchmark_example_selection.get("training_document_ids", []))
+        minimum = min(3, training_count)
+        if not minimum <= len(examples) <= MAX_BENCHMARK_EXAMPLES:
+            raise ValueError("few-shot requires 3 to 5 examples when the training split has at least 3 documents")
     if len(examples) > MAX_BENCHMARK_EXAMPLES:
         raise ValueError(f"At most {MAX_BENCHMARK_EXAMPLES} benchmark examples are supported")
     if any(len(json.dumps(example, ensure_ascii=False)) > MAX_BENCHMARK_EXAMPLE_LENGTH for example in examples):
         raise ValueError("Benchmark example is too large")
-    return variant, [dict(example) for example in examples[:required_count] if isinstance(example, dict)]
+    return variant, examples
+
+
+def prompt_variant_for_request(payload: SlmExtractRequest) -> str:
+    return benchmark_variant_for_request(payload)[0]
+
+
+def benchmark_instruction_for_variant(variant: str) -> str:
+    if variant == NORMAL_PROMPT_VARIANT:
+        return ""
+    return DEFAULT_BENCHMARK_PROMPTS[variant]
+
+
+def build_json_schema_prompt(payload: SlmExtractRequest, config: dict[str, Any], variant: str, examples: list[dict[str, Any]]) -> str:
+    invariant_rules = "\n".join(f"- {rule}" for rule in EXTRACTION_RULES)
+    admin_rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
+    benchmark_instruction = ""
+    if variant in BENCHMARK_PROMPT_VARIANTS:
+        benchmark_instruction = (
+            f"\nK-Fold variant: {variant}. {benchmark_instruction_for_variant(variant)}\n"
+            "Use labeled examples only as formatting and mapping demonstrations; never copy values unless grounded in current OCR text.\n"
+            f"Examples:\n{json.dumps(examples, ensure_ascii=False, indent=2)}\n"
+        )
+    schema = {
+        "json_schema": {
+            "document_type": "invoice | bill_of_lading | packing_list | purchase_order | unknown",
+            "document_number": "Document, invoice, B/L, or order number",
+            "document_date": "YYYY-MM-DD or empty string",
+            "sender": "Sender, seller, vendor, shipper, or issuer",
+            "receiver": "Receiver, buyer, consignee, customer, or ship-to party",
+            "origin": "Origin, loading port, pickup location, or place of receipt",
+            "destination": "Destination, discharge port, delivery location, or ship-to location",
+            "reference_number": "Reference, PO, booking, or related document number",
+            "unit_price": 0,
+            "total_amount": 0,
+            "currency": "THB | USD | EUR | JPY | SGD | CNY | GBP | empty string",
+            "other": {"source_file": payload.source_file},
+        },
+        "fields": [{"sourceText": "source text from OCR", "field": "document_number", "value": "normalized value", "confidence": 0, "status": "success | review | error | processing"}],
+        "confidence": {"overall": 0, "ocr": 0, "slm": 0, "mapping": 0, "completeness": 0},
+        "review_items": [{"field": "document_number", "ocrValue": "raw OCR value", "slmValue": "normalized value", "confidence": 0, "status": "review"}],
+    }
+    return (
+        "Extract logistics fields from Thai or English OCR text into this exact JSON contract.\n"
+        "The canonical fields are document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, and currency.\n"
+        f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n{benchmark_instruction}"
+        f"Document type hint: {payload.document_type_hint}\nSource filename: {payload.source_file}\n\n"
+        f"Required output shape:\n{json.dumps(schema, ensure_ascii=False, indent=2)}\n\nOCR text:\n{payload.ocr_text}\n"
+    )
 
 
 def build_extraction_system_prompt(config: dict[str, Any] | None = None) -> str:
@@ -513,94 +572,43 @@ def apply_review_threshold(result: dict[str, Any], config: SlmPromptConfig | dic
 
 def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None = None) -> str:
     config = config or prompt_config_for_request(payload.prompt_config)
-    benchmark_variant, benchmark_examples = benchmark_variant_for_request(payload)
-    benchmark_base_prompt = benchmark_prompt_for_variant(benchmark_variant)
-    invariant_rules = "\n".join(f"- {rule}" for rule in EXTRACTION_RULES)
-    admin_rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
-    benchmark_instruction = ""
-    if benchmark_variant != "zero-shot":
-        benchmark_instruction = (
-            f"\nBenchmark prompt variant: {benchmark_variant}. "
-            "Use the following labeled examples only as formatting and mapping demonstrations; "
-            "do not copy values unless grounded in the current OCR text.\n"
-            f"Examples:\n{json.dumps(benchmark_examples, ensure_ascii=False, indent=2)}\n"
-        )
-
-    # Clean optical OCR typos and incorporate line-level OCR confidence
-    ocr_text_to_use = repair_ocr_typos(payload.ocr_text)
-    low_conf_guidance = ""
+    variant, examples = benchmark_variant_for_request(payload)
+    ocr_text = repair_ocr_typos(payload.ocr_text)
+    low_confidence_lines: list[str] = []
     if payload.ocr_lines:
-        annotated_lines = []
-        low_count = 0
         for line in payload.ocr_lines:
-            c = float(line.confidence or 0)
-            c_pct = round(c * 100 if c <= 1.0 else c)
-            rep_text = repair_ocr_typos(line.text)
-            if 0 < c_pct < 80 and rep_text.strip():
-                annotated_lines.append(f"{rep_text} [⚠️ OCR conf: {c_pct}%]")
-                low_count += 1
+            confidence = float(line.confidence or 0)
+            confidence_pct = round(confidence * 100 if confidence <= 1 else confidence)
+            text = repair_ocr_typos(line.text)
+            if 0 < confidence_pct < 80 and text.strip():
+                low_confidence_lines.append(f"{text} [OCR confidence: {confidence_pct}%]")
             else:
-                annotated_lines.append(rep_text)
-        ocr_text_to_use = "\n".join(annotated_lines)
-        if low_count > 0:
-            low_conf_guidance = "- Lines marked with [⚠️ OCR conf: <80%] have lower optical recognition clarity. Use semantic reasoning to correct obvious character misreadings (e.g. 0 vs O, 1 vs I, punctuation).\n"
+                low_confidence_lines.append(text)
+        ocr_text = "\n".join(low_confidence_lines)
 
-    if benchmark_variant in {"zero-shot", "one-shot", "few-shot"}:
-        zero_shot_schema = {
-            "document_type": "invoice | bill_of_lading | packing_list | purchase_order | unknown",
-            "document_number": "string",
-            "document_date": "YYYY-MM-DD",
-            "sender": "string",
-            "receiver": "string",
-            "origin": "string",
-            "destination": "string",
-            "reference_number": "string",
-            "unit_price": 0.0,
-            "total_amount": 0.0,
-            "currency": "USD | THB | EUR | string",
-        }
-        return (
-            f"Benchmark base prompt ({benchmark_variant}):\n{benchmark_base_prompt}\n"
-            "Fields: document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, currency.\n"
-            f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n"
-            f"{low_conf_guidance}"
-            f"{benchmark_instruction}\n"
-            "Rules:\n- Numbers must be numeric float without commas.\n- Dates must be YYYY-MM-DD.\n- If missing, use \"\" or 0.0.\n"
-            "- Currency must match OCR symbols ($/USD for dollar, ฿/THB/บาท for Thai baht). Do NOT default to THB if $ or USD is present.\n"
-            "- Bank names (e.g. ธ.กสิกรไทย, ธนาคาร, KBANK, SCB, BBL) are payment channels, NOT sender or receiver. Put bank info in other.\n\n"
-            f"Document type hint: {payload.document_type_hint}\nSource filename: {payload.source_file}\n\n"
-            f"Required output shape:\n{json.dumps(zero_shot_schema, ensure_ascii=False, indent=2)}\n\nOCR text:\n{ocr_text_to_use}\n"
-        )
-
-    schema = {
-        "json_schema": {
-            "document_type": "invoice | bill_of_lading | packing_list | purchase_order | unknown",
-            "document_number": "Document, invoice, B/L, or order number",
-            "document_date": "YYYY-MM-DD or empty string",
-            "sender": "Sender, seller, vendor, shipper, or issuer",
-            "receiver": "Receiver, buyer, consignee, customer, or ship-to party",
-            "origin": "Origin, loading port, pickup location, or place of receipt",
-            "destination": "Destination, discharge port, delivery location, or ship-to location",
-            "reference_number": "Reference, PO, booking, or related document number",
-            "unit_price": 0,
-            "total_amount": 0,
-            "currency": "THB | USD | EUR | JPY | SGD | CNY | GBP | empty string",
-            "other": {"source_file": payload.source_file},
-        },
-        "fields": [{"sourceText": "source text from OCR", "field": "document_number", "value": "normalized value", "confidence": 0, "status": "success | review | error | processing"}],
-        "confidence": {"overall": 0, "ocr": 0, "slm": 0, "mapping": 0, "completeness": 0},
-        "review_items": [{"field": "document_number", "ocrValue": "raw OCR value", "slmValue": "normalized value", "confidence": 0, "status": "review"}],
-    }
+    updated_payload = payload.model_copy(update={"ocr_text": ocr_text}) if hasattr(payload, "model_copy") else payload.copy(update={"ocr_text": ocr_text})
+    prompt = build_json_schema_prompt(updated_payload, config, variant, examples)
     return (
-        f"Benchmark base prompt ({benchmark_variant}):\n{benchmark_base_prompt}\n"
-        "Extract logistics fields from Thai or English OCR text into this exact JSON contract.\n"
-        "The canonical fields are document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, and currency.\n"
-        f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n"
-        f"{low_conf_guidance}"
-        f"{benchmark_instruction}\n"
-        f"Document type hint: {payload.document_type_hint}\nSource filename: {payload.source_file}\n\n"
-        f"Required output shape:\n{json.dumps(schema, ensure_ascii=False, indent=2)}\n\nOCR text:\n{ocr_text_to_use}\n"
+        f"Base extraction prompt:\n{extraction_base_prompt(config)}\n\n"
+        f"{prompt}"
+        "Additional output rules:\n"
+        "- Numbers must be numeric floats without commas.\n"
+        "- Dates must be YYYY-MM-DD; use an empty string or 0.0 when absent.\n"
+        "- Currency must follow OCR symbols; do not default to THB when USD or $ is present.\n"
+        "- Bank names are payment channels, not sender or receiver; put them in other.\n"
     )
+
+
+def _self_check_prompt_composition() -> None:
+    config = {"system_prompt": "base", "fallback_rules": []}
+    payload = SlmExtractRequest(ocr_text="sample")
+    assert "kfold_extraction" not in build_slm_prompt(payload, config)
+    assert benchmark_variant_for_request(payload) == (NORMAL_PROMPT_VARIANT, [])
+
+
+_self_check_prompt_composition()
+
+
 
 
 def parse_json_object(text: str) -> dict[str, Any]:

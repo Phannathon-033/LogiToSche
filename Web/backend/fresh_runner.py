@@ -36,10 +36,12 @@ try:
         _prediction_cache_path,
         _score,
         compare_field_values,
+        benchmark_prompt_snapshot,
         load_prompt_config,
-        benchmark_prompt_for_variant,
+        extraction_base_prompt,
         record_document_performance,
         run_kfold_evaluation,
+        select_training_examples,
     )
 except ImportError:
     from .kfold_evaluator import (
@@ -53,10 +55,12 @@ except ImportError:
         _prediction_cache_path,
         _score,
         compare_field_values,
+        benchmark_prompt_snapshot,
         load_prompt_config,
-        benchmark_prompt_for_variant,
+        extraction_base_prompt,
         record_document_performance,
         run_kfold_evaluation,
+        select_training_examples,
     )
 
 
@@ -104,9 +108,16 @@ def run_fresh_fold(
 
     prompt_snapshot = {
         **load_prompt_config(),
-        "benchmark_prompt": benchmark_prompt_for_variant(prompt_variant),
+        "base_prompt": extraction_base_prompt(load_prompt_config()),
+        "benchmark_prompt": extraction_base_prompt(load_prompt_config()),
         "benchmark_prompt_variant": prompt_variant,
         "benchmark_examples": [],
+        "example_selection": {},
+        "prompt_source": {
+            "module": "prompts.py",
+            "config_file": str(BASE_DIR / "prompt_config.json"),
+            "variant": "K-Fold composition",
+        },
     }
 
     progress_info = {
@@ -134,20 +145,38 @@ def run_fresh_fold(
     total_matched_fields = 0
     total_evaluated_fields = 0
     fresh_extractions: dict[str, tuple[dict, dict]] = {}
-    benchmark_examples: list[dict] = []
-    if prompt_variant in ("one-shot", "few-shot"):
-        pool = [documents[i] for i in train_idx]
-        ex_count = 1 if prompt_variant == "one-shot" else min(3, len(pool))
-        for ex_doc in pool[:ex_count]:
-            ex_ocr = _get_ocr(ex_doc).get("ocr_text", "")
-            ex_gt = _get_document_ground_truth(ex_doc)
-            benchmark_examples.append({
-                "source_file": ex_doc.get("file_name", ""),
-                "ocr_text": ex_ocr[:1000],
-                "json_schema": {key: ex_gt.get(key, "") for key in CORE_FIELDS},
-            })
+    training_documents = [documents[i] for i in train_idx]
+    benchmark_examples, example_selection = select_training_examples(
+        training_documents,
+        prompt_variant,
+    )
+    if prompt_variant == "one-shot" and len(benchmark_examples) != 1:
+        raise ValueError("one-shot requires one training example")
+    if prompt_variant == "few-shot" and len(training_documents) >= 3 and len(benchmark_examples) < 3:
+        raise ValueError("few-shot requires at least three training examples")
+    prompt_snapshot.update(
+        benchmark_prompt_snapshot(
+            prompt_variant,
+            config=prompt_snapshot,
+            examples=benchmark_examples,
+            selection=example_selection,
+        )
+    )
+    prompt_snapshot["benchmark_prompt"] = prompt_snapshot["base_prompt"]
+    prompt_snapshot["benchmark_examples"] = benchmark_examples
+    prompt_snapshot["example_selection"] = example_selection
 
     progress_info["prompt_variant"] = prompt_variant
+    progress_info["prompt_source"] = prompt_snapshot.get("prompt_source")
+    progress_info["example_selection"] = example_selection
+    progress_info["benchmark_examples"] = benchmark_examples
+    progress_info["training_document_ids"] = [str(doc.get("id")) for doc in training_documents]
+
+    if any(
+        str(example.get("document_id")) in {str(doc.get("id")) for doc in target_docs}
+        for example in benchmark_examples
+    ):
+        raise RuntimeError("Training example leaked into validation documents")
 
     print(f"\n{'='*70}")
     print(f"  Starting Fresh GPU Inference: Fold {fold} of {k_splits} ({total} documents)")

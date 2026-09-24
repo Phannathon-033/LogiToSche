@@ -121,8 +121,9 @@ class SlmExtractRequest(BaseModel):
     ocr_lines: list[OcrLine] = Field(default_factory=list)
     image_base64: str | None = None
     prompt_config: dict[str, Any] | None = None
-    benchmark_prompt_variant: str = "zero-shot"
+    benchmark_prompt_variant: str | None = None
     benchmark_examples: list[dict[str, Any]] = Field(default_factory=list)
+    benchmark_example_selection: dict[str, Any] = Field(default_factory=dict)
 
 
 def convert_pdf_to_image(pdf_bytes: bytes, page_num: int = 0) -> tuple[Image.Image, int]:
