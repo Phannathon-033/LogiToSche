@@ -24,6 +24,17 @@ pip install -r requirements.txt
 
 The machine must have an NVIDIA driver, Git, Node.js, and Python installed before these commands run. Do not copy a `.venv` or `node_modules` from another machine.
 
+## Prompt library
+
+Static prompts are grouped by execution mode under `Web/backend/prompt_library`:
+
+- `benchmark/zero-shot/kfold_extraction.txt` — K-Fold without examples
+- `benchmark/one-shot/kfold_extraction.txt` — K-Fold with one training example
+- `benchmark/few-shot/kfold_extraction.txt` — K-Fold with up to three training examples
+- `admin/presets.json` — Admin prompt presets
+
+One-shot and few-shot examples are generated from each fold's training split at runtime. They are not stored in the prompt files, so validation documents are not leaked into the examples.
+
 ## Dataset and environment
 
 The repository includes 300 benchmark images in `C:\LogiToSche\To_Testing` and the ground-truth manifest at `C:\LogiToSche\Web\backend\ground_truth_dataset.json` after cloning.

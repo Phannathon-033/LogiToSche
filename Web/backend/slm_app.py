@@ -23,6 +23,7 @@ try:
         EXTRACTION_SYSTEM_PROMPT,
         MODEL_IDS,
         default_admin_config,
+        benchmark_prompt_for_variant,
         load_prompt_config,
         prompt_for_preset,
         save_prompt_config as persist_prompt_config,
@@ -35,6 +36,7 @@ except ImportError:
         EXTRACTION_SYSTEM_PROMPT,
         MODEL_IDS,
         default_admin_config,
+        benchmark_prompt_for_variant,
         load_prompt_config,
         prompt_for_preset,
         save_prompt_config as persist_prompt_config,
@@ -512,6 +514,7 @@ def apply_review_threshold(result: dict[str, Any], config: SlmPromptConfig | dic
 def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None = None) -> str:
     config = config or prompt_config_for_request(payload.prompt_config)
     benchmark_variant, benchmark_examples = benchmark_variant_for_request(payload)
+    benchmark_base_prompt = benchmark_prompt_for_variant(benchmark_variant)
     invariant_rules = "\n".join(f"- {rule}" for rule in EXTRACTION_RULES)
     admin_rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
     benchmark_instruction = ""
@@ -557,7 +560,7 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
             "currency": "USD | THB | EUR | string",
         }
         return (
-            "Extract the 11 canonical logistics fields from OCR text into JSON.\n"
+            f"Benchmark base prompt ({benchmark_variant}):\n{benchmark_base_prompt}\n"
             "Fields: document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, currency.\n"
             f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n"
             f"{low_conf_guidance}"
@@ -589,6 +592,7 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
         "review_items": [{"field": "document_number", "ocrValue": "raw OCR value", "slmValue": "normalized value", "confidence": 0, "status": "review"}],
     }
     return (
+        f"Benchmark base prompt ({benchmark_variant}):\n{benchmark_base_prompt}\n"
         "Extract logistics fields from Thai or English OCR text into this exact JSON contract.\n"
         "The canonical fields are document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, and currency.\n"
         f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n"

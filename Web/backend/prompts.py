@@ -60,7 +60,18 @@ EXTRACTION_RULES = (
 )
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
-PRESETS_FILE = BASE_DIR / "prompt_presets.json"
+PROMPT_LIBRARY_DIR = BASE_DIR / "prompt_library"
+PRESETS_FILE = PROMPT_LIBRARY_DIR / "admin" / "presets.json"
+BENCHMARK_PROMPT_FILES = {
+    "zero-shot": PROMPT_LIBRARY_DIR / "benchmark" / "zero-shot" / "kfold_extraction.txt",
+    "one-shot": PROMPT_LIBRARY_DIR / "benchmark" / "one-shot" / "kfold_extraction.txt",
+    "few-shot": PROMPT_LIBRARY_DIR / "benchmark" / "few-shot" / "kfold_extraction.txt",
+}
+DEFAULT_BENCHMARK_PROMPTS = {
+    "zero-shot": "Extract the 11 canonical logistics fields from the OCR text into JSON: document_type, document_number, document_date (YYYY-MM-DD), sender, receiver, origin, destination, reference_number, unit_price (float), total_amount (float), currency. No explanations. Return strictly valid JSON.",
+    "one-shot": "Extract the 11 canonical logistics fields from the OCR text into JSON: document_type, document_number, document_date (YYYY-MM-DD), sender, receiver, origin, destination, reference_number, unit_price (float), total_amount (float), currency. Use the one labeled example only to understand formatting and field mapping. Ground every value in the current OCR text. No explanations. Return strictly valid JSON.",
+    "few-shot": "Extract the 11 canonical logistics fields from the OCR text into JSON: document_type, document_number, document_date (YYYY-MM-DD), sender, receiver, origin, destination, reference_number, unit_price (float), total_amount (float), currency. Use the labeled examples only to understand formatting and field mapping. Ground every value in the current OCR text; never copy example values. No explanations. Return strictly valid JSON.",
+}
 
 DEFAULT_PROMPT_PRESETS: dict[str, dict[str, Any]] = {
     # 1. Extraction Core Presets
@@ -185,13 +196,28 @@ def load_prompt_presets() -> dict[str, dict[str, Any]]:
                 return data
         except Exception:
             pass
-    # Initialize presets file with defaults
     save_prompt_presets(DEFAULT_PROMPT_PRESETS)
     return deepcopy(DEFAULT_PROMPT_PRESETS)
 
 
 def save_prompt_presets(presets: dict[str, dict[str, Any]]) -> None:
+    PRESETS_FILE.parent.mkdir(parents=True, exist_ok=True)
     PRESETS_FILE.write_text(json.dumps(presets, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def benchmark_prompt_for_variant(variant: str) -> str:
+    normalized = variant.strip().lower()
+    if normalized not in BENCHMARK_PROMPT_FILES:
+        raise ValueError(f"Unsupported benchmark prompt variant: {variant}")
+    path = BENCHMARK_PROMPT_FILES[normalized]
+    if path.is_file():
+        prompt = "\n".join(
+            line for line in path.read_text(encoding="utf-8").splitlines()
+            if not line.lstrip().startswith("#")
+        ).strip()
+        if prompt:
+            return prompt
+    return DEFAULT_BENCHMARK_PROMPTS[normalized]
 
 
 def reset_prompt_presets() -> dict[str, dict[str, Any]]:

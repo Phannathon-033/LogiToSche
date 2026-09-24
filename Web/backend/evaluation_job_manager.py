@@ -47,7 +47,7 @@ try:
         _score,
         compare_field_values,
         load_prompt_config,
-        prompt_for_preset,
+        benchmark_prompt_for_variant,
         record_document_performance,
         run_kfold_evaluation,
     )
@@ -64,7 +64,7 @@ except ImportError:
         _score,
         compare_field_values,
         load_prompt_config,
-        prompt_for_preset,
+        benchmark_prompt_for_variant,
         record_document_performance,
         run_kfold_evaluation,
     )
@@ -321,7 +321,7 @@ class EvaluationJobManager:
         start_time = time.time()
         prompt_snapshot = {
             **load_prompt_config(),
-            "kfold_zero_shot_prompt": prompt_for_preset("kfold_zero_shot"),
+            "benchmark_prompt": benchmark_prompt_for_variant(prompt_variant),
             "benchmark_prompt_variant": prompt_variant,
             "benchmark_examples": [],
         }
