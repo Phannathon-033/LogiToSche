@@ -32,7 +32,7 @@ winget install --id Git.Git -e --source winget ; winget install --id Python.Pyth
    winget install --id Python.Python.3.10 -e --source winget
    python --version
    ```
-   *(หรือดาวน์โหลดตัวติดตั้ง .exe จาก [python.org](https://www.python.org/downloads/release/python-31011/) - สำคัญ: หากติดตั้งผ่าน .exe ต้องติ๊ก **"Add python.exe to PATH"**)*
+   *(หรือดาวน์โหลดตัวติดตั้ง .exe จาก [python.org](https://www.python.org/downloads/) - สำคัญ: หากติดตั้งผ่าน .exe ต้องติ๊ก **"Add python.exe to PATH"**)*
 
 3. **Node.js 18+ LTS (React Web Frontend):**
    ```powershell
