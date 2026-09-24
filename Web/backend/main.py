@@ -12,6 +12,7 @@ import tempfile
 import time
 import types
 from pathlib import Path
+from urllib.parse import quote
 from typing import Any
 
 try:
@@ -467,8 +468,9 @@ def post_benchmark_fresh_start(
     k: int = 5,
     max_docs: int | None = None,
     re_ocr: bool = False,
+    prompt_variant: str = "zero-shot",
 ) -> Any:
-    query = f"?fold={fold}&k={k}"
+    query = f"?fold={fold}&k={k}&prompt_variant={quote(prompt_variant)}"
     if max_docs:
         query += f"&max_docs={max_docs}"
     if re_ocr:

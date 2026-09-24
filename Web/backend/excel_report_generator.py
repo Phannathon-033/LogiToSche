@@ -128,6 +128,11 @@ def generate_kfold_excel_report(
     latency_summary = data.get("latency_summary", {})
     folds = data.get("folds", [])
     field_performance = data.get("field_performance", {})
+    prompt_variant = str(
+        data.get("prompt_variant")
+        or data.get("prompt_config", {}).get("snapshot", {}).get("benchmark_prompt_variant")
+        or "unknown"
+    ).lower()
 
     # Load performance logs for Sheet 4, limited to this report's documents.
     report_doc_ids = {
@@ -189,7 +194,11 @@ def generate_kfold_excel_report(
         ("เครื่องยนต์ OCR (OCR Engine)", "PaddleOCR v2.7 (TH+EN Bilingual Text Recognition)"),
         ("รูปแบบการแบ่ง Fold (Validation Mode)", f"{k_splits}-Fold Cross-Validation (Stratified Document Split)"),
         ("จำนวนเอกสารในชุดข้อมูล (Dataset Size)", f"{total_docs or len(perf_records) or 300} ฉบับ (Documents)"),
-        ("เทคนิค Prompt (Prompt Engineering)", "Zero-Shot Direct Canonical JSON Schema"),
+        ("เทคนิค Prompt (Prompt Engineering)", {
+            "zero-shot": "Zero-Shot Direct Canonical JSON Schema",
+            "one-shot": "One-Shot In-Context Canonical JSON Schema",
+            "few-shot": "Few-Shot In-Context Canonical JSON Schema",
+        }.get(prompt_variant, prompt_variant)),
         ("Random Seed", str(data.get("random_seed", 42))),
     ]
     for idx, (label, val) in enumerate(meta_rows, start=5):
@@ -221,9 +230,9 @@ def generate_kfold_excel_report(
         ("ค่า Precision เฉลี่ย", prec_display, "ความถูกต้องของฟิลด์ที่โมเดลระบุ"),
         ("ค่า Recall เฉลี่ย", rec_display, "ความครอบคลุมของฟิลด์ที่ดึงได้จริง"),
         ("ความคล้ายคลึงของข้อความ (Similarity)", sim_display, "Levenshtein Text Similarity"),
-        ("เวลาเฉลี่ยอ่าน OCR ต่อฉบับ", f"{latency_summary.get('avg_ocr_sec', 0.85):.2f} วินาที", "PaddleOCR Live Inference"),
-        ("เวลาเฉลี่ยโมเดล SLM ต่อฉบับ", f"{latency_summary.get('avg_slm_sec', 12.5):.2f} วินาที", "Qwen2.5-1.5B GPU Inference"),
-        ("เวลาเฉลี่ยรวมทั้งกระบวนการ / ฉบับ", f"{latency_summary.get('avg_total_sec', 13.35):.2f} วินาที", "End-to-End Pipeline Latency"),
+        ("เวลาเฉลี่ยอ่าน OCR ต่อฉบับ", f"{latency_summary.get('mean_ocr_time_sec', 0.0):.2f} วินาที", "PaddleOCR Live Inference"),
+        ("เวลาเฉลี่ยโมเดล SLM ต่อฉบับ", f"{latency_summary.get('mean_slm_time_sec', 0.0):.2f} วินาที", "Qwen2.5-1.5B GPU Inference"),
+        ("เวลาเฉลี่ยรวมทั้งกระบวนการ / ฉบับ", f"{latency_summary.get('mean_total_time_sec', 0.0):.2f} วินาที", "End-to-End Pipeline Latency"),
     ]
     for idx, (label, val, note) in enumerate(metrics_rows, start=5):
         ws_summary[f"E{idx}"].value = label

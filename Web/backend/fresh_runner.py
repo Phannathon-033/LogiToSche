@@ -32,6 +32,7 @@ try:
         _cache_path,
         _extract,
         _get_document_ground_truth,
+        _get_ocr,
         _prediction_cache_path,
         _score,
         compare_field_values,
@@ -48,6 +49,7 @@ except ImportError:
         _cache_path,
         _extract,
         _get_document_ground_truth,
+        _get_ocr,
         _prediction_cache_path,
         _score,
         compare_field_values,
@@ -74,6 +76,7 @@ def run_fresh_fold(
     max_docs: int | None = None,
     force_rerun_ocr: bool = False,
     fresh_run_id: str | None = None,
+    prompt_variant: str = "zero-shot",
 ) -> dict:
     if not GT_FILE.is_file():
         raise FileNotFoundError(f"Ground truth file not found at {GT_FILE}")
@@ -96,10 +99,13 @@ def run_fresh_fold(
     selected_doc_ids = [str(doc.get("id")) for doc in target_docs]
     start_time = time.time()
 
+    if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
+        raise ValueError(f"Unsupported prompt variant: {prompt_variant}")
+
     prompt_snapshot = {
         **load_prompt_config(),
-        "benchmark_prompt": benchmark_prompt_for_variant("zero-shot"),
-        "benchmark_prompt_variant": "zero-shot",
+        "benchmark_prompt": benchmark_prompt_for_variant(prompt_variant),
+        "benchmark_prompt_variant": prompt_variant,
         "benchmark_examples": [],
     }
 
@@ -128,6 +134,20 @@ def run_fresh_fold(
     total_matched_fields = 0
     total_evaluated_fields = 0
     fresh_extractions: dict[str, tuple[dict, dict]] = {}
+    benchmark_examples: list[dict] = []
+    if prompt_variant in ("one-shot", "few-shot"):
+        pool = [documents[i] for i in train_idx]
+        ex_count = 1 if prompt_variant == "one-shot" else min(3, len(pool))
+        for ex_doc in pool[:ex_count]:
+            ex_ocr = _get_ocr(ex_doc).get("ocr_text", "")
+            ex_gt = _get_document_ground_truth(ex_doc)
+            benchmark_examples.append({
+                "source_file": ex_doc.get("file_name", ""),
+                "ocr_text": ex_ocr[:1000],
+                "json_schema": {key: ex_gt.get(key, "") for key in CORE_FIELDS},
+            })
+
+    progress_info["prompt_variant"] = prompt_variant
 
     print(f"\n{'='*70}")
     print(f"  Starting Fresh GPU Inference: Fold {fold} of {k_splits} ({total} documents)")
@@ -148,7 +168,13 @@ def run_fresh_fold(
         print(f"[{idx:2d}/{total}] {doc_id} ({file_name[:32]}...) -> Extracting on GPU...", end="", flush=True)
 
         try:
-            pred, trace = _extract(doc, prompt_snapshot, force_rerun=True, force_rerun_ocr=force_rerun_ocr)
+            pred, trace = _extract(
+                doc,
+                prompt_snapshot,
+                force_rerun=True,
+                force_rerun_ocr=force_rerun_ocr,
+                benchmark_examples=benchmark_examples,
+            )
             fresh_extractions[str(doc_id)] = (pred, trace)
             doc_elapsed = time.time() - t0
             perf = trace.get("performance", {})
@@ -224,6 +250,7 @@ def run_fresh_fold(
         single_fold=fold,
         selected_doc_ids=processed_doc_ids,
         precomputed_extractions=fresh_extractions,
+        prompt_variant=prompt_variant,
         force_rerun=False,
     )
     report_doc_ids = [
@@ -255,6 +282,7 @@ if __name__ == "__main__":
     parser.add_argument("--max", type=int, default=None, help="Max docs to process (for testing)")
     parser.add_argument("--re-ocr", action="store_true", help="Force re-run PaddleOCR even if cached")
     parser.add_argument("--run-id", default=None, help="Fresh run identifier assigned by the service")
+    parser.add_argument("--prompt-variant", choices=("zero-shot", "one-shot", "few-shot"), default="zero-shot")
     args = parser.parse_args()
 
     run_fresh_fold(
@@ -263,4 +291,5 @@ if __name__ == "__main__":
         max_docs=args.max,
         force_rerun_ocr=args.re_ocr,
         fresh_run_id=args.run_id,
+        prompt_variant=args.prompt_variant,
     )

@@ -1176,8 +1176,12 @@ def start_fresh_run_endpoint(
     k: int = 5,
     max_docs: int | None = None,
     re_ocr: bool = False,
+    prompt_variant: str = "zero-shot",
 ) -> dict[str, Any]:
     global _fresh_process
+    prompt_variant = prompt_variant.strip().lower()
+    if prompt_variant not in BENCHMARK_PROMPT_VARIANTS:
+        raise HTTPException(status_code=400, detail=f"Unsupported prompt variant: {prompt_variant}")
     progress_file = REPORT_DIR / "fresh_run_progress.json"
     if progress_file.is_file():
         try:
@@ -1195,7 +1199,14 @@ def start_fresh_run_endpoint(
     runner_script = BASE_DIR / "fresh_runner.py"
     py_exec = sys.executable
     fresh_run_id = datetime.utcnow().strftime("fresh_%Y%m%d_%H%M%S_%f")
-    cmd = [py_exec, str(runner_script), "--fold", str(fold), "--k", str(k), "--run-id", fresh_run_id]
+    cmd = [
+        py_exec,
+        str(runner_script),
+        "--fold", str(fold),
+        "--k", str(k),
+        "--run-id", fresh_run_id,
+        "--prompt-variant", prompt_variant,
+    ]
     if max_docs:
         cmd.extend(["--max", str(max_docs)])
     if re_ocr:
@@ -1215,6 +1226,7 @@ def start_fresh_run_endpoint(
         "fold": fold,
         "k": k,
         "max_docs": max_docs,
+        "prompt_variant": prompt_variant,
         "pid": _fresh_process.pid,
     }
 

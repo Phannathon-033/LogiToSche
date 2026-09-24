@@ -550,7 +550,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       setFreshStatus({ is_running: true, finished: false, fold: selectedSingleFold, k_splits: kSplits });
       setIsPollingFresh(true);
       const resp = await apiFetch(
-        `/api/benchmark/kfold/fresh-start?fold=${selectedSingleFold}&k=${Math.max(2, kSplits)}`,
+        `/api/benchmark/kfold/fresh-start?fold=${selectedSingleFold}&k=${Math.max(2, kSplits)}&prompt_variant=${encodeURIComponent(promptVariant)}`,
         { method: "POST" },
       );
       if (!resp.ok) throw new Error(`Fresh start failed with status ${resp.status}`);
