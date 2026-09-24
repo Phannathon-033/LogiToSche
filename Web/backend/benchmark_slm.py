@@ -15,7 +15,8 @@ if hasattr(sys.stdout, "reconfigure"):
 import requests
 
 BASE_DIR = Path(__file__).resolve().parent
-DEFAULT_IMAGE_DIR = Path(r"E:\Logistics To JSON\archive\invoices_images")
+PROJECT_ROOT = BASE_DIR.parent.parent
+DEFAULT_IMAGE_DIR = Path(os.environ.get("LOGIAI_BENCHMARK_IMAGE_DIR", PROJECT_ROOT / "To_Testing"))
 OCR_ENDPOINT = "http://127.0.0.1:8000/api/ocr"
 SLM_ENDPOINT = "http://127.0.0.1:8001/api/slm/extract"
 

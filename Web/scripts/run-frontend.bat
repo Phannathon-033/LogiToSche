@@ -1,3 +1,3 @@
 @echo off
-cd /d "E:\Logistics To JSON\Web"
+cd /d "%~dp0.."
 npm run dev

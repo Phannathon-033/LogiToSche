@@ -6,14 +6,23 @@ import sys
 import time
 import requests
 
-from kfold_evaluator import GT_FILE, compare_field_values, CORE_FIELDS, FIELD_LABELS_TH
+from kfold_evaluator import (
+    CORE_FIELDS,
+    DATASET_DIR,
+    FIELD_LABELS_TH,
+    GT_FILE,
+    OCR_ENDPOINT,
+    REQUEST_HEADERS,
+    SLM_ENDPOINT,
+    compare_field_values,
+)
 
 # Select doc index (default 0 -> DOC-001)
 doc_idx = int(sys.argv[1]) if len(sys.argv) > 1 else 0
 
 gt_data = json.loads(GT_FILE.read_text(encoding="utf-8"))
 doc = gt_data["documents"][doc_idx]
-img_path = pathlib.Path(r"E:\Logistics To JSON\To_Testing") / doc["file_name"]
+img_path = DATASET_DIR / doc["file_name"]
 
 print("=" * 70)
 print(f"  Live End-to-End Test: {doc.get('id')} ({doc.get('file_name')})")
@@ -24,10 +33,10 @@ print("\n[Step 1] Running PaddleOCR on GPU (POST /api/ocr)...")
 t0 = time.time()
 with img_path.open("rb") as f:
     ocr_resp = requests.post(
-        "http://127.0.0.1:8000/api/ocr",
+        OCR_ENDPOINT,
         files={"file": (img_path.name, f, "image/png")},
         data={"lang": "th"},
-        headers={"X-LogiAI-Token": "logiai_secret_token_123"},
+        headers=REQUEST_HEADERS,
         timeout=60,
     )
 ocr_time = time.time() - t0
@@ -43,7 +52,7 @@ print(f"  OCR Text snippet: {ocr_text[:120]}...")
 print("\n[Step 2] Running Qwen2.5-1.5B SLM on CUDA (POST /api/slm/extract)...")
 t1 = time.time()
 slm_resp = requests.post(
-    "http://127.0.0.1:8001/api/slm/extract",
+    SLM_ENDPOINT,
     json={
         "document_type_hint": doc.get("category", "Invoice"),
         "source_file": doc.get("file_name"),

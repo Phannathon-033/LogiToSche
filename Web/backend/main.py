@@ -531,8 +531,9 @@ def get_benchmark_image(file_name: str) -> Any:
     from fastapi.responses import FileResponse
 
     base_testing_dir = Path(
-        os.environ.get("LOGIAI_DATASET_DIR", r"E:\Logistics To JSON\To_Testing")
+        os.environ.get("LOGIAI_DATASET_DIR", str(Path(__file__).resolve().parents[2] / "To_Testing"))
     ).resolve()
+
     safe_name = Path(file_name).name
     img_path = (base_testing_dir / safe_name).resolve()
     if base_testing_dir not in img_path.parents or not img_path.is_file():
