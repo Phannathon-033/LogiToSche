@@ -628,6 +628,8 @@ def run_kfold_evaluation(
     force_rerun: bool = False,
     doc_id: str | None = None,
     single_fold: int | None = None,
+    selected_doc_ids: list[str] | None = None,
+    precomputed_extractions: dict[str, tuple[dict[str, Any], dict[str, Any]]] | None = None,
 ) -> dict[str, Any]:
     if not GT_FILE.is_file():
         raise FileNotFoundError(f"Ground truth dataset not found: {GT_FILE}")
@@ -692,6 +694,14 @@ def run_kfold_evaluation(
             if single_fold < 1 or single_fold > len(all_splits):
                 raise ValueError(f"single_fold must be between 1 and {len(all_splits)}, got {single_fold}")
             tr_idx, val_idx = all_splits[single_fold - 1]
+            if selected_doc_ids is not None:
+                selected = {str(doc_id) for doc_id in selected_doc_ids}
+                val_idx = np.array(
+                    [index for index in val_idx if str(documents[index].get("id")) in selected],
+                    dtype=int,
+                )
+                if not len(val_idx):
+                    raise ValueError("selected_doc_ids do not belong to the selected validation fold")
             target_splits = [(single_fold, tr_idx, val_idx)]
         else:
             target_splits = [(f_num, tr, val) for f_num, (tr, val) in enumerate(all_splits, start=1)]
@@ -717,12 +727,16 @@ def run_kfold_evaluation(
         baseline_scores = []
         document_evaluations = []
         for document in validation_documents:
-            prediction, trace = _extract(
-                document,
-                prompt_snapshot,
-                force_rerun=force_rerun,
-                benchmark_examples=benchmark_examples,
-            )
+            precomputed = precomputed_extractions.get(str(document.get("id"))) if precomputed_extractions else None
+            if precomputed is None:
+                prediction, trace = _extract(
+                    document,
+                    prompt_snapshot,
+                    force_rerun=force_rerun,
+                    benchmark_examples=benchmark_examples,
+                )
+            else:
+                prediction, trace = precomputed
             truth = _get_document_ground_truth(document)
             baseline = _baseline_prediction(trace["ocr"]["ocr_text"], baseline_map.get(document.get("file_name", ""), {}))
             slm_score = _score(prediction, truth)

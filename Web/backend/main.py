@@ -504,13 +504,14 @@ def post_benchmark_performance_log_clear() -> Any:
 @app.get("/api/benchmark/kfold/export-excel")
 @app.get("/api/evaluation/export-excel")
 def get_kfold_excel_report_endpoint(
+    fresh_run_id: str | None = None,
     job_id: str | None = None,
     run_id: str | None = None,
 ) -> Any:
     from fastapi.responses import Response
     from urllib.parse import urlencode
 
-    query = urlencode({key: value for key, value in {"job_id": job_id, "run_id": run_id}.items() if value})
+    query = urlencode({key: value for key, value in {"fresh_run_id": fresh_run_id, "job_id": job_id, "run_id": run_id}.items() if value})
     path = "/api/benchmark/kfold/export-excel"
     try:
         response = requests.get(

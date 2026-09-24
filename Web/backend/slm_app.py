@@ -1183,25 +1183,40 @@ def start_fresh_run_endpoint(
         try:
             curr = json.loads(progress_file.read_text(encoding="utf-8"))
             if curr.get("is_running"):
-                return {"status": "already_running", "progress": curr}
+                return {
+                    "status": "already_running",
+                    "fresh_run_id": curr.get("fresh_run_id"),
+                    "progress": curr,
+                }
         except Exception:
             pass
 
     import subprocess
     runner_script = BASE_DIR / "fresh_runner.py"
     py_exec = sys.executable
-    cmd = [py_exec, str(runner_script), "--fold", str(fold), "--k", str(k)]
+    fresh_run_id = datetime.utcnow().strftime("fresh_%Y%m%d_%H%M%S_%f")
+    cmd = [py_exec, str(runner_script), "--fold", str(fold), "--k", str(k), "--run-id", fresh_run_id]
     if max_docs:
         cmd.extend(["--max", str(max_docs)])
     if re_ocr:
         cmd.append("--re-ocr")
+    runner_env = os.environ.copy()
+    runner_env["LOGIAI_REPORT_DIR"] = str(REPORT_DIR)
     _fresh_process = subprocess.Popen(
         cmd,
         cwd=str(BASE_DIR),
+        env=runner_env,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
-    return {"status": "started", "fold": fold, "k": k, "max_docs": max_docs, "pid": _fresh_process.pid}
+    return {
+        "status": "started",
+        "fresh_run_id": fresh_run_id,
+        "fold": fold,
+        "k": k,
+        "max_docs": max_docs,
+        "pid": _fresh_process.pid,
+    }
 
 
 @app.post("/api/benchmark/kfold/fresh-stop")
@@ -1294,7 +1309,32 @@ def clear_performance_log_endpoint() -> dict[str, Any]:
         return {"status": "error", "error": str(e)}
 
 
-def resolve_export_report(job_id: str | None = None, run_id: str | None = None) -> dict[str, Any]:
+def resolve_export_report(
+    fresh_run_id: str | None = None,
+    job_id: str | None = None,
+    run_id: str | None = None,
+) -> dict[str, Any]:
+    if fresh_run_id:
+        if not re.fullmatch(r"fresh_[A-Za-z0-9_-]+", fresh_run_id):
+            raise HTTPException(status_code=400, detail="Invalid fresh_run_id")
+        progress_file = REPORT_DIR / "fresh_run_progress.json"
+        if not progress_file.is_file():
+            raise HTTPException(status_code=404, detail="Fresh evaluation run not found")
+        try:
+            progress = json.loads(progress_file.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(status_code=500, detail=f"Could not read Fresh evaluation state: {exc}") from exc
+        if progress.get("fresh_run_id") != fresh_run_id:
+            raise HTTPException(status_code=404, detail="Fresh evaluation run is no longer current")
+        if progress.get("is_running"):
+            raise HTTPException(status_code=409, detail="Fresh evaluation is still running")
+        report = progress.get("final_report")
+        if not progress.get("finished") or not isinstance(report, dict) or not report.get("folds"):
+            raise HTTPException(status_code=409, detail="Fresh evaluation has not completed a report yet")
+        if run_id and report.get("run_id") != run_id:
+            raise HTTPException(status_code=409, detail="fresh_run_id and run_id refer to different reports")
+        return report
+
     if job_id:
         if not re.fullmatch(r"eval_[A-Za-z0-9_-]+", job_id):
             raise HTTPException(status_code=400, detail="Invalid job_id")
@@ -1332,13 +1372,14 @@ def resolve_export_report(job_id: str | None = None, run_id: str | None = None) 
 @app.get("/api/benchmark/kfold/export-excel")
 @app.get("/api/evaluation/export-excel")
 def export_kfold_excel_endpoint(
+    fresh_run_id: str | None = None,
     job_id: str | None = None,
     run_id: str | None = None,
 ) -> Any:
     from fastapi.responses import FileResponse
     try:
         from excel_report_generator import generate_kfold_excel_report
-        report = resolve_export_report(job_id=job_id, run_id=run_id)
+        report = resolve_export_report(fresh_run_id=fresh_run_id, job_id=job_id, run_id=run_id)
         excel_path = generate_kfold_excel_report(report)
         if not excel_path.is_file():
             raise HTTPException(status_code=404, detail="Excel report not found")
