@@ -5,6 +5,7 @@ import json
 import os
 import re
 import sys
+import threading
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -378,17 +379,27 @@ def execute_slm_prompt(payload: SlmPromptRequest) -> SlmPromptResponse:
         return execute_rule_based_prompt(payload)
 
 
+_model_lock = threading.Lock()
+
+
 def get_slm(model_id: str | None = None) -> tuple[Any, Any]:
     global _slm_model, _slm_tokenizer, _loaded_model_id
-    model_id = model_id or get_active_model_id()
-    if _loaded_model_id != model_id or _slm_model is None or _slm_tokenizer is None:
+    with _model_lock:
+        model_id = model_id or get_active_model_id()
+        if _slm_model is not None and _slm_tokenizer is not None and _loaded_model_id == model_id:
+            return _slm_tokenizer, _slm_model
+
+        if AutoModelForCausalLM is None or AutoTokenizer is None or torch is None:
+            raise HTTPException(status_code=503, detail=f"SLM dependencies failed to import: {IMPORT_ERROR}")
+        if not torch.cuda.is_available():
+            raise HTTPException(status_code=503, detail="CUDA is required for SLM but torch.cuda is not available")
+
         _slm_model = None
         _slm_tokenizer = None
-    if AutoModelForCausalLM is None or AutoTokenizer is None or torch is None:
-        raise HTTPException(status_code=503, detail=f"SLM dependencies failed to import: {IMPORT_ERROR}")
-    if not torch.cuda.is_available():
-        raise HTTPException(status_code=503, detail="CUDA is required for SLM but torch.cuda is not available")
-    if _slm_model is None or _slm_tokenizer is None:
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+        print(f"[SLM] Loading model {model_id} into CUDA:0 with float16...", flush=True)
         _slm_tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
         _slm_model = AutoModelForCausalLM.from_pretrained(
             model_id,
@@ -399,7 +410,8 @@ def get_slm(model_id: str | None = None) -> tuple[Any, Any]:
         )
         _slm_model.eval()
         _loaded_model_id = model_id
-    return _slm_tokenizer, _slm_model
+        print(f"[SLM] Model {model_id} ready on CUDA:0!", flush=True)
+        return _slm_tokenizer, _slm_model
 
 
 def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
@@ -412,16 +424,29 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
     ]
     text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer([text], return_tensors="pt").to(model.device)
-    max_tokens = 200 if benchmark_variant == "zero-shot" else 900
+    max_tokens = 300 if benchmark_variant in ("zero-shot", "one-shot", "few-shot") else 900
     import time
     t0 = time.time()
     print(f"[SLM] Generating JSON for {payload.source_file} (variant={benchmark_variant}, in_tokens={inputs.input_ids.shape[1]}, max_out={max_tokens})...", flush=True)
+
+    eos_id = tokenizer.eos_token_id or 151645
+    pad_id = tokenizer.pad_token_id or eos_id
+
     with torch.inference_mode():
-        generated_ids = model.generate(**inputs, max_new_tokens=max_tokens, do_sample=False, repetition_penalty=1.05)
+        generated_ids = model.generate(
+            **inputs,
+            max_new_tokens=max_tokens,
+            do_sample=False,
+            repetition_penalty=1.05,
+            eos_token_id=eos_id,
+            pad_token_id=pad_id,
+        )
     gen_time = time.time() - t0
     output_ids = generated_ids[0][inputs.input_ids.shape[-1] :]
     decoded = tokenizer.decode(output_ids, skip_special_tokens=True)
     print(f"[SLM] Generated {len(output_ids)} tokens in {gen_time:.2f}s ({len(output_ids)/max(gen_time, 0.01):.1f} tps)!", flush=True)
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
     return parse_json_object(decoded)
 
 
@@ -517,7 +542,7 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
         if low_count > 0:
             low_conf_guidance = "- Lines marked with [⚠️ OCR conf: <80%] have lower optical recognition clarity. Use semantic reasoning to correct obvious character misreadings (e.g. 0 vs O, 1 vs I, punctuation).\n"
 
-    if benchmark_variant == "zero-shot":
+    if benchmark_variant in {"zero-shot", "one-shot", "few-shot"}:
         zero_shot_schema = {
             "document_type": "invoice | bill_of_lading | packing_list | purchase_order | unknown",
             "document_number": "string",
@@ -536,6 +561,7 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
             "Fields: document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, currency.\n"
             f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n"
             f"{low_conf_guidance}"
+            f"{benchmark_instruction}\n"
             "Rules:\n- Numbers must be numeric float without commas.\n- Dates must be YYYY-MM-DD.\n- If missing, use \"\" or 0.0.\n"
             "- Currency must match OCR symbols ($/USD for dollar, ฿/THB/บาท for Thai baht). Do NOT default to THB if $ or USD is present.\n"
             "- Bank names (e.g. ธ.กสิกรไทย, ธนาคาร, KBANK, SCB, BBL) are payment channels, NOT sender or receiver. Put bank info in other.\n\n"
@@ -1080,9 +1106,10 @@ def get_kfold_report(
     doc_id: str | None = None,
     single_fold: int | None = None,
 ) -> dict[str, Any]:
-    if prompt_variant.strip().lower() != "zero-shot":
-        raise HTTPException(status_code=400, detail="K-Fold evaluation supports zero-shot only")
-    prompt_variant = "zero-shot"
+    cleaned_variant = prompt_variant.strip().lower()
+    if cleaned_variant not in BENCHMARK_PROMPT_VARIANTS:
+        raise HTTPException(status_code=400, detail=f"Unsupported prompt variant: {prompt_variant}")
+    prompt_variant = cleaned_variant
     report_path = REPORT_DIR / "kfold_evaluation_report.json"
     if not report_path.exists() and (BASE_DIR / "kfold_evaluation_report.json").exists():
         report_path = BASE_DIR / "kfold_evaluation_report.json"
@@ -1263,6 +1290,30 @@ def clear_performance_log_endpoint() -> dict[str, Any]:
         return {"status": "error", "error": str(e)}
 
 
+@app.get("/api/benchmark/kfold/export-excel")
+@app.get("/api/evaluation/export-excel")
+def export_kfold_excel_endpoint() -> Any:
+    from fastapi.responses import FileResponse
+    from fastapi import HTTPException
+    import sys
+    backend_dir = pathlib.Path(__file__).resolve().parent
+    if str(backend_dir) not in sys.path:
+        sys.path.insert(0, str(backend_dir))
+    try:
+        from excel_report_generator import generate_kfold_excel_report
+        excel_path = generate_kfold_excel_report()
+        if not excel_path.is_file():
+            raise HTTPException(status_code=404, detail="Excel report not found")
+        date_str = datetime.now().strftime("%Y%m%d")
+        return FileResponse(
+            excel_path,
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            filename=f"LogiAI_KFold_Evaluation_Report_{date_str}.xlsx",
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate Excel report: {e}")
+
+
 # ---------------------------------------------------------------------------
 # Background Evaluation Job System (Immediate response, resume, OCR cache)
 # ---------------------------------------------------------------------------
@@ -1272,8 +1323,8 @@ class StartEvaluationRequest(BaseModel):
     k: int = 5
     seed: int = 42
     prompt_variant: str = "zero-shot"
-    resume: bool = True
-    force_rerun_ocr: bool = False
+    resume: bool = False
+    force_rerun_ocr: bool = True
     max_docs: int | None = None
     doc_id: str | None = None
 
@@ -1320,4 +1371,11 @@ def stop_current_evaluation_job() -> dict[str, Any]:
 def stop_specific_evaluation_job(job_id: str) -> dict[str, Any]:
     from evaluation_job_manager import job_manager
     return job_manager.stop_job(job_id)
+
+
+@app.post("/api/evaluation/reset")
+@app.post("/api/benchmark/evaluation/reset")
+def reset_evaluation_job() -> dict[str, Any]:
+    from evaluation_job_manager import job_manager
+    return job_manager.reset_job()
 

@@ -347,6 +347,7 @@ def _extract(
     prompt_snapshot: dict[str, Any],
     force_rerun: bool = False,
     force_rerun_ocr: bool = False,
+    benchmark_examples: list[dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     variant = prompt_snapshot.get("benchmark_prompt_variant", "zero-shot")
     pred_cache_file = _prediction_cache_path(document, variant)
@@ -401,12 +402,13 @@ def _extract(
     ocr = _get_ocr(document, force_rerun=force_rerun_ocr)
     ocr_time_sec = float(ocr.get("ocr_time_sec", 0.85))
 
-    prompt_text = prompt_snapshot["kfold_zero_shot_prompt"]
+    prompt_text = prompt_snapshot.get("kfold_zero_shot_prompt") or prompt_snapshot.get("system_prompt", "")
+    examples_to_send = benchmark_examples if benchmark_examples is not None else prompt_snapshot.get("benchmark_examples", [])
     request_config = {
         **prompt_snapshot,
         "system_prompt": prompt_text,
         "benchmark_prompt_variant": variant,
-        "benchmark_examples": [],
+        "benchmark_examples": examples_to_send,
     }
 
     t_slm_start = time.time()
@@ -419,10 +421,10 @@ def _extract(
             "ocr_lines": ocr["ocr_lines"],
             "prompt_config": request_config,
             "benchmark_prompt_variant": variant,
-            "benchmark_examples": [],
+            "benchmark_examples": examples_to_send,
         },
         headers=REQUEST_HEADERS,
-        timeout=float(os.environ.get("LOGIAI_SLM_TIMEOUT", "180")),
+        timeout=float(os.environ.get("LOGIAI_SLM_TIMEOUT", "300")),
     )
     slm_time_sec = round(time.time() - t_slm_start, 3)
     response.raise_for_status()
@@ -648,13 +650,13 @@ def run_kfold_evaluation(
         if k_splits < 2 or k_splits > len(documents):
             raise ValueError(f"K-Fold requires 2 <= k <= {len(documents)}, found {k_splits}")
 
-    if prompt_variant != "zero-shot":
-        raise ValueError("K-Fold evaluation currently supports zero-shot only")
+    if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
+        raise ValueError(f"K-Fold evaluation unsupported variant: {prompt_variant}")
 
     prompt_snapshot = {
         **load_prompt_config(),
         "kfold_zero_shot_prompt": prompt_for_preset("kfold_zero_shot"),
-        "benchmark_prompt_variant": "zero-shot",
+        "benchmark_prompt_variant": prompt_variant,
         "benchmark_examples": [],
     }
     if not prompt_snapshot["kfold_zero_shot_prompt"].strip():
@@ -685,11 +687,31 @@ def run_kfold_evaluation(
 
     for fold, train_indices, validation_indices in target_splits:
         validation_documents = [documents[index] for index in validation_indices]
+
+        # In-context demonstration examples from train split (Strictly prevent data leakage)
+        benchmark_examples: list[dict[str, Any]] = []
+        if prompt_variant in ("one-shot", "few-shot"):
+            pool = [documents[i] for i in train_indices] if len(train_indices) > 0 else [d for d in documents if d.get("id") != validation_documents[0].get("id")]
+            ex_count = 1 if prompt_variant == "one-shot" else min(3, len(pool))
+            for ex_doc in pool[:ex_count]:
+                ex_ocr = _get_ocr(ex_doc).get("ocr_text", "")
+                ex_gt = _get_document_ground_truth(ex_doc)
+                benchmark_examples.append({
+                    "source_file": ex_doc.get("file_name", ""),
+                    "ocr_text": ex_ocr[:1000],
+                    "json_schema": {k: ex_gt.get(k, "") for k in CORE_FIELDS},
+                })
+
         slm_scores = []
         baseline_scores = []
         document_evaluations = []
         for document in validation_documents:
-            prediction, trace = _extract(document, prompt_snapshot, force_rerun=force_rerun)
+            prediction, trace = _extract(
+                document,
+                prompt_snapshot,
+                force_rerun=force_rerun,
+                benchmark_examples=benchmark_examples,
+            )
             truth = _get_document_ground_truth(document)
             baseline = _baseline_prediction(trace["ocr"]["ocr_text"], baseline_map.get(document.get("file_name", ""), {}))
             slm_score = _score(prediction, truth)

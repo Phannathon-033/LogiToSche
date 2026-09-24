@@ -108,7 +108,15 @@ class EvaluationJobManager:
 
         if target_file and target_file.is_file():
             try:
-                return json.loads(target_file.read_text(encoding="utf-8"))
+                data = json.loads(target_file.read_text(encoding="utf-8"))
+                active_tid = self._active_job_id
+                active_thread = self._threads.get(active_tid) if active_tid else None
+                if data.get("is_running") and (not active_thread or not active_thread.is_alive()):
+                    data["is_running"] = False
+                    if data.get("status") == "running":
+                        data["status"] = "stopped"
+                        data["message"] = "Process completed or halted"
+                return data
             except Exception:
                 pass
 
@@ -140,6 +148,24 @@ class EvaluationJobManager:
 
         return {"status": "not_running", "message": "No running job to stop"}
 
+    def reset_job(self) -> dict[str, Any]:
+        """Forces reset of current job state to idle."""
+        with self._lock:
+            self._active_job_id = None
+            self._stop_flags.clear()
+            idle_state = {
+                "job_id": None,
+                "status": "idle",
+                "is_running": False,
+                "message": "Evaluation job reset to idle",
+            }
+            if CURRENT_JOB_FILE.is_file():
+                try:
+                    CURRENT_JOB_FILE.unlink(missing_ok=True)
+                except Exception:
+                    pass
+            return idle_state
+
     def start_job(
         self,
         mode: str = "5_fold",  # '5_fold' | 'single_fold' | 'single_doc'
@@ -147,8 +173,8 @@ class EvaluationJobManager:
         k_splits: int = 5,
         random_seed: int = 42,
         prompt_variant: str = "zero-shot",
-        resume: bool = True,
-        force_rerun_ocr: bool = False,
+        resume: bool = False,
+        force_rerun_ocr: bool = True,
         max_docs: int | None = None,
         doc_id: str | None = None,
     ) -> dict[str, Any]:
@@ -180,29 +206,40 @@ class EvaluationJobManager:
             except Exception as e:
                 return {"status": "error", "message": f"Failed to parse ground truth dataset: {e}"}
 
-            # Determine splits
-            kf = KFold(n_splits=k_splits, shuffle=True, random_state=random_seed)
-            splits = list(kf.split(np.arange(len(documents))))
-
             if mode == "single_doc":
                 total_target_docs = 1
-                target_splits = [(1, [], [next((i for i, d in enumerate(documents) if d.get("id") == (doc_id or "DOC-001")), 0)])]
-            elif mode == "single_fold":
-                if single_fold < 1 or single_fold > len(splits):
-                    single_fold = 1
-                tr_idx, val_idx = splits[single_fold - 1]
-                if max_docs:
-                    val_idx = val_idx[:max_docs]
-                total_target_docs = len(val_idx)
-                target_splits = [(single_fold, tr_idx, val_idx)]
-            else:  # '5_fold'
-                target_splits = []
-                total_target_docs = 0
-                for f_num, (tr_idx, val_idx) in enumerate(splits, start=1):
+                doc_idx = 0
+                target_id = (doc_id or "DOC-001").strip().lower()
+                for i, d in enumerate(documents):
+                    cur_id = str(d.get("id", "")).strip().lower()
+                    cur_fname = str(d.get("file_name", "")).strip().lower()
+                    if cur_id == target_id or cur_fname == target_id:
+                        doc_idx = i
+                        break
+                target_splits = [(1, [], [doc_idx])]
+                resume = False  # Always run fresh on GPU to measure live performance!
+                force_rerun_ocr = True  # Always re-read OCR on image fresh!
+            else:
+                effective_k = max(2, min(k_splits, len(documents)))
+                kf = KFold(n_splits=effective_k, shuffle=True, random_state=random_seed)
+                splits = list(kf.split(np.arange(len(documents))))
+
+                if mode == "single_fold":
+                    if single_fold < 1 or single_fold > len(splits):
+                        single_fold = 1
+                    tr_idx, val_idx = splits[single_fold - 1]
                     if max_docs:
                         val_idx = val_idx[:max_docs]
-                    total_target_docs += len(val_idx)
-                    target_splits.append((f_num, tr_idx, val_idx))
+                    total_target_docs = len(val_idx)
+                    target_splits = [(single_fold, tr_idx, val_idx)]
+                else:  # '5_fold'
+                    target_splits = []
+                    total_target_docs = 0
+                    for f_num, (tr_idx, val_idx) in enumerate(splits, start=1):
+                        if max_docs:
+                            val_idx = val_idx[:max_docs]
+                        total_target_docs += len(val_idx)
+                        target_splits.append((f_num, tr_idx, val_idx))
 
             initial_job_state = {
                 "job_id": job_id,
@@ -296,7 +333,7 @@ class EvaluationJobManager:
 
         print(f"\n{'='*70}")
         print(f"  [JOB {job_id}] Started: {job_state['mode']} ({job_state['overall_total']} documents)")
-        print(f"  Resume: {resume} | Prompt: {prompt_variant} | OCR Cache: Enabled")
+        print(f"  Resume: {resume} | Prompt: {prompt_variant} | OCR: {'Forced Fresh Read' if force_rerun_ocr else 'Cached'}")
         print(f"{'='*70}\n")
 
         for fold, train_indices, validation_indices in target_splits:
@@ -306,6 +343,20 @@ class EvaluationJobManager:
 
             fold_docs = [documents[idx] for idx in validation_indices]
             fold_total = len(fold_docs)
+
+            # In-context demonstration examples from train split (Strictly prevent data leakage)
+            benchmark_examples: list[dict[str, Any]] = []
+            if prompt_variant in ("one-shot", "few-shot"):
+                pool = [documents[i] for i in train_indices] if len(train_indices) > 0 else [d for d in documents if d.get("id") != fold_docs[0].get("id")]
+                ex_count = 1 if prompt_variant == "one-shot" else min(3, len(pool))
+                for ex_doc in pool[:ex_count]:
+                    ex_ocr = _get_ocr(ex_doc).get("ocr_text", "")
+                    ex_gt = _get_document_ground_truth(ex_doc)
+                    benchmark_examples.append({
+                        "source_file": ex_doc.get("file_name", ""),
+                        "ocr_text": ex_ocr[:1000],
+                        "json_schema": {k: ex_gt.get(k, "") for k in CORE_FIELDS},
+                    })
 
             job_state["current_fold"] = fold
             job_state["fold_total"] = fold_total
@@ -341,6 +392,7 @@ class EvaluationJobManager:
                         prompt_snapshot,
                         force_rerun=(not is_cached),
                         force_rerun_ocr=force_rerun_ocr,
+                        benchmark_examples=benchmark_examples,
                     )
                     doc_elapsed = round(time.time() - t_doc_start, 2)
                     perf = trace.get("performance", {})
@@ -444,6 +496,13 @@ class EvaluationJobManager:
             job_state["final_report"] = final_report
             job_state["final_accuracy"] = str(final_report["metrics_summary"]["accuracy_display"]).replace("±", "+/-")
             job_state["final_f1"] = str(final_report["metrics_summary"]["f1_display"]).replace("±", "+/-")
+            try:
+                from excel_report_generator import generate_kfold_excel_report
+                excel_file = generate_kfold_excel_report(final_report)
+                job_state["excel_report_file"] = str(excel_file.name)
+                print(f"[JOB {job_id}] Auto-generated detailed Excel report: {excel_file}")
+            except Exception as ex_err:
+                print(f"[WARN] Failed to auto-generate Excel report: {ex_err}")
         except Exception as e:
             print(f"[WARN] Error compiling final report: {e}")
 
