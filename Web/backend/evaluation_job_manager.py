@@ -44,6 +44,8 @@ try:
         _get_document_ground_truth,
         _get_ocr,
         _prediction_cache_path,
+        clear_prediction_cache,
+        prediction_cache_is_valid,
         _score,
         compare_field_values,
         benchmark_prompt_snapshot,
@@ -63,6 +65,8 @@ except ImportError:
         _get_document_ground_truth,
         _get_ocr,
         _prediction_cache_path,
+        clear_prediction_cache,
+        prediction_cache_is_valid,
         _score,
         compare_field_values,
         benchmark_prompt_snapshot,
@@ -283,6 +287,14 @@ class EvaluationJobManager:
                 "final_report": None,
             }
 
+            if not resume:
+                rerun_documents = [
+                    documents[index]
+                    for _, _, validation_indices in target_splits
+                    for index in validation_indices
+                ]
+                clear_prediction_cache(rerun_documents, prompt_variant)
+
             self._write_job_file(initial_job_state)
 
             # Spawn background worker thread
@@ -418,8 +430,11 @@ class EvaluationJobManager:
                 self._write_job_file(job_state)
 
                 # Check if document already has cached prediction and resume is enabled
-                pred_cache_file = _prediction_cache_path(doc, prompt_variant)
-                is_cached = resume and pred_cache_file.is_file()
+                is_cached = resume and prediction_cache_is_valid(
+                    doc,
+                    prompt_snapshot,
+                    benchmark_examples,
+                )
 
                 try:
                     # Run or load prediction

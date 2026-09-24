@@ -1154,7 +1154,7 @@ def get_kfold_report(
             random_seed=seed,
             document_limit=limit,
             prompt_variant=prompt_variant,
-            force_rerun=rerun if (k <= 1 or doc_id is not None) else False,
+            force_rerun=rerun,
             doc_id=doc_id,
             single_fold=single_fold,
         )

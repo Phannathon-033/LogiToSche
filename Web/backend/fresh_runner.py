@@ -34,6 +34,7 @@ try:
         _get_document_ground_truth,
         _get_ocr,
         _prediction_cache_path,
+        clear_prediction_cache,
         _score,
         compare_field_values,
         benchmark_prompt_snapshot,
@@ -53,6 +54,7 @@ except ImportError:
         _get_document_ground_truth,
         _get_ocr,
         _prediction_cache_path,
+        clear_prediction_cache,
         _score,
         compare_field_values,
         benchmark_prompt_snapshot,
@@ -177,6 +179,8 @@ def run_fresh_fold(
         for example in benchmark_examples
     ):
         raise RuntimeError("Training example leaked into validation documents")
+
+    clear_prediction_cache(target_docs, prompt_variant)
 
     print(f"\n{'='*70}")
     print(f"  Starting Fresh GPU Inference: Fold {fold} of {k_splits} ({total} documents)")

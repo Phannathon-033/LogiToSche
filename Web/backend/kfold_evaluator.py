@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import pathlib
@@ -64,6 +65,122 @@ REQUEST_HEADERS = {"X-LogiAI-Token": API_TOKEN} if API_TOKEN else {}
 MANIFEST_FILE = pathlib.Path(os.environ.get("LOGIAI_BASELINE_MANIFEST", ""))
 PERF_LOG_FILE = REPORT_DIR / "doc_performance_log.json"
 PERF_CSV_FILE = REPORT_DIR / "doc_performance_log.csv"
+PREDICTION_CACHE_SCHEMA_VERSION = 2
+
+
+def _integrity_metadata(
+    prompt_snapshot: dict[str, Any],
+    variant: str,
+    examples: list[dict[str, Any]],
+) -> dict[str, Any]:
+    selection = prompt_snapshot.get("example_selection", {})
+    example_ids = [str(example.get("document_id", "")) for example in examples]
+    example_confidences = [example.get("ocr_confidence") for example in examples]
+    training_ids = [str(doc_id) for doc_id in selection.get("training_document_ids", [])]
+    canonical = json.dumps(
+        {
+            "cache_schema_version": PREDICTION_CACHE_SCHEMA_VERSION,
+            "base_prompt": prompt_snapshot.get("base_prompt", ""),
+            "system_prompt": prompt_snapshot.get("system_prompt", ""),
+            "fallback_rules": prompt_snapshot.get("fallback_rules", []),
+            "confidence_threshold": prompt_snapshot.get("confidence_threshold"),
+            "selected_model": prompt_snapshot.get("selected_model"),
+            "variant": variant,
+            "examples": examples,
+            "example_selection": selection,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return {
+        "cache_schema_version": PREDICTION_CACHE_SCHEMA_VERSION,
+        "prompt_hash": hashlib.sha256(canonical.encode("utf-8")).hexdigest(),
+        "variant": variant,
+        "benchmark_example_ids": example_ids,
+        "benchmark_example_confidences": example_confidences,
+        "training_document_ids": training_ids,
+    }
+
+
+def clear_prediction_cache(documents: list[dict[str, Any]], variant: str) -> int:
+    removed = 0
+    for document in documents:
+        cache_file = _prediction_cache_path(document, variant)
+        if cache_file.is_file():
+            cache_file.unlink()
+            removed += 1
+    return removed
+
+
+def _cache_matches_integrity(cached: dict[str, Any], integrity: dict[str, Any]) -> bool:
+    return all(cached.get(key) == value for key, value in integrity.items())
+
+
+def compare_prediction_reports(
+    reference_report: dict[str, Any],
+    candidate_report: dict[str, Any],
+) -> dict[str, Any]:
+    reference = {
+        str(item.get("id")): item.get("prediction", {})
+        for item in reference_report.get("predictions", [])
+        if item.get("id") is not None
+    }
+    candidate = {
+        str(item.get("id")): item.get("prediction", {})
+        for item in candidate_report.get("predictions", [])
+        if item.get("id") is not None
+    }
+    common_ids = sorted(set(reference) & set(candidate))
+    changed_documents = [doc_id for doc_id in common_ids if reference[doc_id] != candidate[doc_id]]
+    changed_fields = sum(
+        reference[doc_id].get(field) != candidate[doc_id].get(field)
+        for doc_id in common_ids
+        for field in CORE_FIELDS
+    )
+    result = {
+        "reference_run_id": reference_report.get("run_id"),
+        "candidate_run_id": candidate_report.get("run_id"),
+        "reference_variant": reference_report.get("prompt_variant"),
+        "candidate_variant": candidate_report.get("prompt_variant"),
+        "common_prediction_documents": len(common_ids),
+        "same_prediction_documents": len(common_ids) - len(changed_documents),
+        "changed_prediction_documents": len(changed_documents),
+        "changed_fields": changed_fields,
+        "warning": None,
+    }
+    if (
+        reference_report.get("prompt_variant") == "zero-shot"
+        and candidate_report.get("prompt_variant") in {"one-shot", "few-shot"}
+        and common_ids
+        and not changed_documents
+    ):
+        result["warning"] = (
+            f"{candidate_report.get('prompt_variant')} produced identical predictions to zero-shot; "
+            "verify prompt delivery and cache isolation."
+        )
+    return result
+
+
+def prediction_cache_is_valid(
+    document: dict[str, Any],
+    prompt_snapshot: dict[str, Any],
+    examples: list[dict[str, Any]] | None = None,
+) -> bool:
+    variant = str(prompt_snapshot.get("benchmark_prompt_variant", "zero-shot"))
+    cache_file = _prediction_cache_path(document, variant)
+    if not cache_file.is_file():
+        return False
+    try:
+        cached = json.loads(cache_file.read_text(encoding="utf-8"))
+        expected = _integrity_metadata(
+            prompt_snapshot,
+            variant,
+            examples if examples is not None else prompt_snapshot.get("benchmark_examples", []),
+        )
+        return "json_schema" in cached and "trace" in cached and _cache_matches_integrity(cached, expected)
+    except (OSError, json.JSONDecodeError, TypeError):
+        return False
 
 
 def record_document_performance(
@@ -373,11 +490,17 @@ def _extract(
     benchmark_examples: list[dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     variant = prompt_snapshot.get("benchmark_prompt_variant", "zero-shot")
+    examples_to_send = benchmark_examples if benchmark_examples is not None else prompt_snapshot.get("benchmark_examples", [])
+    integrity = _integrity_metadata(prompt_snapshot, variant, examples_to_send)
     pred_cache_file = _prediction_cache_path(document, variant)
     if not force_rerun and pred_cache_file.is_file():
         try:
             cached = json.loads(pred_cache_file.read_text(encoding="utf-8"))
-            if "json_schema" in cached and "trace" in cached:
+            if (
+                "json_schema" in cached
+                and "trace" in cached
+                and _cache_matches_integrity(cached, integrity)
+            ):
                 if "performance" not in cached["trace"]:
                     ocr_t = float(cached["trace"].get("ocr", {}).get("ocr_time_sec", 0.85))
                     slm_t = float(cached.get("performance", {}).get("slm_time_sec", cached["trace"].get("slm", {}).get("performance", {}).get("inference_time_sec", 8.2)))
@@ -420,12 +543,16 @@ def _extract(
             "cached_at": datetime.now(timezone.utc).isoformat(),
         }
         perf = {"ocr_time_sec": 0.85, "slm_time_sec": 1.15, "total_time_sec": 2.0}
-        return pred, {"ocr": ocr_info, "slm": {"source": "qwen_slm_calibrated"}, "performance": perf}
+        return pred, {
+            "ocr": ocr_info,
+            "slm": {"source": "qwen_slm_calibrated"},
+            "performance": perf,
+            "prompt_integrity": integrity,
+        }
 
     ocr = _get_ocr(document, force_rerun=force_rerun_ocr)
     ocr_time_sec = float(ocr.get("ocr_time_sec", 0.85))
 
-    examples_to_send = benchmark_examples if benchmark_examples is not None else prompt_snapshot.get("benchmark_examples", [])
     request_config = {
         key: prompt_snapshot[key]
         for key in (
@@ -470,11 +597,16 @@ def _extract(
         "slm_time_sec": slm_time_sec,
         "total_time_sec": total_time_sec,
     }
-    trace = {"ocr": ocr, "slm": result, "performance": perf_info}
+    trace = {
+        "ocr": ocr,
+        "slm": result,
+        "performance": perf_info,
+        "prompt_integrity": integrity,
+    }
     _write_json(pred_cache_file, {
         "document_id": document.get("id"),
         "file_name": document.get("file_name"),
-        "variant": variant,
+        **integrity,
         "json_schema": extracted_schema,
         "trace": trace,
         "performance": perf_info,
@@ -661,7 +793,30 @@ def _self_check_example_selection() -> None:
     assert metadata["actual_count"] == 3
 
 
+def _self_check_prompt_integrity() -> None:
+    snapshot = {
+        "base_prompt": "base",
+        "system_prompt": "system",
+        "fallback_rules": [],
+        "confidence_threshold": 89,
+        "selected_model": "test",
+        "benchmark_prompt_variant": "zero-shot",
+        "example_selection": {"training_document_ids": ["train-1"]},
+    }
+    first = _integrity_metadata(snapshot, "zero-shot", [])
+    assert first["prompt_hash"] == _integrity_metadata(snapshot, "zero-shot", [])["prompt_hash"]
+    assert first["benchmark_example_ids"] == []
+    changed = _integrity_metadata({**snapshot, "benchmark_prompt_variant": "one-shot"}, "one-shot", [{"document_id": "train-1"}])
+    assert changed["prompt_hash"] != first["prompt_hash"]
+    assert _cache_matches_integrity({**first, "json_schema": {}, "trace": {}}, first)
+    assert not _cache_matches_integrity({"variant": "zero-shot"}, first)
+    zero = {"run_id": "zero", "prompt_variant": "zero-shot", "predictions": [{"id": "1", "prediction": {"sender": "A"}}]}
+    one = {"run_id": "one", "prompt_variant": "one-shot", "predictions": [{"id": "1", "prediction": {"sender": "A"}}]}
+    assert compare_prediction_reports(zero, one)["warning"]
+
+
 _self_check_example_selection()
+_self_check_prompt_integrity()
 
 
 def run_kfold_evaluation(
@@ -757,6 +912,14 @@ def run_kfold_evaluation(
             target_splits = [(single_fold, tr_idx, val_idx)]
         else:
             target_splits = [(f_num, tr, val) for f_num, (tr, val) in enumerate(all_splits, start=1)]
+
+    if force_rerun:
+        rerun_documents = [
+            documents[index]
+            for _, _, validation_indices in target_splits
+            for index in validation_indices
+        ]
+        clear_prediction_cache(rerun_documents, prompt_variant)
 
     for fold, train_indices, validation_indices in target_splits:
         validation_documents = [documents[index] for index in validation_indices]
@@ -856,6 +1019,7 @@ def run_kfold_evaluation(
                     "slm_time_sec": slm_t,
                     "total_time_sec": tot_t,
                 },
+                "prompt_integrity": deepcopy(trace.get("prompt_integrity", {})),
             })
 
         slm_fold = _fold_result(fold, validation_documents, slm_scores)
