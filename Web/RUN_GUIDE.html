@@ -276,13 +276,48 @@ cd LogiToSche/Web</code></pre>
         คัดลอกไฟล์ <code class="text-amber-300">.env.example</code> ไปเป็น <code class="text-amber-300">.env</code> ทั้งใน Root และ Backend (ค่าเริ่มต้นเป็น Open Dev Mode รันได้ทันทีโดยไม่ต้องใส่ Token):
       </p>
       
-      <!-- Windows CMD/PowerShell Copy -->
-      <div class="space-y-2">
-        <span class="text-xs font-semibold text-slate-400 block">สำหรับ Windows (PowerShell หรือ CMD):</span>
+      <!-- Universal 1-Command Option -->
+      <div class="rounded-xl border border-indigo-500/40 bg-indigo-950/30 p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-indigo-300">⭐ วิธีที่แนะนำ (คำสั่งเดียวผ่าน Node.js/npm - รันได้ทุก Terminal 100%):</span>
+          <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-mono">Cross-Platform</span>
+        </div>
         <div class="code-box">
-          <button class="copy-btn" onclick="copyCode(this, 'copy .env.example .env\ncopy backend\\.env.example backend\\.env')">📋 คัดลอก</button>
-          <pre class="text-xs sm:text-sm text-emerald-300"><code>copy .env.example .env
+          <button class="copy-btn" onclick="copyCode(this, 'npm run setup:env')">📋 คัดลอก</button>
+          <code class="text-xs sm:text-sm text-emerald-300 font-bold">npm run setup:env</code>
+        </div>
+      </div>
+
+      <!-- Multiple Terminal Options -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
+        <!-- Option A: PowerShell -->
+        <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-3 space-y-2">
+          <span class="font-bold text-cyan-400 block">สำหรับ PowerShell:</span>
+          <div class="code-box text-xs py-2">
+            <button class="copy-btn" onclick="copyCode(this, 'Copy-Item .env.example .env ; Copy-Item backend/.env.example backend/.env')">📋 คัดลอก</button>
+            <pre class="text-slate-200"><code>Copy-Item .env.example .env
+Copy-Item backend/.env.example backend/.env</code></pre>
+          </div>
+        </div>
+
+        <!-- Option B: Git Bash -->
+        <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-3 space-y-2">
+          <span class="font-bold text-orange-400 block">สำหรับ Git Bash (ใช้ cp):</span>
+          <div class="code-box text-xs py-2">
+            <button class="copy-btn" onclick="copyCode(this, 'cp .env.example .env && cp backend/.env.example backend/.env')">📋 คัดลอก</button>
+            <pre class="text-slate-200"><code>cp .env.example .env
+cp backend/.env.example backend/.env</code></pre>
+          </div>
+        </div>
+
+        <!-- Option C: CMD -->
+        <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-3 space-y-2">
+          <span class="font-bold text-emerald-400 block">สำหรับ Command Prompt (CMD):</span>
+          <div class="code-box text-xs py-2">
+            <button class="copy-btn" onclick="copyCode(this, 'copy .env.example .env & copy backend\\.env.example backend\\.env')">📋 คัดลอก</button>
+            <pre class="text-slate-200"><code>copy .env.example .env
 copy backend\.env.example backend\.env</code></pre>
+          </div>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "setup:env": "node -e \"const fs=require('fs'); if(fs.existsSync('.env.example')) fs.copyFileSync('.env.example','.env'); if(fs.existsSync('backend/.env.example')) fs.copyFileSync('backend/.env.example','backend/.env'); console.log('.env files created successfully!');\"",
     "dev": "vite --host 0.0.0.0",
     "dev:all": "powershell -ExecutionPolicy Bypass -File ./scripts/start-all.ps1",
     "dev:windows": "cmd /c scripts\\run-all-windows.bat",
