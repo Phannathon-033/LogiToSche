@@ -43,6 +43,7 @@ try:
         record_document_performance,
         run_kfold_evaluation,
         select_training_examples,
+        validate_training_split,
     )
 except ImportError:
     from .kfold_evaluator import (
@@ -63,6 +64,7 @@ except ImportError:
         record_document_performance,
         run_kfold_evaluation,
         select_training_examples,
+        validate_training_split,
     )
 
 
@@ -148,6 +150,7 @@ def run_fresh_fold(
     total_evaluated_fields = 0
     fresh_extractions: dict[str, tuple[dict, dict]] = {}
     training_documents = [documents[i] for i in train_idx]
+    validate_training_split(prompt_variant, len(training_documents))
     benchmark_examples, example_selection = select_training_examples(
         training_documents,
         prompt_variant,

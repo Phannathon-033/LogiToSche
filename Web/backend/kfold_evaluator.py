@@ -314,11 +314,21 @@ def _ocr_confidence_percent(ocr: dict[str, Any]) -> float:
     return round(float(np.mean(scores)), 2) if scores else 0.0
 
 
+def validate_training_split(prompt_variant: str, training_count: int) -> None:
+    normalized = prompt_variant.strip().lower()
+    if training_count == 0 and normalized != "zero-shot":
+        raise ValueError(
+            f"{prompt_variant} requires a non-empty training split; "
+            "single-document evaluation supports zero-shot only"
+        )
+
+
 def select_training_examples(
     training_documents: list[dict[str, Any]],
     prompt_variant: str,
     ocr_loader: Any | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    validate_training_split(prompt_variant, len(training_documents))
     normalized = prompt_variant.strip().lower()
     if normalized == "zero-shot":
         return [], {
@@ -780,6 +790,14 @@ def _get_document_ground_truth(document: dict[str, Any]) -> dict[str, Any]:
 
 
 def _self_check_example_selection() -> None:
+    validate_training_split("zero-shot", 0)
+    try:
+        validate_training_split("one-shot", 0)
+    except ValueError as exc:
+        assert "non-empty training split" in str(exc)
+    else:
+        raise AssertionError("one-shot must reject an empty training split")
+
     docs = [
         {"id": "low", "ground_truth": {}},
         {"id": "high", "ground_truth": {}},
@@ -864,6 +882,7 @@ def run_kfold_evaluation(
 
     if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
         raise ValueError(f"K-Fold evaluation unsupported variant: {prompt_variant}")
+    validate_training_split(prompt_variant, 0 if is_single_doc else 1)
 
     active_prompt_config = load_prompt_config()
     prompt_snapshot = {

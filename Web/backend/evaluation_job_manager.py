@@ -54,6 +54,7 @@ try:
         record_document_performance,
         run_kfold_evaluation,
         select_training_examples,
+        validate_training_split,
     )
 except ImportError:
     from .kfold_evaluator import (
@@ -75,6 +76,7 @@ except ImportError:
         record_document_performance,
         run_kfold_evaluation,
         select_training_examples,
+        validate_training_split,
     )
 
 
@@ -187,6 +189,8 @@ class EvaluationJobManager:
         doc_id: str | None = None,
     ) -> dict[str, Any]:
         """Creates an evaluation job and starts it in a background thread."""
+        if mode == "single_doc":
+            validate_training_split(prompt_variant, 0)
         with self._lock:
             # Check if an active job is already running
             if self._active_job_id:
