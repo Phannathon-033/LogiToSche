@@ -480,10 +480,22 @@ def benchmark_variant_for_request(payload: SlmExtractRequest) -> tuple[str, list
     elif variant == "one-shot" and len(examples) != 1:
         raise ValueError("one-shot requires exactly one benchmark example")
     elif variant == "few-shot":
-        training_count = len(payload.benchmark_example_selection.get("training_document_ids", []))
-        minimum = min(3, training_count)
+        training_ids = {
+            str(doc_id)
+            for doc_id in payload.benchmark_example_selection.get("training_document_ids", [])
+        }
+        minimum = min(3, len(training_ids))
         if not minimum <= len(examples) <= MAX_BENCHMARK_EXAMPLES:
             raise ValueError("few-shot requires 3 to 5 examples when the training split has at least 3 documents")
+        if any(str(example.get("document_id", "")) not in training_ids for example in examples):
+            raise ValueError("benchmark examples must come from the training split")
+    elif variant == "one-shot":
+        training_ids = {
+            str(doc_id)
+            for doc_id in payload.benchmark_example_selection.get("training_document_ids", [])
+        }
+        if str(examples[0].get("document_id", "")) not in training_ids:
+            raise ValueError("benchmark examples must come from the training split")
     if len(examples) > MAX_BENCHMARK_EXAMPLES:
         raise ValueError(f"At most {MAX_BENCHMARK_EXAMPLES} benchmark examples are supported")
     if any(len(json.dumps(example, ensure_ascii=False)) > MAX_BENCHMARK_EXAMPLE_LENGTH for example in examples):

@@ -110,10 +110,16 @@ def benchmark_prompt_snapshot(
     if normalized == "one-shot" and len(selected) != 1:
         raise ValueError("one-shot requires exactly one benchmark example")
     if normalized == "few-shot":
-        training_ids = (selection or {}).get("training_document_ids", [])
+        training_ids = {str(doc_id) for doc_id in (selection or {}).get("training_document_ids", [])}
         minimum = min(3, len(training_ids))
         if not minimum <= len(selected) <= 5:
             raise ValueError("few-shot requires between 3 and 5 examples when the training split has at least 3 documents")
+        if any(str(example.get("document_id", "")) not in training_ids for example in selected):
+            raise ValueError("benchmark examples must come from the training split")
+    elif normalized == "one-shot":
+        training_ids = {str(doc_id) for doc_id in (selection or {}).get("training_document_ids", [])}
+        if str(selected[0].get("document_id", "")) not in training_ids:
+            raise ValueError("benchmark examples must come from the training split")
     active = prompt_config_snapshot(config or load_prompt_config())
     return {
         **active,

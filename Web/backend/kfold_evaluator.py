@@ -881,9 +881,6 @@ def run_kfold_evaluation(
         },
     }
     prompt_snapshot["benchmark_prompt"] = prompt_snapshot["base_prompt"]
-    prompt_snapshot["variant_instruction_file"] = str(
-        pathlib.Path("prompt_library") / "benchmark" / prompt_variant / "kfold_extraction.txt"
-    )
     run_id = datetime.now(timezone.utc).strftime("run_%Y%m%d_%H%M%S_%f")
     baseline_map: dict[str, Any] = {}
     if MANIFEST_FILE.is_file():

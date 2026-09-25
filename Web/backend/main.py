@@ -394,7 +394,12 @@ def release_ocr() -> dict[str, str]:
 
 @app.post("/api/slm/extract")
 def slm_extract(payload: SlmExtractRequest) -> dict[str, Any]:
-    return forward_slm_request("/api/slm/extract", payload.model_dump() if hasattr(payload, "model_dump") else payload.dict())
+    body = (
+        payload.model_dump(exclude_none=True, exclude_defaults=True)
+        if hasattr(payload, "model_dump")
+        else payload.dict(exclude_none=True, exclude_defaults=True)
+    )
+    return forward_slm_request("/api/slm/extract", body)
 
 
 @app.post("/api/slm/execute-prompt")
