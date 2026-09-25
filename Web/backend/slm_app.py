@@ -12,7 +12,7 @@ from typing import Any
 
 import requests
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -105,6 +105,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def verify_slm_token(request, call_next):
+    if not GATEWAY_TOKEN or request.method == "OPTIONS":
+        return await call_next(request)
+    token = request.headers.get("X-LogiAI-Token")
+    if token != GATEWAY_TOKEN:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
+    return await call_next(request)
+
 
 _slm_tokenizer: Any | None = None
 _slm_model: Any | None = None
@@ -1202,6 +1214,7 @@ def get_fresh_run_status() -> dict[str, Any]:
 def start_fresh_run_endpoint(
     fold: int = 1,
     k: int = 5,
+    seed: int = 42,
     max_docs: int | None = None,
     re_ocr: bool = False,
     prompt_variant: str = "zero-shot",
@@ -1232,6 +1245,7 @@ def start_fresh_run_endpoint(
         str(runner_script),
         "--fold", str(fold),
         "--k", str(k),
+        "--seed", str(seed),
         "--run-id", fresh_run_id,
         "--prompt-variant", prompt_variant,
     ]
@@ -1253,6 +1267,7 @@ def start_fresh_run_endpoint(
         "fresh_run_id": fresh_run_id,
         "fold": fold,
         "k": k,
+        "seed": seed,
         "max_docs": max_docs,
         "prompt_variant": prompt_variant,
         "pid": _fresh_process.pid,

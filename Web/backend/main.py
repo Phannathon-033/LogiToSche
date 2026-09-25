@@ -103,6 +103,13 @@ async def verify_gateway_token(request: Request, call_next):
 SUPPORTED_LANGUAGES = {"th", "en"}
 OCR_DEVICE = os.environ.get("LOGIAI_OCR_DEVICE", "gpu:0")
 SLM_SERVICE_URL = os.environ.get("LOGIAI_SLM_URL", "http://127.0.0.1:8001")
+
+
+def slm_request_headers() -> dict[str, str]:
+    token = os.environ.get("LOGIAI_GATEWAY_TOKEN", "").strip()
+    return {"X-LogiAI-Token": token} if token else {}
+
+
 _ocr_engines: dict[str, Any] = {}
 
 
@@ -238,7 +245,11 @@ def health() -> dict[str, str]:
 @app.get("/api/slm/health")
 def slm_health() -> dict[str, Any]:
     try:
-        response = requests.get(f"{SLM_SERVICE_URL}/api/slm/health", timeout=5)
+        response = requests.get(
+            f"{SLM_SERVICE_URL}/api/slm/health",
+            headers=slm_request_headers(),
+            timeout=5,
+        )
         return response.json()
     except requests.RequestException:
         return {"status": "unavailable", "service": "slm", "device": "unknown", "cuda": "false"}
@@ -284,7 +295,11 @@ def system_health() -> dict[str, Any]:
     slm_model = "Qwen2.5-1.5B (FP16)"
     slm_device = "CUDA:0"
     try:
-        r = requests.get(f"{SLM_SERVICE_URL}/api/slm/health", timeout=1.5)
+        r = requests.get(
+            f"{SLM_SERVICE_URL}/api/slm/health",
+            headers=slm_request_headers(),
+            timeout=1.5,
+        )
         if r.status_code == 200:
             data = r.json()
             if data.get("status") in {"ready", "missing-model"} and data.get("cuda"):
@@ -480,7 +495,7 @@ def post_benchmark_fresh_start(
     re_ocr: bool = False,
     prompt_variant: str = "zero-shot",
 ) -> Any:
-    query = f"?fold={fold}&k={k}&prompt_variant={quote(prompt_variant)}"
+    query = f"?fold={fold}&k={k}&seed={seed}&prompt_variant={quote(prompt_variant)}"
     if max_docs:
         query += f"&max_docs={max_docs}"
     if re_ocr:
@@ -624,7 +639,11 @@ def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -
     timeout = 300 if "benchmark" in path else (60 if method == "GET" else 120)
     if method == "GET":
         try:
-            response = requests.get(f"{SLM_SERVICE_URL}{path}", timeout=timeout)
+            response = requests.get(
+                f"{SLM_SERVICE_URL}{path}",
+                headers=slm_request_headers(),
+                timeout=timeout,
+            )
             response.raise_for_status()
             value = response.json()
             if isinstance(value, (dict, list)):
@@ -633,7 +652,12 @@ def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -
             raise HTTPException(status_code=503, detail=f"SLM service is unavailable: {exc}")
 
     try:
-        response = requests.post(f"{SLM_SERVICE_URL}{path}", json=body, timeout=timeout)
+        response = requests.post(
+            f"{SLM_SERVICE_URL}{path}",
+            json=body,
+            headers=slm_request_headers(),
+            timeout=timeout,
+        )
         response.raise_for_status()
         value = response.json()
         if isinstance(value, (dict, list)):

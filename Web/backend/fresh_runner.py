@@ -130,6 +130,7 @@ def run_fresh_fold(
         "fold": fold,
         "k_splits": k_splits,
         "random_seed": random_seed,
+        "prompt_variant": prompt_variant,
         "max_docs": max_docs,
         "selected_doc_ids": selected_doc_ids,
         "current_index": 0,
@@ -315,6 +316,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run fresh GPU inference for Fold 1")
     parser.add_argument("--fold", type=int, default=1, help="Target fold number (default: 1)")
     parser.add_argument("--k", type=int, default=5, help="Number of K-splits (default: 5)")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed (default: 42)")
     parser.add_argument("--max", type=int, default=None, help="Max docs to process (for testing)")
     parser.add_argument("--re-ocr", action="store_true", help="Force re-run PaddleOCR even if cached")
     parser.add_argument("--run-id", default=None, help="Fresh run identifier assigned by the service")
@@ -324,6 +326,7 @@ if __name__ == "__main__":
     run_fresh_fold(
         fold=args.fold,
         k_splits=args.k,
+        random_seed=args.seed,
         max_docs=args.max,
         force_rerun_ocr=args.re_ocr,
         fresh_run_id=args.run_id,

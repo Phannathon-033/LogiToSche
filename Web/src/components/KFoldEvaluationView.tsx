@@ -394,6 +394,21 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   const [reportSource, setReportSource] = useState<"fresh" | "evaluation" | null>(null);
   const [autoResume, setAutoResume] = useState<boolean>(false);
 
+  function applyReport(report: KFoldReport, source: "fresh" | "evaluation") {
+    setKfoldReport(report);
+    setReportSource(source);
+    if (report.k_splits) setKSplits(report.k_splits);
+    if (typeof report.random_seed === "number") setRandomSeed(report.random_seed);
+    if (report.prompt_variant === "zero-shot" || report.prompt_variant === "one-shot" || report.prompt_variant === "few-shot") {
+      setPromptVariant(report.prompt_variant);
+    }
+  }
+
+  function reportTimestamp(report: KFoldReport): number {
+    const timestamp = report.created_at ? Date.parse(report.created_at) : Number.NaN;
+    return Number.isFinite(timestamp) ? timestamp : 0;
+  }
+
   async function fetchPerformanceLogs() {
     setLoadingPerfLogs(true);
     try {
@@ -510,8 +525,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             const data: EvaluationJobStatus = await res.json();
             setEvalJob(data);
             if (data.status === "completed" && data.final_report) {
-              setKfoldReport(data.final_report);
-              setReportSource("evaluation");
+              applyReport(data.final_report, "evaluation");
               setIsPollingJob(false);
               showToast?.(`การประเมินผลเสร็จสิ้น 100%! ความแม่นยำ: ${data.final_accuracy || "-"}`);
               fetchPerformanceLogs();
@@ -542,8 +556,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           if (!expectedFreshRunId || data.fresh_run_id !== expectedFreshRunId) return;
           setFreshStatus(data);
           if (!data.is_running && data.finished && data.final_report) {
-            setKfoldReport(data.final_report);
-            setReportSource("fresh");
+            applyReport(data.final_report, "fresh");
             setIsPollingFresh(false);
             showToast?.(`Fresh GPU Test เสร็จสิ้น ${data.completed_docs || 0} ฉบับ · ความแม่นยำ: ${data.final_accuracy || "-"}`);
             fetchPerformanceLogs();
@@ -569,7 +582,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       setFreshStatus({ is_running: true, finished: false, fold: selectedSingleFold, k_splits: kSplits });
       setIsPollingFresh(true);
       const resp = await apiFetch(
-        `/api/benchmark/kfold/fresh-start?fold=${selectedSingleFold}&k=${Math.max(2, kSplits)}&prompt_variant=${encodeURIComponent(promptVariant)}`,
+        `/api/benchmark/kfold/fresh-start?fold=${selectedSingleFold}&k=${Math.max(2, kSplits)}&seed=${randomSeed}&prompt_variant=${encodeURIComponent(promptVariant)}`,
         { method: "POST" },
       );
       if (!resp.ok) throw new Error(`Fresh start failed with status ${resp.status}`);
@@ -724,8 +737,9 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         }
       }
 
-      // Check active Background Evaluation Job status on mount
+      // Restore the newest completed report when both evaluation engines have state.
       let restoredEvaluationReport: KFoldReport | null = null;
+      let restoredFreshReport: KFoldReport | null = null;
       try {
         const evalRes = await apiFetch("/api/evaluation/status");
         if (evalRes.ok) {
@@ -735,8 +749,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             setIsPollingJob(true);
           } else if (evalData.status === "completed" && evalData.final_report) {
             restoredEvaluationReport = evalData.final_report;
-            setKfoldReport(evalData.final_report);
-            setReportSource("evaluation");
           }
         }
       } catch (e) {
@@ -752,14 +764,19 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             setFreshStatus(freshData);
             if (freshData.is_running) {
               setIsPollingFresh(true);
-            } else if (!restoredEvaluationReport && freshData.finished && freshData.final_report) {
-              setKfoldReport(freshData.final_report);
-              setReportSource("fresh");
+            } else if (freshData.finished && freshData.final_report) {
+              restoredFreshReport = freshData.final_report;
             }
           }
         }
       } catch (e) {
         console.warn("Check Fresh run on mount:", e);
+      }
+
+      if (restoredFreshReport && (!restoredEvaluationReport || reportTimestamp(restoredFreshReport) >= reportTimestamp(restoredEvaluationReport))) {
+        applyReport(restoredFreshReport, "fresh");
+      } else if (restoredEvaluationReport) {
+        applyReport(restoredEvaluationReport, "evaluation");
       }
     } catch (err) {
       console.error("Failed to load benchmark data:", err);
@@ -1144,8 +1161,13 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 >
                   <select
                     value={promptVariant}
-                    disabled={evalJob?.is_running}
-                    onChange={(e) => setPromptVariant(e.target.value as "zero-shot" | "one-shot" | "few-shot")}
+                    disabled={Boolean(evalJob?.is_running || freshStatus?.is_running)}
+                    onChange={(e) => {
+                      const nextVariant = e.target.value as "zero-shot" | "one-shot" | "few-shot";
+                      setPromptVariant(nextVariant);
+                      setKfoldReport(null);
+                      setReportSource(null);
+                    }}
                     className="bg-transparent text-xs font-bold focus:outline-none cursor-pointer disabled:opacity-60"
                   >
                     <option value="zero-shot" className="text-slate-900 bg-white">Zero-shot</option>

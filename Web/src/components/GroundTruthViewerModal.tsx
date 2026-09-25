@@ -45,6 +45,10 @@ interface GroundTruthDoc {
 
 interface KFoldReport {
   method: string;
+  prompt_variant?: string;
+  created_at?: string;
+  random_seed?: number;
+  single_fold?: number | null;
   dataset: string;
   total_documents: number;
   k_splits: number;
@@ -71,7 +75,7 @@ interface KFoldReport {
   folds: Array<{
     fold: number;
     val_samples_count: number;
-    overall_accuracy_pct: number;
+    accuracy_pct: number;
     precision_pct: number;
     recall_pct: number;
     f1_score_pct: number;
@@ -122,10 +126,14 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
+  function reportTimestamp(report: KFoldReport): number {
+    const timestamp = report.created_at ? Date.parse(report.created_at) : Number.NaN;
+    return Number.isFinite(timestamp) ? timestamp : 0;
+  }
+
   async function loadData() {
     setLoading(true);
     try {
-      // 1. Fetch Ground Truth Dataset
       const gtResp = await apiFetch("/api/benchmark/ground-truth");
       if (gtResp.ok) {
         const data = await gtResp.json();
@@ -136,16 +144,25 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
         }
       }
 
-      // 2. Fetch the current evaluation job report
-      const evalResp = await apiFetch("/api/evaluation/status");
-      if (evalResp.ok) {
-        const evalData = await evalResp.json();
-        setKfoldReport(
-          evalData.status === "completed" && evalData.final_report
-            ? evalData.final_report
-            : null
-        );
-      }
+      const [evalResp, freshResp] = await Promise.all([
+        apiFetch("/api/evaluation/status"),
+        apiFetch("/api/benchmark/kfold/fresh-status"),
+      ]);
+      const evalData = evalResp.ok ? await evalResp.json() : null;
+      const freshData = freshResp.ok ? await freshResp.json() : null;
+      const evaluationReport =
+        evalData?.status === "completed" && evalData.final_report
+          ? (evalData.final_report as KFoldReport)
+          : null;
+      const freshReport =
+        freshData?.finished && freshData.final_report
+          ? (freshData.final_report as KFoldReport)
+          : null;
+      setKfoldReport(
+        freshReport && (!evaluationReport || reportTimestamp(freshReport) >= reportTimestamp(evaluationReport))
+          ? freshReport
+          : evaluationReport
+      );
     } catch (err) {
       console.error("Failed to fetch benchmark data:", err);
     } finally {
@@ -156,7 +173,17 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
   async function handleRerunKFold() {
     setIsRerunningKFold(true);
     try {
-      const resp = await apiFetch("/api/benchmark/kfold?rerun=true");
+      const variant = kfoldReport?.prompt_variant || "zero-shot";
+      const params = new URLSearchParams({
+        rerun: "true",
+        k: String(kfoldReport?.k_splits || 5),
+        seed: String(kfoldReport?.random_seed || 42),
+        prompt_variant: variant,
+      });
+      if (kfoldReport?.single_fold) {
+        params.set("single_fold", String(kfoldReport.single_fold));
+      }
+      const resp = await apiFetch(`/api/benchmark/kfold?${params.toString()}`);
       if (resp.ok) {
         const data = await resp.json();
         setKfoldReport(data);
@@ -227,7 +254,7 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
       }
     }
 
-    const foldAccs = kfoldReport.folds.map((f) => `**${f.overall_accuracy_pct.toFixed(1)}%**`).join(" | ");
+    const foldAccs = kfoldReport.folds.map((f) => `**${f.accuracy_pct.toFixed(1)}%**`).join(" | ");
     lines.push(`| **ความแม่นยำภาพรวม (Overall Accuracy)** | ${foldAccs} | **${kfoldReport.metrics_summary.accuracy_display}** |`);
 
     const foldF1s = kfoldReport.folds.map((f) => `${f.f1_score_pct.toFixed(1)}%`).join(" | ");
@@ -879,9 +906,14 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
                       <Table className="h-4 w-4 text-blue-600" />
                       <span>ตารางเปรียบเทียบความแม่นยำรายฟิลด์ในแต่ละ Fold (Fold 1 ถึง Fold 5)</span>
                     </h3>
-                    <span className="rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-[11px] font-bold text-blue-700">
-                      K={kfoldReport.k_splits} Folds Cross-Validation
-                    </span>
+                    <div className="flex flex-wrap items-center justify-end gap-2">
+                      <span className="rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-[11px] font-bold text-blue-700">
+                        K={kfoldReport.k_splits} Folds Cross-Validation
+                      </span>
+                      <span className="rounded-full bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[11px] font-bold text-slate-700">
+                        {kfoldReport.prompt_variant || "unknown variant"}
+                      </span>
+                    </div>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs font-sans">
@@ -937,7 +969,7 @@ export function GroundTruthViewerModal({ isOpen, onClose }: GroundTruthViewerMod
                               key={f.fold}
                               className="p-3 text-center font-mono text-emerald-700 font-black"
                             >
-                              {f.overall_accuracy_pct.toFixed(1)}%
+                              {f.accuracy_pct.toFixed(1)}%
                             </td>
                           ))}
                           <td className="p-3 text-center font-mono text-blue-900 bg-blue-100/70 font-bold text-sm">
@@ -994,29 +1026,33 @@ function JsonSyntaxHighlighter({ json }: { json: any }) {
 
   const lines = useMemo(() => jsonString.split("\n"), [jsonString]);
 
+  function escapeHtml(value: string): string {
+    return value.replace(/[&<>\"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;",
+    })[char] || char);
+  }
+
   function highlightLine(line: string) {
     return line.replace(
       /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
       (match) => {
+        const safeMatch = escapeHtml(match);
         let cls = "text-slate-800";
         if (/^"/.test(match)) {
           if (/:$/.test(match)) {
-            // Key
-            const keyPart = match.slice(0, -1);
+            const keyPart = safeMatch.slice(0, -1);
             return `<span class="text-blue-700 font-semibold">${keyPart}</span><span class="text-slate-400">:</span>`;
-          } else {
-            // String value
-            return `<span class="text-emerald-700 font-medium">${match}</span>`;
           }
-        } else if (/true|false/.test(match)) {
-          cls = "text-purple-600 font-bold";
-        } else if (/null/.test(match)) {
-          cls = "text-slate-400 font-bold italic";
-        } else {
-          // Number
-          cls = "text-amber-600 font-bold font-mono";
+          return `<span class="text-emerald-700 font-medium">${safeMatch}</span>`;
         }
-        return `<span class="${cls}">${match}</span>`;
+        if (/true|false/.test(match)) cls = "text-purple-600 font-bold";
+        else if (/null/.test(match)) cls = "text-slate-400 font-bold italic";
+        else cls = "text-amber-600 font-bold font-mono";
+        return `<span class="${cls}">${safeMatch}</span>`;
       }
     );
   }
