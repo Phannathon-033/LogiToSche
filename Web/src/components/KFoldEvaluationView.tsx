@@ -465,9 +465,24 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         cache: "no-store",
       });
       if (!resp.ok) {
-        throw new Error(`Download failed with status ${resp.status}`);
+        const errorBody = await resp.text();
+        let detail = errorBody;
+        try {
+          const parsed = JSON.parse(errorBody) as { detail?: unknown };
+          if (typeof parsed.detail === "string") detail = parsed.detail;
+        } catch {
+          detail = errorBody;
+        }
+        throw new Error(detail || `Download failed with status ${resp.status}`);
+      }
+      const contentType = resp.headers.get("content-type") || "";
+      if (!contentType.includes("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+        throw new Error("Export endpoint did not return an Excel workbook");
       }
       const blob = await resp.blob();
+      if (blob.size === 0) {
+        throw new Error("Export endpoint returned an empty Excel workbook");
+      }
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -479,7 +494,8 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       showToast?.("ดาวน์โหลดรายงาน Excel อย่างละเอียดสำเร็จเรียบร้อยแล้ว!");
     } catch (err) {
       console.error("Download Excel error:", err);
-      showToast?.("ไม่สามารถดาวน์โหลดไฟล์ Excel ได้ กรุณาลองใหม่อีกครั้ง");
+      const message = err instanceof Error ? err.message : "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ";
+      showToast?.(`ไม่สามารถดาวน์โหลดไฟล์ Excel ได้: ${message}`);
     }
   }
 

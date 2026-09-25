@@ -525,9 +525,14 @@ def get_kfold_excel_report_endpoint(
 
     query = urlencode({key: value for key, value in {"fresh_run_id": fresh_run_id, "job_id": job_id, "run_id": run_id}.items() if value})
     path = "/api/benchmark/kfold/export-excel"
+    headers = {}
+    gateway_token = os.environ.get("LOGIAI_GATEWAY_TOKEN", "").strip()
+    if gateway_token:
+        headers["X-LogiAI-Token"] = gateway_token
     try:
         response = requests.get(
             f"{SLM_SERVICE_URL}{path}?{query}" if query else f"{SLM_SERVICE_URL}{path}",
+            headers=headers,
             timeout=300,
         )
         if response.status_code >= 400:
