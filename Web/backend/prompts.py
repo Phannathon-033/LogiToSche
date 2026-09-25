@@ -49,7 +49,7 @@ MODEL_IDS = {
 }
 
 EXTRACTION_SYSTEM_PROMPT = "You extract logistics document data. Return only valid JSON. Do not include markdown or explanations."
-EXTRACTION_RULES = (
+DEFAULT_EXTRACTION_RULES = (
     "Return every canonical field in json_schema; use an empty string or 0 when not grounded in OCR.",
     "Put source_file, quantity, vehicle, weight, tax, address, payment, and every non-canonical field inside json_schema.other.",
     "Map invoice, B/L, document, and order numbers to document_number according to context.",
@@ -59,6 +59,19 @@ EXTRACTION_RULES = (
     "Use confidence values from 0 to 100 and put low-confidence or conflicting values in review_items.",
     "Return only valid JSON with no markdown or explanation.",
 )
+
+
+def configured_extraction_rules(config: dict[str, Any] | None = None) -> list[str]:
+    active = config or load_prompt_config()
+    rules = active.get("extraction_rules", DEFAULT_EXTRACTION_RULES)
+    if not isinstance(rules, list):
+        return list(DEFAULT_EXTRACTION_RULES)
+    normalized = [str(rule).strip() for rule in rules if str(rule).strip()]
+    return normalized or list(DEFAULT_EXTRACTION_RULES)
+
+
+# Kept as a compatibility alias for callers that import the old constant.
+EXTRACTION_RULES = DEFAULT_EXTRACTION_RULES
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 PROMPT_LIBRARY_DIR = BASE_DIR / "prompt_library"
@@ -72,7 +85,7 @@ DEFAULT_BENCHMARK_PROMPTS = {
 
 def extraction_base_prompt(config: dict[str, Any] | None = None) -> str:
     active = config or load_prompt_config()
-    rules = "\n".join(f"- {rule}" for rule in EXTRACTION_RULES)
+    rules = "\n".join(f"- {rule}" for rule in configured_extraction_rules(active))
     fallback_rules = "\n".join(f"- {rule}" for rule in active.get("fallback_rules", []))
     return (
         f"{EXTRACTION_SYSTEM_PROMPT}\n"
@@ -263,6 +276,7 @@ def reset_prompt_presets() -> dict[str, dict[str, Any]]:
 
 DEFAULT_ADMIN_CONFIG = {
     "system_prompt": "คุณคือผู้ช่วยดึงข้อมูลโลจิสติกส์จาก OCR text ให้ map ข้อมูลเข้าสู่ JSON schema อย่างเคร่งครัด แยก sender, receiver, total amount และ document number ให้ชัดเจน พร้อมระบุ field ที่ไม่มั่นใจลง review_items",
+    "extraction_rules": list(DEFAULT_EXTRACTION_RULES),
     "fallback_rules": [
         "ถ้าเจอทั้ง Subtotal และ Total Amount ให้เลือก Total Amount",
         "Consignee, Ship To, Deliver To ให้ตีความเป็น receiver ตามบริบทเอกสาร",

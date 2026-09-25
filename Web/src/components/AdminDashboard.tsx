@@ -25,6 +25,7 @@ const initialPromptLabState: AdminPromptLabState = {
   confidenceThreshold: 85,
   selectedModel: "qwen-2.5-1.5b",
   systemPrompt: "",
+  extractionRules: [],
   fallbackRules: [],
   monitoredFields: [],
   fewShotExamples: [],

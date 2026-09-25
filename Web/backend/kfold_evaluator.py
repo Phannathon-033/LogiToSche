@@ -82,6 +82,7 @@ def _integrity_metadata(
             "cache_schema_version": PREDICTION_CACHE_SCHEMA_VERSION,
             "base_prompt": prompt_snapshot.get("base_prompt", ""),
             "system_prompt": prompt_snapshot.get("system_prompt", ""),
+            "extraction_rules": prompt_snapshot.get("extraction_rules", []),
             "fallback_rules": prompt_snapshot.get("fallback_rules", []),
             "confidence_threshold": prompt_snapshot.get("confidence_threshold"),
             "selected_model": prompt_snapshot.get("selected_model"),
@@ -557,6 +558,7 @@ def _extract(
         key: prompt_snapshot[key]
         for key in (
             "system_prompt",
+            "extraction_rules",
             "fallback_rules",
             "confidence_threshold",
             "selected_model",
@@ -797,6 +799,7 @@ def _self_check_prompt_integrity() -> None:
     snapshot = {
         "base_prompt": "base",
         "system_prompt": "system",
+        "extraction_rules": ["extract configured"],
         "fallback_rules": [],
         "confidence_threshold": 89,
         "selected_model": "test",

@@ -19,8 +19,8 @@ from pydantic import BaseModel, Field
 try:
     from .prompts import (
         CORE_FIELDS as PROMPT_CORE_FIELDS,
-        EXTRACTION_RULES,
         EXTRACTION_SYSTEM_PROMPT,
+        configured_extraction_rules,
         MODEL_IDS,
         DEFAULT_BENCHMARK_PROMPTS,
         default_admin_config,
@@ -33,8 +33,8 @@ try:
 except ImportError:
     from prompts import (
         CORE_FIELDS as PROMPT_CORE_FIELDS,
-        EXTRACTION_RULES,
         EXTRACTION_SYSTEM_PROMPT,
+        configured_extraction_rules,
         MODEL_IDS,
         DEFAULT_BENCHMARK_PROMPTS,
         default_admin_config,
@@ -49,6 +49,7 @@ MIN_PROMPT_LENGTH = 1
 MAX_PROMPT_LENGTH = 10000
 MAX_RULE_LENGTH = 1000
 MAX_RULES = 20
+MAX_EXTRACTION_RULES = 20
 BENCHMARK_PROMPT_VARIANTS = {"zero-shot", "one-shot", "few-shot"}
 MAX_BENCHMARK_EXAMPLES = 5
 NORMAL_PROMPT_VARIANT = "normal"
@@ -118,6 +119,7 @@ SUPPORTED_MODELS = set(MODEL_IDS)
 
 class SlmPromptConfig(BaseModel):
     system_prompt: str = Field(min_length=MIN_PROMPT_LENGTH, max_length=MAX_PROMPT_LENGTH)
+    extraction_rules: list[str] = Field(default_factory=list, max_length=MAX_EXTRACTION_RULES)
     fallback_rules: list[str] = Field(default_factory=list, max_length=MAX_RULES)
     confidence_threshold: int = Field(default=85, ge=SUPPORTED_CONFIDENCE_RANGE[0], le=SUPPORTED_CONFIDENCE_RANGE[1])
     selected_model: str = "qwen-2.5-1.5b"
@@ -126,12 +128,15 @@ class SlmPromptConfig(BaseModel):
     def normalized(self) -> dict[str, Any]:
         if self.selected_model not in SUPPORTED_MODELS:
             raise ValueError(f"Unsupported SLM model: {self.selected_model}")
+        if any(not rule.strip() or len(rule) > MAX_RULE_LENGTH for rule in self.extraction_rules):
+            raise ValueError("Extraction rules must be non-empty and at most 1000 characters")
         if any(not rule.strip() or len(rule) > MAX_RULE_LENGTH for rule in self.fallback_rules):
             raise ValueError("Fallback rules must be non-empty and at most 1000 characters")
         if any(field not in SUPPORTED_MONITORED_FIELDS for field in self.monitored_fields):
             raise ValueError("Monitored fields must be canonical 11 fields")
         return {
             "system_prompt": self.system_prompt.strip(),
+            "extraction_rules": [rule.strip() for rule in self.extraction_rules],
             "fallback_rules": [rule.strip() for rule in self.fallback_rules],
             "confidence_threshold": self.confidence_threshold,
             "selected_model": self.selected_model,
@@ -497,7 +502,7 @@ def benchmark_instruction_for_variant(variant: str) -> str:
 
 
 def build_json_schema_prompt(payload: SlmExtractRequest, config: dict[str, Any], variant: str, examples: list[dict[str, Any]]) -> str:
-    invariant_rules = "\n".join(f"- {rule}" for rule in EXTRACTION_RULES)
+    invariant_rules = "\n".join(f"- {rule}" for rule in configured_extraction_rules(config))
     admin_rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
     benchmark_instruction = ""
     if variant in BENCHMARK_PROMPT_VARIANTS:
@@ -600,10 +605,13 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
 
 
 def _self_check_prompt_composition() -> None:
-    config = {"system_prompt": "base", "fallback_rules": []}
+    config = {"system_prompt": "base", "extraction_rules": ["configured rule"], "fallback_rules": []}
     payload = SlmExtractRequest(ocr_text="sample")
-    assert "kfold_extraction" not in build_slm_prompt(payload, config)
+    prompt = build_slm_prompt(payload, config)
+    assert "kfold_extraction" not in prompt
+    assert "configured rule" in prompt
     assert benchmark_variant_for_request(payload) == (NORMAL_PROMPT_VARIANT, [])
+    assert "Return every canonical field" in extraction_base_prompt({"system_prompt": "base", "fallback_rules": []})
 
 
 _self_check_prompt_composition()

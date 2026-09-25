@@ -463,6 +463,27 @@ export function AdminPromptConfig({
     }
   }
 
+  function updateExtractionRule(index: number, nextValue: string) {
+    onChange({
+      ...value,
+      extractionRules: value.extractionRules.map((rule, ruleIndex) => (ruleIndex === index ? nextValue : rule)),
+    });
+  }
+
+  function handleAddExtractionRule() {
+    onChange({
+      ...value,
+      extractionRules: [...value.extractionRules, "ระบุกฎการสกัดข้อมูลที่นี่"],
+    });
+  }
+
+  function handleDeleteExtractionRule(index: number) {
+    onChange({
+      ...value,
+      extractionRules: value.extractionRules.filter((_, ruleIndex) => ruleIndex !== index),
+    });
+  }
+
   function updateFallbackRule(index: number, nextValue: string) {
     onChange({
       ...value,
@@ -931,6 +952,49 @@ export function AdminPromptConfig({
               className="w-full rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 font-mono text-xs leading-relaxed text-slate-800 focus:border-indigo-500 focus:bg-white focus:outline-none transition shadow-inner"
               placeholder="ระบุ System Prompt ที่นี่..."
             />
+
+            {/* Extraction Rules Editor */}
+            <div className="space-y-2.5 pt-2 border-t border-slate-100">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <FileCode className="h-3.5 w-3.5 text-indigo-500" />
+                    <span>กฎการสกัดข้อมูล (Extraction Rules)</span>
+                  </p>
+                  <p className="text-[10px] text-slate-400">กฎหลักสำหรับการ map และ normalize ข้อมูลจาก OCR</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAddExtractionRule}
+                  className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-slate-50 transition shadow-2xs"
+                >
+                  <Plus className="h-3.5 w-3.5 text-blue-600" />
+                  <span>เพิ่มกฎใหม่</span>
+                </button>
+              </div>
+
+              <div className="space-y-2">
+                {value.extractionRules.map((rule, index) => (
+                  <div key={`extraction-rule-${index}`} className="flex items-center gap-2">
+                    <span className="font-mono text-xs font-bold text-slate-400 w-5 text-right">{index + 1}.</span>
+                    <input
+                      type="text"
+                      value={rule}
+                      onChange={(event) => updateExtractionRule(index, event.target.value)}
+                      className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-800 focus:border-indigo-500 focus:outline-none transition"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteExtractionRule(index)}
+                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                      title="ลบกฎนี้"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
 
             {/* Fallback Rules Editor */}
             <div className="space-y-2.5 pt-2 border-t border-slate-100">

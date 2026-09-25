@@ -214,6 +214,7 @@ class SlmPromptRequest(BaseModel):
 
 class SlmPromptConfig(BaseModel):
     system_prompt: str = Field(default="", min_length=1)
+    extraction_rules: list[str] = Field(default_factory=list)
     fallback_rules: list[str] = Field(default_factory=list)
     confidence_threshold: int = 85
     selected_model: str = "qwen-2.5-1.5b"

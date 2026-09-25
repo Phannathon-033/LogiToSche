@@ -141,6 +141,7 @@ export interface SlmPromptConfig {
   confidenceThreshold: number;
   selectedModel: string;
   systemPrompt: string;
+  extractionRules: string[];
   fallbackRules: string[];
   monitoredFields: Array<keyof JsonSchemaOutput>;
 }
@@ -289,6 +290,7 @@ export interface AdminPromptLabState {
   confidenceThreshold: number;
   selectedModel: string;
   systemPrompt: string;
+  extractionRules: string[];
   fallbackRules: string[];
   monitoredFields: Array<keyof JsonSchemaOutput>;
   fewShotExamples: AdminFewShotExample[];
