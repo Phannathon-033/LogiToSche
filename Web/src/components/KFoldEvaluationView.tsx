@@ -1403,8 +1403,10 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                       ? `ทดสอบรอบที่ ${evalJob.current_fold} (Fold ${evalJob.current_fold}: ชุดทดสอบ ${evalJob.fold_total} ฉบับ)`
                       : `ทดสอบสด 1 ฉบับ (${evalJob.current_doc_id})`}
                     {" · "}
-                    <span className="text-indigo-300">
-                      PaddleOCR แคชพร้อมใช้ 300 ฉบับ (ไม่ต้องทำซ้ำ) · บันทึกผลรายฉบับทันที
+                    <span className="text-emerald-400 font-medium">
+                      {(evalJob.resumed_cached_docs ?? evalJob.cached_count ?? 0) > 0
+                        ? `Resume ข้ามฉบับเดิม ${evalJob.resumed_cached_docs ?? evalJob.cached_count} ฉบับ · รันสดฉบับที่เหลือ`
+                        : "รันสด 100% (PaddleOCR + GPU SLM รันใหม่ทุกฉบับ ไม่ใช้แคช) · บันทึกผลรายฉบับทันที"}
                     </span>
                   </p>
                 </div>
@@ -1594,14 +1596,22 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
               <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3">
                 <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">
-                  แคชเดิม vs รันสด GPU
+                  การประมวลผล (GPU Inference)
                 </span>
                 <div className="flex items-baseline gap-1 text-sm font-bold">
-                  <span className="text-cyan-400">{evalJob.resumed_cached_docs ?? evalJob.cached_count ?? 0} แคช</span>
-                  <span className="text-slate-500">/</span>
-                  <span className="text-amber-400">{evalJob.live_gpu_docs ?? evalJob.live_gpu_count ?? 0} GPU สด</span>
+                  <span className="text-amber-400">{evalJob.live_gpu_docs ?? evalJob.live_gpu_count ?? evalJob.completed_docs ?? 0} GPU สด</span>
+                  {(evalJob.resumed_cached_docs ?? evalJob.cached_count ?? 0) > 0 && (
+                    <>
+                      <span className="text-slate-500">/</span>
+                      <span className="text-cyan-400">{evalJob.resumed_cached_docs ?? evalJob.cached_count} Resume</span>
+                    </>
+                  )}
                 </div>
-                <span className="text-[10px] text-slate-400">ประหยัดเวลาด้วยแคชเดิม</span>
+                <span className="text-[10px] text-emerald-400/90">
+                  {(evalJob.resumed_cached_docs ?? evalJob.cached_count ?? 0) > 0
+                    ? `ข้ามเอกสารเดิม ${evalJob.resumed_cached_docs ?? evalJob.cached_count} ฉบับ`
+                    : "✓ รันสดใหม่ทุกฉบับ ไม่ใช้แคช"}
+                </span>
               </div>
 
               <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3">
