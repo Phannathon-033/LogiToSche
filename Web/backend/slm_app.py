@@ -553,8 +553,11 @@ def build_json_schema_prompt(payload: SlmExtractRequest, config: dict[str, Any],
         benchmark_instruction = (
             f"Benchmark variant: {variant}. {benchmark_instruction_for_variant(variant, config)}\n"
             "Use labeled examples only as formatting and mapping demonstrations; never copy values unless grounded in current OCR text.\n"
-            f"Examples:\n{json.dumps(examples, ensure_ascii=False, indent=2)}\n"
         )
+        if examples:
+            benchmark_instruction += (
+                f"Examples:\n{json.dumps(examples, ensure_ascii=False, indent=2)}\n"
+            )
     schema = {
         "json_schema": {
             "document_type": "invoice | bill_of_lading | packing_list | purchase_order | unknown",
