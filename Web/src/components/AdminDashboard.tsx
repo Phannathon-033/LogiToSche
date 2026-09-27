@@ -321,57 +321,30 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
 
   const activeMenuTitle =
     activeView === "dashboard"
-      ? "ภาพรวมการดำเนินงานระบบ"
+      ? "Dashboard"
       : activeView === "evaluation"
-        ? "5-Fold Benchmark & Model Evaluation"
+        ? "K-Fold & Model Evaluation"
         : activeView === "documents"
-          ? "Documents Queue & Review"
+          ? "Documents & Review Queue"
           : activeView === "document-detail"
             ? "Document Detail"
             : activeView === "users"
-              ? "Users & Activity"
-              : "Prompt Lab & Quality Reports";
+              ? "Users & Settings"
+              : "Prompt & Quality";
 
   const adminMenuItems = [
-    { id: "dashboard", name: "Overview", icon: LayoutDashboard },
-    { id: "documents", name: "Documents Queue", icon: FileSearch, badge: "237" },
-    { id: "prompt", name: "Prompt Lab", icon: SlidersHorizontal },
-    { id: "reports", name: "Analytics & Reports", icon: BarChart3 },
-    { id: "evaluation", name: "5-Fold Benchmark", icon: Zap },
-    { id: "users", name: "Users & Activity", icon: Users },
-    { id: "settings", name: "Settings", icon: Settings },
+    { id: "dashboard" as const, name: "Dashboard", icon: LayoutDashboard },
+    { id: "evaluation" as const, name: "ทดสอบ K-Fold & F1", icon: BarChart3 },
+    { id: "documents" as const, name: "Documents", icon: FileSearch },
+    { id: "users" as const, name: "Users & Settings", icon: Users },
+    { id: "prompt" as const, name: "Prompt & Quality", icon: Settings },
   ];
 
-  function handleSelectMenu(itemId: string, name: string) {
-    if (itemId === "reports") {
-      setPromptQualityTab("reports");
-      setActiveView("prompt");
-    } else if (itemId === "settings") {
-      setUsersSettingsTab("users");
-      setActiveView("users");
-    } else if (itemId === "users") {
-      setUsersSettingsTab("activity");
-      setActiveView("users");
-    } else if (itemId === "prompt") {
-      setPromptQualityTab("prompt");
-      setActiveView("prompt");
-    } else {
-      setActiveView(itemId as AdminView);
-    }
+  function selectAdminView(view: AdminView, name: string) {
+    setActiveView(view);
     setSidebarOpen(false);
     showToast(`สลับหน้า: ${name}`);
   }
-
-  const isItemActive = (itemId: string) => {
-    if (itemId === "dashboard") return activeView === "dashboard";
-    if (itemId === "documents") return activeView === "documents" || activeView === "document-detail";
-    if (itemId === "prompt") return activeView === "prompt" && promptQualityTab === "prompt";
-    if (itemId === "reports") return activeView === "prompt" && promptQualityTab === "reports";
-    if (itemId === "evaluation") return activeView === "evaluation";
-    if (itemId === "users") return activeView === "users" && usersSettingsTab === "activity";
-    if (itemId === "settings") return activeView === "users" && usersSettingsTab === "users";
-    return false;
-  };
 
   return (
     <div className="flex min-h-screen w-full bg-slate-50 font-sans text-slate-900">
@@ -393,35 +366,22 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
           </button>
         </div>
 
-        <nav className="flex-1 space-y-1.5 px-3 py-5" aria-label="เมนู admin">
-          <p className="px-3 pb-1 text-[10px] font-black uppercase tracking-widest text-slate-400">เมนูหลัก</p>
+        <nav className="flex-1 space-y-2 px-3 py-5" aria-label="เมนู admin">
+          <p className="px-4 pb-1 text-[10px] font-black uppercase tracking-widest text-slate-400">เมนูหลัก</p>
           {adminMenuItems.map((item) => {
             const Icon = item.icon;
-            const active = isItemActive(item.id);
+            const active = activeView === item.id;
             return (
               <button
                 type="button"
                 key={item.id}
-                onClick={() => handleSelectMenu(item.id, item.name)}
-                className={`flex h-10 w-full items-center justify-between rounded-xl px-3.5 text-left text-xs font-bold transition ${
-                  active
-                    ? "bg-blue-50 text-blue-600 shadow-[inset_3px_0_0_#2563EB]"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                onClick={() => selectAdminView(item.id, item.name)}
+                className={`flex h-11 w-full items-center gap-3 rounded-lg px-4 text-left text-sm font-bold transition ${
+                  active ? "bg-blue-50 text-blue-600 shadow-[inset_3px_0_0_#2563EB]" : "text-slate-600 hover:bg-slate-50"
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <Icon className="h-4.5 w-4.5" aria-hidden="true" />
-                  <span>{item.name}</span>
-                </div>
-                {"badge" in item && item.badge && (
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-black ${
-                      active ? "bg-blue-200/80 text-blue-800" : "bg-slate-100 text-slate-600"
-                    }`}
-                  >
-                    {item.badge}
-                  </span>
-                )}
+                <Icon className="h-5 w-5" aria-hidden="true" />
+                {item.name}
               </button>
             );
           })}
