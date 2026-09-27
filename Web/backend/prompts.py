@@ -50,15 +50,65 @@ MODEL_IDS = {
 
 EXTRACTION_SYSTEM_PROMPT = "You extract logistics document data. Return only valid JSON. Do not include markdown or explanations."
 DEFAULT_EXTRACTION_RULES = (
-    "Return every canonical field in json_schema; use an empty string or 0 when not grounded in OCR.",
+    "Return every canonical field in json_schema.",
+    "Use only values grounded in the current OCR text.",
     "Put source_file, quantity, vehicle, weight, tax, address, payment, and every non-canonical field inside json_schema.other.",
     "Map invoice, B/L, document, and order numbers to document_number according to context.",
     "Map Bill To, Ship To, Consignee, Buyer, Customer, and Receiver to receiver; map Vendor, Seller, Shipper, Issuer, and From to sender.",
     "Map PO, booking, and related-document identifiers to reference_number when they are not the primary document number.",
-    "Normalize dates to YYYY-MM-DD when unambiguous and parse unit_price and total_amount as numbers.",
     "Use confidence values from 0 to 100 and put low-confidence or conflicting values in review_items.",
-    "Return only valid JSON with no markdown or explanation.",
 )
+DEFAULT_OUTPUT_RULES = (
+    "Normalize unambiguous dates to YYYY-MM-DD; use an empty string when a date is absent or ambiguous.",
+    "Return unit_price and total_amount as numeric values without commas; use 0.0 when absent.",
+    "Currency must follow symbols or values found in OCR; do not default to THB when USD or $ is present.",
+)
+DEFAULT_BENCHMARK_PROMPTS = {
+    "zero-shot": "Use the main extraction prompt without labeled examples.",
+    "one-shot": "Use the main extraction prompt with exactly one labeled example selected from the training split by OCR confidence.",
+    "few-shot": "Use the main extraction prompt with 3 to 5 labeled examples selected from the training split by OCR confidence.",
+}
+DEFAULT_FALLBACK_RULES = (
+    "When both Subtotal and Total Amount are present, use Total Amount.",
+    "Interpret Consignee, Ship To, and Deliver To as receiver according to document context.",
+    "Treat bank names as payment channels, not sender or receiver; put them in other.",
+)
+
+
+def configured_output_rules(config: dict[str, Any] | None = None) -> list[str]:
+    active = config or load_prompt_config()
+    rules = active.get("output_rules", DEFAULT_OUTPUT_RULES)
+    if not isinstance(rules, list):
+        return list(DEFAULT_OUTPUT_RULES)
+    normalized = [str(rule).strip() for rule in rules if str(rule).strip()]
+    return normalized or list(DEFAULT_OUTPUT_RULES)
+
+
+def configured_benchmark_prompts(config: dict[str, Any] | None = None) -> dict[str, str]:
+    active = config or load_prompt_config()
+    prompts = active.get("benchmark_prompts", DEFAULT_BENCHMARK_PROMPTS)
+    if not isinstance(prompts, dict):
+        return dict(DEFAULT_BENCHMARK_PROMPTS)
+    return {
+        variant: str(prompts.get(variant) or DEFAULT_BENCHMARK_PROMPTS[variant])
+        for variant in BENCHMARK_VARIANTS
+    }
+
+
+def configured_fallback_rules(config: dict[str, Any] | None = None) -> list[str]:
+    active = config or load_prompt_config()
+    rules = active.get("fallback_rules", DEFAULT_FALLBACK_RULES)
+    if not isinstance(rules, list):
+        return list(DEFAULT_FALLBACK_RULES)
+    normalized = [str(rule).strip() for rule in rules if str(rule).strip()]
+    return normalized or list(DEFAULT_FALLBACK_RULES)
+
+
+def benchmark_prompt_for_variant(variant: str, config: dict[str, Any] | None = None) -> str:
+    normalized = variant.strip().lower()
+    if normalized not in BENCHMARK_VARIANTS:
+        raise ValueError(f"Unsupported benchmark prompt variant: {variant}")
+    return configured_benchmark_prompts(config)[normalized]
 
 
 def configured_extraction_rules(config: dict[str, Any] | None = None) -> list[str]:
@@ -76,22 +126,18 @@ EXTRACTION_RULES = DEFAULT_EXTRACTION_RULES
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 PROMPT_LIBRARY_DIR = BASE_DIR / "prompt_library"
 PRESETS_FILE = PROMPT_LIBRARY_DIR / "admin" / "presets.json"
-DEFAULT_BENCHMARK_PROMPTS = {
-    "zero-shot": "Use the main extraction prompt without labeled examples.",
-    "one-shot": "Use the main extraction prompt with exactly one labeled example selected from the training split by OCR confidence.",
-    "few-shot": "Use the main extraction prompt with 3 to 5 labeled examples selected from the training split by OCR confidence.",
-}
 
 
 def extraction_base_prompt(config: dict[str, Any] | None = None) -> str:
     active = config or load_prompt_config()
     rules = "\n".join(f"- {rule}" for rule in configured_extraction_rules(active))
-    fallback_rules = "\n".join(f"- {rule}" for rule in active.get("fallback_rules", []))
+    output_rules = "\n".join(f"- {rule}" for rule in configured_output_rules(active))
+    fallback_rules = "\n".join(f"- {rule}" for rule in configured_fallback_rules(active))
     return (
-        f"{EXTRACTION_SYSTEM_PROMPT}\n"
-        f"{active.get('system_prompt', '').strip()}\n"
-        f"Canonical extraction rules:\n{rules}\n"
-        f"Additional admin rules:\n{fallback_rules}"
+        f"{active.get('system_prompt', EXTRACTION_SYSTEM_PROMPT).strip()}\n"
+        f"Extraction rules:\n{rules}\n"
+        f"Output rules:\n{output_rules}\n"
+        f"Domain rules:\n{fallback_rules}"
     ).strip()
 
 
@@ -125,7 +171,7 @@ def benchmark_prompt_snapshot(
         **active,
         "base_prompt": extraction_base_prompt(active),
         "benchmark_prompt_variant": normalized,
-        "benchmark_instruction": DEFAULT_BENCHMARK_PROMPTS[normalized],
+        "benchmark_instruction": benchmark_prompt_for_variant(normalized, active),
         "benchmark_examples": selected,
         "example_selection": deepcopy(selection or {}),
         "prompt_source": {
@@ -268,26 +314,17 @@ def save_prompt_presets(presets: dict[str, dict[str, Any]]) -> None:
     PRESETS_FILE.write_text(json.dumps(presets, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def benchmark_prompt_for_variant(variant: str) -> str:
-    normalized = variant.strip().lower()
-    if normalized not in BENCHMARK_VARIANTS:
-        raise ValueError(f"Unsupported benchmark prompt variant: {variant}")
-    return DEFAULT_BENCHMARK_PROMPTS[normalized]
-
-
 def reset_prompt_presets() -> dict[str, dict[str, Any]]:
     save_prompt_presets(DEFAULT_PROMPT_PRESETS)
     return deepcopy(DEFAULT_PROMPT_PRESETS)
 
 
 DEFAULT_ADMIN_CONFIG = {
-    "system_prompt": "คุณคือผู้ช่วยดึงข้อมูลโลจิสติกส์จาก OCR text ให้ map ข้อมูลเข้าสู่ JSON schema อย่างเคร่งครัด แยก sender, receiver, total amount และ document number ให้ชัดเจน พร้อมระบุ field ที่ไม่มั่นใจลง review_items",
+    "system_prompt": EXTRACTION_SYSTEM_PROMPT,
     "extraction_rules": list(DEFAULT_EXTRACTION_RULES),
-    "fallback_rules": [
-        "ถ้าเจอทั้ง Subtotal และ Total Amount ให้เลือก Total Amount",
-        "Consignee, Ship To, Deliver To ให้ตีความเป็น receiver ตามบริบทเอกสาร",
-        "วันที่ต้อง normalize เป็น YYYY-MM-DD ถ้าตีความได้ชัดเจน",
-    ],
+    "output_rules": list(DEFAULT_OUTPUT_RULES),
+    "fallback_rules": list(DEFAULT_FALLBACK_RULES),
+    "benchmark_prompts": dict(DEFAULT_BENCHMARK_PROMPTS),
     "confidence_threshold": 85,
     "selected_model": "qwen-2.5-1.5b",
     "monitored_fields": ["document_number", "document_date", "receiver", "total_amount"],

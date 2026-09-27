@@ -109,6 +109,7 @@ def run_fresh_fold(
 
     if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
         raise ValueError(f"Unsupported prompt variant: {prompt_variant}")
+    force_rerun_ocr = True
 
     prompt_snapshot = {
         **load_prompt_config(),
@@ -209,7 +210,7 @@ def run_fresh_fold(
                 doc,
                 prompt_snapshot,
                 force_rerun=True,
-                force_rerun_ocr=force_rerun_ocr,
+                force_rerun_ocr=True,
                 benchmark_examples=benchmark_examples,
             )
             fresh_extractions[str(doc_id)] = (pred, trace)
@@ -318,7 +319,7 @@ if __name__ == "__main__":
     parser.add_argument("--k", type=int, default=5, help="Number of K-splits (default: 5)")
     parser.add_argument("--seed", type=int, default=42, help="Random seed (default: 42)")
     parser.add_argument("--max", type=int, default=None, help="Max docs to process (for testing)")
-    parser.add_argument("--re-ocr", action="store_true", help="Force re-run PaddleOCR even if cached")
+    parser.add_argument("--re-ocr", action="store_true", help="Retained for compatibility; PaddleOCR always reruns")
     parser.add_argument("--run-id", default=None, help="Fresh run identifier assigned by the service")
     parser.add_argument("--prompt-variant", choices=("zero-shot", "one-shot", "few-shot"), default="zero-shot")
     args = parser.parse_args()

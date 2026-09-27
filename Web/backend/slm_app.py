@@ -21,6 +21,9 @@ try:
         CORE_FIELDS as PROMPT_CORE_FIELDS,
         EXTRACTION_SYSTEM_PROMPT,
         configured_extraction_rules,
+        configured_output_rules,
+        configured_fallback_rules,
+        configured_benchmark_prompts,
         MODEL_IDS,
         DEFAULT_BENCHMARK_PROMPTS,
         default_admin_config,
@@ -35,6 +38,9 @@ except ImportError:
         CORE_FIELDS as PROMPT_CORE_FIELDS,
         EXTRACTION_SYSTEM_PROMPT,
         configured_extraction_rules,
+        configured_output_rules,
+        configured_fallback_rules,
+        configured_benchmark_prompts,
         MODEL_IDS,
         DEFAULT_BENCHMARK_PROMPTS,
         default_admin_config,
@@ -132,7 +138,9 @@ SUPPORTED_MODELS = set(MODEL_IDS)
 class SlmPromptConfig(BaseModel):
     system_prompt: str = Field(min_length=MIN_PROMPT_LENGTH, max_length=MAX_PROMPT_LENGTH)
     extraction_rules: list[str] = Field(default_factory=list, max_length=MAX_EXTRACTION_RULES)
+    output_rules: list[str] = Field(default_factory=list, max_length=MAX_RULES)
     fallback_rules: list[str] = Field(default_factory=list, max_length=MAX_RULES)
+    benchmark_prompts: dict[str, str] = Field(default_factory=dict)
     confidence_threshold: int = Field(default=85, ge=SUPPORTED_CONFIDENCE_RANGE[0], le=SUPPORTED_CONFIDENCE_RANGE[1])
     selected_model: str = "qwen-2.5-1.5b"
     monitored_fields: list[str] = Field(default_factory=list, max_length=len(CORE_FIELDS))
@@ -140,16 +148,30 @@ class SlmPromptConfig(BaseModel):
     def normalized(self) -> dict[str, Any]:
         if self.selected_model not in SUPPORTED_MODELS:
             raise ValueError(f"Unsupported SLM model: {self.selected_model}")
-        if any(not rule.strip() or len(rule) > MAX_RULE_LENGTH for rule in self.extraction_rules):
-            raise ValueError("Extraction rules must be non-empty and at most 1000 characters")
-        if any(not rule.strip() or len(rule) > MAX_RULE_LENGTH for rule in self.fallback_rules):
-            raise ValueError("Fallback rules must be non-empty and at most 1000 characters")
+        rule_groups = {
+            "extraction_rules": self.extraction_rules,
+            "output_rules": self.output_rules,
+            "fallback_rules": self.fallback_rules,
+        }
+        for name, rules in rule_groups.items():
+            if any(not rule.strip() or len(rule) > MAX_RULE_LENGTH for rule in rules):
+                raise ValueError(f"{name} must contain non-empty rules of at most 1000 characters")
+        if any(variant not in BENCHMARK_PROMPT_VARIANTS or not instruction.strip() for variant, instruction in self.benchmark_prompts.items()):
+            raise ValueError("Benchmark prompts must use supported variants and non-empty instructions")
         if any(field not in SUPPORTED_MONITORED_FIELDS for field in self.monitored_fields):
             raise ValueError("Monitored fields must be canonical 11 fields")
+        config = {
+            "extraction_rules": self.extraction_rules,
+            "output_rules": self.output_rules,
+            "fallback_rules": self.fallback_rules,
+            "benchmark_prompts": self.benchmark_prompts,
+        }
         return {
             "system_prompt": self.system_prompt.strip(),
-            "extraction_rules": [rule.strip() for rule in self.extraction_rules],
-            "fallback_rules": [rule.strip() for rule in self.fallback_rules],
+            "extraction_rules": configured_extraction_rules(config),
+            "output_rules": configured_output_rules(config),
+            "fallback_rules": configured_fallback_rules(config),
+            "benchmark_prompts": configured_benchmark_prompts(config),
             "confidence_threshold": self.confidence_threshold,
             "selected_model": self.selected_model,
             "monitored_fields": list(dict.fromkeys(self.monitored_fields)),
@@ -519,19 +541,17 @@ def prompt_variant_for_request(payload: SlmExtractRequest) -> str:
     return benchmark_variant_for_request(payload)[0]
 
 
-def benchmark_instruction_for_variant(variant: str) -> str:
+def benchmark_instruction_for_variant(variant: str, config: dict[str, Any]) -> str:
     if variant == NORMAL_PROMPT_VARIANT:
         return ""
-    return DEFAULT_BENCHMARK_PROMPTS[variant]
+    return configured_benchmark_prompts(config)[variant]
 
 
 def build_json_schema_prompt(payload: SlmExtractRequest, config: dict[str, Any], variant: str, examples: list[dict[str, Any]]) -> str:
-    invariant_rules = "\n".join(f"- {rule}" for rule in configured_extraction_rules(config))
-    admin_rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
     benchmark_instruction = ""
     if variant in BENCHMARK_PROMPT_VARIANTS:
         benchmark_instruction = (
-            f"\nK-Fold variant: {variant}. {benchmark_instruction_for_variant(variant)}\n"
+            f"Benchmark variant: {variant}. {benchmark_instruction_for_variant(variant, config)}\n"
             "Use labeled examples only as formatting and mapping demonstrations; never copy values unless grounded in current OCR text.\n"
             f"Examples:\n{json.dumps(examples, ensure_ascii=False, indent=2)}\n"
         )
@@ -555,19 +575,17 @@ def build_json_schema_prompt(payload: SlmExtractRequest, config: dict[str, Any],
         "review_items": [{"field": "document_number", "ocrValue": "raw OCR value", "slmValue": "normalized value", "confidence": 0, "status": "review"}],
     }
     return (
-        "Extract logistics fields from Thai or English OCR text into this exact JSON contract.\n"
-        "The canonical fields are document_type, document_number, document_date, sender, receiver, origin, destination, reference_number, unit_price, total_amount, and currency.\n"
-        f"Invariant rules:\n{invariant_rules}\nAdmin rules:\n{admin_rules}\n{benchmark_instruction}"
-        f"Document type hint: {payload.document_type_hint}\nSource filename: {payload.source_file}\n\n"
-        f"Required output shape:\n{json.dumps(schema, ensure_ascii=False, indent=2)}\n\nOCR text:\n{payload.ocr_text}\n"
+        "Fill the required JSON contract using the current OCR text.\n"
+        f"{benchmark_instruction}"
+        f"Document type hint: {payload.document_type_hint}\n"
+        f"Source filename: {payload.source_file}\n\n"
+        f"Required output shape:\n{json.dumps(schema, ensure_ascii=False, indent=2)}\n\n"
+        f"OCR text:\n{payload.ocr_text}\n"
     )
 
 
 def build_extraction_system_prompt(config: dict[str, Any] | None = None) -> str:
-    config = config or get_prompt_config()
-    rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
-    return f"{EXTRACTION_SYSTEM_PROMPT}\n{config['system_prompt']}\nAdditional admin rules:\n{rules}"
-
+    return extraction_base_prompt(config or get_prompt_config())
 
 def build_assistant_system_prompt(system_instruction: str, config: dict[str, Any]) -> str:
     rules = "\n".join(f"- {rule}" for rule in config["fallback_rules"])
@@ -616,25 +634,49 @@ def build_slm_prompt(payload: SlmExtractRequest, config: dict[str, Any] | None =
         ocr_text = "\n".join(low_confidence_lines)
 
     updated_payload = payload.model_copy(update={"ocr_text": ocr_text}) if hasattr(payload, "model_copy") else payload.copy(update={"ocr_text": ocr_text})
-    prompt = build_json_schema_prompt(updated_payload, config, variant, examples)
-    return (
-        f"Base extraction prompt:\n{extraction_base_prompt(config)}\n\n"
-        f"{prompt}"
-        "Additional output rules:\n"
-        "- Numbers must be numeric floats without commas.\n"
-        "- Dates must be YYYY-MM-DD; use an empty string or 0.0 when absent.\n"
-        "- Currency must follow OCR symbols; do not default to THB when USD or $ is present.\n"
-        "- Bank names are payment channels, not sender or receiver; put them in other.\n"
-    )
+    return build_json_schema_prompt(updated_payload, config, variant, examples)
 
 
 def _self_check_prompt_composition() -> None:
-    config = {"system_prompt": "base", "extraction_rules": ["configured rule"], "fallback_rules": []}
-    payload = SlmExtractRequest(ocr_text="sample")
-    prompt = build_slm_prompt(payload, config)
-    assert "kfold_extraction" not in prompt
-    assert "configured rule" in prompt
-    assert benchmark_variant_for_request(payload) == (NORMAL_PROMPT_VARIANT, [])
+    config = {
+        "system_prompt": "base",
+        "extraction_rules": ["configured rule"],
+        "output_rules": ["configured output rule"],
+        "fallback_rules": ["configured domain rule"],
+        "benchmark_prompts": {
+            "zero-shot": "zero instruction",
+            "one-shot": "one instruction",
+            "few-shot": "few instruction",
+        },
+    }
+    normal_payload = SlmExtractRequest(ocr_text="sample")
+    system_prompt = build_extraction_system_prompt(config)
+    normal_prompt = build_slm_prompt(normal_payload, config)
+    assert system_prompt.count("configured rule") == 1
+    assert system_prompt.count("configured output rule") == 1
+    assert system_prompt.count("configured domain rule") == 1
+    assert "configured rule" not in normal_prompt
+    assert "Examples:" not in normal_prompt
+    assert benchmark_variant_for_request(normal_payload) == (NORMAL_PROMPT_VARIANT, [])
+
+    zero_payload = SlmExtractRequest(ocr_text="sample", benchmark_prompt_variant="zero-shot")
+    assert "Examples:" not in build_slm_prompt(zero_payload, config)
+
+    one_payload = SlmExtractRequest(
+        ocr_text="sample",
+        benchmark_prompt_variant="one-shot",
+        benchmark_examples=[{"document_id": "train-1"}],
+        benchmark_example_selection={"training_document_ids": ["train-1"]},
+    )
+    assert build_slm_prompt(one_payload, config).count('"document_id": "train-1"') == 1
+
+    few_payload = SlmExtractRequest(
+        ocr_text="sample",
+        benchmark_prompt_variant="few-shot",
+        benchmark_examples=[{"document_id": f"train-{index}"} for index in range(1, 4)],
+        benchmark_example_selection={"training_document_ids": [f"train-{index}" for index in range(1, 4)]},
+    )
+    assert build_slm_prompt(few_payload, config).count('"document_id"') == 3
     assert "Return every canonical field" in extraction_base_prompt({"system_prompt": "base", "fallback_rules": []})
 
 

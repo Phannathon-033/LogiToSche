@@ -4,11 +4,9 @@ Provides asynchronous, non-blocking background job execution for K-Fold evaluati
 Features:
 1. Immediate HTTP response upon job creation (no browser timeout).
 2. Per-document immediate saving of predictions and performance logs.
-3. Resume capability (skips already-predicted documents if stopped or interrupted).
-4. OCR Caching: reuses OCR text cache (PaddleOCR run once per document), ensuring
-   Zero-shot, One-shot, and Few-shot evaluate on identical OCR inputs without re-running OCR.
-5. Real-time progress tracking (overall progress, fold progress, elapsed time, live logs).
-6. Graceful stop and cancel controls.
+3. Live evaluation: every document bypasses prediction and OCR caches.
+4. Real-time progress tracking (overall progress, fold progress, elapsed time, live logs).
+5. Graceful stop and cancel controls.
 """
 
 from __future__ import annotations
@@ -38,14 +36,8 @@ try:
     from kfold_evaluator import (
         CORE_FIELDS,
         GT_FILE,
-        PREDICTION_CACHE_DIR,
-        _cache_path,
         _extract,
         _get_document_ground_truth,
-        _get_ocr,
-        _prediction_cache_path,
-        clear_prediction_cache,
-        prediction_cache_is_valid,
         _score,
         compare_field_values,
         benchmark_prompt_snapshot,
@@ -60,14 +52,8 @@ except ImportError:
     from .kfold_evaluator import (
         CORE_FIELDS,
         GT_FILE,
-        PREDICTION_CACHE_DIR,
-        _cache_path,
         _extract,
         _get_document_ground_truth,
-        _get_ocr,
-        _prediction_cache_path,
-        clear_prediction_cache,
-        prediction_cache_is_valid,
         _score,
         compare_field_values,
         benchmark_prompt_snapshot,
@@ -191,6 +177,8 @@ class EvaluationJobManager:
         """Creates an evaluation job and starts it in a background thread."""
         if mode == "single_doc":
             validate_training_split(prompt_variant, 0)
+        resume = False
+        force_rerun_ocr = True
         with self._lock:
             # Check if an active job is already running
             if self._active_job_id:
@@ -291,14 +279,6 @@ class EvaluationJobManager:
                 "final_report": None,
             }
 
-            if not resume:
-                rerun_documents = [
-                    documents[index]
-                    for _, _, validation_indices in target_splits
-                    for index in validation_indices
-                ]
-                clear_prediction_cache(rerun_documents, prompt_variant)
-
             self._write_job_file(initial_job_state)
 
             # Spawn background worker thread
@@ -357,11 +337,12 @@ class EvaluationJobManager:
         overall_matched_fields = 0
         overall_evaluated_fields = 0
         overall_doc_counter = 0
+        live_extractions: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
         stopped = False
 
         print(f"\n{'='*70}")
         print(f"  [JOB {job_id}] Started: {job_state['mode']} ({job_state['overall_total']} documents)")
-        print(f"  Resume: {resume} | Prompt: {prompt_variant} | OCR: {'Forced Fresh Read' if force_rerun_ocr else 'Cached'}")
+        print(f"  Live evaluation: prediction and OCR cache bypassed | Prompt: {prompt_variant} | OCR: Forced Fresh Read")
         print(f"{'='*70}\n")
 
         for fold, train_indices, validation_indices in target_splits:
@@ -433,22 +414,17 @@ class EvaluationJobManager:
                 job_state["elapsed_seconds"] = round(time.time() - start_time, 1)
                 self._write_job_file(job_state)
 
-                # Check if document already has cached prediction and resume is enabled
-                is_cached = resume and prediction_cache_is_valid(
-                    doc,
-                    prompt_snapshot,
-                    benchmark_examples,
-                )
+                is_cached = False
 
                 try:
-                    # Run or load prediction
                     pred, trace = _extract(
                         doc,
                         prompt_snapshot,
-                        force_rerun=(not is_cached),
-                        force_rerun_ocr=force_rerun_ocr,
+                        force_rerun=True,
+                        force_rerun_ocr=True,
                         benchmark_examples=benchmark_examples,
                     )
+                    live_extractions[str(doc_id)] = (pred, trace)
                     doc_elapsed = round(time.time() - t_doc_start, 2)
                     perf = trace.get("performance", {})
                     ocr_t = float(perf.get("ocr_time_sec", 0.85))
@@ -545,8 +521,9 @@ class EvaluationJobManager:
                 random_seed=job_state["random_seed"],
                 single_fold=target_single_fold,
                 doc_id=target_doc_id,
-                force_rerun=False,
+                force_rerun=True,
                 prompt_variant=prompt_variant,
+                precomputed_extractions=live_extractions,
             )
             job_state["final_report"] = final_report
             job_state["final_accuracy"] = str(final_report["metrics_summary"]["accuracy_display"]).replace("±", "+/-")

@@ -222,7 +222,9 @@ class SlmPromptRequest(BaseModel):
 class SlmPromptConfig(BaseModel):
     system_prompt: str = Field(default="", min_length=1)
     extraction_rules: list[str] = Field(default_factory=list)
+    output_rules: list[str] = Field(default_factory=list)
     fallback_rules: list[str] = Field(default_factory=list)
+    benchmark_prompts: dict[str, str] = Field(default_factory=dict)
     confidence_threshold: int = 85
     selected_model: str = "qwen-2.5-1.5b"
     monitored_fields: list[str] = Field(default_factory=list)
@@ -491,6 +493,7 @@ def get_benchmark_fresh_status() -> Any:
 def post_benchmark_fresh_start(
     fold: int = 1,
     k: int = 5,
+    seed: int = 42,
     max_docs: int | None = None,
     re_ocr: bool = False,
     prompt_variant: str = "zero-shot",

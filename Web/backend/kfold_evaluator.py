@@ -524,7 +524,7 @@ def _extract(
         except Exception:
             pass
 
-    if os.environ.get("LOGIAI_FAST_BENCHMARK", "0") == "1":
+    if os.environ.get("LOGIAI_FAST_BENCHMARK", "0") == "1" and not force_rerun_ocr:
         gt = document.get("ground_truth", {})
         pred = dict(gt)
         fname = document.get("file_name", "")
@@ -990,9 +990,11 @@ def run_kfold_evaluation(
                 prediction, trace = _extract(
                     document,
                     prompt_snapshot,
-                    force_rerun=force_rerun,
+                    force_rerun=True,
+                    force_rerun_ocr=True,
                     benchmark_examples=benchmark_examples,
                 )
+
             else:
                 prediction, trace = precomputed
             truth = _get_document_ground_truth(document)
