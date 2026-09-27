@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { AppHeader } from "./components/AppHeader";
 import { AdminDashboard } from "./components/AdminDashboard";
 import { LandingHeroConverter } from "./components/LandingHeroConverter";
-import { LoginPage, type UserSession } from "./components/LoginPage";
+import { LoginPage } from "./components/LoginPage";
 import { ManualReviewModal } from "./components/ManualReviewModal";
 import { RegisterPage } from "./components/RegisterPage";
 import { Toast } from "./components/Toast";
@@ -13,6 +13,8 @@ import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
 import { KFoldEvaluationView } from "./components/KFoldEvaluationView";
 import {
   fetchFirebaseDocuments,
+  logoutFirebaseUser,
+  observeFirebaseAuth,
   saveDocumentToFirebase,
   type FirebaseDocumentRecord,
 } from "./services/firebase";
@@ -29,6 +31,7 @@ import { renderPdfPreview, runPaddleOcr, type OcrLanguage, type OcrLine } from "
 import { runSlmExtraction } from "./services/slmApi";
 import { normalizeLogisticsJsonSchema } from "./services/dataValidationService";
 import { EMPTY_JSON_SCHEMA } from "./types";
+import type { UserSession } from "./types";
 import type {
   BatchDocumentItem,
   DocumentJob,
@@ -44,14 +47,8 @@ function isAdminSession(session: UserSession | null) {
 
 export function App() {
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
-  const [userSession, setUserSession] = useState<UserSession | null>(() => {
-    try {
-      const saved = localStorage.getItem("logiai_user");
-      return saved ? (JSON.parse(saved) as UserSession) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [userSession, setUserSession] = useState<UserSession | null>(null);
+  const [isAuthResolving, setIsAuthResolving] = useState(true);
 
   const [batchDocuments, setBatchDocuments] = useState<BatchDocumentItem[]>([]);
   const [activeDocIndex, setActiveDocIndex] = useState<number>(0);
@@ -87,11 +84,6 @@ export function App() {
   function handleLogin(session: UserSession) {
     setUserSession(session);
     setViewMode(isAdminSession(session) ? "admin" : "user");
-    try {
-      localStorage.setItem("logiai_user", JSON.stringify(session));
-    } catch {
-      // ignore storage errors
-    }
     showToast(`ยินดีต้อนรับคุณ ${session.name}`);
   }
 
@@ -100,14 +92,21 @@ export function App() {
     showToast(`ลงทะเบียนสำเร็จ! ยินดีต้อนรับคุณ ${session.name}`);
   }
 
-  function handleLogout() {
-    setUserSession(null);
+  async function handleLogout() {
     try {
-      localStorage.removeItem("logiai_user");
+      await logoutFirebaseUser();
     } catch {
-      // ignore storage errors
+      showToast("ไม่สามารถออกจากระบบได้ กรุณาลองใหม่");
     }
   }
+
+  useEffect(() => {
+    return observeFirebaseAuth((session) => {
+      setUserSession(session);
+      setViewMode(isAdminSession(session) ? "admin" : "user");
+      setIsAuthResolving(false);
+    });
+  }, []);
 
   useEffect(() => {
     if (!toast) return;
@@ -790,6 +789,10 @@ export function App() {
         ),
       );
     }
+  }
+
+  if (isAuthResolving) {
+    return <div className="flex min-h-screen items-center justify-center bg-slate-50 text-sm font-semibold text-slate-600">กำลังตรวจสอบบัญชีผู้ใช้...</div>;
   }
 
   if (!userSession) {

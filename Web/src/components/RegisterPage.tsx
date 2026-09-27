@@ -1,6 +1,7 @@
-import { ArrowRight, Briefcase, CheckCircle2, Eye, EyeOff, Lock, Mail, ShieldAlert, User, UserPlus } from "lucide-react";
+import { ArrowRight, CheckCircle2, Eye, EyeOff, Lock, Mail, ShieldAlert, User, UserPlus } from "lucide-react";
 import { useState } from "react";
-import type { UserSession } from "./LoginPage";
+import type { UserSession } from "../types";
+import { registerFirebaseUser } from "../services/firebase";
 import { Logo } from "./Logo";
 
 interface RegisterPageProps {
@@ -8,18 +9,9 @@ interface RegisterPageProps {
   onSwitchToLogin: () => void;
 }
 
-const ROLES = [
-  "เจ้าหน้าที่คีย์ข้อมูล (Data Operator)",
-  "ผู้จัดการคลังสินค้า (Logistics Manager)",
-  "เจ้าหน้าที่ตรวจสอบเอกสาร (Document Inspector)",
-  "วิศวกรโลจิสติกส์ (Logistics Engineer)",
-  "ผู้ดูแลระบบ (Admin)",
-];
-
 export function RegisterPage({ onRegister, onSwitchToLogin }: RegisterPageProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState(ROLES[0]);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +19,7 @@ export function RegisterPage({ onRegister, onSwitchToLogin }: RegisterPageProps)
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
@@ -36,7 +28,7 @@ export function RegisterPage({ onRegister, onSwitchToLogin }: RegisterPageProps)
       return;
     }
     if (!email.trim()) {
-      setError("กรุณากรอกชื่อผู้ใช้งานหรืออีเมล");
+      setError("กรุณากรอกอีเมล");
       return;
     }
     if (!password) {
@@ -57,17 +49,14 @@ export function RegisterPage({ onRegister, onSwitchToLogin }: RegisterPageProps)
     }
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      const username = email.includes("@") ? email.split("@")[0] : email.trim();
-      const session: UserSession = {
-        username: username,
-        name: name.trim(),
-        role: role.split(" ")[0],
-        email: email.includes("@") ? email.trim() : `${email.trim()}@logiai.co.th`,
-      };
+    try {
+      const session = await registerFirebaseUser(name.trim(), email.trim(), password);
       onRegister(session);
-    }, 500);
+    } catch (registrationError) {
+      setError(registrationError instanceof Error ? registrationError.message : "ไม่สามารถสร้างบัญชีได้");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -147,27 +136,6 @@ export function RegisterPage({ onRegister, onSwitchToLogin }: RegisterPageProps)
                     className="w-full rounded-xl border border-slate-300/80 bg-slate-50/70 py-2.5 pl-10 pr-3.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-cyan-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-cyan-600/20 transition-all"
                     required
                   />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="reg-role" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                  บทบาท / แผนกในองค์กร
-                </label>
-                <div className="relative">
-                  <Briefcase className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-                  <select
-                    id="reg-role"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300/80 bg-slate-50/70 py-2.5 pl-10 pr-8 text-sm text-slate-900 focus:border-cyan-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-cyan-600/20 transition-all"
-                  >
-                    {ROLES.map((r) => (
-                      <option key={r} value={r}>
-                        {r}
-                      </option>
-                    ))}
-                  </select>
                 </div>
               </div>
 

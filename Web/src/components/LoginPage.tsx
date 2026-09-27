@@ -1,54 +1,29 @@
-import { ArrowRight, Eye, EyeOff, Lock, Mail, ShieldAlert, User } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Lock, Mail, ShieldAlert } from "lucide-react";
 import { useState } from "react";
+import type { UserSession } from "../types";
+import { loginFirebaseUser } from "../services/firebase";
 import { Logo } from "./Logo";
 
-export interface UserSession {
-  username: string;
-  name: string;
-  role: string;
-  email: string;
-}
+export type { UserSession } from "../types";
 
 interface LoginPageProps {
   onLogin: (session: UserSession) => void;
   onSwitchToRegister?: () => void;
 }
 
-const DEMO_ACCOUNTS: UserSession[] = [
-  {
-    username: "somchai.w",
-    name: "สมชาย วงศ์สวัสดิ์",
-    role: "ผู้ดูแลระบบ (Admin)",
-    email: "somchai.w@logiai.co.th",
-  },
-  {
-    username: "operator.a",
-    name: "อนันต์ สุขใจ",
-    role: "เจ้าหน้าที่คีย์ข้อมูล",
-    email: "anan.s@logiai.co.th",
-  },
-  {
-    username: "manager.p",
-    name: "พิมลพรรณ สายชล",
-    role: "ผู้จัดการคลังสินค้า",
-    email: "pimonpan.p@logiai.co.th",
-  },
-];
-
 export function LoginPage({ onLogin, onSwitchToRegister }: LoginPageProps) {
-  const [username, setUsername] = useState("somchai.w@logiai.co.th");
-  const [password, setPassword] = useState("password123");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
     if (!username.trim()) {
-      setError("กรุณากรอกชื่อผู้ใช้งานหรืออีเมล");
+      setError("กรุณากรอกอีเมล");
       return;
     }
     if (!password) {
@@ -57,27 +32,14 @@ export function LoginPage({ onLogin, onSwitchToRegister }: LoginPageProps) {
     }
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      const matched = DEMO_ACCOUNTS.find(
-        (acc) => acc.username === username.trim() || acc.email === username.trim(),
-      );
-
-      const session: UserSession = matched || {
-        username: username.split("@")[0],
-        name: username.split("@")[0].toUpperCase(),
-        role: "เจ้าหน้าที่โลจิสติกส์",
-        email: username.includes("@") ? username : `${username}@logiai.co.th`,
-      };
-
+    try {
+      const session = await loginFirebaseUser(username.trim(), password);
       onLogin(session);
-    }, 400);
-  }
-
-  function handleSelectDemoAccount(acc: UserSession) {
-    setUsername(acc.email);
-    setPassword("password123");
-    setError("");
+    } catch (loginError) {
+      setError(loginError instanceof Error ? loginError.message : "ไม่สามารถเข้าสู่ระบบได้");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -114,7 +76,7 @@ export function LoginPage({ onLogin, onSwitchToRegister }: LoginPageProps) {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="username" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                  ชื่อผู้ใช้งาน หรือ อีเมล
+                  อีเมล
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
@@ -123,7 +85,7 @@ export function LoginPage({ onLogin, onSwitchToRegister }: LoginPageProps) {
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="name@logiai.co.th"
+                    placeholder="name@example.com"
                     className="w-full rounded-xl border border-slate-300/80 bg-slate-50/70 py-2.5 pl-10 pr-3.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-cyan-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-cyan-600/20 transition-all"
                     required
                   />
@@ -168,18 +130,6 @@ export function LoginPage({ onLogin, onSwitchToRegister }: LoginPageProps) {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-1">
-                <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-600">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-600/20"
-                  />
-                  <span>จดจำบัญชีในเครื่องนี้</span>
-                </label>
-              </div>
-
               <button
                 type="submit"
                 disabled={isLoading}
@@ -195,32 +145,6 @@ export function LoginPage({ onLogin, onSwitchToRegister }: LoginPageProps) {
                 )}
               </button>
             </form>
-
-            {/* Quick Demo Accounts Selection */}
-            <div className="mt-6 pt-5 border-t border-slate-200/80">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2.5 flex items-center gap-1.5">
-                <User className="h-3.5 w-3.5 text-cyan-600" /> เลือกบัญชีทดสอบด่วน (Quick Demo Accounts)
-              </p>
-              <div className="space-y-1.5">
-                {DEMO_ACCOUNTS.map((acc) => (
-                  <button
-                    key={acc.username}
-                    type="button"
-                    onClick={() => handleSelectDemoAccount(acc)}
-                    className={`w-full flex items-center justify-between p-2.5 rounded-xl border transition-all text-xs text-left ${
-                      username === acc.email
-                        ? "border-cyan-500/60 bg-cyan-50 font-bold text-cyan-800"
-                        : "border-slate-200/80 bg-slate-50/70 hover:bg-slate-100/80 text-slate-700"
-                    }`}
-                  >
-                    <span className="truncate">{acc.name}</span>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-500 shrink-0 ml-2">
-                      {acc.role}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
 
           </div>
 

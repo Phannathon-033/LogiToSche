@@ -304,6 +304,13 @@ export interface AdminFewShotExample {
   expectedOutput: string;
 }
 
+export interface UserSession {
+  username: string;
+  name: string;
+  role: string;
+  email: string;
+}
+
 export interface AdminUserRecord {
   id: string;
   name: string;

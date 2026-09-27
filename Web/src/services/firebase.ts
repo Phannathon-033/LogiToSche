@@ -1,9 +1,19 @@
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { getApp, getApps, initializeApp } from "firebase/app";
 import {
+  createUserWithEmailAndPassword,
+  deleteUser,
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+  type User,
+} from "firebase/auth";
+import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   getFirestore,
   limit,
@@ -28,6 +38,7 @@ import type {
   JsonSchemaOutput,
   ReviewItem,
   SlmPerformanceMetrics,
+  UserSession,
 } from "../types";
 
 // User's provided Firebase configuration
@@ -45,6 +56,99 @@ const firebaseConfig = {
 export const firebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 export const db = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
+export const auth = getAuth(firebaseApp);
+
+interface UserProfile {
+  uid: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt?: Timestamp | string;
+  updatedAt?: Timestamp | string;
+}
+
+function profileToSession(user: User, profile?: Partial<UserProfile>): UserSession {
+  const email = profile?.email || user.email || "";
+  const name = profile?.name || user.displayName || email.split("@")[0] || "ผู้ใช้";
+  return {
+    username: email.split("@")[0] || user.uid,
+    name,
+    role: profile?.role || "เจ้าหน้าที่โลจิสติกส์",
+    email,
+  };
+}
+
+function firebaseAuthError(error: unknown): Error {
+  const code = typeof error === "object" && error && "code" in error ? String(error.code) : "";
+  const messages: Record<string, string> = {
+    "auth/email-already-in-use": "อีเมลนี้มีบัญชีอยู่แล้ว",
+    "auth/invalid-email": "รูปแบบอีเมลไม่ถูกต้อง",
+    "auth/weak-password": "รหัสผ่านไม่ปลอดภัยเพียงพอ",
+    "auth/invalid-credential": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+    "auth/user-not-found": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+    "auth/wrong-password": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+    "auth/operation-not-allowed": "ยังไม่ได้เปิด Email/Password Authentication ใน Firebase",
+  };
+  return new Error(messages[code] || "ไม่สามารถดำเนินการบัญชีผู้ใช้กับ Firebase ได้");
+}
+
+export async function registerFirebaseUser(
+  name: string,
+  email: string,
+  password: string,
+): Promise<UserSession> {
+  try {
+    const credential = await createUserWithEmailAndPassword(auth, email, password);
+    const profile: UserProfile = {
+      uid: credential.user.uid,
+      name,
+      email: credential.user.email || email,
+      role: "เจ้าหน้าที่โลจิสติกส์",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    try {
+      await setDoc(doc(db, "users", credential.user.uid), profile);
+    } catch (profileError) {
+      await deleteUser(credential.user);
+      throw profileError;
+    }
+    return profileToSession(credential.user, profile);
+  } catch (error) {
+    throw firebaseAuthError(error);
+  }
+}
+
+export async function loginFirebaseUser(email: string, password: string): Promise<UserSession> {
+  try {
+    const credential = await signInWithEmailAndPassword(auth, email, password);
+    const profileSnapshot = await getDoc(doc(db, "users", credential.user.uid));
+    const profile = profileSnapshot.exists() ? (profileSnapshot.data() as UserProfile) : undefined;
+    return profileToSession(credential.user, profile);
+  } catch (error) {
+    throw firebaseAuthError(error);
+  }
+}
+
+export function observeFirebaseAuth(callback: (session: UserSession | null) => void): () => void {
+  return onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      callback(null);
+      return;
+    }
+    try {
+      const snapshot = await getDoc(doc(db, "users", user.uid));
+      const profile = snapshot.exists() ? (snapshot.data() as UserProfile) : undefined;
+      callback(profileToSession(user, profile));
+    } catch {
+      callback(profileToSession(user));
+    }
+  });
+}
+
+export async function logoutFirebaseUser(): Promise<void> {
+  await signOut(auth);
+}
 
 // Initialize analytics if supported in browser environment
 export let analytics: ReturnType<typeof getAnalytics> | null = null;

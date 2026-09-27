@@ -1,5 +1,5 @@
 import { BarChart3, LogOut, ShieldCheck, Sparkles } from "lucide-react";
-import type { UserSession } from "./LoginPage";
+import type { UserSession } from "../types";
 import { Logo } from "./Logo";
 
 interface AppHeaderProps {
