@@ -535,6 +535,14 @@ class EvaluationJobManager:
                 print(f"[JOB {job_id}] Auto-generated detailed Excel report: {excel_file}")
             except Exception as ex_err:
                 print(f"[WARN] Failed to auto-generate Excel report: {ex_err}")
+
+            try:
+                (REPORTS_DIR / "kfold_evaluation_report.json").write_text(
+                    json.dumps(final_report, ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
+            except Exception as sync_err:
+                print(f"[WARN] Failed to sync kfold_evaluation_report.json: {sync_err}")
         except Exception as e:
             print(f"[WARN] Error compiling final report: {e}")
 
