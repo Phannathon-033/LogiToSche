@@ -18,18 +18,14 @@ import {
   HardDrive,
   Layers,
   Pause,
-  Plus,
   RefreshCw,
-  Save,
   Server,
   Settings,
   ShieldAlert,
-  Sliders,
   Sparkles,
   Terminal,
   TrendingDown,
   TrendingUp,
-  X,
   Zap,
 } from "lucide-react";
 import type {
@@ -88,10 +84,6 @@ export function AdminOverview({
   // 3. Real Performance logs (for throughput chart)
   const [perfData, setPerfData] = useState<PerformanceLogResponse | null>(null);
   const [timeRange, setTimeRange] = useState<"1h" | "2h" | "6h" | "all">("2h");
-
-  // 4. Prompt Lab field adding state
-  const [newFieldInput, setNewFieldInput] = useState("");
-  const [isAddingField, setIsAddingField] = useState(false);
 
   // Fetch real-time system health
   const fetchHealth = useCallback(async (showSpinner = false) => {
@@ -421,55 +413,6 @@ export function AdminOverview({
 
     return list.slice(0, 5);
   }, [documents, systemHealth, evalStatus]);
-
-  // Real Prompt Lab handlers
-  const handleThresholdChange = (val: number) => {
-    if (onUpdatePromptLab) {
-      onUpdatePromptLab((prev) => ({
-        ...prev,
-        confidenceThreshold: Math.round(val * 100),
-      }));
-    }
-  };
-
-  const handleModelChange = (model: string) => {
-    if (onUpdatePromptLab) {
-      onUpdatePromptLab((prev) => ({
-        ...prev,
-        selectedModel: model,
-      }));
-    }
-  };
-
-  const handleRemoveField = (fieldToRemove: string) => {
-    if (onUpdatePromptLab) {
-      onUpdatePromptLab((prev) => ({
-        ...prev,
-        monitoredFields: prev.monitoredFields.filter((f) => f !== fieldToRemove),
-      }));
-    }
-  };
-
-  const handleAddField = () => {
-    const trimmed = newFieldInput.trim().toLowerCase().replace(/\s+/g, "_");
-    if (trimmed && onUpdatePromptLab) {
-      onUpdatePromptLab((prev) => {
-        if (prev.monitoredFields.includes(trimmed as keyof JsonSchemaOutput)) return prev;
-        return {
-          ...prev,
-          monitoredFields: [...prev.monitoredFields, trimmed as keyof JsonSchemaOutput],
-        };
-      });
-      setNewFieldInput("");
-      setIsAddingField(false);
-    }
-  };
-
-  // Normalized threshold between 0.0 and 1.0
-  const normalizedThreshold = useMemo(() => {
-    const raw = promptLab?.confidenceThreshold ?? 85;
-    return raw <= 1 ? raw : raw / 100;
-  }, [promptLab?.confidenceThreshold]);
 
   return (
     <div className="space-y-6">
@@ -953,11 +896,11 @@ export function AdminOverview({
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* ROW 4: Actionable Documents & Prompt Lab Quick Controls */}
+      {/* ROW 4: Recent Actionable Documents (100% Real Documents from Firebase) */}
       {/* ------------------------------------------------------------- */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        {/* LEFT COLUMN: Recent Actionable Documents (100% Real Documents from Firebase) */}
-        <section className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-6 lg:col-span-8">
+      <div>
+        {/* Recent Actionable Documents (100% Real Documents from Firebase) */}
+        <section className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h3 className="text-base font-black tracking-tight text-slate-900">
@@ -1099,185 +1042,6 @@ export function AdminOverview({
                 ดูเอกสารทั้งหมดในคิว →
               </button>
             )}
-          </div>
-        </section>
-
-        {/* RIGHT COLUMN: Prompt Lab Quick Controls (100% Real from Prompt Config API) */}
-        <section className="flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-6 lg:col-span-4">
-          <div>
-            {/* Header */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="rounded-lg bg-blue-50 p-2 text-blue-600">
-                  <Sliders className="h-4 w-4" />
-                </div>
-                <div>
-                  <h3 className="text-base font-black tracking-tight text-slate-900">
-                    Prompt Lab Quick Controls
-                  </h3>
-                  <p className="text-xs text-slate-500">
-                    ปรับแต่งพารามิเตอร์การดึงข้อมูลจริง
-                  </p>
-                </div>
-              </div>
-              {onSavePromptConfig && (
-                <button
-                  type="button"
-                  onClick={onSavePromptConfig}
-                  className="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-bold text-blue-700 hover:bg-blue-100"
-                  title="บันทึกการตั้งค่าลง SLM Gateway"
-                >
-                  <Save className="h-3 w-3" />
-                  <span>บันทึก</span>
-                </button>
-              )}
-            </div>
-
-            {/* Form Controls */}
-            <div className="mt-5 space-y-4">
-              {/* Model selection */}
-              <div>
-                <label className="block text-xs font-bold text-slate-700">
-                  โมเดลที่ใช้งาน
-                </label>
-                <select
-                  value={promptLab?.selectedModel || "qwen-2.5-1.5b"}
-                  onChange={(e) => handleModelChange(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/60 px-3 py-2 text-xs font-bold text-slate-900 focus:border-blue-500 focus:bg-white focus:outline-none"
-                >
-                  <option value="qwen-2.5-1.5b">Qwen2.5-1.5B (Active / GPU:0)</option>
-                  <option value="qwen-2.5-3b">Qwen2.5-3B-Instruct</option>
-                  <option value="llama-3.2-3b">Llama-3.2-3B-Instruct</option>
-                  <option value="mistral-7b">Mistral-7B-Instruct-v0.3</option>
-                </select>
-              </div>
-
-              {/* Confidence Threshold Slider */}
-              <div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-700">Confidence Threshold</span>
-                  <span className="font-mono font-black text-blue-600">
-                    {normalizedThreshold.toFixed(2)} ({Math.round(normalizedThreshold * 100)}%)
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="0.50"
-                  max="0.95"
-                  step="0.05"
-                  value={normalizedThreshold}
-                  onChange={(e) => handleThresholdChange(parseFloat(e.target.value))}
-                  className="mt-2 w-full accent-blue-600 cursor-pointer"
-                />
-                <p className="mt-1 text-[11px] text-slate-400">
-                  เอกสารที่มี Confidence ต่ำกว่านี้จะถูกส่งเข้าคิวรอตรวจ
-                </p>
-              </div>
-
-              {/* Monitored Fields Tags */}
-              <div>
-                <label className="block text-xs font-bold text-slate-700">
-                  ฟิลด์ที่ติดตามเป็นพิเศษ (Monitored Fields)
-                </label>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {(promptLab?.monitoredFields || ["tax_id", "total_amount", "vendor_name", "date", "invoice_no"]).map((field) => (
-                    <span
-                      key={String(field)}
-                      className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-100/80 px-2 py-0.5 font-mono text-[11px] font-bold text-slate-700"
-                    >
-                      {String(field)}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveField(String(field))}
-                        className="text-slate-400 hover:text-rose-600"
-                        title={`ลบฟิลด์ ${String(field)}`}
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  ))}
-
-                  {isAddingField ? (
-                    <div className="inline-flex items-center gap-1">
-                      <input
-                        type="text"
-                        placeholder="field_name"
-                        value={newFieldInput}
-                        onChange={(e) => setNewFieldInput(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && handleAddField()}
-                        autoFocus
-                        className="h-6 w-24 rounded border border-blue-400 px-1.5 font-mono text-[11px] outline-none"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleAddField}
-                        className="rounded bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold text-white hover:bg-blue-700"
-                      >
-                        เพิ่ม
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setIsAddingField(false)}
-                        className="text-slate-400 hover:text-slate-600"
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setIsAddingField(true)}
-                      className="inline-flex items-center gap-1 rounded-md border border-dashed border-slate-300 px-2 py-0.5 text-[11px] font-bold text-slate-500 hover:border-blue-400 hover:text-blue-600"
-                    >
-                      <Plus className="h-3 w-3" /> เพิ่มฟิลด์
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Auto Fallback Toggle */}
-              <div className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/60 p-3">
-                <div>
-                  <p className="text-xs font-bold text-slate-900">
-                    เปิดใช้งาน Fallback Rules อัตโนมัติ
-                  </p>
-                  <p className="text-[10px] text-slate-400">
-                    {promptLab?.fallbackRules && promptLab.fallbackRules.length > 0
-                      ? `เปิดใช้งาน ${promptLab.fallbackRules.length} กฎเกณฑ์สำรอง`
-                      : "ใช้ RegEx และ Dictionary เมื่อ SLM ขาดความมั่นใจ"}
-                  </p>
-                </div>
-                <label className="relative inline-flex cursor-pointer items-center">
-                  <input
-                    type="checkbox"
-                    checked={Boolean(promptLab?.fallbackRules && promptLab.fallbackRules.length > 0)}
-                    onChange={(e) => {
-                      if (onUpdatePromptLab) {
-                        onUpdatePromptLab((prev) => ({
-                          ...prev,
-                          fallbackRules: e.target.checked
-                            ? ["regex_total_amount", "dictionary_vendor"]
-                            : [],
-                        }));
-                      }
-                    }}
-                    className="peer sr-only"
-                  />
-                  <div className="peer h-5 w-9 rounded-full bg-slate-200 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-focus:outline-none"></div>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          {/* Action Button */}
-          <div className="mt-5 border-t border-slate-100 pt-4">
-            <button
-              type="button"
-              onClick={onOpenPromptLab}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-black text-white shadow-sm transition hover:bg-blue-700"
-            >
-              เปิด Prompt Lab เต็มรูปแบบ <ArrowRight className="h-4 w-4" />
-            </button>
           </div>
         </section>
       </div>
