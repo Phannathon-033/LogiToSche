@@ -469,13 +469,17 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
     ]
     text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer([text], return_tensors="pt").to(model.device)
-    max_tokens = 300 if benchmark_variant in ("zero-shot", "one-shot", "few-shot") else 900
+    max_tokens = 300 if benchmark_variant in ("zero-shot", "one-shot", "few-shot") else 400
     import time
     t0 = time.time()
     print(f"[SLM] Generating JSON for {payload.source_file} (variant={benchmark_variant}, in_tokens={inputs.input_ids.shape[1]}, max_out={max_tokens})...", flush=True)
 
-    eos_id = tokenizer.eos_token_id or 151645
-    pad_id = tokenizer.pad_token_id or eos_id
+    eos_ids = [tokenizer.eos_token_id, 151645, 151643]
+    eos_ids = list(dict.fromkeys(i for i in eos_ids if i is not None))
+    pad_id = tokenizer.pad_token_id or eos_ids[0]
+
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
 
     with torch.inference_mode():
         generated_ids = model.generate(
@@ -483,7 +487,7 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
             max_new_tokens=max_tokens,
             do_sample=False,
             repetition_penalty=1.05,
-            eos_token_id=eos_id,
+            eos_token_id=eos_ids,
             pad_token_id=pad_id,
         )
     gen_time = time.time() - t0
