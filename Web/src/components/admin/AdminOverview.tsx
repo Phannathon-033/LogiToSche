@@ -13,13 +13,11 @@ import {
   Eye,
   FileCode,
   FileImage,
-  FileSpreadsheet,
   FileText,
   Filter,
   HardDrive,
   Layers,
   Pause,
-  Play,
   Plus,
   RefreshCw,
   Save,
@@ -28,7 +26,6 @@ import {
   ShieldAlert,
   Sliders,
   Sparkles,
-  Square,
   Terminal,
   TrendingDown,
   TrendingUp,
@@ -46,13 +43,10 @@ import {
   getSystemHealth,
   getEvaluationJobStatus,
   getPerformanceLogs,
-  startEvaluation,
-  stopEvaluation,
   type SystemHealthData,
   type EvaluationJobStatusResponse,
   type PerformanceLogResponse,
 } from "../../services/adminApi";
-import { API_BASE_URL, buildApiUrl } from "../../services/apiClient";
 
 export interface AdminOverviewProps {
   analytics: AdminAnalyticsPoint[];
@@ -90,7 +84,6 @@ export function AdminOverview({
 
   // 2. Real Evaluation Job status
   const [evalStatus, setEvalStatus] = useState<EvaluationJobStatusResponse | null>(null);
-  const [isActionLoading, setIsActionLoading] = useState(false);
 
   // 3. Real Performance logs (for throughput chart)
   const [perfData, setPerfData] = useState<PerformanceLogResponse | null>(null);
@@ -429,36 +422,6 @@ export function AdminOverview({
     return list.slice(0, 5);
   }, [documents, systemHealth, evalStatus]);
 
-  // Real Evaluation Runner Handlers
-  const handleStartEval = async () => {
-    setIsActionLoading(true);
-    try {
-      await startEvaluation({ k_splits: 5, random_seed: 42 });
-      await fetchEvalStatus();
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "ไม่สามารถเริ่มการประเมินผลได้");
-    } finally {
-      setIsActionLoading(false);
-    }
-  };
-
-  const handleStopEval = async () => {
-    setIsActionLoading(true);
-    try {
-      await stopEvaluation();
-      await fetchEvalStatus();
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "ไม่สามารถหยุดการประเมินได้");
-    } finally {
-      setIsActionLoading(false);
-    }
-  };
-
-  const handleExportExcel = () => {
-    const url = buildApiUrl("/api/evaluation/export-excel");
-    window.open(url, "_blank");
-  };
-
   // Real Prompt Lab handlers
   const handleThresholdChange = (val: number) => {
     if (onUpdatePromptLab) {
@@ -742,10 +705,10 @@ export function AdminOverview({
       </section>
 
       {/* ------------------------------------------------------------- */}
-      {/* ROW 3: Two Master Cards: System Health & Real-time Runner */}
+      {/* ROW 3: Master Card: System Health & Telemetry */}
       {/* ------------------------------------------------------------- */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* LEFT MASTER CARD: System Health & Telemetry (100% Real from Port 8000) */}
+      <div className="grid grid-cols-1 gap-6">
+        {/* MASTER CARD: System Health & Telemetry (100% Real from Port 8000) */}
         <section className="flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-6">
           <div>
             {/* Header */}
@@ -791,7 +754,7 @@ export function AdminOverview({
             </div>
 
             {/* 4 Telemetry sub-cards (Real GPU, OCR, SLM, RAM) */}
-            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-2">
+            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {/* Tile 1: GPU Engine */}
               <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-3.5 transition hover:border-slate-200">
                 <div className="flex items-center justify-between">
@@ -983,233 +946,6 @@ export function AdminOverview({
                 {throughputMetrics.labels.map((lbl, idx) => (
                   <span key={idx}>{lbl}</span>
                 ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* RIGHT MASTER CARD: Real-time Evaluation Runner (100% Real from Backend Job Manager) */}
-        <section className="flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:p-6">
-          <div>
-            {/* Header */}
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="rounded-md bg-purple-100 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-purple-700">
-                    BENCHMARK RUNNER
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500">
-                    Job: <span className="font-mono text-slate-800">{evalStatus?.job_id || "eval_kfold_active"}</span>
-                  </span>
-                </div>
-                <h3 className="mt-1 text-base font-black tracking-tight text-slate-900">
-                  Real-time Evaluation Runner
-                </h3>
-                <p className="text-xs text-slate-500">
-                  Zero-shot • Qwen2.5-1.5B (FP16) • 5-Fold Cross Validation
-                </p>
-              </div>
-
-              <div>
-                <span
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-black tracking-wide ${
-                    evalStatus?.is_running
-                      ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                      : evalStatus?.status === "completed"
-                      ? "border border-blue-200 bg-blue-50 text-blue-700"
-                      : "border border-slate-200 bg-slate-50 text-slate-700"
-                  }`}
-                >
-                  <span
-                    className={`h-2 w-2 rounded-full ${
-                      evalStatus?.is_running ? "bg-emerald-500 animate-pulse" : evalStatus?.status === "completed" ? "bg-blue-500" : "bg-slate-400"
-                    }`}
-                  />
-                  {evalStatus?.is_running
-                    ? "RUNNING"
-                    : evalStatus?.status
-                    ? evalStatus.status.toUpperCase()
-                    : "IDLE"}
-                </span>
-              </div>
-            </div>
-
-            {/* Dual Progress Bars */}
-            <div className="mt-4 space-y-3 rounded-xl border border-slate-100 bg-slate-50/70 p-3.5">
-              {/* Overall Progress */}
-              <div>
-                <div className="flex items-center justify-between text-xs font-black">
-                  <span className="text-slate-800">ความคืบหน้ารวม</span>
-                  <span className="font-mono text-blue-600">
-                    {evalStatus?.total_docs
-                      ? `${Math.round(((evalStatus.completed_docs || 0) / evalStatus.total_docs) * 100)}% (${evalStatus.completed_docs || 0}/${evalStatus.total_docs} ตัวอย่าง)`
-                      : evalStatus?.final_report
-                      ? "100% (ประเมินเสร็จสมบูรณ์)"
-                      : "พร้อมเริ่มการทดสอบ"}
-                  </span>
-                </div>
-                <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-slate-200">
-                  <div
-                    className="h-full rounded-full bg-blue-600 transition-all duration-300"
-                    style={{
-                      width: evalStatus?.total_docs
-                        ? `${Math.min(100, ((evalStatus.completed_docs || 0) / evalStatus.total_docs) * 100)}%`
-                        : evalStatus?.final_report
-                        ? "100%"
-                        : "0%",
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Fold Progress */}
-              <div>
-                <div className="flex items-center justify-between text-[11px] font-bold">
-                  <span className="text-slate-600">
-                    Fold {evalStatus?.current_fold || (evalStatus?.final_report ? 5 : 1)}/
-                    {evalStatus?.k_splits || 5} (Validation Fold)
-                  </span>
-                  <span className="font-mono text-emerald-600">
-                    {evalStatus?.final_report ? "ครบทั้ง 5 Folds" : "Stratified K-Fold"}
-                  </span>
-                </div>
-                <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
-                  <div
-                    className="h-full rounded-full bg-emerald-500 transition-all duration-300"
-                    style={{
-                      width: evalStatus?.final_report
-                        ? "100%"
-                        : evalStatus?.current_fold
-                        ? `${(evalStatus.current_fold / (evalStatus.k_splits || 5)) * 100}%`
-                        : "20%",
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* 4 Stat Tiles */}
-            <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-              <div className="rounded-xl border border-slate-100 bg-white p-3 text-center shadow-2xs">
-                <span className="text-[10px] font-bold text-slate-400">ตัวอย่างปัจจุบัน</span>
-                <p className="mt-1 truncate font-mono text-xs font-black text-slate-900" title={evalStatus?.current_file_name || evalStatus?.current_doc_id || "DOC-001"}>
-                  {evalStatus?.current_file_name || evalStatus?.current_doc_id || (evalStatus?.final_report ? "5 Folds Complete" : "DOC-001")}
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-slate-100 bg-white p-3 text-center shadow-2xs">
-                <span className="text-[10px] font-bold text-slate-400">เวลาที่ใช้ไป</span>
-                <p className="mt-1 font-mono text-xs font-black text-slate-900">
-                  {evalStatus?.elapsed_seconds
-                    ? `${Math.floor(evalStatus.elapsed_seconds / 60)}m ${evalStatus.elapsed_seconds % 60}s`
-                    : perfData?.summary?.mean_total_time_sec
-                    ? `เฉลี่ย ${perfData.summary.mean_total_time_sec.toFixed(1)}s`
-                    : "0m 00s"}
-                </p>
-                <span className="text-[9px] text-slate-400">Inference Real-time</span>
-              </div>
-
-              <div className="rounded-xl border border-slate-100 bg-white p-3 text-center shadow-2xs">
-                <span className="text-[10px] font-bold text-slate-400">ค่าเฉลี่ย F1-Score</span>
-                <p className="mt-1 font-mono text-xs font-black text-emerald-600">
-                  {evalStatus?.final_report?.metrics_summary?.mean_f1_score_pct
-                    ? `${evalStatus.final_report.metrics_summary.mean_f1_score_pct.toFixed(1)}%`
-                    : evalStatus?.final_f1
-                    ? evalStatus.final_f1
-                    : "100.0%"}
-                </p>
-                <span className="text-[9px] font-bold text-emerald-600">Exact Match</span>
-              </div>
-
-              <div className="rounded-xl border border-slate-100 bg-white p-3 text-center shadow-2xs">
-                <span className="text-[10px] font-bold text-slate-400">Accuracy / Total</span>
-                <p className="mt-1 font-mono text-xs font-black text-slate-900">
-                  {evalStatus?.final_accuracy
-                    ? evalStatus.final_accuracy
-                    : evalStatus?.final_report?.metrics_summary?.mean_accuracy_pct
-                    ? `${evalStatus.final_report.metrics_summary.mean_accuracy_pct.toFixed(1)}%`
-                    : "100.0%"}
-                </p>
-                <span className="text-[9px] text-slate-400">11 ฟิลด์หลัก</span>
-              </div>
-            </div>
-
-            {/* Action Buttons Row */}
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                {evalStatus?.is_running ? (
-                  <button
-                    type="button"
-                    onClick={handleStopEval}
-                    disabled={isActionLoading}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-bold text-rose-800 shadow-2xs transition hover:bg-rose-100 disabled:opacity-50"
-                  >
-                    <Square className="h-3.5 w-3.5 text-rose-600" />
-                    <span>หยุดการประเมิน</span>
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleStartEval}
-                    disabled={isActionLoading}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-blue-600 bg-blue-600 px-3 py-1.5 text-xs font-bold text-white shadow-2xs transition hover:bg-blue-700 disabled:opacity-50"
-                  >
-                    <Play className="h-3.5 w-3.5" />
-                    <span>เริ่มรัน K-Fold</span>
-                  </button>
-                )}
-
-                <button
-                  type="button"
-                  onClick={handleExportExcel}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800 transition hover:bg-emerald-100"
-                >
-                  <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>Export Excel</span>
-                </button>
-              </div>
-
-              {onOpenEvaluation && (
-                <button
-                  type="button"
-                  onClick={onOpenEvaluation}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800"
-                >
-                  เปิดหน้า K-Fold เต็มรูปแบบ →
-                </button>
-              )}
-            </div>
-
-            {/* Live Terminal Window */}
-            <div className="mt-4 overflow-hidden rounded-xl border border-slate-800 bg-slate-950 p-3 shadow-inner">
-              <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 text-[10px]">
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2.5 w-2.5 rounded-full bg-rose-500" />
-                  <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
-                  <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                  <span className="ml-2 font-mono text-slate-400">eval_runner.log</span>
-                </div>
-                <span className="font-mono text-emerald-400 flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping" />
-                  {evalStatus?.is_running ? "streaming..." : "live telemetry ready"}
-                </span>
-              </div>
-              <div className="mt-2 space-y-1 font-mono text-[11px] leading-relaxed text-slate-300">
-                {evalStatus?.recent_logs && evalStatus.recent_logs.length > 0 ? (
-                  evalStatus.recent_logs.slice(-5).map((log, idx) => (
-                    <p key={idx} className="text-slate-300">{log}</p>
-                  ))
-                ) : evalStatus?.logs && evalStatus.logs.length > 0 ? (
-                  evalStatus.logs.slice(-5).map((log, idx) => (
-                    <p key={idx} className="text-slate-300">{log}</p>
-                  ))
-                ) : (
-                  <>
-                    <p className="text-slate-400">[System] Hardware Gateway active: PaddleOCR v4 (Port 8000) &amp; Qwen2.5-1.5B (Port 8001)</p>
-                    <p className="text-slate-400">[System] Pre-cached performance records loaded: {perfData?.summary?.total_documents_logged || 305} items.</p>
-                    <p className="text-emerald-400">[Evaluation] Ready for 5-Fold Cross Validation test on Ground Truth dataset.</p>
-                  </>
-                )}
               </div>
             </div>
           </div>
