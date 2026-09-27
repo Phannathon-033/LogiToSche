@@ -44,6 +44,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import * as XLSX from "xlsx";
 import { API_BASE_URL, apiFetch } from "../services/apiClient";
 
 export interface KFoldEvaluationViewProps {
@@ -443,18 +444,73 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     window.open(`${API_BASE_URL}/api/benchmark/performance-log/csv`, "_blank");
   }
 
+  function handleDownloadPerfExcel() {
+    try {
+      const recordsToExport = filteredPerfRecords.length > 0 ? filteredPerfRecords : perfLogs.records;
+      if (!recordsToExport || recordsToExport.length === 0) {
+        showToast?.("ยังไม่มีรายการ Log Performance สำหรับ Export");
+        return;
+      }
+
+      showToast?.("กำลังสร้างและดาวน์โหลดตาราง Log Performance แยกรายฉบับ (.xlsx)...");
+
+      const rows = recordsToExport.map((r, idx) => {
+        const formattedTime = r.timestamp ? new Date(r.timestamp).toLocaleString("th-TH") : "-";
+        const status = r.accuracy_pct >= 80 ? "PASS" : "REVIEW";
+        return {
+          "ลำดับ (#)": idx + 1,
+          "วัน-เวลาบันทึก (Timestamp)": formattedTime,
+          "รหัสเอกสาร": r.doc_id,
+          "ชื่อไฟล์ภาพ": r.file_name,
+          "Fold": r.fold ? `Fold ${r.fold}` : "-",
+          "เวลา OCR (วินาที)": Number(r.ocr_time_sec.toFixed(3)),
+          "เวลา SLM (วินาที)": Number(r.slm_time_sec.toFixed(3)),
+          "เวลารวมทั้งสิ้น (วินาที)": Number(r.total_time_sec.toFixed(3)),
+          "จุดตรวจสอบที่ตรง": `${r.matched_fields} / ${r.total_fields || 11} ฟิลด์`,
+          "ความแม่นยำ (%)": `${r.accuracy_pct.toFixed(1)}%`,
+          "สถานะ": status,
+        };
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+      worksheet["!cols"] = [
+        { wch: 8 },  // ลำดับ
+        { wch: 22 }, // Timestamp
+        { wch: 12 }, // รหัสเอกสาร
+        { wch: 42 }, // ชื่อไฟล์ภาพ
+        { wch: 10 }, // Fold
+        { wch: 18 }, // เวลา OCR
+        { wch: 18 }, // เวลา SLM
+        { wch: 22 }, // เวลารวม
+        { wch: 20 }, // จุดตรวจสอบที่ตรง
+        { wch: 16 }, // ความแม่นยำ
+        { wch: 12 }, // สถานะ
+      ];
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Per-Document Breakdown");
+
+      const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+      XLSX.writeFile(workbook, `LogiAI_Performance_Breakdown_${dateStr}.xlsx`);
+      showToast?.(`ดาวน์โหลดตาราง Log Performance (${recordsToExport.length} รายการ) เป็น Excel สำเร็จ!`);
+    } catch (err: any) {
+      console.error("Export Perf Excel error:", err);
+      showToast?.(`ไม่สามารถส่งออก Excel ได้: ${err.message || err}`);
+    }
+  }
+
   async function handleDownloadExcelReport() {
     try {
       showToast?.("กำลังสร้างและเตรียมดาวน์โหลดรายงานสรุป Excel อย่างละเอียด (.xlsx)...");
 
-      // 1. Resolve target run_id from currently loaded report or completed job
+      // 1. Resolve target run_id - prioritize newly completed evaluation job or fresh run!
       let targetRunId = "";
-      if (kfoldReport?.run_id && kfoldReport.run_id.startsWith("run_")) {
-        targetRunId = kfoldReport.run_id;
-      } else if (evalJob?.status === "completed" && evalJob?.final_report?.run_id) {
+      if (evalJob?.status === "completed" && evalJob?.final_report?.run_id) {
         targetRunId = evalJob.final_report.run_id;
       } else if (freshStatus?.finished && freshStatus?.final_report?.run_id) {
         targetRunId = freshStatus.final_report.run_id;
+      } else if (kfoldReport?.run_id && kfoldReport.run_id.startsWith("run_")) {
+        targetRunId = kfoldReport.run_id;
       }
 
       // 2. If no valid run_id in state, query the latest benchmark metadata
@@ -2339,12 +2395,22 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
                   <button
                     type="button"
-                    onClick={handleDownloadExcelReport}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition"
-                    title="ดาวน์โหลดรายงานผลสรุปและบันทึกเวลาเป็นไฟล์ Excel (.xlsx)"
+                    onClick={handleDownloadPerfExcel}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/80 bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 text-xs font-bold transition shadow-sm active:scale-95"
+                    title="ดาวน์โหลดเฉพาะตาราง Log Performance แยกรายฉบับนี้เป็นไฟล์ Excel (.xlsx)"
                   >
                     <FileSpreadsheet className="h-3.5 w-3.5" />
-                    <span>รายงานสรุป Excel (.xlsx)</span>
+                    <span>ส่งออกตารางนี้เป็น Excel (.xlsx)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleDownloadExcelReport}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 px-3 py-2 text-xs font-bold shadow-xs transition"
+                    title="ดาวน์โหลดรายงานสรุป K-Fold 4 ชีตอย่างละเอียดและบันทึกเวลาเป็นไฟล์ Excel (.xlsx)"
+                  >
+                    <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
+                    <span>รายงานสรุป K-Fold ทั้งหมด (.xlsx)</span>
                   </button>
 
                   <button
@@ -2463,6 +2529,16 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                       <X className="h-3.5 w-3.5" />
                     </button>
                   )}
+
+                  <button
+                    type="button"
+                    onClick={handleDownloadPerfExcel}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/80 bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 text-xs font-bold transition shadow-xs active:scale-95 shrink-0"
+                    title="ดาวน์โหลดข้อมูลตารางนี้เป็นไฟล์ Excel (.xlsx)"
+                  >
+                    <FileSpreadsheet className="h-3.5 w-3.5" />
+                    <span>ดาวน์โหลด Excel (.xlsx)</span>
+                  </button>
                 </div>
               </div>
 

@@ -131,10 +131,13 @@ def generate_kfold_excel_report(
     if perf_file.is_file():
         try:
             perf_json = json.loads(perf_file.read_text(encoding="utf-8"))
+            all_records = perf_json.get("records", [])
             perf_records = [
-                record for record in perf_json.get("records", [])
+                record for record in all_records
                 if str(record.get("doc_id")) in report_doc_ids
             ]
+            if not perf_records and all_records:
+                perf_records = all_records
         except (OSError, json.JSONDecodeError):
             pass
 
@@ -539,15 +542,16 @@ def generate_kfold_excel_report(
 
     perf_headers = [
         "ลำดับ",
-        "วันเวลา (Timestamp UTC)",
+        "วัน-เวลาบันทึก (Timestamp)",
         "รหัสเอกสาร (Doc ID)",
-        "ชื่อไฟล์รูปภาพ (File Name)",
+        "ชื่อไฟล์ภาพ (File Name)",
         "รอบ (Fold)",
         "เวลา OCR (วินาที)",
         "เวลา SLM บน GPU (วินาที)",
         "เวลารวมต่อฉบับ (วินาที)",
-        "ฟิลด์ที่ถูกต้อง (Matched / 11)",
+        "จุดตรวจสอบที่ตรง (Matched / 11)",
         "ความแม่นยำ (%)",
+        "สถานะ (Status)",
     ]
     for col_idx, h in enumerate(perf_headers, start=1):
         _style_header_cell(ws_perf.cell(row=1, column=col_idx), h, bg_color="334155", font_size=10)
@@ -564,14 +568,26 @@ def generate_kfold_excel_report(
         ws_perf.cell(row=p_row, column=7, value=float(precord.get("slm_time_sec", 0.0))).alignment = Alignment(horizontal="right")
         ws_perf.cell(row=p_row, column=8, value=float(precord.get("total_time_sec", 0.0))).alignment = Alignment(horizontal="right")
         ws_perf.cell(row=p_row, column=9, value=f"{precord.get('matched_fields', 0)}/{precord.get('total_fields', 11)}").alignment = Alignment(horizontal="center")
-        ws_perf.cell(row=p_row, column=10, value=f"{float(precord.get('accuracy_pct', 0.0)):.1f}%").alignment = Alignment(horizontal="right")
+        acc = float(precord.get("accuracy_pct", 0.0))
+        ws_perf.cell(row=p_row, column=10, value=f"{acc:.1f}%").alignment = Alignment(horizontal="right")
 
-        for c in range(1, 11):
+        status_text = "PASS" if acc >= 80.0 else "REVIEW"
+        status_cell = ws_perf.cell(row=p_row, column=11, value=status_text)
+        status_cell.alignment = Alignment(horizontal="center")
+        if status_text == "PASS":
+            status_cell.font = Font(name=FONT_NAME, size=9.5, bold=True, color=COLOR_PASS_TEXT)
+            status_cell.fill = PatternFill(start_color=COLOR_PASS_BG, end_color=COLOR_PASS_BG, fill_type="solid")
+        else:
+            status_cell.font = Font(name=FONT_NAME, size=9.5, bold=True, color="92400E")
+            status_cell.fill = PatternFill(start_color="FEF3C7", end_color="FEF3C7", fill_type="solid")
+
+        for c in range(1, 12):
             cell = ws_perf.cell(row=p_row, column=c)
-            cell.font = Font(name=FONT_NAME, size=9.5)
             cell.border = thin_border
-            if p_idx % 2 == 0:
-                cell.fill = PatternFill(start_color=COLOR_ZEBRA, end_color=COLOR_ZEBRA, fill_type="solid")
+            if c != 11:
+                cell.font = Font(name=FONT_NAME, size=9.5)
+                if p_idx % 2 == 0:
+                    cell.fill = PatternFill(start_color=COLOR_ZEBRA, end_color=COLOR_ZEBRA, fill_type="solid")
 
         p_row += 1
 
