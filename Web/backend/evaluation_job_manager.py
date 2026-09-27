@@ -4,11 +4,9 @@ Provides asynchronous, non-blocking background job execution for K-Fold evaluati
 Features:
 1. Immediate HTTP response upon job creation (no browser timeout).
 2. Per-document immediate saving of predictions and performance logs.
-3. Resume capability (skips already-predicted documents if stopped or interrupted).
-4. OCR Caching: reuses OCR text cache (PaddleOCR run once per document), ensuring
-   Zero-shot, One-shot, and Few-shot evaluate on identical OCR inputs without re-running OCR.
-5. Real-time progress tracking (overall progress, fold progress, elapsed time, live logs).
-6. Graceful stop and cancel controls.
+3. Live evaluation: every document bypasses prediction and OCR caches.
+4. Real-time progress tracking (overall progress, fold progress, elapsed time, live logs).
+5. Graceful stop and cancel controls.
 """
 
 from __future__ import annotations
@@ -38,35 +36,33 @@ try:
     from kfold_evaluator import (
         CORE_FIELDS,
         GT_FILE,
-        PREDICTION_CACHE_DIR,
-        _cache_path,
         _extract,
         _get_document_ground_truth,
-        _get_ocr,
-        _prediction_cache_path,
         _score,
         compare_field_values,
+        benchmark_prompt_snapshot,
         load_prompt_config,
-        benchmark_prompt_for_variant,
+        extraction_base_prompt,
         record_document_performance,
         run_kfold_evaluation,
+        select_training_examples,
+        validate_training_split,
     )
 except ImportError:
     from .kfold_evaluator import (
         CORE_FIELDS,
         GT_FILE,
-        PREDICTION_CACHE_DIR,
-        _cache_path,
         _extract,
         _get_document_ground_truth,
-        _get_ocr,
-        _prediction_cache_path,
         _score,
         compare_field_values,
+        benchmark_prompt_snapshot,
         load_prompt_config,
-        benchmark_prompt_for_variant,
+        extraction_base_prompt,
         record_document_performance,
         run_kfold_evaluation,
+        select_training_examples,
+        validate_training_split,
     )
 
 
@@ -179,6 +175,10 @@ class EvaluationJobManager:
         doc_id: str | None = None,
     ) -> dict[str, Any]:
         """Creates an evaluation job and starts it in a background thread."""
+        if mode == "single_doc":
+            validate_training_split(prompt_variant, 0)
+        resume = False
+        force_rerun_ocr = True
         with self._lock:
             # Check if an active job is already running
             if self._active_job_id:
@@ -321,19 +321,28 @@ class EvaluationJobManager:
         start_time = time.time()
         prompt_snapshot = {
             **load_prompt_config(),
-            "benchmark_prompt": benchmark_prompt_for_variant(prompt_variant),
+            "base_prompt": extraction_base_prompt(load_prompt_config()),
+            "benchmark_prompt": extraction_base_prompt(load_prompt_config()),
             "benchmark_prompt_variant": prompt_variant,
             "benchmark_examples": [],
+            "example_selection": {},
+            "example_selection_by_fold": {},
+            "prompt_source": {
+                "module": "prompts.py",
+                "config_file": str(BASE_DIR / "prompt_config.json"),
+                "variant": "K-Fold composition",
+            },
         }
 
         overall_matched_fields = 0
         overall_evaluated_fields = 0
         overall_doc_counter = 0
+        live_extractions: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
         stopped = False
 
         print(f"\n{'='*70}")
         print(f"  [JOB {job_id}] Started: {job_state['mode']} ({job_state['overall_total']} documents)")
-        print(f"  Resume: {resume} | Prompt: {prompt_variant} | OCR: {'Forced Fresh Read' if force_rerun_ocr else 'Cached'}")
+        print(f"  Live evaluation: prediction and OCR cache bypassed | Prompt: {prompt_variant} | OCR: Forced Fresh Read")
         print(f"{'='*70}\n")
 
         for fold, train_indices, validation_indices in target_splits:
@@ -344,19 +353,43 @@ class EvaluationJobManager:
             fold_docs = [documents[idx] for idx in validation_indices]
             fold_total = len(fold_docs)
 
-            # In-context demonstration examples from train split (Strictly prevent data leakage)
-            benchmark_examples: list[dict[str, Any]] = []
-            if prompt_variant in ("one-shot", "few-shot"):
-                pool = [documents[i] for i in train_indices] if len(train_indices) > 0 else [d for d in documents if d.get("id") != fold_docs[0].get("id")]
-                ex_count = 1 if prompt_variant == "one-shot" else min(3, len(pool))
-                for ex_doc in pool[:ex_count]:
-                    ex_ocr = _get_ocr(ex_doc).get("ocr_text", "")
-                    ex_gt = _get_document_ground_truth(ex_doc)
-                    benchmark_examples.append({
-                        "source_file": ex_doc.get("file_name", ""),
-                        "ocr_text": ex_ocr[:1000],
-                        "json_schema": {k: ex_gt.get(k, "") for k in CORE_FIELDS},
-                    })
+            training_documents = [documents[index] for index in train_indices]
+            benchmark_examples, example_selection = select_training_examples(
+                training_documents,
+                prompt_variant,
+            )
+            if prompt_variant == "one-shot" and len(benchmark_examples) != 1:
+                raise ValueError("one-shot requires one training example")
+            if prompt_variant == "few-shot" and len(training_documents) >= 3 and len(benchmark_examples) < 3:
+                raise ValueError("few-shot requires at least three training examples")
+
+            fold_prompt_snapshot = benchmark_prompt_snapshot(
+                prompt_variant,
+                config=prompt_snapshot,
+                examples=benchmark_examples,
+                selection=example_selection,
+            )
+            fold_prompt_snapshot["benchmark_prompt"] = fold_prompt_snapshot["base_prompt"]
+            prompt_snapshot["example_selection_by_fold"][str(fold)] = example_selection
+            prompt_snapshot.update(fold_prompt_snapshot)
+            prompt_snapshot["example_selection_by_fold"] = prompt_snapshot.get(
+                "example_selection_by_fold", {}
+            )
+            prompt_snapshot["benchmark_examples"] = benchmark_examples
+            prompt_snapshot["example_selection"] = example_selection
+
+            if any(
+                str(example.get("document_id")) in {str(doc.get("id")) for doc in fold_docs}
+                for example in benchmark_examples
+            ):
+                raise RuntimeError("Training example leaked into validation documents")
+
+            job_state["current_fold"] = fold
+            job_state["prompt_source"] = prompt_snapshot.get("prompt_source")
+            job_state["example_selection_by_fold"] = prompt_snapshot["example_selection_by_fold"]
+            job_state["current_example_selection"] = example_selection
+            job_state["benchmark_examples"] = benchmark_examples
+            job_state["training_document_ids"] = [str(doc.get("id")) for doc in training_documents]
 
             job_state["current_fold"] = fold
             job_state["fold_total"] = fold_total
@@ -381,19 +414,17 @@ class EvaluationJobManager:
                 job_state["elapsed_seconds"] = round(time.time() - start_time, 1)
                 self._write_job_file(job_state)
 
-                # Check if document already has cached prediction and resume is enabled
-                pred_cache_file = _prediction_cache_path(doc, prompt_variant)
-                is_cached = resume and pred_cache_file.is_file()
+                is_cached = False
 
                 try:
-                    # Run or load prediction
                     pred, trace = _extract(
                         doc,
                         prompt_snapshot,
-                        force_rerun=(not is_cached),
-                        force_rerun_ocr=force_rerun_ocr,
+                        force_rerun=True,
+                        force_rerun_ocr=True,
                         benchmark_examples=benchmark_examples,
                     )
+                    live_extractions[str(doc_id)] = (pred, trace)
                     doc_elapsed = round(time.time() - t_doc_start, 2)
                     perf = trace.get("performance", {})
                     ocr_t = float(perf.get("ocr_time_sec", 0.85))
@@ -490,8 +521,9 @@ class EvaluationJobManager:
                 random_seed=job_state["random_seed"],
                 single_fold=target_single_fold,
                 doc_id=target_doc_id,
-                force_rerun=False,
+                force_rerun=True,
                 prompt_variant=prompt_variant,
+                precomputed_extractions=live_extractions,
             )
             job_state["final_report"] = final_report
             job_state["final_accuracy"] = str(final_report["metrics_summary"]["accuracy_display"]).replace("±", "+/-")

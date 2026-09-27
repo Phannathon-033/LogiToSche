@@ -141,6 +141,7 @@ export interface SlmPromptConfig {
   confidenceThreshold: number;
   selectedModel: string;
   systemPrompt: string;
+  extractionRules: string[];
   fallbackRules: string[];
   monitoredFields: Array<keyof JsonSchemaOutput>;
 }
@@ -183,7 +184,7 @@ export type BatchFileStatus = "queued" | "ocr_processing" | "ocr_completed" | "s
 
 export interface BatchDocumentItem {
   id: string;
-  file: File;
+  file?: File;
   fileName: string;
   fileSize: string;
   previewUrl: string | null;
@@ -209,6 +210,7 @@ export interface BatchDocumentItem {
 
 export interface AdminActor {
   name: string;
+  email?: string;
   role: "Admin" | "User";
   avatar: string;
 }
@@ -289,6 +291,7 @@ export interface AdminPromptLabState {
   confidenceThreshold: number;
   selectedModel: string;
   systemPrompt: string;
+  extractionRules: string[];
   fallbackRules: string[];
   monitoredFields: Array<keyof JsonSchemaOutput>;
   fewShotExamples: AdminFewShotExample[];

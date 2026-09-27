@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Activity,
   BarChart3,
@@ -8,9 +8,13 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  Search,
   Settings,
+  SlidersHorizontal,
+  Sun,
   Users,
   X,
+  Zap,
 } from "lucide-react";
 import type {
   AdminAnalyticsPoint,
@@ -21,18 +25,22 @@ import type {
   JsonSchemaOutput,
 } from "../types";
 import { getSlmPromptConfig, saveSlmPromptConfig } from "../services/slmApi";
+import {
+  fetchFirebaseDocuments,
+  toAdminDocumentRecord,
+  updateFirebaseDocument,
+  type FirebaseDocumentRecord,
+} from "../services/firebase";
 const initialPromptLabState: AdminPromptLabState = {
   confidenceThreshold: 85,
   selectedModel: "qwen-2.5-1.5b",
   systemPrompt: "",
+  extractionRules: [],
   fallbackRules: [],
   monitoredFields: [],
   fewShotExamples: [],
 };
 
-const initialDocuments: AdminDocumentRecord[] = [];
-const initialAnalytics: AdminAnalyticsPoint[] = [];
-const initialErrorClusters: AdminErrorCluster[] = [];
 import { AdminOverview } from "./admin/AdminOverview";
 import { Logo } from "./Logo";
 import { AdminPromptConfig } from "./admin/AdminPromptConfig";
@@ -43,6 +51,40 @@ import { AdminActivityLogs } from "./admin/AdminActivityLogs";
 import { AdminUserSettings } from "./admin/AdminUserSettings";
 import { GroundTruthViewerModal } from "./GroundTruthViewerModal";
 import { KFoldEvaluationView } from "./KFoldEvaluationView";
+
+function buildAnalytics(documents: AdminDocumentRecord[]): AdminAnalyticsPoint[] {
+  const total = documents.length;
+  const review = documents.filter((document) => document.status === "review").length;
+  const success = documents.filter((document) => document.status === "success").length;
+  const filled = documents.reduce((sum, document) => sum + document.extractedFields.filter((field) => field.value.trim()).length, 0);
+  const totalFields = documents.length * 11;
+  return [
+    { label: "เอกสารทั้งหมด", value: total, hint: "จากเอกสารที่บันทึกจริง" },
+    { label: "สำเร็จ", value: success, hint: `${total ? Math.round((success / total) * 100) : 0}% ของเอกสารทั้งหมด` },
+    { label: "รอตรวจสอบ", value: review, hint: "มี review item หรือ field ว่าง" },
+    { label: "ความครบถ้วนเฉลี่ย", value: totalFields ? Math.round((filled / totalFields) * 100) : 0, hint: "จาก 11 ฟิลด์หลัก" },
+  ];
+}
+
+function buildErrorClusters(documents: AdminDocumentRecord[]): AdminErrorCluster[] {
+  const counts = new Map<string, Set<string>>();
+  documents.forEach((document) => {
+    [...document.missingFields, ...document.conflictingFields, ...document.reviewItems.map((item) => item.field as keyof JsonSchemaOutput)].forEach((field) => {
+      const ids = counts.get(field) || new Set<string>();
+      ids.add(document.id);
+      counts.set(field, ids);
+    });
+  });
+  return [...counts.entries()]
+    .sort(([, a], [, b]) => b.size - a.size)
+    .map(([field, ids], index) => ({
+      id: `cluster-${field}`,
+      title: `${field} ต้องตรวจสอบ`,
+      count: ids.size,
+      documents: ids.size,
+      recommendation: "ตรวจ label และ semantic context ก่อนปรับ prompt",
+    }));
+}
 
 type AdminView = "dashboard" | "documents" | "document-detail" | "users" | "prompt" | "evaluation";
 type PromptQualityTab = "prompt" | "reports";
@@ -58,8 +100,11 @@ interface AdminDashboardProps {
 export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUser }: AdminDashboardProps) {
   const [activeView, setActiveView] = useState<AdminView>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [documents, setDocuments] = useState<AdminDocumentRecord[]>(initialDocuments);
-  const [selectedDocumentId, setSelectedDocumentId] = useState<string>(initialDocuments[0]?.id ?? "");
+  const [documents, setDocuments] = useState<AdminDocumentRecord[]>([]);
+  const [firebaseRecords, setFirebaseRecords] = useState<FirebaseDocumentRecord[]>([]);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string>("");
+  const [documentsLoading, setDocumentsLoading] = useState(true);
+  const [documentsError, setDocumentsError] = useState<string | null>(null);
   const [promptLab, setPromptLab] = useState<AdminPromptLabState>(initialPromptLabState);
   const [promptQualityTab, setPromptQualityTab] = useState<PromptQualityTab>("prompt");
   const [usersSettingsTab, setUsersSettingsTab] = useState<UsersSettingsTab>("users");
@@ -68,6 +113,27 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
   const [promptConfigSaving, setPromptConfigSaving] = useState(false);
   const showToastRef = useRef(showToast);
   showToastRef.current = showToast;
+
+  const loadDocuments = useCallback(async () => {
+    setDocumentsLoading(true);
+    try {
+      const records = await fetchFirebaseDocuments(100);
+      const adminDocuments = records.map(toAdminDocumentRecord);
+      setFirebaseRecords(records);
+      setDocuments(adminDocuments);
+      setSelectedDocumentId((current) => current || adminDocuments[0]?.id || "");
+      setDocumentsError(null);
+    } catch (error) {
+      setDocumentsError(error instanceof Error ? error.message : "ไม่สามารถโหลดเอกสารจริงได้");
+      setDocuments([]);
+    } finally {
+      setDocumentsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadDocuments();
+  }, [loadDocuments]);
 
   useEffect(() => {
     let active = true;
@@ -104,62 +170,33 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
     setActiveView("document-detail");
   }
 
-  function handleSaveDocument(documentId: string, nextJson: JsonSchemaOutput, correctionReason: string) {
+  async function handleSaveDocument(documentId: string, nextJson: JsonSchemaOutput, correctionReason: string) {
     const normalizedReason = correctionReason.trim() || "ปรับแก้ field เพื่อแก้ข้อมูลตกหล่นจากผู้ใช้หรือ SLM";
+    const sourceRecord = firebaseRecords.find((record) => record.id === documentId);
+    const currentDocument = documents.find((document) => document.id === documentId);
+    if (!sourceRecord || !currentDocument) return;
 
-    setDocuments((current) =>
-      current.map((document) => {
-        if (document.id !== documentId) return document;
-
-        const changedFields = (Object.keys(nextJson) as Array<keyof JsonSchemaOutput>).filter((field) => {
-          const previousValue = JSON.stringify(document.jsonOutput[field]);
-          const nextValue = JSON.stringify(nextJson[field]);
-          return previousValue !== nextValue;
-        });
-
-        const correctionHistory = changedFields.map((field, index) => ({
-          id: `${document.id}-corr-${document.correctionHistory.length + index + 1}`,
-          field,
-          previousValue: String(document.jsonOutput[field] ?? ""),
-          nextValue: String(nextJson[field] ?? ""),
-          reason: normalizedReason,
-          correctedBy: "สมชาย วงศ์สวัสดิ์",
-          correctedAt: "27 ส.ค. 2026 10:15",
-        }));
-
-        const updatedDocument: AdminDocumentRecord = {
-          ...document,
-          jsonOutput: nextJson,
-          status: "success",
-          statusLabel: "ปรับแก้แล้ว รอใช้เป็น feedback",
-          result: `${Math.max(document.overallConfidence, 92)}%`,
-          overallConfidence: Math.max(document.overallConfidence, 92),
-          missingFields: [],
-          conflictingFields: [],
-          queueReasons: ["แก้ไขแล้ว ใช้เป็น feedback สำหรับ prompt lab"],
-          reviewNotes: [normalizedReason, ...document.reviewNotes],
-          correctionHistory: [...correctionHistory, ...document.correctionHistory],
-          reviewItems: document.reviewItems.map((item) => ({ ...item, status: "resolved" })),
-        };
-
-        onUpdateJob(
-          {
-            id: document.id,
-            fileName: document.fileName,
-            type: document.type,
-            status: "success",
-            statusLabel: "admin corrected",
-            startedAt: document.date,
-            result: updatedDocument.result,
-          },
-          nextJson,
-        );
-
-        return updatedDocument;
-      }),
-    );
-
-    showToast("บันทึกการแก้ไข mock data แล้ว พร้อมใช้เป็น feedback สำหรับ prompt");
+    try {
+      const updatedRecord = await updateFirebaseDocument(sourceRecord, nextJson, normalizedReason);
+      const updatedDocument = toAdminDocumentRecord(updatedRecord);
+      setFirebaseRecords((current) => current.map((record) => (record.id === documentId ? updatedRecord : record)));
+      setDocuments((current) => current.map((document) => (document.id === documentId ? updatedDocument : document)));
+      onUpdateJob(
+        {
+          id: updatedDocument.id,
+          fileName: updatedDocument.fileName,
+          type: updatedDocument.type,
+          status: updatedDocument.status,
+          statusLabel: updatedDocument.statusLabel,
+          startedAt: updatedDocument.date,
+          result: updatedDocument.result,
+        },
+        nextJson,
+      );
+      showToast("บันทึกการแก้ไขลง Firebase สำเร็จ");
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "ไม่สามารถบันทึกการแก้ไขได้");
+    }
   }
 
   function renderContent() {
@@ -167,10 +204,21 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
       case "dashboard":
         return (
           <AdminOverview
-            analytics={initialAnalytics}
+            analytics={buildAnalytics(documents)}
             documents={documents}
+            loading={documentsLoading}
+            error={documentsError}
+            onRefresh={loadDocuments}
             onOpenDocument={openDocument}
-            onOpenPromptLab={() => setActiveView("prompt")}
+            onOpenPromptLab={() => {
+              setPromptQualityTab("prompt");
+              setActiveView("prompt");
+            }}
+            onOpenEvaluation={() => setActiveView("evaluation")}
+            onOpenReviewQueue={() => setActiveView("documents")}
+            promptLab={promptLab}
+            onUpdatePromptLab={setPromptLab}
+            onSavePromptConfig={handleSavePromptConfig}
           />
         );
       case "documents":
@@ -212,7 +260,7 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
                 </button>
               ))}
             </div>
-            {usersSettingsTab === "users" ? <AdminUserSettings /> : <AdminActivityLogs />}
+            {usersSettingsTab === "users" ? <AdminUserSettings documents={documents} /> : <AdminActivityLogs documents={documents} />}
           </>
         );
       case "prompt":
@@ -256,7 +304,7 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
                 saving={promptConfigSaving}
               />
             ) : (
-              <AdminReports documents={documents} errorClusters={initialErrorClusters} onOpenDocument={openDocument} />
+              <AdminReports documents={documents} errorClusters={buildErrorClusters(documents)} onOpenDocument={openDocument} />
             )}
             <GroundTruthViewerModal isOpen={groundTruthOpen} onClose={() => setGroundTruthOpen(false)} />
           </>
@@ -273,30 +321,57 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
 
   const activeMenuTitle =
     activeView === "dashboard"
-      ? "Dashboard"
+      ? "ภาพรวมการดำเนินงานระบบ"
       : activeView === "evaluation"
-        ? "K-Fold & Model Evaluation"
+        ? "5-Fold Benchmark & Model Evaluation"
         : activeView === "documents"
-          ? "Documents & Review Queue"
+          ? "Documents Queue & Review"
           : activeView === "document-detail"
             ? "Document Detail"
             : activeView === "users"
-              ? "Users & Settings"
-              : "Prompt & Quality";
+              ? "Users & Activity"
+              : "Prompt Lab & Quality Reports";
 
   const adminMenuItems = [
-    { id: "dashboard" as const, name: "Dashboard", icon: LayoutDashboard },
-    { id: "evaluation" as const, name: "ทดสอบ K-Fold & F1", icon: BarChart3 },
-    { id: "documents" as const, name: "Documents", icon: FileSearch },
-    { id: "users" as const, name: "Users & Settings", icon: Users },
-    { id: "prompt" as const, name: "Prompt & Quality", icon: Settings },
+    { id: "dashboard", name: "Overview", icon: LayoutDashboard },
+    { id: "documents", name: "Documents Queue", icon: FileSearch, badge: "237" },
+    { id: "prompt", name: "Prompt Lab", icon: SlidersHorizontal },
+    { id: "reports", name: "Analytics & Reports", icon: BarChart3 },
+    { id: "evaluation", name: "5-Fold Benchmark", icon: Zap },
+    { id: "users", name: "Users & Activity", icon: Users },
+    { id: "settings", name: "Settings", icon: Settings },
   ];
 
-  function selectAdminView(view: AdminView, name: string) {
-    setActiveView(view);
+  function handleSelectMenu(itemId: string, name: string) {
+    if (itemId === "reports") {
+      setPromptQualityTab("reports");
+      setActiveView("prompt");
+    } else if (itemId === "settings") {
+      setUsersSettingsTab("users");
+      setActiveView("users");
+    } else if (itemId === "users") {
+      setUsersSettingsTab("activity");
+      setActiveView("users");
+    } else if (itemId === "prompt") {
+      setPromptQualityTab("prompt");
+      setActiveView("prompt");
+    } else {
+      setActiveView(itemId as AdminView);
+    }
     setSidebarOpen(false);
     showToast(`สลับหน้า: ${name}`);
   }
+
+  const isItemActive = (itemId: string) => {
+    if (itemId === "dashboard") return activeView === "dashboard";
+    if (itemId === "documents") return activeView === "documents" || activeView === "document-detail";
+    if (itemId === "prompt") return activeView === "prompt" && promptQualityTab === "prompt";
+    if (itemId === "reports") return activeView === "prompt" && promptQualityTab === "reports";
+    if (itemId === "evaluation") return activeView === "evaluation";
+    if (itemId === "users") return activeView === "users" && usersSettingsTab === "activity";
+    if (itemId === "settings") return activeView === "users" && usersSettingsTab === "users";
+    return false;
+  };
 
   return (
     <div className="flex min-h-screen w-full bg-slate-50 font-sans text-slate-900">
@@ -318,22 +393,35 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
           </button>
         </div>
 
-        <nav className="flex-1 space-y-2 px-3 py-5" aria-label="เมนู admin">
-          <p className="px-4 pb-1 text-[10px] font-black uppercase tracking-widest text-slate-400">เมนูหลัก</p>
+        <nav className="flex-1 space-y-1.5 px-3 py-5" aria-label="เมนู admin">
+          <p className="px-3 pb-1 text-[10px] font-black uppercase tracking-widest text-slate-400">เมนูหลัก</p>
           {adminMenuItems.map((item) => {
             const Icon = item.icon;
-            const active = activeView === item.id;
+            const active = isItemActive(item.id);
             return (
               <button
                 type="button"
                 key={item.id}
-                onClick={() => selectAdminView(item.id, item.name)}
-                className={`flex h-11 w-full items-center gap-3 rounded-lg px-4 text-left text-sm font-bold transition ${
-                  active ? "bg-blue-50 text-blue-600 shadow-[inset_3px_0_0_#2563EB]" : "text-slate-600 hover:bg-slate-50"
+                onClick={() => handleSelectMenu(item.id, item.name)}
+                className={`flex h-10 w-full items-center justify-between rounded-xl px-3.5 text-left text-xs font-bold transition ${
+                  active
+                    ? "bg-blue-50 text-blue-600 shadow-[inset_3px_0_0_#2563EB]"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
-                <Icon className="h-5 w-5" aria-hidden="true" />
-                {item.name}
+                <div className="flex items-center gap-3">
+                  <Icon className="h-4.5 w-4.5" aria-hidden="true" />
+                  <span>{item.name}</span>
+                </div>
+                {"badge" in item && item.badge && (
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-black ${
+                      active ? "bg-blue-200/80 text-blue-800" : "bg-slate-100 text-slate-600"
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -360,7 +448,7 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
       </aside>
 
       <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-slate-50">
-        <header className="sticky top-0 z-10 flex min-h-[56px] items-center justify-between gap-3 border-b border-slate-200/90 bg-white/95 px-3 py-2.5 backdrop-blur-md shadow-sm sm:px-5 lg:px-6">
+        <header className="sticky top-0 z-10 flex min-h-[60px] items-center justify-between gap-3 border-b border-slate-200/90 bg-white/95 px-4 py-2.5 backdrop-blur-md shadow-2xs sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-3">
             <button type="button" onClick={() => setSidebarOpen(true)} className="rounded-lg p-2 text-slate-600 hover:bg-blue-50 hover:text-blue-600 lg:hidden" aria-label="เปิดเมนู admin">
               <Menu className="h-5 w-5" />
@@ -371,17 +459,55 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
             </div>
           </div>
 
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
-            <button type="button" onClick={onSwitchToUser} className="hidden rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-extrabold text-slate-700 transition hover:bg-slate-50 sm:inline-flex">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            {/* Search Input */}
+            <div className="relative hidden md:block">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="ค้นหาเอกสาร, ผู้ใช้, logs... (⌘ K)"
+                className="h-9 w-60 rounded-xl border border-slate-200 bg-slate-50/70 pl-8 pr-3 text-xs font-medium text-slate-800 placeholder-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none lg:w-72"
+              />
+            </div>
+
+            <button type="button" onClick={onSwitchToUser} className="hidden rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-extrabold text-slate-700 transition hover:bg-slate-50 sm:inline-flex">
               สลับมุมมองผู้ใช้
             </button>
-            <button type="button" className="relative rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900" aria-label="การแจ้งเตือน">
-              <Bell className="h-5 w-5" />
-              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-orange-500" />
+
+            {/* Theme Toggle Button */}
+            <button
+              type="button"
+              onClick={() => showToast("เปิดใช้งานโหมด Light Console (ค่าเริ่มต้น)")}
+              className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+              title="สลับโหมดการแสดงผล"
+              aria-label="สลับโหมด"
+            >
+              <Sun className="h-4.5 w-4.5" />
             </button>
-            <button type="button" className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900" aria-label="ช่วยเหลือ">
-              <CircleHelp className="h-5 w-5" />
+
+            {/* Notification Bell */}
+            <button
+              type="button"
+              onClick={() => showToast("การแจ้งเตือน: มี 3 รายการรอการตรวจสอบ")}
+              className="relative rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+              aria-label="การแจ้งเตือน"
+            >
+              <Bell className="h-4.5 w-4.5" />
+              <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 text-[9px] font-black text-white">
+                3
+              </span>
             </button>
+
+            {/* Super Admin User Profile Pill */}
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200/80 bg-slate-50/80 px-2.5 py-1">
+              <div className="relative flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
+                AD
+                <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full border border-white bg-emerald-500" />
+              </div>
+              <span className="hidden text-xs font-black text-slate-800 lg:inline">
+                Super Admin
+              </span>
+            </div>
           </div>
         </header>
 

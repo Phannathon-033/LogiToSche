@@ -11,7 +11,12 @@ import { FirebaseSaveSuccessModal } from "./components/FirebaseSaveSuccessModal"
 import { SlmPromptAssistantModal } from "./components/SlmPromptAssistantModal";
 import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
 import { KFoldEvaluationView } from "./components/KFoldEvaluationView";
-import { saveDocumentToFirebase } from "./services/firebase";
+import {
+  fetchFirebaseDocuments,
+  saveDocumentToFirebase,
+  type FirebaseDocumentRecord,
+} from "./services/firebase";
+import { FirebaseCloudHistoryModal } from "./components/FirebaseCloudHistoryModal";
 import { createJsonDownload } from "./services/mockProcessingService";
 import {
   exportBatchToExcel,
@@ -58,6 +63,7 @@ export function App() {
     isAdminSession(userSession) ? "admin" : "user",
   );
   const [showPromptAssistantModal, setShowPromptAssistantModal] = useState(false);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [showEvaluationView, setShowEvaluationView] = useState(false);
   const [firebaseSuccessModal, setFirebaseSuccessModal] = useState<{
     isOpen: boolean;
@@ -138,8 +144,8 @@ export function App() {
     }));
 
     newItems.forEach((item) => {
-      const isPdf = item.file.type === "application/pdf" || item.file.name.toLowerCase().endsWith(".pdf");
-      if (isPdf) {
+      const isPdf = item.file?.type === "application/pdf" || item.file?.name.toLowerCase().endsWith(".pdf");
+      if (isPdf && item.file) {
         renderPdfPreview(item.file)
           .then((previewUrl) => {
             if (previewUrl) {
@@ -189,7 +195,9 @@ export function App() {
         );
 
         try {
-          const ocr = await runPaddleOcr(allDocs[i].file, ocrLanguage);
+          const sourceFile = allDocs[i].file;
+          if (!sourceFile) throw new Error("ไม่มีไฟล์ต้นฉบับสำหรับ OCR");
+          const ocr = await runPaddleOcr(sourceFile, ocrLanguage);
           const text = ocr.text || "PaddleOCR ไม่พบข้อความในไฟล์นี้";
           allDocs[i] = {
             ...allDocs[i],
@@ -314,6 +322,35 @@ export function App() {
     } finally {
       setIsBatchProcessing(false);
     }
+  }
+
+  function handleLoadHistoryRecord(record: FirebaseDocumentRecord) {
+    const item: BatchDocumentItem = {
+      id: record.id,
+      fileName: record.fileName,
+      fileSize: record.fileSize,
+      file: undefined,
+      previewUrl: record.storageUrl || null,
+      status: "completed",
+      statusLabel: "โหลดจากประวัติเอกสาร",
+      ocrProgress: 100,
+      ocrText: record.ocrText || "",
+      spatialText: record.spatialText || "",
+      ocrLines: [],
+      jsonOutput: record.jsonSchema,
+      fields: record.fields,
+      confidenceScores: record.confidenceScores,
+      overallConfidence: record.overallConfidence,
+      performance: record.performance || null,
+      reviewItems: record.reviewItems || [],
+      cloudRecordId: record.id,
+      cloudSyncStatus: record.cloudSyncStatus === "synced" ? "synced" : "local_only",
+      storageUrl: record.storageUrl,
+    };
+    setBatchDocuments([item]);
+    setActiveDocIndex(0);
+    setShowHistoryModal(false);
+    showToast(`โหลด ${record.fileName} เข้า Workspace แล้ว`);
   }
 
   function handleSelectDocIndex(index: number) {
@@ -798,6 +835,7 @@ export function App() {
     <div className="min-h-screen bg-page text-ink antialiased">
       <AppHeader
         user={userSession}
+        onOpenHistory={() => setShowHistoryModal(true)}
         onLogout={handleLogout}
         onOpenEvaluation={() => setShowEvaluationView(true)}
         onToggleAdmin={() => setViewMode("admin")}
@@ -867,6 +905,13 @@ export function App() {
           )}
         </div>
       </main>
+
+      <FirebaseCloudHistoryModal
+        isOpen={showHistoryModal}
+        onClose={() => setShowHistoryModal(false)}
+        onLoadDocument={handleLoadHistoryRecord}
+        onShowToast={showToast}
+      />
 
       {firebaseSuccessModal && (
         <FirebaseSaveSuccessModal

@@ -12,6 +12,7 @@ import tempfile
 import time
 import types
 from pathlib import Path
+from urllib.parse import quote
 from typing import Any
 
 try:
@@ -102,6 +103,13 @@ async def verify_gateway_token(request: Request, call_next):
 SUPPORTED_LANGUAGES = {"th", "en"}
 OCR_DEVICE = os.environ.get("LOGIAI_OCR_DEVICE", "gpu:0")
 SLM_SERVICE_URL = os.environ.get("LOGIAI_SLM_URL", "http://127.0.0.1:8001")
+
+
+def slm_request_headers() -> dict[str, str]:
+    token = os.environ.get("LOGIAI_GATEWAY_TOKEN", "").strip()
+    return {"X-LogiAI-Token": token} if token else {}
+
+
 _ocr_engines: dict[str, Any] = {}
 
 
@@ -120,8 +128,9 @@ class SlmExtractRequest(BaseModel):
     ocr_lines: list[OcrLine] = Field(default_factory=list)
     image_base64: str | None = None
     prompt_config: dict[str, Any] | None = None
-    benchmark_prompt_variant: str = "zero-shot"
+    benchmark_prompt_variant: str | None = None
     benchmark_examples: list[dict[str, Any]] = Field(default_factory=list)
+    benchmark_example_selection: dict[str, Any] = Field(default_factory=dict)
 
 
 def convert_pdf_to_image(pdf_bytes: bytes, page_num: int = 0) -> tuple[Image.Image, int]:
@@ -212,7 +221,10 @@ class SlmPromptRequest(BaseModel):
 
 class SlmPromptConfig(BaseModel):
     system_prompt: str = Field(default="", min_length=1)
+    extraction_rules: list[str] = Field(default_factory=list)
+    output_rules: list[str] = Field(default_factory=list)
     fallback_rules: list[str] = Field(default_factory=list)
+    benchmark_prompts: dict[str, str] = Field(default_factory=dict)
     confidence_threshold: int = 85
     selected_model: str = "qwen-2.5-1.5b"
     monitored_fields: list[str] = Field(default_factory=list)
@@ -235,7 +247,11 @@ def health() -> dict[str, str]:
 @app.get("/api/slm/health")
 def slm_health() -> dict[str, Any]:
     try:
-        response = requests.get(f"{SLM_SERVICE_URL}/api/slm/health", timeout=5)
+        response = requests.get(
+            f"{SLM_SERVICE_URL}/api/slm/health",
+            headers=slm_request_headers(),
+            timeout=5,
+        )
         return response.json()
     except requests.RequestException:
         return {"status": "unavailable", "service": "slm", "device": "unknown", "cuda": "false"}
@@ -281,7 +297,11 @@ def system_health() -> dict[str, Any]:
     slm_model = "Qwen2.5-1.5B (FP16)"
     slm_device = "CUDA:0"
     try:
-        r = requests.get(f"{SLM_SERVICE_URL}/api/slm/health", timeout=1.5)
+        r = requests.get(
+            f"{SLM_SERVICE_URL}/api/slm/health",
+            headers=slm_request_headers(),
+            timeout=1.5,
+        )
         if r.status_code == 200:
             data = r.json()
             if data.get("status") in {"ready", "missing-model"} and data.get("cuda"):
@@ -391,7 +411,12 @@ def release_ocr() -> dict[str, str]:
 
 @app.post("/api/slm/extract")
 def slm_extract(payload: SlmExtractRequest) -> dict[str, Any]:
-    return forward_slm_request("/api/slm/extract", payload.model_dump() if hasattr(payload, "model_dump") else payload.dict())
+    body = (
+        payload.model_dump(exclude_none=True, exclude_defaults=True)
+        if hasattr(payload, "model_dump")
+        else payload.dict(exclude_none=True, exclude_defaults=True)
+    )
+    return forward_slm_request("/api/slm/extract", body)
 
 
 @app.post("/api/slm/execute-prompt")
@@ -439,6 +464,7 @@ def get_benchmark_kfold(
     limit: int | None = None,
     doc_id: str | None = None,
     single_fold: int | None = None,
+    run_id: str | None = None,
 ) -> Any:
     cleaned_variant = prompt_variant.strip().lower()
     if cleaned_variant not in {"zero-shot", "one-shot", "few-shot"}:
@@ -453,6 +479,8 @@ def get_benchmark_kfold(
         query += f"&doc_id={doc_id}"
     if single_fold is not None:
         query += f"&single_fold={single_fold}"
+    if run_id is not None:
+        query += f"&run_id={quote(run_id)}"
     return forward_slm_request(f"/api/benchmark/kfold{query}", {}, method="GET")
 
 
@@ -465,10 +493,12 @@ def get_benchmark_fresh_status() -> Any:
 def post_benchmark_fresh_start(
     fold: int = 1,
     k: int = 5,
+    seed: int = 42,
     max_docs: int | None = None,
     re_ocr: bool = False,
+    prompt_variant: str = "zero-shot",
 ) -> Any:
-    query = f"?fold={fold}&k={k}"
+    query = f"?fold={fold}&k={k}&seed={seed}&prompt_variant={quote(prompt_variant)}"
     if max_docs:
         query += f"&max_docs={max_docs}"
     if re_ocr:
@@ -504,17 +534,23 @@ def post_benchmark_performance_log_clear() -> Any:
 @app.get("/api/benchmark/kfold/export-excel")
 @app.get("/api/evaluation/export-excel")
 def get_kfold_excel_report_endpoint(
+    fresh_run_id: str | None = None,
     job_id: str | None = None,
     run_id: str | None = None,
 ) -> Any:
     from fastapi.responses import Response
     from urllib.parse import urlencode
 
-    query = urlencode({key: value for key, value in {"job_id": job_id, "run_id": run_id}.items() if value})
+    query = urlencode({key: value for key, value in {"fresh_run_id": fresh_run_id, "job_id": job_id, "run_id": run_id}.items() if value})
     path = "/api/benchmark/kfold/export-excel"
+    headers = {}
+    gateway_token = os.environ.get("LOGIAI_GATEWAY_TOKEN", "").strip()
+    if gateway_token:
+        headers["X-LogiAI-Token"] = gateway_token
     try:
         response = requests.get(
             f"{SLM_SERVICE_URL}{path}?{query}" if query else f"{SLM_SERVICE_URL}{path}",
+            headers=headers,
             timeout=300,
         )
         if response.status_code >= 400:
@@ -523,7 +559,11 @@ def get_kfold_excel_report_endpoint(
         return Response(
             content=response.content,
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={"Content-Disposition": response.headers.get("Content-Disposition", "attachment")},
+            headers={
+                "Content-Disposition": response.headers.get("Content-Disposition", "attachment"),
+                "Cache-Control": "no-store, no-cache, must-revalidate",
+                "Pragma": "no-cache",
+            },
         )
     except HTTPException:
         raise
@@ -613,7 +653,11 @@ def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -
     timeout = 300 if "benchmark" in path else (60 if method == "GET" else 120)
     if method == "GET":
         try:
-            response = requests.get(f"{SLM_SERVICE_URL}{path}", timeout=timeout)
+            response = requests.get(
+                f"{SLM_SERVICE_URL}{path}",
+                headers=slm_request_headers(),
+                timeout=timeout,
+            )
             response.raise_for_status()
             value = response.json()
             if isinstance(value, (dict, list)):
@@ -622,7 +666,12 @@ def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -
             raise HTTPException(status_code=503, detail=f"SLM service is unavailable: {exc}")
 
     try:
-        response = requests.post(f"{SLM_SERVICE_URL}{path}", json=body, timeout=timeout)
+        response = requests.post(
+            f"{SLM_SERVICE_URL}{path}",
+            json=body,
+            headers=slm_request_headers(),
+            timeout=timeout,
+        )
         response.raise_for_status()
         value = response.json()
         if isinstance(value, (dict, list)):

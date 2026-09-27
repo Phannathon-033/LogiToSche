@@ -20,7 +20,8 @@ import requests
 from sklearn.model_selection import KFold
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
-PROGRESS_FILE = BASE_DIR / "reports" / "fresh_run_progress.json"
+REPORT_DIR = pathlib.Path(os.environ.get("LOGIAI_REPORT_DIR", BASE_DIR / "reports"))
+PROGRESS_FILE = REPORT_DIR / "fresh_run_progress.json"
 PROGRESS_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 try:
@@ -31,13 +32,18 @@ try:
         _cache_path,
         _extract,
         _get_document_ground_truth,
+        _get_ocr,
         _prediction_cache_path,
+        clear_prediction_cache,
         _score,
         compare_field_values,
+        benchmark_prompt_snapshot,
         load_prompt_config,
-        benchmark_prompt_for_variant,
+        extraction_base_prompt,
         record_document_performance,
         run_kfold_evaluation,
+        select_training_examples,
+        validate_training_split,
     )
 except ImportError:
     from .kfold_evaluator import (
@@ -47,13 +53,18 @@ except ImportError:
         _cache_path,
         _extract,
         _get_document_ground_truth,
+        _get_ocr,
         _prediction_cache_path,
+        clear_prediction_cache,
         _score,
         compare_field_values,
+        benchmark_prompt_snapshot,
         load_prompt_config,
-        benchmark_prompt_for_variant,
+        extraction_base_prompt,
         record_document_performance,
         run_kfold_evaluation,
+        select_training_examples,
+        validate_training_split,
     )
 
 
@@ -72,6 +83,8 @@ def run_fresh_fold(
     random_seed: int = 42,
     max_docs: int | None = None,
     force_rerun_ocr: bool = False,
+    fresh_run_id: str | None = None,
+    prompt_variant: str = "zero-shot",
 ) -> dict:
     if not GT_FILE.is_file():
         raise FileNotFoundError(f"Ground truth file not found at {GT_FILE}")
@@ -90,19 +103,37 @@ def run_fresh_fold(
         target_docs = target_docs[:max_docs]
 
     total = len(target_docs)
+    fresh_run_id = fresh_run_id or datetime.now(timezone.utc).strftime("fresh_%Y%m%d_%H%M%S_%f")
+    selected_doc_ids = [str(doc.get("id")) for doc in target_docs]
     start_time = time.time()
+
+    if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
+        raise ValueError(f"Unsupported prompt variant: {prompt_variant}")
+    force_rerun_ocr = True
 
     prompt_snapshot = {
         **load_prompt_config(),
-        "benchmark_prompt": benchmark_prompt_for_variant("zero-shot"),
-        "benchmark_prompt_variant": "zero-shot",
+        "base_prompt": extraction_base_prompt(load_prompt_config()),
+        "benchmark_prompt": extraction_base_prompt(load_prompt_config()),
+        "benchmark_prompt_variant": prompt_variant,
         "benchmark_examples": [],
+        "example_selection": {},
+        "prompt_source": {
+            "module": "prompts.py",
+            "config_file": str(BASE_DIR / "prompt_config.json"),
+            "variant": "K-Fold composition",
+        },
     }
 
     progress_info = {
         "is_running": True,
+        "fresh_run_id": fresh_run_id,
         "fold": fold,
         "k_splits": k_splits,
+        "random_seed": random_seed,
+        "prompt_variant": prompt_variant,
+        "max_docs": max_docs,
+        "selected_doc_ids": selected_doc_ids,
         "current_index": 0,
         "total_docs": total,
         "current_doc_id": "",
@@ -119,6 +150,42 @@ def run_fresh_fold(
 
     total_matched_fields = 0
     total_evaluated_fields = 0
+    fresh_extractions: dict[str, tuple[dict, dict]] = {}
+    training_documents = [documents[i] for i in train_idx]
+    validate_training_split(prompt_variant, len(training_documents))
+    benchmark_examples, example_selection = select_training_examples(
+        training_documents,
+        prompt_variant,
+    )
+    if prompt_variant == "one-shot" and len(benchmark_examples) != 1:
+        raise ValueError("one-shot requires one training example")
+    if prompt_variant == "few-shot" and len(training_documents) >= 3 and len(benchmark_examples) < 3:
+        raise ValueError("few-shot requires at least three training examples")
+    prompt_snapshot.update(
+        benchmark_prompt_snapshot(
+            prompt_variant,
+            config=prompt_snapshot,
+            examples=benchmark_examples,
+            selection=example_selection,
+        )
+    )
+    prompt_snapshot["benchmark_prompt"] = prompt_snapshot["base_prompt"]
+    prompt_snapshot["benchmark_examples"] = benchmark_examples
+    prompt_snapshot["example_selection"] = example_selection
+
+    progress_info["prompt_variant"] = prompt_variant
+    progress_info["prompt_source"] = prompt_snapshot.get("prompt_source")
+    progress_info["example_selection"] = example_selection
+    progress_info["benchmark_examples"] = benchmark_examples
+    progress_info["training_document_ids"] = [str(doc.get("id")) for doc in training_documents]
+
+    if any(
+        str(example.get("document_id")) in {str(doc.get("id")) for doc in target_docs}
+        for example in benchmark_examples
+    ):
+        raise RuntimeError("Training example leaked into validation documents")
+
+    clear_prediction_cache(target_docs, prompt_variant)
 
     print(f"\n{'='*70}")
     print(f"  Starting Fresh GPU Inference: Fold {fold} of {k_splits} ({total} documents)")
@@ -139,7 +206,14 @@ def run_fresh_fold(
         print(f"[{idx:2d}/{total}] {doc_id} ({file_name[:32]}...) -> Extracting on GPU...", end="", flush=True)
 
         try:
-            pred, trace = _extract(doc, prompt_snapshot, force_rerun=True, force_rerun_ocr=force_rerun_ocr)
+            pred, trace = _extract(
+                doc,
+                prompt_snapshot,
+                force_rerun=True,
+                force_rerun_ocr=True,
+                benchmark_examples=benchmark_examples,
+            )
+            fresh_extractions[str(doc_id)] = (pred, trace)
             doc_elapsed = time.time() - t0
             perf = trace.get("performance", {})
             ocr_time = float(perf.get("ocr_time_sec", 0.85))
@@ -203,8 +277,32 @@ def run_fresh_fold(
     print(f"  Live Fold {fold} Accuracy: {progress_info['live_accuracy_pct']}%")
     print(f"{'='*70}\n")
 
-    # Generate final evaluation report with 100% fresh predictions
-    final_report = run_kfold_evaluation(k_splits=k_splits, random_seed=random_seed, single_fold=fold)
+    processed_doc_ids = [str(item["id"]) for item in progress_info["completed_items"]]
+    if not processed_doc_ids:
+        raise RuntimeError("Fresh inference produced no completed documents")
+
+    # Rebuild the report from exactly the validation documents processed above.
+    final_report = run_kfold_evaluation(
+        k_splits=k_splits,
+        random_seed=random_seed,
+        single_fold=fold,
+        selected_doc_ids=processed_doc_ids,
+        precomputed_extractions=fresh_extractions,
+        prompt_variant=prompt_variant,
+        force_rerun=False,
+    )
+    report_doc_ids = [
+        str(doc.get("id"))
+        for fold_data in final_report.get("folds", [])
+        for doc in fold_data.get("document_evaluations", [])
+    ]
+    if report_doc_ids != processed_doc_ids:
+        raise RuntimeError("Fresh report document set does not match the live inference set")
+    final_report["fresh_run_id"] = fresh_run_id
+    final_report["fresh_selected_doc_ids"] = processed_doc_ids
+    progress_info["processed_doc_ids"] = processed_doc_ids
+    progress_info["total_docs"] = len(processed_doc_ids)
+    progress_info["failed_docs"] = total - len(processed_doc_ids)
 
     progress_info["is_running"] = False
     progress_info["finished"] = True
@@ -219,8 +317,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run fresh GPU inference for Fold 1")
     parser.add_argument("--fold", type=int, default=1, help="Target fold number (default: 1)")
     parser.add_argument("--k", type=int, default=5, help="Number of K-splits (default: 5)")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed (default: 42)")
     parser.add_argument("--max", type=int, default=None, help="Max docs to process (for testing)")
-    parser.add_argument("--re-ocr", action="store_true", help="Force re-run PaddleOCR even if cached")
+    parser.add_argument("--re-ocr", action="store_true", help="Retained for compatibility; PaddleOCR always reruns")
+    parser.add_argument("--run-id", default=None, help="Fresh run identifier assigned by the service")
+    parser.add_argument("--prompt-variant", choices=("zero-shot", "one-shot", "few-shot"), default="zero-shot")
     args = parser.parse_args()
 
-    run_fresh_fold(fold=args.fold, k_splits=args.k, max_docs=args.max, force_rerun_ocr=args.re_ocr)
+    run_fresh_fold(
+        fold=args.fold,
+        k_splits=args.k,
+        random_seed=args.seed,
+        max_docs=args.max,
+        force_rerun_ocr=args.re_ocr,
+        fresh_run_id=args.run_id,
+        prompt_variant=args.prompt_variant,
+    )

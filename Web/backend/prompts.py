@@ -9,12 +9,12 @@ from pathlib import Path
 from typing import Any
 
 PROMPT_CONFIG_ENV = "LOGIAI_PROMPT_CONFIG_PATH"
-PROMPT_CONFIG_FILENAME = "prompts.json"
+PROMPT_CONFIG_FILENAME = "prompt_config.json"
 
 
 def prompt_config_path() -> Path:
     configured = os.environ.get(PROMPT_CONFIG_ENV)
-    return Path(configured).expanduser() if configured else Path(__file__).resolve().parent / "config" / PROMPT_CONFIG_FILENAME
+    return Path(configured).expanduser() if configured else Path(__file__).resolve().parent / PROMPT_CONFIG_FILENAME
 
 
 def prompt_config_metadata(config: dict[str, Any], version: int = 1) -> dict[str, Any]:
@@ -40,6 +40,7 @@ CORE_FIELDS = (
     "total_amount",
     "currency",
 )
+BENCHMARK_VARIANTS = {"zero-shot", "one-shot", "few-shot"}
 
 MODEL_IDS = {
     "qwen-2.5-1.5b": "Qwen/Qwen2.5-1.5B-Instruct",
@@ -47,31 +48,152 @@ MODEL_IDS = {
     "llama-3.1-8b": "meta-llama/Llama-3.1-8B-Instruct",
 }
 
-EXTRACTION_SYSTEM_PROMPT = "You extract logistics document data. Return only valid JSON. Do not include markdown or explanations."
-EXTRACTION_RULES = (
-    "Return every canonical field in json_schema; use an empty string or 0 when not grounded in OCR.",
+EXTRACTION_SYSTEM_PROMPT = "You are a logistics document information extraction model. Return only valid JSON. Do not include markdown or explanations."
+DEFAULT_EXTRACTION_RULES = (
+    "Return every canonical field in json_schema and use only values grounded in the current OCR text.",
+    "document_number: extract the primary identifier of the current document. Priority by document type: invoice uses Invoice No., Invoice Number, Document No.; bill_of_lading uses B/L No. or Bill of Lading No.; purchase_order uses PO No., Purchase Order No., or Order No.; packing_list uses Packing List No. or Document No. Exclude reference, booking, customer, account, date, postal, and monetary values. If candidates conflict, choose the value explicitly associated with the current document type; otherwise return an empty string.",
+    "document_date: extract the primary issue date. Priority: Document Date; Invoice/B/L/PO/Packing List Date; Issue Date; date next to the primary document number. Exclude Due Date, Delivery Date, Shipping Date, ETA, ETD, payment dates, and dates inside line-item descriptions. Normalize only unambiguous dates to YYYY-MM-DD; otherwise return an empty string.",
+    "sender: extract the organization that issues, sends, sells, or ships the document or goods. Prefer Seller, Vendor, Supplier, Shipper, Issuer, or From; for invoices prefer the issuing company or seller, and for bills of lading prefer Shipper. Exclude banks, payment providers, Bill To, Ship To, Consignee, Buyer, Customer, table headers, and product descriptions. Return the organization name, not its label.",
+    "receiver: extract the organization or person receiving the document or goods. Prefer Consignee, Buyer, Customer, Bill To, Ship To, Deliver To, or Receiver; for bills of lading prefer Consignee, and for invoices prefer Bill To or Buyer when explicit. Exclude banks, payment channels, sender addresses, and issuing companies unless explicitly marked as receiver.",
+    "origin: extract the logistics origin location only. Priority: Place of Receipt; Port of Loading; Origin; Ship From; From only when clearly a location. Use a port, city, region, country, or shipping address. Exclude sender names, products, destination, payment addresses, and unrelated addresses. Do not infer origin from a sender country without explicit OCR evidence.",
+    "destination: extract the logistics destination location only. Priority: Place of Delivery; Port of Discharge; Destination; Ship To; Deliver To. Use a port, city, region, country, or delivery address. Exclude receiver names, products, origin, and billing addresses unless explicitly the shipment destination. Do not infer destination from a receiver country without explicit OCR evidence.",
+    "reference_number: extract identifiers for another document or transaction, such as PO No., Booking No., Reference No., Customer Reference, or Contract No. Do not copy document_number into reference_number unless OCR explicitly identifies the same value as both.",
+    "unit_price: extract the price per unit from line-item information. Prefer Unit Price, Price, Rate, or Price Each. Exclude Quantity, Subtotal, Tax, Total, Amount Due, Grand Total, and other aggregate amounts. Return a numeric value without currency symbols or thousands separators.",
+    "total_amount: extract the final monetary total. Priority: Grand Total; Amount Due; Total Amount; Invoice Total; Net Total; Total. Exclude Unit Price, line-item amounts, Quantity, Tax, Discount, and Subtotal when a final total exists. Do not choose the largest number; use the label and context.",
+    "currency: extract currency only when explicitly supported by OCR, such as USD, THB, EUR, GBP, or an unambiguous symbol. Do not infer currency from country, location, or document language.",
     "Put source_file, quantity, vehicle, weight, tax, address, payment, and every non-canonical field inside json_schema.other.",
-    "Map invoice, B/L, document, and order numbers to document_number according to context.",
-    "Map Bill To, Ship To, Consignee, Buyer, Customer, and Receiver to receiver; map Vendor, Seller, Shipper, Issuer, and From to sender.",
-    "Map PO, booking, and related-document identifiers to reference_number when they are not the primary document number.",
-    "Normalize dates to YYYY-MM-DD when unambiguous and parse unit_price and total_amount as numbers.",
     "Use confidence values from 0 to 100 and put low-confidence or conflicting values in review_items.",
-    "Return only valid JSON with no markdown or explanation.",
 )
+DEFAULT_OUTPUT_RULES = (
+    "Missing string fields must be an empty string; missing numeric fields must be 0.0. Normalize unambiguous dates to YYYY-MM-DD and use an empty string when a date is absent or ambiguous.",
+    "Return unit_price and total_amount as numeric values without currency symbols or thousands separators.",
+    "Currency must follow symbols or values found in OCR; do not default to THB when USD or $ is present.",
+)
+DEFAULT_BENCHMARK_PROMPTS = {
+    "zero-shot": "Use the main extraction prompt without labeled examples.",
+    "one-shot": "Use the main extraction prompt with exactly one labeled example selected from the training split by OCR confidence.",
+    "few-shot": "Use the main extraction prompt with 3 to 5 labeled examples selected from the training split by OCR confidence.",
+}
+DEFAULT_FALLBACK_RULES = (
+    "Use only evidence from the current OCR text; never copy values from training examples. Training examples demonstrate mapping behavior only.",
+    "Return every canonical field even when no value is found. If evidence is insufficient, return the defined empty value instead of guessing.",
+    "When multiple candidates exist, prefer an explicitly labelled candidate, then one matching the document type, then one semantically valid for the field; otherwise return the empty value.",
+    "A nearby value is not automatically a field value. Verify label, semantic meaning, and OCR context together; do not select a value only because its visual or numeric format looks plausible.",
+    "Do not infer sender, receiver, origin, or destination from world knowledge. Do not infer origin from a sender address or destination from a receiver address unless OCR explicitly identifies the shipment location.",
+    "Do not treat DESCRIPTION, QTY, PRICE, AMOUNT, BILLING PERIOD, or ITEM table headers as extracted values.",
+    "Do not treat banks or payment providers as sender or receiver unless explicitly identified as such; put non-canonical values in json_schema.other and do not create extra top-level canonical fields.",
+    "Confidence represents confidence in the selected value, not general document confidence. Low OCR confidence does not automatically make a value incorrect; combine it with semantic consistency and context.",
+    "Put a field in review_items when OCR confidence is below the configured threshold, candidates conflict, the OCR value appears corrupted, or document context is inconsistent with the selected value.",
+    "When both Subtotal and Total Amount are present, use the final labelled total rather than Subtotal. Interpret Consignee, Ship To, and Deliver To as receiver; treat bank names as payment channels, not sender or receiver.",
+)
+
+
+def configured_output_rules(config: dict[str, Any] | None = None) -> list[str]:
+    active = config or load_prompt_config()
+    rules = active.get("output_rules", DEFAULT_OUTPUT_RULES)
+    if not isinstance(rules, list):
+        return list(DEFAULT_OUTPUT_RULES)
+    normalized = [str(rule).strip() for rule in rules if str(rule).strip()]
+    return normalized or list(DEFAULT_OUTPUT_RULES)
+
+
+def configured_benchmark_prompts(config: dict[str, Any] | None = None) -> dict[str, str]:
+    active = config or load_prompt_config()
+    prompts = active.get("benchmark_prompts", DEFAULT_BENCHMARK_PROMPTS)
+    if not isinstance(prompts, dict):
+        return dict(DEFAULT_BENCHMARK_PROMPTS)
+    return {
+        variant: str(prompts.get(variant) or DEFAULT_BENCHMARK_PROMPTS[variant])
+        for variant in BENCHMARK_VARIANTS
+    }
+
+
+def configured_fallback_rules(config: dict[str, Any] | None = None) -> list[str]:
+    active = config or load_prompt_config()
+    rules = active.get("fallback_rules", DEFAULT_FALLBACK_RULES)
+    if not isinstance(rules, list):
+        return list(DEFAULT_FALLBACK_RULES)
+    normalized = [str(rule).strip() for rule in rules if str(rule).strip()]
+    return normalized or list(DEFAULT_FALLBACK_RULES)
+
+
+def benchmark_prompt_for_variant(variant: str, config: dict[str, Any] | None = None) -> str:
+    normalized = variant.strip().lower()
+    if normalized not in BENCHMARK_VARIANTS:
+        raise ValueError(f"Unsupported benchmark prompt variant: {variant}")
+    return configured_benchmark_prompts(config)[normalized]
+
+
+def configured_extraction_rules(config: dict[str, Any] | None = None) -> list[str]:
+    active = config or load_prompt_config()
+    rules = active.get("extraction_rules", DEFAULT_EXTRACTION_RULES)
+    if not isinstance(rules, list):
+        return list(DEFAULT_EXTRACTION_RULES)
+    normalized = [str(rule).strip() for rule in rules if str(rule).strip()]
+    return normalized or list(DEFAULT_EXTRACTION_RULES)
+
+
+# Kept as a compatibility alias for callers that import the old constant.
+EXTRACTION_RULES = DEFAULT_EXTRACTION_RULES
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 PROMPT_LIBRARY_DIR = BASE_DIR / "prompt_library"
 PRESETS_FILE = PROMPT_LIBRARY_DIR / "admin" / "presets.json"
-BENCHMARK_PROMPT_FILES = {
-    "zero-shot": PROMPT_LIBRARY_DIR / "benchmark" / "zero-shot" / "kfold_extraction.txt",
-    "one-shot": PROMPT_LIBRARY_DIR / "benchmark" / "one-shot" / "kfold_extraction.txt",
-    "few-shot": PROMPT_LIBRARY_DIR / "benchmark" / "few-shot" / "kfold_extraction.txt",
-}
-DEFAULT_BENCHMARK_PROMPTS = {
-    "zero-shot": "Extract the 11 canonical logistics fields from the OCR text into JSON: document_type, document_number, document_date (YYYY-MM-DD), sender, receiver, origin, destination, reference_number, unit_price (float), total_amount (float), currency. No explanations. Return strictly valid JSON.",
-    "one-shot": "Extract the 11 canonical logistics fields from the OCR text into JSON: document_type, document_number, document_date (YYYY-MM-DD), sender, receiver, origin, destination, reference_number, unit_price (float), total_amount (float), currency. Use the one labeled example only to understand formatting and field mapping. Ground every value in the current OCR text. No explanations. Return strictly valid JSON.",
-    "few-shot": "Extract the 11 canonical logistics fields from the OCR text into JSON: document_type, document_number, document_date (YYYY-MM-DD), sender, receiver, origin, destination, reference_number, unit_price (float), total_amount (float), currency. Use the labeled examples only to understand formatting and field mapping. Ground every value in the current OCR text; never copy example values. No explanations. Return strictly valid JSON.",
-}
+
+
+def extraction_base_prompt(config: dict[str, Any] | None = None) -> str:
+    active = config or load_prompt_config()
+    rules = "\n".join(f"- {rule}" for rule in configured_extraction_rules(active))
+    output_rules = "\n".join(f"- {rule}" for rule in configured_output_rules(active))
+    fallback_rules = "\n".join(f"- {rule}" for rule in configured_fallback_rules(active))
+    return (
+        f"{active.get('system_prompt', EXTRACTION_SYSTEM_PROMPT).strip()}\n"
+        f"Extraction rules:\n{rules}\n"
+        f"Output rules:\n{output_rules}\n"
+        f"Domain rules:\n{fallback_rules}"
+    ).strip()
+
+
+def benchmark_prompt_snapshot(
+    variant: str,
+    config: dict[str, Any] | None = None,
+    examples: list[dict[str, Any]] | None = None,
+    selection: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    normalized = variant.strip().lower()
+    if normalized not in BENCHMARK_VARIANTS:
+        raise ValueError(f"Unsupported benchmark prompt variant: {variant}")
+    selected = deepcopy(examples or [])
+    if normalized == "zero-shot" and selected:
+        raise ValueError("zero-shot cannot include benchmark examples")
+    if normalized == "one-shot" and len(selected) != 1:
+        raise ValueError("one-shot requires exactly one benchmark example")
+    if normalized == "few-shot":
+        training_ids = {str(doc_id) for doc_id in (selection or {}).get("training_document_ids", [])}
+        minimum = min(3, len(training_ids))
+        if not minimum <= len(selected) <= 5:
+            raise ValueError("few-shot requires between 3 and 5 examples when the training split has at least 3 documents")
+        if any(str(example.get("document_id", "")) not in training_ids for example in selected):
+            raise ValueError("benchmark examples must come from the training split")
+    elif normalized == "one-shot":
+        training_ids = {str(doc_id) for doc_id in (selection or {}).get("training_document_ids", [])}
+        if str(selected[0].get("document_id", "")) not in training_ids:
+            raise ValueError("benchmark examples must come from the training split")
+    active = prompt_config_snapshot(config or load_prompt_config())
+    return {
+        **active,
+        "base_prompt": extraction_base_prompt(active),
+        "benchmark_prompt_variant": normalized,
+        "benchmark_instruction": benchmark_prompt_for_variant(normalized, active),
+        "benchmark_examples": selected,
+        "example_selection": deepcopy(selection or {}),
+        "prompt_source": {
+            "module": "prompts.py",
+            "config_file": str(prompt_config_path()),
+            "variant": "K-Fold composition",
+        },
+    }
+
 
 DEFAULT_PROMPT_PRESETS: dict[str, dict[str, Any]] = {
     # 1. Extraction Core Presets
@@ -205,36 +327,20 @@ def save_prompt_presets(presets: dict[str, dict[str, Any]]) -> None:
     PRESETS_FILE.write_text(json.dumps(presets, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def benchmark_prompt_for_variant(variant: str) -> str:
-    normalized = variant.strip().lower()
-    if normalized not in BENCHMARK_PROMPT_FILES:
-        raise ValueError(f"Unsupported benchmark prompt variant: {variant}")
-    path = BENCHMARK_PROMPT_FILES[normalized]
-    if path.is_file():
-        prompt = "\n".join(
-            line for line in path.read_text(encoding="utf-8").splitlines()
-            if not line.lstrip().startswith("#")
-        ).strip()
-        if prompt:
-            return prompt
-    return DEFAULT_BENCHMARK_PROMPTS[normalized]
-
-
 def reset_prompt_presets() -> dict[str, dict[str, Any]]:
     save_prompt_presets(DEFAULT_PROMPT_PRESETS)
     return deepcopy(DEFAULT_PROMPT_PRESETS)
 
 
 DEFAULT_ADMIN_CONFIG = {
-    "system_prompt": "คุณคือผู้ช่วยดึงข้อมูลโลจิสติกส์จาก OCR text ให้ map ข้อมูลเข้าสู่ JSON schema อย่างเคร่งครัด แยก sender, receiver, total amount และ document number ให้ชัดเจน พร้อมระบุ field ที่ไม่มั่นใจลง review_items",
-    "fallback_rules": [
-        "ถ้าเจอทั้ง Subtotal และ Total Amount ให้เลือก Total Amount",
-        "Consignee, Ship To, Deliver To ให้ตีความเป็น receiver ตามบริบทเอกสาร",
-        "วันที่ต้อง normalize เป็น YYYY-MM-DD ถ้าตีความได้ชัดเจน",
-    ],
+    "system_prompt": EXTRACTION_SYSTEM_PROMPT,
+    "extraction_rules": list(DEFAULT_EXTRACTION_RULES),
+    "output_rules": list(DEFAULT_OUTPUT_RULES),
+    "fallback_rules": list(DEFAULT_FALLBACK_RULES),
+    "benchmark_prompts": dict(DEFAULT_BENCHMARK_PROMPTS),
     "confidence_threshold": 85,
     "selected_model": "qwen-2.5-1.5b",
-    "monitored_fields": ["document_number", "document_date", "receiver", "total_amount"],
+    "monitored_fields": ["document_number", "document_date", "sender", "receiver", "origin", "destination", "total_amount"],
 }
 
 

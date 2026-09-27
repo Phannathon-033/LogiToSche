@@ -54,6 +54,15 @@ export function AdminReviewQueue({ documents, onOpenDocument }: AdminReviewQueue
           </div>
         </div>
 
+        {documents.length === 0 ? (
+          <p className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center text-xs font-semibold text-slate-500">
+            ยังไม่มีเอกสารที่บันทึกจาก Firebase หรือ Local cache
+          </p>
+        ) : filteredDocuments.length === 0 ? (
+          <p className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center text-xs font-semibold text-slate-500">
+            ไม่พบเอกสารตามตัวกรองที่เลือก
+          </p>
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[720px] border-collapse text-left text-xs">
             <thead>
@@ -117,6 +126,7 @@ export function AdminReviewQueue({ documents, onOpenDocument }: AdminReviewQueue
             </tbody>
           </table>
         </div>
+        )}
       </div>
     </div>
   );

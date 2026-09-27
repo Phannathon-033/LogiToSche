@@ -5,6 +5,7 @@ import { Logo } from "./Logo";
 interface AppHeaderProps {
   user?: UserSession | null;
   onLogout?: () => void;
+  onOpenHistory?: () => void;
   onOpenSignIn?: () => void;
   onOpenEvaluation?: () => void;
   onToggleAdmin?: () => void;
@@ -14,6 +15,7 @@ interface AppHeaderProps {
 export function AppHeader({
   user,
   onLogout,
+  onOpenHistory,
   onOpenSignIn,
   onOpenEvaluation,
   onToggleAdmin,
@@ -43,6 +45,17 @@ export function AppHeader({
               <Sparkles className="h-3.5 w-3.5 text-amber-500" />
               <span className="hidden xs:inline">ทดสอบ K-Fold & F1</span>
               <span className="xs:hidden">K-Fold</span>
+            </button>
+          )}
+
+          {user && onOpenHistory && (
+            <button
+              type="button"
+              onClick={onOpenHistory}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs transition hover:bg-slate-50"
+              title="เปิดประวัติเอกสารที่บันทึกไว้"
+            >
+              ประวัติเอกสาร
             </button>
           )}
 

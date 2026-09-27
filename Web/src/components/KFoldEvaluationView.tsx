@@ -1,7 +1,6 @@
 import {
   Activity,
   AlertCircle,
-  ArrowLeft,
   Award,
   BarChart3,
   BookmarkCheck,
@@ -72,6 +71,27 @@ export interface DocPerformanceSummary {
   mean_total_time_sec: number;
   min_total_time_sec: number;
   max_total_time_sec: number;
+}
+
+export interface FreshRunStatus {
+  is_running: boolean;
+  finished: boolean;
+  fresh_run_id?: string;
+  fold?: number;
+  k_splits?: number;
+  random_seed?: number;
+  max_docs?: number | null;
+  total_docs?: number;
+  completed_docs?: number;
+  failed_docs?: number;
+  current_doc_id?: string;
+  current_file_name?: string;
+  live_accuracy_pct?: number;
+  elapsed_seconds?: number;
+  recent_logs?: string[];
+  selected_doc_ids?: string[];
+  final_accuracy?: string;
+  final_report?: KFoldReport | null;
 }
 
 export interface EvaluationJobStatus {
@@ -367,7 +387,26 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   // Background Evaluation Job System (Immediate response, resume capability, OCR cache)
   const [evalJob, setEvalJob] = useState<EvaluationJobStatus | null>(null);
   const [isPollingJob, setIsPollingJob] = useState<boolean>(false);
+  const [freshStatus, setFreshStatus] = useState<FreshRunStatus | null>(null);
+  const [expectedFreshRunId, setExpectedFreshRunId] = useState<string | null>(null);
+  const [isPollingFresh, setIsPollingFresh] = useState<boolean>(false);
+  const [reportSource, setReportSource] = useState<"fresh" | "evaluation" | null>(null);
   const [autoResume, setAutoResume] = useState<boolean>(false);
+
+  function applyReport(report: KFoldReport, source: "fresh" | "evaluation") {
+    setKfoldReport(report);
+    setReportSource(source);
+    if (report.k_splits) setKSplits(report.k_splits);
+    if (typeof report.random_seed === "number") setRandomSeed(report.random_seed);
+    if (report.prompt_variant === "zero-shot" || report.prompt_variant === "one-shot" || report.prompt_variant === "few-shot") {
+      setPromptVariant(report.prompt_variant);
+    }
+  }
+
+  function reportTimestamp(report: KFoldReport): number {
+    const timestamp = report.created_at ? Date.parse(report.created_at) : Number.NaN;
+    return Number.isFinite(timestamp) ? timestamp : 0;
+  }
 
   async function fetchPerformanceLogs() {
     setLoadingPerfLogs(true);
@@ -412,29 +451,56 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       }
 
       const exportParams = new URLSearchParams();
-      const jobMatchesReport =
-        Boolean(evalJob?.job_id) &&
-        evalJob?.job_id !== "กำลังเริ่มงาน..." &&
-        evalJob?.final_report?.run_id === kfoldReport.run_id;
-      if (jobMatchesReport) {
-        exportParams.set("job_id", evalJob!.job_id!);
-      } else if (kfoldReport.run_id) {
-        exportParams.set("run_id", kfoldReport.run_id);
+      if (reportSource === "fresh") {
+        if (!freshStatus?.fresh_run_id || freshStatus.final_report?.run_id !== kfoldReport.run_id) {
+          showToast?.("ไม่พบ Fresh run ที่ตรงกับรายงานบนหน้าจอ");
+          return;
+        }
+        exportParams.set("fresh_run_id", freshStatus.fresh_run_id);
+        exportParams.set("run_id", kfoldReport.run_id || "");
       } else {
-        showToast?.("ไม่พบรหัสรายงานสำหรับ Export");
-        return;
+        const jobMatchesReport =
+          Boolean(evalJob?.job_id) &&
+          evalJob?.job_id !== "กำลังเริ่มงาน..." &&
+          evalJob?.final_report?.run_id === kfoldReport.run_id;
+        if (jobMatchesReport) {
+          exportParams.set("job_id", evalJob!.job_id!);
+        } else if (kfoldReport.run_id) {
+          exportParams.set("run_id", kfoldReport.run_id);
+        } else {
+          showToast?.("ไม่พบรหัสรายงานสำหรับ Export");
+          return;
+        }
       }
 
       showToast?.("กำลังสร้างและดาวน์โหลดรายงานสรุป Excel อย่างละเอียด (.xlsx)...");
-      const resp = await apiFetch(`/api/benchmark/kfold/export-excel?${exportParams.toString()}`);
+      exportParams.set("_", `${Date.now()}`);
+      const resp = await apiFetch(`/api/benchmark/kfold/export-excel?${exportParams.toString()}`, {
+        cache: "no-store",
+      });
       if (!resp.ok) {
-        throw new Error(`Download failed with status ${resp.status}`);
+        const errorBody = await resp.text();
+        let detail = errorBody;
+        try {
+          const parsed = JSON.parse(errorBody) as { detail?: unknown };
+          if (typeof parsed.detail === "string") detail = parsed.detail;
+        } catch {
+          detail = errorBody;
+        }
+        throw new Error(detail || `Download failed with status ${resp.status}`);
+      }
+      const contentType = resp.headers.get("content-type") || "";
+      if (!contentType.includes("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+        throw new Error("Export endpoint did not return an Excel workbook");
       }
       const blob = await resp.blob();
+      if (blob.size === 0) {
+        throw new Error("Export endpoint returned an empty Excel workbook");
+      }
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `LogiAI_KFold_Evaluation_Report_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      a.download = `LogiAI_KFold_Evaluation_Report_${kfoldReport.run_id || "latest"}.xlsx`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -442,7 +508,8 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       showToast?.("ดาวน์โหลดรายงาน Excel อย่างละเอียดสำเร็จเรียบร้อยแล้ว!");
     } catch (err) {
       console.error("Download Excel error:", err);
-      showToast?.("ไม่สามารถดาวน์โหลดไฟล์ Excel ได้ กรุณาลองใหม่อีกครั้ง");
+      const message = err instanceof Error ? err.message : "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ";
+      showToast?.(`ไม่สามารถดาวน์โหลดไฟล์ Excel ได้: ${message}`);
     }
   }
 
@@ -457,7 +524,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
             const data: EvaluationJobStatus = await res.json();
             setEvalJob(data);
             if (data.status === "completed" && data.final_report) {
-              setKfoldReport(data.final_report);
+              applyReport(data.final_report, "evaluation");
               setIsPollingJob(false);
               showToast?.(`การประเมินผลเสร็จสิ้น 100%! ความแม่นยำ: ${data.final_accuracy || "-"}`);
               fetchPerformanceLogs();
@@ -476,6 +543,76 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     };
   }, [isPollingJob, evalJob?.is_running]);
 
+  // Poll the dedicated subprocess that always re-runs OCR and SLM inference.
+  useEffect(() => {
+    let interval: any;
+    if (isPollingFresh || freshStatus?.is_running) {
+      interval = setInterval(async () => {
+        try {
+          const res = await apiFetch("/api/benchmark/kfold/fresh-status");
+          if (!res.ok) return;
+          const data: FreshRunStatus = await res.json();
+          if (!expectedFreshRunId || data.fresh_run_id !== expectedFreshRunId) return;
+          setFreshStatus(data);
+          if (!data.is_running && data.finished && data.final_report) {
+            applyReport(data.final_report, "fresh");
+            setIsPollingFresh(false);
+            showToast?.(`Fresh GPU Test เสร็จสิ้น ${data.completed_docs || 0} ฉบับ · ความแม่นยำ: ${data.final_accuracy || "-"}`);
+            fetchPerformanceLogs();
+          } else if (!data.is_running && !data.finished) {
+            setIsPollingFresh(false);
+          }
+        } catch (err) {
+          console.error("Poll Fresh evaluation error:", err);
+        }
+      }, 1500);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isPollingFresh, freshStatus?.is_running, expectedFreshRunId]);
+
+  async function handleStartFreshRun() {
+    if (evalJob?.is_running || freshStatus?.is_running) return;
+    try {
+      setKfoldReport(null);
+      setReportSource(null);
+      setExpectedFreshRunId(null);
+      setFreshStatus({ is_running: true, finished: false, fold: selectedSingleFold, k_splits: kSplits });
+      setIsPollingFresh(true);
+      const resp = await apiFetch(
+        `/api/benchmark/kfold/fresh-start?fold=${selectedSingleFold}&k=${Math.max(2, kSplits)}&seed=${randomSeed}&prompt_variant=${encodeURIComponent(promptVariant)}`,
+        { method: "POST" },
+      );
+      if (!resp.ok) throw new Error(`Fresh start failed with status ${resp.status}`);
+      const started: { fresh_run_id?: string } = await resp.json();
+      if (!started.fresh_run_id) throw new Error("Fresh start did not return fresh_run_id");
+      setExpectedFreshRunId(started.fresh_run_id);
+      setFreshStatus((current) => ({
+        ...(current || { is_running: true, finished: false }),
+        fresh_run_id: started.fresh_run_id,
+      }));
+      showToast?.(`เริ่ม Fresh GPU Test Fold ${selectedSingleFold} ใหม่โดยไม่ใช้ prediction cache`);
+    } catch (err) {
+      console.error("Start Fresh evaluation failed:", err);
+      setFreshStatus(null);
+      setIsPollingFresh(false);
+      showToast?.("ไม่สามารถเริ่ม Fresh GPU Test ได้");
+    }
+  }
+
+  async function handleStopFreshRun() {
+    try {
+      const resp = await apiFetch("/api/benchmark/kfold/fresh-stop", { method: "POST" });
+      if (!resp.ok) throw new Error(`Fresh stop failed with status ${resp.status}`);
+      setIsPollingFresh(true);
+      showToast?.("ส่งคำสั่งหยุด Fresh GPU Test แล้ว");
+    } catch (err) {
+      console.error("Stop Fresh evaluation failed:", err);
+      showToast?.("ไม่สามารถหยุด Fresh GPU Test ได้");
+    }
+  }
+
   async function handleStartEvaluationJob(
     targetMode?: "5_fold" | "single_fold" | "single_doc",
     targetFold?: number,
@@ -486,6 +623,8 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
     try {
       setIsPollingJob(true);
+      setKfoldReport(null);
+      setReportSource(null);
       // Give instant UI feedback so button transforms immediately
       setEvalJob({
         job_id: "กำลังเริ่มงาน...",
@@ -598,7 +737,9 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         }
       }
 
-      // Check active Background Evaluation Job status on mount
+      // Restore the newest completed report when both evaluation engines have state.
+      let restoredEvaluationReport: KFoldReport | null = null;
+      let restoredFreshReport: KFoldReport | null = null;
       try {
         const evalRes = await apiFetch("/api/evaluation/status");
         if (evalRes.ok) {
@@ -607,11 +748,35 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           if (evalData.is_running) {
             setIsPollingJob(true);
           } else if (evalData.status === "completed" && evalData.final_report) {
-            setKfoldReport(evalData.final_report);
+            restoredEvaluationReport = evalData.final_report;
           }
         }
       } catch (e) {
         console.warn("Check eval job on mount:", e);
+      }
+
+      try {
+        const freshRes = await apiFetch("/api/benchmark/kfold/fresh-status");
+        if (freshRes.ok) {
+          const freshData: FreshRunStatus = await freshRes.json();
+          if (freshData.fresh_run_id) {
+            setExpectedFreshRunId(freshData.fresh_run_id);
+            setFreshStatus(freshData);
+            if (freshData.is_running) {
+              setIsPollingFresh(true);
+            } else if (freshData.finished && freshData.final_report) {
+              restoredFreshReport = freshData.final_report;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Check Fresh run on mount:", e);
+      }
+
+      if (restoredFreshReport && (!restoredEvaluationReport || reportTimestamp(restoredFreshReport) >= reportTimestamp(restoredEvaluationReport))) {
+        applyReport(restoredFreshReport, "fresh");
+      } else if (restoredEvaluationReport) {
+        applyReport(restoredEvaluationReport, "evaluation");
       }
     } catch (err) {
       console.error("Failed to load benchmark data:", err);
@@ -768,16 +933,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       <div className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md px-4 sm:px-6 py-3">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            {onBack && (
-              <button
-                type="button"
-                onClick={onBack}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>กลับ</span>
-              </button>
-            )}
             <div>
               <div className="flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700">
@@ -996,8 +1151,13 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 >
                   <select
                     value={promptVariant}
-                    disabled={evalJob?.is_running}
-                    onChange={(e) => setPromptVariant(e.target.value as "zero-shot" | "one-shot" | "few-shot")}
+                    disabled={Boolean(evalJob?.is_running || freshStatus?.is_running)}
+                    onChange={(e) => {
+                      const nextVariant = e.target.value as "zero-shot" | "one-shot" | "few-shot";
+                      setPromptVariant(nextVariant);
+                      setKfoldReport(null);
+                      setReportSource(null);
+                    }}
                     className="bg-transparent text-xs font-bold focus:outline-none cursor-pointer disabled:opacity-60"
                   >
                     <option value="zero-shot" className="text-slate-900 bg-white">Zero-shot</option>
@@ -1019,15 +1179,35 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
               </div>
             </div>
 
-            {/* Run CTA Button */}
-            <div className="flex items-center gap-2">
+            {/* Run CTA Buttons */}
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={handleStartFreshRun}
+                disabled={Boolean(evalJob?.is_running || freshStatus?.is_running || evaluationMode === "all_folds")}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-500 px-4 py-2.5 text-xs font-black text-slate-950 shadow-md transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-60"
+                title="รัน Fold ที่เลือกใหม่ด้วย OCR และ SLM บน GPU โดยไม่ใช้ prediction cache"
+              >
+                {freshStatus?.is_running ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
+                <span>{freshStatus?.is_running ? `Fresh ${freshStatus.completed_docs || 0}/${freshStatus.total_docs || 0}` : "Fresh GPU Fold"}</span>
+              </button>
+              {freshStatus?.is_running && (
+                <button
+                  type="button"
+                  onClick={handleStopFreshRun}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-red-300 bg-red-50 px-3 py-2.5 text-xs font-bold text-red-700 transition hover:bg-red-100"
+                >
+                  <X className="h-3.5 w-3.5" />
+                  หยุด Fresh
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => {
                   const targetMode = evaluationMode === "all_folds" ? "5_fold" : evaluationMode === "single_doc" ? "single_doc" : "single_fold";
                   handleStartEvaluationJob(targetMode, selectedSingleFold);
                 }}
-                disabled={evalJob?.is_running}
+                disabled={Boolean(evalJob?.is_running || freshStatus?.is_running)}
                 className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-xs font-black text-white shadow-md transition ${
                   evalJob?.is_running
                     ? "bg-slate-700 cursor-not-allowed opacity-90"

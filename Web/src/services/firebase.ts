@@ -21,7 +21,9 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import type {
+  AdminDocumentRecord,
   ConfidenceScore,
+  DocumentType,
   ExtractedField,
   JsonSchemaOutput,
   ReviewItem,
@@ -174,7 +176,10 @@ export async function uploadDocumentFileToStorage(
  * with automatic fallback to Local Persistent Storage so data is never lost.
  */
 export async function saveDocumentToFirebase(
-  record: Omit<FirebaseDocumentRecord, "id" | "createdAt"> & { id?: string },
+  record: Omit<FirebaseDocumentRecord, "id" | "createdAt"> & {
+    id?: string;
+    createdAt?: FirebaseDocumentRecord["createdAt"];
+  },
   file?: File | null
 ): Promise<FirebaseDocumentRecord> {
   const docId = record.id || `doc_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
@@ -196,7 +201,7 @@ export async function saveDocumentToFirebase(
     id: docId,
     storageUrl: storageUrl || "",
     storagePath: storagePath || "",
-    createdAt: new Date().toISOString(),
+    createdAt: record.createdAt || new Date().toISOString(),
     cloudSyncStatus: "local_saved",
     cloudSyncNote: "บันทึกลง Local Workspace เรียบร้อยแล้ว (รอการเปิดฐานข้อมูลบน Cloud Firestore)",
   };
@@ -231,21 +236,42 @@ export async function saveDocumentToFirebase(
   const otherObj = schema.other && typeof schema.other === "object" ? { ...schema.other } : {};
   delete (otherObj as any).storage_url;
 
-  // Pure 11 Core Logistics Fields + other object ONLY
   const dataToSave = sanitizeForFirestore({
     document_type: docType,
     document_number: docNumber,
     document_date: docDate,
-    sender: sender,
-    receiver: receiver,
-    origin: origin,
-    destination: destination,
+    sender,
+    receiver,
+    origin,
+    destination,
     reference_number: refNo,
     unit_price: unitPrice,
     total_amount: totalAmount,
-    currency: currency,
+    currency,
     other: otherObj,
+    source_file: record.fileName,
+    file_name: record.fileName,
+    file_size: record.fileSize,
+    file_type: record.fileType,
+    fields: record.fields,
+    confidence_scores: record.confidenceScores,
+    overall_confidence: record.overallConfidence,
+    performance: record.performance ?? null,
+    review_items: record.reviewItems ?? [],
+    ocr_text: record.ocrText ?? "",
+    spatial_text: record.spatialText ?? "",
+    storage_url: storageUrl || "",
+    storage_path: storagePath || "",
+    user_email: record.userEmail ?? "",
+    user_name: record.userName ?? "",
+    created_at: record.createdAt || new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   });
+  const persistedData = dataToSave as Record<string, any>;
+  persistedData.other = otherObj;
+  if (storageUrl) persistedData.other.storage_url = storageUrl;
+  persistedData.storage_url = storageUrl || "";
+  persistedData.storage_path = storagePath || "";
 
   try {
     const docRef = doc(db, "logistics_extractions", docId);
@@ -291,71 +317,64 @@ export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<F
       const data = docSnap.data() as any;
       const schemaOut: JsonSchemaOutput = {
         document_type: data.document_type || "invoice",
-        document_number: data.document_number || data.document_no || "-",
-        document_date: data.document_date || "-",
-        sender: data.sender || data.party_name || "-",
-        receiver: data.receiver || "-",
-        origin: data.origin || "-",
-        destination: data.destination || "-",
-        reference_number: data.reference_number || data.document_number || data.document_no || "-",
+        document_number: data.document_number || data.document_no || "",
+        document_date: data.document_date || "",
+        sender: data.sender || data.party_name || "",
+        receiver: data.receiver || "",
+        origin: data.origin || "",
+        destination: data.destination || "",
+        reference_number: data.reference_number || "",
         unit_price: Number(data.unit_price) || 0,
         total_amount: Number(data.total_amount) || 0,
-        currency: data.currency || "THB",
-        document_no: data.document_number || data.document_no || "-",
-        party_name: data.sender || data.party_name || "-",
-        source_file: data.source_file || docSnap.id,
-        quantity: data.quantity ?? 1,
+        currency: data.currency || "",
+        document_no: data.document_number || data.document_no || "",
+        party_name: data.sender || data.party_name || "",
+        source_file: data.source_file || data.file_name || docSnap.id,
+        quantity: data.quantity ?? 0,
         other: data.other && typeof data.other === "object" ? data.other : {},
       };
 
+      const storedFields = Array.isArray(data.fields) ? data.fields as ExtractedField[] : null;
+      const storedReviewItems = Array.isArray(data.review_items) ? data.review_items as ReviewItem[] : [];
+      const storedConfidenceScores = Array.isArray(data.confidence_scores) ? data.confidence_scores as ConfidenceScore[] : null;
+      const storedPerformance = data.performance && typeof data.performance === "object" ? data.performance as SlmPerformanceMetrics : null;
+      const createdAt = data.created_at || data.updated_at || "";
+      const userEmail = String(data.user_email || "");
+      const userName = String(data.user_name || "");
+      const fileName = String(data.file_name || data.source_file || docSnap.id);
+      const fileSize = String(data.file_size || "");
+      const fileType = String(data.file_type || "");
+      const storageUrl = String(data.storage_url || data.other?.storage_url || "");
+      const storagePath = String(data.storage_path || "");
+      const overallConfidence = Number(data.overall_confidence) || storedPerformance?.accuracy_pct || 0;
+      const fields = storedFields || buildStoredFields(schemaOut, data.other);
+      const confidenceScores = storedConfidenceScores || [];
+
       const otherObj = schemaOut.other || {};
-      const fieldsList: ExtractedField[] = [
-        { id: 1, sourceText: schemaOut.document_type, field: "document_type", value: schemaOut.document_type, confidence: 98, status: "success", isOther: false },
-        { id: 2, sourceText: schemaOut.document_number, field: "document_number", value: schemaOut.document_number, confidence: 96, status: "success", isOther: false },
-        { id: 3, sourceText: schemaOut.document_date, field: "document_date", value: schemaOut.document_date, confidence: 95, status: "success", isOther: false },
-        { id: 4, sourceText: schemaOut.sender, field: "sender", value: schemaOut.sender, confidence: 94, status: "success", isOther: false },
-        { id: 5, sourceText: schemaOut.receiver, field: "receiver", value: schemaOut.receiver, confidence: 94, status: "success", isOther: false },
-        { id: 6, sourceText: schemaOut.origin, field: "origin", value: schemaOut.origin, confidence: 93, status: "success", isOther: false },
-        { id: 7, sourceText: schemaOut.destination, field: "destination", value: schemaOut.destination, confidence: 93, status: "success", isOther: false },
-        { id: 8, sourceText: schemaOut.reference_number, field: "reference_number", value: schemaOut.reference_number, confidence: 95, status: "success", isOther: false },
-        { id: 9, sourceText: String(schemaOut.unit_price), field: "unit_price", value: String(schemaOut.unit_price), confidence: 95, status: "success", isOther: false },
-        { id: 10, sourceText: String(schemaOut.total_amount), field: "total_amount", value: String(schemaOut.total_amount), confidence: 96, status: "success", isOther: false },
-        { id: 11, sourceText: schemaOut.currency, field: "currency", value: schemaOut.currency, confidence: 98, status: "success", isOther: false },
-      ];
-
-      Object.entries(otherObj).forEach(([k, v], idx) => {
-        if (k !== "storage_url") {
-          fieldsList.push({
-            id: 8 + idx,
-            sourceText: String(v),
-            field: k,
-            value: String(v),
-            confidence: 90,
-            status: "success",
-            isOther: true,
-          });
-        }
-      });
-
       cloudDocs.push({
         id: docSnap.id,
-        fileName: schemaOut.source_file || `${docSnap.id}.tif`,
-        fileSize: "0.85 MB",
-        fileType: "image/jpeg",
-        storageUrl: String(otherObj.storage_url || ""),
+        fileName,
+        fileSize,
+        fileType,
+        storageUrl,
+        storagePath,
         documentType: schemaOut.document_type,
         jsonSchema: schemaOut,
-        fields: fieldsList,
-        confidenceScores: [
-          { label: "การอ่านข้อความ (OCR)", value: 96, tone: "green" },
-          { label: "การทำความเข้าใจ (SLM)", value: 95, tone: "blue" },
-          { label: "การแมป 11 ฟิลด์หลัก", value: 98, tone: "blue" },
-          { label: "ความครบถ้วน Other", value: 95, tone: "blue" },
-        ],
-        overallConfidence: 96,
+        fields,
+        confidenceScores,
+        overallConfidence,
+        performance: storedPerformance,
+        reviewItems: storedReviewItems,
+        ocrText: String(data.ocr_text || ""),
+        spatialText: String(data.spatial_text || ""),
+        createdAt,
+        userEmail,
+        userName,
         cloudSyncStatus: "synced",
         cloudSyncNote: "บันทึกใน Cloud Firestore (11 ฟิลด์หลัก + other) สำเร็จ",
       });
+
+      void otherObj;
     });
   } catch (error: any) {
     console.warn("Notice reading from Cloud Firestore (showing local documents):", error?.message || error);
@@ -383,6 +402,127 @@ export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<F
 /**
  * Delete a document from Firestore, Storage, and Local Cache
  */
+function buildStoredFields(schema: JsonSchemaOutput, other: Record<string, unknown> = {}): ExtractedField[] {
+  const coreFields: Array<[keyof JsonSchemaOutput, string]> = [
+    ["document_type", schema.document_type],
+    ["document_number", schema.document_number],
+    ["document_date", schema.document_date],
+    ["sender", schema.sender],
+    ["receiver", schema.receiver],
+    ["origin", schema.origin],
+    ["destination", schema.destination],
+    ["reference_number", schema.reference_number],
+    ["unit_price", String(schema.unit_price)],
+    ["total_amount", String(schema.total_amount)],
+    ["currency", schema.currency],
+  ];
+  return [
+    ...coreFields.map(([field, value], index) => ({
+      id: index + 1,
+      sourceText: value,
+      field,
+      value,
+      confidence: value && value !== "0" ? 100 : 0,
+      status: value && value !== "0" ? "success" as const : "review" as const,
+      isOther: false,
+    })),
+    ...Object.entries(other)
+      .filter(([key]) => key !== "storage_url")
+      .map(([field, value], index) => ({
+        id: coreFields.length + index + 1,
+        sourceText: String(value),
+        field,
+        value: String(value),
+        confidence: 100,
+        status: "success" as const,
+        isOther: true,
+      })),
+  ];
+}
+
+export function toAdminDocumentRecord(record: FirebaseDocumentRecord): AdminDocumentRecord {
+  const schema = record.jsonSchema;
+  const missingFields = ([
+    "document_type", "document_number", "document_date", "sender", "receiver",
+    "origin", "destination", "reference_number", "unit_price", "total_amount", "currency",
+  ] as Array<keyof JsonSchemaOutput>).filter((field) => {
+    const value = schema[field];
+    return typeof value === "number" ? value === 0 : !String(value || "").trim();
+  });
+  const reviewFields = new Set((record.reviewItems || []).filter((item) => item.status === "review").map((item) => item.field));
+  const reviewFieldNames = [...reviewFields];
+
+  const status = missingFields.length > 0 || record.reviewItems?.some((item) => item.status === "review") ? "review" : "success";
+  const confidence = record.overallConfidence || record.performance?.accuracy_pct || 0;
+  const date = formatFirebaseDate(record.createdAt);
+  const name = record.userName || record.userEmail || "Unknown uploader";
+  const email = record.userEmail || "";
+  const type = normalizeDocumentType(record.documentType || schema.document_type);
+
+  return {
+    id: record.id,
+    fileName: record.fileName,
+    type,
+    uploadedBy: { name, email, role: "User", avatar: name.slice(0, 2).toUpperCase() || "U" },
+    date,
+    status,
+    statusLabel: status === "review" ? "รอตรวจสอบ" : "สำเร็จ",
+    result: `${confidence}%`,
+    overallConfidence: confidence,
+    queueReasons: [...new Set([...missingFields.map((field) => `ขาด ${field}`), ...reviewFieldNames.map((field) => `Review ${field}`)])],
+    missingFields,
+    conflictingFields: [],
+    errorTags: [],
+    reviewNotes: record.reviewItems?.map((item) => item.field) || [],
+    ocrText: record.ocrText || "",
+    jsonOutput: schema,
+    extractedFields: record.fields,
+    reviewItems: record.reviewItems || [],
+    correctionHistory: [],
+    promptSignals: [],
+    metrics: {
+      ocrTime: record.performance ? `${record.performance.inference_time_sec}s` : "-",
+      slmTime: record.performance ? `${record.performance.inference_time_sec}s` : "-",
+      totalTime: record.performance ? `${record.performance.inference_time_sec}s` : "-",
+      device: record.performance?.device || "-",
+      ocrEngine: "PaddleOCR",
+      slmModel: record.performance?.model || "Qwen2.5-1.5B",
+    },
+    ocrLines: [],
+  };
+}
+
+function normalizeDocumentType(value: string): DocumentType {
+  const normalized = value.toLowerCase();
+  if (normalized.includes("bill") || normalized.includes("lading")) return "Bill of Lading";
+  if (normalized.includes("packing")) return "Packing List";
+  if (normalized.includes("purchase") || normalized.includes("order")) return "Purchase Order";
+  return "Invoice";
+}
+
+function formatFirebaseDate(value: FirebaseDocumentRecord["createdAt"]): string {
+  if (!value) return "-";
+  const date = typeof value === "string" ? new Date(value) : value?.toDate?.() || new Date(value?.seconds ? value.seconds * 1000 : 0);
+  return Number.isNaN(date.getTime()) ? "-" : date.toLocaleString("th-TH", { dateStyle: "medium", timeStyle: "short" });
+}
+
+export async function updateFirebaseDocument(
+  record: FirebaseDocumentRecord,
+  jsonSchema: JsonSchemaOutput,
+  correctionReason: string,
+): Promise<FirebaseDocumentRecord> {
+  const fields = buildStoredFields(jsonSchema, jsonSchema.other);
+  const reviewItems = (record.reviewItems || []).map((item) => ({ ...item, status: "resolved" as const }));
+  return saveDocumentToFirebase({
+    ...record,
+    jsonSchema,
+    fields,
+    reviewItems,
+    cloudSyncStatus: undefined,
+    cloudSyncNote: correctionReason,
+  });
+}
+
 export async function deleteDocumentFromFirebase(docId: string, storagePath?: string): Promise<void> {
   removeFromLocalCache(docId);
 

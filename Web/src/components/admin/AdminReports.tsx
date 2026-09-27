@@ -1,4 +1,4 @@
-import { BarChart3, Download } from "lucide-react";
+import { BarChart3 } from "lucide-react";
 import type { AdminDocumentRecord, AdminErrorCluster } from "../../types";
 
 interface AdminReportsProps {
@@ -25,13 +25,9 @@ export function AdminReports({ documents, errorClusters, onOpenDocument }: Admin
           <h3 className="text-xs font-black uppercase tracking-widest text-slate-400">รายงาน & สถิติการประมวลผล</h3>
           <p className="mt-1 text-sm font-black text-slate-900">วิเคราะห์ความผิดพลาดเพื่อนำไปปรับ prompt และ rule</p>
         </div>
-        <button
-          type="button"
-          className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-blue-500"
-        >
-          <Download className="h-4 w-4" />
-          ดาวน์โหลดรายงาน PDF
-        </button>
+        <span className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-500">
+          รายงานจากเอกสารที่บันทึกจริง
+        </span>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
@@ -67,7 +63,11 @@ export function AdminReports({ documents, errorClusters, onOpenDocument }: Admin
         <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-panel">
           <h4 className="mb-6 text-xs font-black uppercase tracking-wider text-slate-900">field ที่พลาดบ่อย</h4>
           <div className="space-y-4">
-            {Object.entries(fieldCounts).map(([field, count]) => (
+            {Object.entries(fieldCounts).length === 0 ? (
+              <p className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center text-xs font-semibold text-slate-500">
+                ยังไม่มี missing หรือ conflicting field จากเอกสารจริง
+              </p>
+            ) : Object.entries(fieldCounts).map(([field, count]) => (
               <div key={field} className="space-y-1">
                 <div className="flex justify-between text-xs font-bold text-slate-600">
                   <span>{field}</span>
@@ -87,8 +87,18 @@ export function AdminReports({ documents, errorClusters, onOpenDocument }: Admin
             <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">พร้อมเป็น feedback</span>
           </div>
           <div className="space-y-3">
-            {errorClusters.map((cluster, index) => {
-              const document = documents[index % documents.length];
+            {errorClusters.length === 0 ? (
+              <p className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center text-xs font-semibold text-slate-500">
+                ยังไม่มี error cluster จากเอกสารจริง
+              </p>
+            ) : errorClusters.map((cluster) => {
+              const field = cluster.id.replace(/^cluster-/, "");
+              const document = documents.find((item) =>
+                item.missingFields.includes(field as keyof AdminDocumentRecord["jsonOutput"]) ||
+                item.conflictingFields.includes(field as keyof AdminDocumentRecord["jsonOutput"]) ||
+                item.reviewItems.some((reviewItem) => reviewItem.field === field),
+              );
+              if (!document) return null;
               return (
                 <button
                   key={cluster.id}

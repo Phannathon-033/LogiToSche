@@ -167,6 +167,7 @@ function mapPromptConfig(data: {
   confidence_threshold: number;
   selected_model: string;
   system_prompt: string;
+  extraction_rules: string[];
   fallback_rules: string[];
   monitored_fields: string[];
 }): SlmPromptConfigResponse {
@@ -174,6 +175,7 @@ function mapPromptConfig(data: {
     confidenceThreshold: data.confidence_threshold,
     selectedModel: data.selected_model,
     systemPrompt: data.system_prompt,
+    extractionRules: data.extraction_rules,
     fallbackRules: data.fallback_rules,
     monitoredFields: data.monitored_fields as SlmPromptConfigResponse["monitoredFields"],
   };
@@ -193,6 +195,7 @@ export async function saveSlmPromptConfig(config: SlmPromptConfig): Promise<SlmP
       confidence_threshold: config.confidenceThreshold,
       selected_model: config.selectedModel,
       system_prompt: config.systemPrompt,
+      extraction_rules: config.extractionRules,
       fallback_rules: config.fallbackRules,
       monitored_fields: config.monitoredFields,
     }),
