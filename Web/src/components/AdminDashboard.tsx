@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Activity,
   BarChart3,
@@ -21,6 +21,12 @@ import type {
   JsonSchemaOutput,
 } from "../types";
 import { getSlmPromptConfig, saveSlmPromptConfig } from "../services/slmApi";
+import {
+  fetchFirebaseDocuments,
+  toAdminDocumentRecord,
+  updateFirebaseDocument,
+  type FirebaseDocumentRecord,
+} from "../services/firebase";
 const initialPromptLabState: AdminPromptLabState = {
   confidenceThreshold: 85,
   selectedModel: "qwen-2.5-1.5b",
@@ -31,9 +37,6 @@ const initialPromptLabState: AdminPromptLabState = {
   fewShotExamples: [],
 };
 
-const initialDocuments: AdminDocumentRecord[] = [];
-const initialAnalytics: AdminAnalyticsPoint[] = [];
-const initialErrorClusters: AdminErrorCluster[] = [];
 import { AdminOverview } from "./admin/AdminOverview";
 import { Logo } from "./Logo";
 import { AdminPromptConfig } from "./admin/AdminPromptConfig";
@@ -44,6 +47,40 @@ import { AdminActivityLogs } from "./admin/AdminActivityLogs";
 import { AdminUserSettings } from "./admin/AdminUserSettings";
 import { GroundTruthViewerModal } from "./GroundTruthViewerModal";
 import { KFoldEvaluationView } from "./KFoldEvaluationView";
+
+function buildAnalytics(documents: AdminDocumentRecord[]): AdminAnalyticsPoint[] {
+  const total = documents.length;
+  const review = documents.filter((document) => document.status === "review").length;
+  const success = documents.filter((document) => document.status === "success").length;
+  const filled = documents.reduce((sum, document) => sum + document.extractedFields.filter((field) => field.value.trim()).length, 0);
+  const totalFields = documents.length * 11;
+  return [
+    { label: "เอกสารทั้งหมด", value: total, hint: "จากเอกสารที่บันทึกจริง" },
+    { label: "สำเร็จ", value: success, hint: `${total ? Math.round((success / total) * 100) : 0}% ของเอกสารทั้งหมด` },
+    { label: "รอตรวจสอบ", value: review, hint: "มี review item หรือ field ว่าง" },
+    { label: "ความครบถ้วนเฉลี่ย", value: totalFields ? Math.round((filled / totalFields) * 100) : 0, hint: "จาก 11 ฟิลด์หลัก" },
+  ];
+}
+
+function buildErrorClusters(documents: AdminDocumentRecord[]): AdminErrorCluster[] {
+  const counts = new Map<string, Set<string>>();
+  documents.forEach((document) => {
+    [...document.missingFields, ...document.conflictingFields, ...document.reviewItems.map((item) => item.field as keyof JsonSchemaOutput)].forEach((field) => {
+      const ids = counts.get(field) || new Set<string>();
+      ids.add(document.id);
+      counts.set(field, ids);
+    });
+  });
+  return [...counts.entries()]
+    .sort(([, a], [, b]) => b.size - a.size)
+    .map(([field, ids], index) => ({
+      id: `cluster-${field}`,
+      title: `${field} ต้องตรวจสอบ`,
+      count: ids.size,
+      documents: ids.size,
+      recommendation: "ตรวจ label และ semantic context ก่อนปรับ prompt",
+    }));
+}
 
 type AdminView = "dashboard" | "documents" | "document-detail" | "users" | "prompt" | "evaluation";
 type PromptQualityTab = "prompt" | "reports";
@@ -59,8 +96,11 @@ interface AdminDashboardProps {
 export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUser }: AdminDashboardProps) {
   const [activeView, setActiveView] = useState<AdminView>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [documents, setDocuments] = useState<AdminDocumentRecord[]>(initialDocuments);
-  const [selectedDocumentId, setSelectedDocumentId] = useState<string>(initialDocuments[0]?.id ?? "");
+  const [documents, setDocuments] = useState<AdminDocumentRecord[]>([]);
+  const [firebaseRecords, setFirebaseRecords] = useState<FirebaseDocumentRecord[]>([]);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string>("");
+  const [documentsLoading, setDocumentsLoading] = useState(true);
+  const [documentsError, setDocumentsError] = useState<string | null>(null);
   const [promptLab, setPromptLab] = useState<AdminPromptLabState>(initialPromptLabState);
   const [promptQualityTab, setPromptQualityTab] = useState<PromptQualityTab>("prompt");
   const [usersSettingsTab, setUsersSettingsTab] = useState<UsersSettingsTab>("users");
@@ -69,6 +109,27 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
   const [promptConfigSaving, setPromptConfigSaving] = useState(false);
   const showToastRef = useRef(showToast);
   showToastRef.current = showToast;
+
+  const loadDocuments = useCallback(async () => {
+    setDocumentsLoading(true);
+    try {
+      const records = await fetchFirebaseDocuments(100);
+      const adminDocuments = records.map(toAdminDocumentRecord);
+      setFirebaseRecords(records);
+      setDocuments(adminDocuments);
+      setSelectedDocumentId((current) => current || adminDocuments[0]?.id || "");
+      setDocumentsError(null);
+    } catch (error) {
+      setDocumentsError(error instanceof Error ? error.message : "ไม่สามารถโหลดเอกสารจริงได้");
+      setDocuments([]);
+    } finally {
+      setDocumentsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadDocuments();
+  }, [loadDocuments]);
 
   useEffect(() => {
     let active = true;
@@ -105,62 +166,33 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
     setActiveView("document-detail");
   }
 
-  function handleSaveDocument(documentId: string, nextJson: JsonSchemaOutput, correctionReason: string) {
+  async function handleSaveDocument(documentId: string, nextJson: JsonSchemaOutput, correctionReason: string) {
     const normalizedReason = correctionReason.trim() || "ปรับแก้ field เพื่อแก้ข้อมูลตกหล่นจากผู้ใช้หรือ SLM";
+    const sourceRecord = firebaseRecords.find((record) => record.id === documentId);
+    const currentDocument = documents.find((document) => document.id === documentId);
+    if (!sourceRecord || !currentDocument) return;
 
-    setDocuments((current) =>
-      current.map((document) => {
-        if (document.id !== documentId) return document;
-
-        const changedFields = (Object.keys(nextJson) as Array<keyof JsonSchemaOutput>).filter((field) => {
-          const previousValue = JSON.stringify(document.jsonOutput[field]);
-          const nextValue = JSON.stringify(nextJson[field]);
-          return previousValue !== nextValue;
-        });
-
-        const correctionHistory = changedFields.map((field, index) => ({
-          id: `${document.id}-corr-${document.correctionHistory.length + index + 1}`,
-          field,
-          previousValue: String(document.jsonOutput[field] ?? ""),
-          nextValue: String(nextJson[field] ?? ""),
-          reason: normalizedReason,
-          correctedBy: "สมชาย วงศ์สวัสดิ์",
-          correctedAt: "27 ส.ค. 2026 10:15",
-        }));
-
-        const updatedDocument: AdminDocumentRecord = {
-          ...document,
-          jsonOutput: nextJson,
-          status: "success",
-          statusLabel: "ปรับแก้แล้ว รอใช้เป็น feedback",
-          result: `${Math.max(document.overallConfidence, 92)}%`,
-          overallConfidence: Math.max(document.overallConfidence, 92),
-          missingFields: [],
-          conflictingFields: [],
-          queueReasons: ["แก้ไขแล้ว ใช้เป็น feedback สำหรับ prompt lab"],
-          reviewNotes: [normalizedReason, ...document.reviewNotes],
-          correctionHistory: [...correctionHistory, ...document.correctionHistory],
-          reviewItems: document.reviewItems.map((item) => ({ ...item, status: "resolved" })),
-        };
-
-        onUpdateJob(
-          {
-            id: document.id,
-            fileName: document.fileName,
-            type: document.type,
-            status: "success",
-            statusLabel: "admin corrected",
-            startedAt: document.date,
-            result: updatedDocument.result,
-          },
-          nextJson,
-        );
-
-        return updatedDocument;
-      }),
-    );
-
-    showToast("บันทึกการแก้ไข mock data แล้ว พร้อมใช้เป็น feedback สำหรับ prompt");
+    try {
+      const updatedRecord = await updateFirebaseDocument(sourceRecord, nextJson, normalizedReason);
+      const updatedDocument = toAdminDocumentRecord(updatedRecord);
+      setFirebaseRecords((current) => current.map((record) => (record.id === documentId ? updatedRecord : record)));
+      setDocuments((current) => current.map((document) => (document.id === documentId ? updatedDocument : document)));
+      onUpdateJob(
+        {
+          id: updatedDocument.id,
+          fileName: updatedDocument.fileName,
+          type: updatedDocument.type,
+          status: updatedDocument.status,
+          statusLabel: updatedDocument.statusLabel,
+          startedAt: updatedDocument.date,
+          result: updatedDocument.result,
+        },
+        nextJson,
+      );
+      showToast("บันทึกการแก้ไขลง Firebase สำเร็จ");
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "ไม่สามารถบันทึกการแก้ไขได้");
+    }
   }
 
   function renderContent() {
@@ -168,8 +200,11 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
       case "dashboard":
         return (
           <AdminOverview
-            analytics={initialAnalytics}
+            analytics={buildAnalytics(documents)}
             documents={documents}
+            loading={documentsLoading}
+            error={documentsError}
+            onRefresh={loadDocuments}
             onOpenDocument={openDocument}
             onOpenPromptLab={() => setActiveView("prompt")}
           />
@@ -213,7 +248,7 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
                 </button>
               ))}
             </div>
-            {usersSettingsTab === "users" ? <AdminUserSettings /> : <AdminActivityLogs />}
+            {usersSettingsTab === "users" ? <AdminUserSettings documents={documents} /> : <AdminActivityLogs documents={documents} />}
           </>
         );
       case "prompt":
@@ -257,7 +292,7 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
                 saving={promptConfigSaving}
               />
             ) : (
-              <AdminReports documents={documents} errorClusters={initialErrorClusters} onOpenDocument={openDocument} />
+              <AdminReports documents={documents} errorClusters={buildErrorClusters(documents)} onOpenDocument={openDocument} />
             )}
             <GroundTruthViewerModal isOpen={groundTruthOpen} onClose={() => setGroundTruthOpen(false)} />
           </>

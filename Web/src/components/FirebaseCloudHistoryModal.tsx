@@ -168,10 +168,10 @@ export function FirebaseCloudHistoryModal({
   }
 
   function handleCopyRules() {
-    const rules = `rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if true;\n    }\n  }\n}`;
+    const rules = `rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /logistics_extractions/{document} {\n      allow read, write: if request.auth != null;\n    }\n  }\n}`;
     navigator.clipboard.writeText(rules);
     setCopiedRules(true);
-    onShowToast("คัดลอก Firestore Rules เรียบร้อย");
+    onShowToast("คัดลอกตัวอย่าง Firestore Rules แล้ว ต้องปรับตามระบบ Auth ก่อนใช้งานจริง");
     setTimeout(() => setCopiedRules(false), 2000);
   }
 
@@ -305,7 +305,7 @@ export function FirebaseCloudHistoryModal({
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <p className="font-extrabold text-sm text-slate-900">
-                      วิธีเปิดสิทธิ์บันทึกข้อมูลใน Firebase Console (ใช้เวลาเพียง 15 วินาที):
+                      ตัวอย่างการตั้ง Firestore Rules สำหรับระบบที่มี Authentication:
                     </p>
                     <button
                       type="button"
@@ -334,11 +334,7 @@ export function FirebaseCloudHistoryModal({
                       </a>
                     </li>
                     <li>
-                      เปลี่ยนเป็น{" "}
-                      <code className="rounded bg-white border border-blue-200 px-1.5 py-0.5 font-mono text-[11px] font-bold text-blue-900">
-                        allow read, write: if true;
-                      </code>{" "}
-                      แล้วกด <b>"Publish" (เผยแพร่)</b>
+                      ใช้กฎตัวอย่างที่ตรวจสอบผู้ใช้แล้ว และปรับเงื่อนไขให้ตรงกับ Firebase Authentication ของระบบก่อนกด <b>"Publish"</b>
                     </li>
                     <li>
                       เปิดลิงก์{" "}
@@ -351,11 +347,7 @@ export function FirebaseCloudHistoryModal({
                         Firebase Storage Rules
                         <ExternalLink className="h-3 w-3" />
                       </a>{" "}
-                      เปลี่ยนเป็น{" "}
-                      <code className="rounded bg-white border border-blue-200 px-1.5 py-0.5 font-mono text-[11px] font-bold text-blue-900">
-                        allow read, write: if true;
-                      </code>{" "}
-                      แล้วกด <b>"Publish"</b>
+                      ใช้กฎที่ตรวจสอบผู้ใช้แล้วและปรับเงื่อนไขให้ตรงกับ Storage ของระบบก่อนกด <b>"Publish"</b>
                     </li>
                     <li>
                       เสร็จแล้วกลับมากดปุ่ม <b>"ซิงค์ขึ้น Cloud"</b> ข้อมูลจะถูกอัปโหลดขึ้น Firebase อัตโนมัติทันที

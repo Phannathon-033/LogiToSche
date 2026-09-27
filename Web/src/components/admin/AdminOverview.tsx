@@ -18,6 +18,9 @@ import { getSystemHealth, type SystemHealthData } from "../../services/adminApi"
 interface AdminOverviewProps {
   analytics: AdminAnalyticsPoint[];
   documents: AdminDocumentRecord[];
+  loading?: boolean;
+  error?: string | null;
+  onRefresh?: () => void;
   onOpenDocument: (documentId: string) => void;
   onOpenPromptLab: () => void;
 }
@@ -25,6 +28,9 @@ interface AdminOverviewProps {
 export function AdminOverview({
   analytics,
   documents,
+  loading = false,
+  error = null,
+  onRefresh,
   onOpenDocument,
   onOpenPromptLab,
 }: AdminOverviewProps) {
@@ -68,9 +74,9 @@ export function AdminOverview({
   });
   const recentDocuments = actionableDocuments.slice(0, 5);
 
-  const isGpuActive = systemHealth?.gpu.status === "ACTIVE" || !healthError;
-  const isOcrActive = systemHealth?.ocr.status === "ACTIVE" || !healthError;
-  const isSlmActive = systemHealth?.slm.status === "ACTIVE" || !healthError;
+  const isGpuActive = systemHealth?.gpu.status === "ACTIVE";
+  const isOcrActive = systemHealth?.ocr.status === "ACTIVE";
+  const isSlmActive = systemHealth?.slm.status === "ACTIVE";
   const activeDevicesCount = (isGpuActive ? 1 : 0) + (isOcrActive ? 1 : 0) + (isSlmActive ? 1 : 0);
 
   return (
@@ -78,7 +84,12 @@ export function AdminOverview({
       <div className="flex flex-col gap-1">
         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600">Admin Console</p>
         <h3 className="text-xl font-black tracking-tight text-slate-900 sm:text-2xl">ภาพรวมการประมวลผลเอกสาร</h3>
-        <p className="text-xs font-semibold text-slate-500">ติดตามสถานะเอกสาร อุปกรณ์ และผลการทำงานของระบบในหน้าเดียว</p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-xs font-semibold text-slate-500">ติดตามสถานะเอกสารที่บันทึกจริง อุปกรณ์ และผลการทำงานของระบบในหน้าเดียว</p>
+          {onRefresh && <button type="button" onClick={onRefresh} disabled={loading} className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-600 disabled:opacity-50">{loading ? "กำลังโหลด..." : "รีเฟรชเอกสาร"}</button>}
+        </div>
+        {error && <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800">{error}</p>}
+        {!loading && documents.length === 0 && <p className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-500">ยังไม่มีเอกสารที่บันทึกจากผู้ใช้</p>}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -313,7 +324,7 @@ export function AdminOverview({
                   : "border-red-200 bg-red-50 text-red-700"
               }`}
             >
-              {systemHealth?.status_label || (healthError ? "Connecting..." : "All systems active")}
+              {systemHealth?.status_label || (healthError ? "เชื่อมต่อไม่ได้" : "กำลังโหลดข้อมูล")}
             </span>
           </div>
         </div>
@@ -331,9 +342,9 @@ export function AdminOverview({
             </div>
             <span
               className="mt-1 block truncate text-xs font-extrabold text-slate-900"
-              title={systemHealth?.gpu.name || "NVIDIA GeForce RTX 3050 Laptop GPU"}
+              title={systemHealth?.gpu.name || "ยังไม่มีข้อมูล GPU"}
             >
-              {systemHealth?.gpu.name || "RTX 3050 Laptop GPU"}
+              {systemHealth?.gpu.name || "ยังไม่มีข้อมูล"}
             </span>
             <div className="mt-2 flex items-center justify-between">
               <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-700">
@@ -341,7 +352,7 @@ export function AdminOverview({
                 {systemHealth?.gpu.status || "ACTIVE"}
               </span>
               <span className="text-[10px] font-bold text-slate-500">
-                {systemHealth?.gpu.cuda_version ? `CUDA ${systemHealth.gpu.cuda_version}` : "CUDA 12.6"}
+                {systemHealth?.gpu.cuda_version ? `CUDA ${systemHealth.gpu.cuda_version}` : "-"}
               </span>
             </div>
           </div>
@@ -351,16 +362,16 @@ export function AdminOverview({
             <div className="flex items-center justify-between">
               <span className="block text-[9px] font-black uppercase text-slate-400">VRAM Usage</span>
               <span className="text-[9px] font-extrabold text-blue-600">
-                {systemHealth?.vram.percent !== undefined ? `${systemHealth.vram.percent}%` : "83%"}
+                {systemHealth?.vram.percent !== undefined ? `${systemHealth.vram.percent}%` : "-"}
               </span>
             </div>
             <span className="mt-1 block text-xs font-extrabold text-slate-900">
-              {systemHealth?.vram.label || "3.3 GB / 4.0 GB"}
+              {systemHealth?.vram.label || "ยังไม่มีข้อมูล"}
             </span>
             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-200">
               <div
                 className="h-full rounded-full bg-blue-600 transition-all duration-500"
-                style={{ width: `${Math.min(100, Math.max(5, systemHealth?.vram.percent ?? 83))}%` }}
+                style={{ width: `${Math.min(100, Math.max(0, systemHealth?.vram.percent ?? 0))}%` }}
               />
             </div>
           </div>
@@ -370,11 +381,11 @@ export function AdminOverview({
             <div className="flex items-center justify-between">
               <span className="block text-[9px] font-black uppercase text-slate-400">OCR Engine</span>
               <span className="text-[9px] font-extrabold text-slate-500">
-                {systemHealth?.ocr.device ? `Device ${systemHealth.ocr.device}` : "gpu:0"}
+                {systemHealth?.ocr.device ? `Device ${systemHealth.ocr.device}` : "-"}
               </span>
             </div>
             <span className="mt-1 block text-xs font-extrabold text-slate-900">
-              {systemHealth?.ocr.engine || "PaddleOCR v4 (GPU)"}
+              {systemHealth?.ocr.engine || "ยังไม่มีข้อมูล"}
             </span>
             <div className="mt-2 flex items-center justify-between">
               <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-700">
@@ -392,14 +403,14 @@ export function AdminOverview({
             <div className="flex items-center justify-between">
               <span className="block text-[9px] font-black uppercase text-slate-400">SLM Model</span>
               <span className="text-[9px] font-extrabold text-slate-500">
-                {systemHealth?.slm.device || "CUDA:0"}
+                {systemHealth?.slm.device || "-"}
               </span>
             </div>
             <span
               className="mt-1 block truncate text-xs font-extrabold text-slate-900"
-              title={systemHealth?.slm.model || "Qwen2.5-1.5B (FP16)"}
+              title={systemHealth?.slm.model || "ยังไม่มีข้อมูลโมเดล"}
             >
-              {systemHealth?.slm.model || "Qwen2.5-1.5B (FP16)"}
+              {systemHealth?.slm.model || "ยังไม่มีข้อมูล"}
             </span>
             <div className="mt-2 flex items-center justify-between">
               <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-700">
@@ -428,12 +439,12 @@ export function AdminOverview({
         <div className="flex items-center gap-2">
           <span className="font-semibold text-slate-500">System Uptime</span>
           <span className="font-extrabold text-slate-900">
-            {systemHealth?.uptime_human || "3 ชม. 38 นาที"}
+            {systemHealth?.uptime_human || "-"}
           </span>
         </div>
         <div className="flex items-center gap-3 text-[11px] text-slate-500">
           <span>
-            เครื่องเซิร์ฟเวอร์: <span className="font-bold text-slate-700">RTX 3050 Laptop</span>
+            เครื่องเซิร์ฟเวอร์: <span className="font-bold text-slate-700">{systemHealth?.gpu.name || "ยังไม่มีข้อมูล"}</span>
           </span>
           <span className="h-3 w-px bg-slate-200" />
           <span>

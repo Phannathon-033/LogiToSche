@@ -67,8 +67,50 @@ export function AdminJobsHistory({
     });
   }
 
+  function downloadText(content: string, fileName: string, type: string) {
+    const url = URL.createObjectURL(new Blob([content], { type }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handleDownloadJson() {
+    const records = selectedDocs.length > 0
+      ? filteredDocuments.filter((document) => selectedDocs.includes(document.id))
+      : selectedDocument ? [selectedDocument] : [];
+    if (records.length === 0) return;
+    const payload = records.length === 1 ? records[0].jsonOutput : records.map((document) => document.jsonOutput);
+    downloadText(JSON.stringify(payload, null, 2), "logiai_admin_documents.json", "application/json;charset=utf-8");
+    showToast(`ดาวน์โหลด JSON ${records.length} รายการแล้ว`);
+  }
+
+  function handleExportCsv() {
+    const records = selectedDocs.length > 0
+      ? filteredDocuments.filter((document) => selectedDocs.includes(document.id))
+      : selectedDocument ? [selectedDocument] : [];
+    if (records.length === 0) return;
+    const fields: Array<keyof JsonSchemaOutput> = [
+      "document_type", "document_number", "document_date", "sender", "receiver",
+      "origin", "destination", "reference_number", "unit_price", "total_amount", "currency",
+    ];
+    const quote = (value: unknown) => `"${String(value ?? "").replace(/"/g, '""')}"`;
+    const rows = [
+      ["file_name", ...fields].map(quote).join(","),
+      ...records.map((document) => [document.fileName, ...fields.map((field) => document.jsonOutput[field])].map(quote).join(",")),
+    ];
+    downloadText(`\\uFEFF${rows.join("\\r\\n")}`, "logiai_admin_documents.csv", "text/csv;charset=utf-8");
+    showToast(`ส่งออก CSV ${records.length} รายการแล้ว`);
+  }
+
   if (!selectedDocument || !draftJson) {
-    return null;
+    return (
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-8 text-center shadow-panel">
+        <p className="text-sm font-bold text-slate-700">ยังไม่มีเอกสารจาก Firebase หรือ Local cache</p>
+        <button type="button" onClick={onBack} className="mt-4 rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50">กลับรายการเอกสาร</button>
+      </div>
+    );
   }
 
   return (
@@ -116,7 +158,7 @@ export function AdminJobsHistory({
         <div className="flex gap-2">
           <button
             type="button"
-            onClick={() => showToast(`กำลังดาวน์โหลด JSON สำหรับ ${selectedDocs.length || 1} ไฟล์รวมเป็นชุด (ZIP)...`)}
+            onClick={handleDownloadJson}
             className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-extrabold text-slate-700 transition hover:bg-slate-50"
           >
             <FileJson className="h-4 w-4 text-blue-600" />
@@ -124,7 +166,7 @@ export function AdminJobsHistory({
           </button>
           <button
             type="button"
-            onClick={() => showToast(`ส่งออกประวัติ ${selectedDocs.length || 1} รายการเป็นไฟล์ Excel/CSV สำเร็จ`)}
+            onClick={handleExportCsv}
             className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-extrabold text-slate-700 transition hover:bg-slate-50"
           >
             <FileSpreadsheet className="h-4 w-4 text-emerald-600" />
@@ -307,7 +349,7 @@ export function AdminJobsHistory({
             </button>
             <button
               type="button"
-              onClick={() => showToast(`ดาวน์โหลด JSON ของไฟล์ ${selectedDocument.fileName} สำเร็จ`)}
+              onClick={handleDownloadJson}
               className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-50"
             >
               <Download className="h-4 w-4" />
