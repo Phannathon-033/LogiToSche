@@ -353,33 +353,62 @@ def select_training_examples(
 
     requested_count = 1 if normalized == "one-shot" else 5
     ocr_loader = ocr_loader or _get_ocr
-    ranked: list[tuple[float, str, dict[str, Any], dict[str, Any]]] = []
+    ranked: list[tuple[float, float, float, str, dict[str, Any], dict[str, Any], dict[str, Any]]] = []
     for document in training_documents:
         ocr = ocr_loader(document)
-        confidence = _ocr_confidence_percent(ocr)
+        ocr_confidence = _ocr_confidence_percent(ocr)
         doc_id = str(document.get("id") or document.get("file_name") or "")
-        ranked.append((confidence, doc_id, document, ocr))
-    ranked.sort(key=lambda item: (-item[0], item[1]))
+        truth = _get_document_ground_truth(document)
+
+        # Calculate field completeness across 11 CORE_FIELDS
+        filled_count = sum(
+            1 for field in CORE_FIELDS
+            if str(truth.get(field, "")).strip() not in {"", "-", "n/a", "null", "none"}
+        )
+        completeness_pct = round(100.0 * filled_count / len(CORE_FIELDS), 2)
+
+        # Use overall confidence from dataset metadata or calculate composite score
+        conf_dict = document.get("confidence", {})
+        if isinstance(conf_dict, dict) and conf_dict.get("overall") is not None:
+            overall_confidence = float(conf_dict.get("overall", 0.0))
+        else:
+            overall_confidence = round((ocr_confidence * 0.4) + (completeness_pct * 0.6), 2)
+
+        ranked.append((completeness_pct, overall_confidence, ocr_confidence, doc_id, document, ocr, truth))
+
+    # Priority ranking:
+    # 1. Highest field completeness (100% complete documents first)
+    # 2. Highest overall confidence
+    # 3. Highest average OCR line confidence
+    ranked.sort(key=lambda item: (-item[0], -item[1], -item[2], item[3]))
     selected_count = min(requested_count, len(ranked))
     if normalized == "few-shot" and len(ranked) >= 3:
         selected_count = min(5, len(ranked))
 
     examples = []
     selected = []
-    for confidence, doc_id, document, ocr in ranked[:selected_count]:
-        truth = _get_document_ground_truth(document)
+    for completeness_pct, overall_confidence, ocr_confidence, doc_id, document, ocr, truth in ranked[:selected_count]:
         examples.append({
             "document_id": doc_id,
             "source_file": document.get("file_name", ""),
             "ocr_text": str(ocr.get("ocr_text", ""))[:1000],
-            "ocr_confidence": confidence,
+            "confidence": overall_confidence,
+            "overall_confidence": overall_confidence,
+            "ocr_confidence": ocr_confidence,
+            "completeness": completeness_pct,
             "json_schema": {field: truth.get(field, "") for field in CORE_FIELDS},
         })
-        selected.append({"document_id": doc_id, "ocr_confidence": confidence})
+        selected.append({
+            "document_id": doc_id,
+            "confidence": overall_confidence,
+            "overall_confidence": overall_confidence,
+            "ocr_confidence": ocr_confidence,
+            "completeness": completeness_pct,
+        })
 
     metadata = {
-        "method": "highest_average_ocr_line_confidence",
-        "confidence_aggregation": "mean of valid OCR line confidence percentages",
+        "method": "highest_overall_confidence_and_completeness",
+        "confidence_aggregation": "overall confidence prioritizing full field completeness (11/11)",
         "requested_count": requested_count,
         "actual_count": len(examples),
         "training_document_ids": [str(doc.get("id")) for doc in training_documents],
