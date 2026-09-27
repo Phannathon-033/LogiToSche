@@ -463,6 +463,51 @@ copy backend\.env.example backend\.env</code></pre>
           </span>
         </div>
       </div>
+
+      <!-- Part 3.4: GPU Compatibility & Upgrade Guide -->
+      <div class="rounded-xl border border-emerald-500/40 bg-emerald-950/20 p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-emerald-300 flex items-center gap-2">
+            <span>💡 ขั้นที่ 3.4: ถ้าเปลี่ยนหรืออัปเกรดการ์ดจอ (GPU) ต้องเปลี่ยน CUDA หรือลง PyTorch ใหม่ไหม?</span>
+          </span>
+          <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">Backward Compatible</span>
+        </div>
+        <div class="text-xs text-slate-300 space-y-2 leading-relaxed">
+          <p>
+            <b>คำตอบคือ: ส่วนใหญ่ไม่ต้องเปลี่ยนเลยครับ!</b> เพราะ PyTorch build <code class="text-emerald-400">torch-2.11.0+cu128</code> ที่เราติดตั้งนี้ ถูกคอมไพล์ไบนารีเคอร์เนลแบบ <b>Backward Compatible</b> ครอบคลุมสถาปัตยกรรมการ์ดจอ NVIDIA เกือบทุกรุ่นในปัจจุบัน:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 pt-1 font-mono text-[11px]">
+            <div class="rounded-lg bg-slate-950 p-2.5 border border-slate-800 space-y-1">
+              <span class="text-indigo-400 font-bold block">sm_75 (Turing)</span>
+              <span class="text-slate-400 text-[10px] block">RTX 2060, 2070, 2080, GTX 1660 Ti</span>
+            </div>
+            <div class="rounded-lg bg-slate-950 p-2.5 border border-slate-800 space-y-1">
+              <span class="text-cyan-400 font-bold block">sm_86 (Ampere)</span>
+              <span class="text-slate-400 text-[10px] block">RTX 3060, 3070, 3080, 3090</span>
+            </div>
+            <div class="rounded-lg bg-slate-950 p-2.5 border border-slate-800 space-y-1">
+              <span class="text-emerald-400 font-bold block">sm_90 (Ada/Hopper)</span>
+              <span class="text-slate-400 text-[10px] block">RTX 4060, 4070, 4080, 4090</span>
+            </div>
+            <div class="rounded-lg bg-slate-950 p-2.5 border border-slate-800 space-y-1">
+              <span class="text-amber-400 font-bold block">sm_120 (Blackwell)</span>
+              <span class="text-slate-400 text-[10px] block">RTX 5060 Ti, 5070, 5080, 5090</span>
+            </div>
+          </div>
+          <ul class="list-disc list-inside space-y-1 pt-1 text-[11px] text-slate-300">
+            <li><b>สลับไปใช้ RTX 20 / 30 / 40 Series:</b> เสียบการ์ดจอแล้วรันต่อได้ทันที ไม่ต้องรันคำสั่ง pip ติดตั้งอะไรเพิ่ม</li>
+            <li><b>ถอดการ์ดจอออกแล้วใช้ CPU:</b> ไม่ต้องลง PyTorch ใหม่ แค่เข้าไปปรับใน <code class="text-amber-300">backend/.env</code> เป็น <code class="text-emerald-400">LOGIAI_SLM_DEVICE=cpu</code></li>
+            <li><b>กรณีที่ต้องเปลี่ยน:</b> เฉพาะเมื่อเปลี่ยนไปใช้การ์ดจอรุ่นเก่ามากต่ำกว่า RTX 20 (เช่น GTX 10xx `sm_61`) หรือการ์ดจอค่ายอื่น (AMD ROCm / Intel Arc / Mac MPS)</li>
+          </ul>
+          <div class="space-y-1 pt-2">
+            <span class="text-slate-300 font-bold block">⚡ คำสั่งเช็คความเข้ากันได้หลังเปลี่ยนการ์ดจอ (คำสั่งเดียวจบ):</span>
+            <div class="code-box text-xs">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <pre class="text-emerald-300"><code>backend\.venv\Scripts\python.exe -c "import torch; print('GPU:', torch.cuda.get_device_name(0)); x=torch.randn(10,10,device='cuda'); print('CUDA Status: OK' if (x@x).is_cuda else 'Fail')"</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Step 4: Install Frontend Dependencies -->
@@ -812,6 +857,33 @@ LOGIAI_OCR_DEVICE=cpu</code>
             <p>
               <b>การแก้ไข:</b> ใน <code class="text-indigo-300">backend/slm_app.py</code> เวอร์ชันปัจจุบันได้ปรับเพิ่ม <code class="text-emerald-400">max_tokens=700</code> พร้อมเสริมระบบ Resilient Regex JSON Extractor เพื่อกู้คืนและปิดปีกกา JSON ให้อัตโนมัติเรียบร้อยแล้ว
             </p>
+          </div>
+        </details>
+
+        <!-- Issue 9: Changing / Upgrading GPU FAQ -->
+        <details class="group rounded-xl border border-emerald-500/40 bg-slate-950 p-4">
+          <summary class="font-bold text-emerald-300 cursor-pointer flex items-center justify-between">
+            <span>❓ ปัญหาที่ 9: ถ้าเปลี่ยนหรืออัปเกรดการ์ดจอ (เช่น สลับไปใช้ RTX 3060, RTX 4070 หรือ CPU) ต้องลง CUDA หรือ PyTorch ใหม่ไหม?</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-3 border-t border-slate-900 pt-3">
+            <p>
+              <b>ตอบ:</b> <b>ไม่ต้องเปลี่ยนเลยครับ!</b> หากเปลี่ยนไปใช้การ์ดจอ NVIDIA ในตระกูล <b>RTX 20, 30, 40 หรือ 50 Series</b> เนื่องจากชุด PyTorch build <code class="text-emerald-400">cu128</code> ที่ติดตั้งอยู่นี้ได้รวมไบนารีเคอร์เนลสำหรับสถาปัตยกรรม <b>sm_75, sm_80, sm_86, sm_90, sm_100, sm_120</b> ไว้อย่างสมบูรณ์แบบแล้ว
+            </p>
+            <div class="rounded-lg bg-slate-900 p-3 border border-slate-800 space-y-1.5 text-xs">
+              <span class="text-white font-bold block">สรุปแนวทางเมื่อเปลี่ยนฮาร์ดแวร์:</span>
+              <ul class="list-disc list-inside space-y-1 text-[11px] text-slate-300">
+                <li><b>เปลี่ยนเป็น RTX 30xx หรือ RTX 40xx:</b> สลับการ์ดจอ อัปเดต NVIDIA Driver ใน Windows แล้วสตาร์ทเซอร์วิสรันต่อได้ทันที</li>
+                <li><b>ถอดการ์ดจอออก / สลับไปใช้ CPU:</b> เปิดไฟล์ <code class="text-amber-300">backend/.env</code> แก้ไขเป็น <code class="text-emerald-400">LOGIAI_SLM_DEVICE=cpu</code> และ <code class="text-emerald-400">LOGIAI_OCR_DEVICE=cpu</code></li>
+                <li><b>เปลี่ยนเป็นการ์ดจอเก่ามาก (เช่น GTX 10xx / Pascal):</b> จำเป็นต้องถอย PyTorch ไปเป็นรุ่นเก่าที่รองรับ <code class="text-amber-300">sm_61</code></li>
+              </ul>
+            </div>
+            <p><b>คำสั่งทดสอบหลังเปลี่ยนการ์ดจอ:</b></p>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <code>backend\.venv\Scripts\python.exe -c "import torch; print('GPU:', torch.cuda.get_device_name(0)); x=torch.randn(10,10,device='cuda'); print('CUDA Status: OK' if (x@x).is_cuda else 'Fail')"</code>
+            </div>
+            <p class="text-[11px] text-emerald-400">ถ้าผลลัพธ์ขึ้นว่า <b>CUDA Status: OK</b> แปลว่าพร้อมรัน 5-Fold Evaluation ต่อได้ทันที 100%</p>
           </div>
         </details>
       </div>
