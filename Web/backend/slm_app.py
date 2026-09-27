@@ -565,8 +565,8 @@ def build_json_schema_prompt(payload: SlmExtractRequest, config: dict[str, Any],
             "origin": "Origin, loading port, pickup location, or place of receipt",
             "destination": "Destination, discharge port, delivery location, or ship-to location",
             "reference_number": "Reference, PO, booking, or related document number",
-            "unit_price": 0,
-            "total_amount": 0,
+            "unit_price": 0.0,
+            "total_amount": 0.0,
             "currency": "THB | USD | EUR | JPY | SGD | CNY | GBP | empty string",
             "other": {"source_file": payload.source_file},
         },
@@ -578,6 +578,7 @@ def build_json_schema_prompt(payload: SlmExtractRequest, config: dict[str, Any],
         "Fill the required JSON contract using the current OCR text.\n"
         f"{benchmark_instruction}"
         f"Document type hint: {payload.document_type_hint}\n"
+        "Document type hint is contextual guidance only. If the OCR clearly contradicts the hint, rely on the OCR evidence.\n"
         f"Source filename: {payload.source_file}\n\n"
         f"Required output shape:\n{json.dumps(schema, ensure_ascii=False, indent=2)}\n\n"
         f"OCR text:\n{payload.ocr_text}\n"

@@ -48,19 +48,25 @@ MODEL_IDS = {
     "llama-3.1-8b": "meta-llama/Llama-3.1-8B-Instruct",
 }
 
-EXTRACTION_SYSTEM_PROMPT = "You extract logistics document data. Return only valid JSON. Do not include markdown or explanations."
+EXTRACTION_SYSTEM_PROMPT = "You are a logistics document information extraction model. Return only valid JSON. Do not include markdown or explanations."
 DEFAULT_EXTRACTION_RULES = (
-    "Return every canonical field in json_schema.",
-    "Use only values grounded in the current OCR text.",
+    "Return every canonical field in json_schema and use only values grounded in the current OCR text.",
+    "document_number: extract the primary identifier of the current document. Priority by document type: invoice uses Invoice No., Invoice Number, Document No.; bill_of_lading uses B/L No. or Bill of Lading No.; purchase_order uses PO No., Purchase Order No., or Order No.; packing_list uses Packing List No. or Document No. Exclude reference, booking, customer, account, date, postal, and monetary values. If candidates conflict, choose the value explicitly associated with the current document type; otherwise return an empty string.",
+    "document_date: extract the primary issue date. Priority: Document Date; Invoice/B/L/PO/Packing List Date; Issue Date; date next to the primary document number. Exclude Due Date, Delivery Date, Shipping Date, ETA, ETD, payment dates, and dates inside line-item descriptions. Normalize only unambiguous dates to YYYY-MM-DD; otherwise return an empty string.",
+    "sender: extract the organization that issues, sends, sells, or ships the document or goods. Prefer Seller, Vendor, Supplier, Shipper, Issuer, or From; for invoices prefer the issuing company or seller, and for bills of lading prefer Shipper. Exclude banks, payment providers, Bill To, Ship To, Consignee, Buyer, Customer, table headers, and product descriptions. Return the organization name, not its label.",
+    "receiver: extract the organization or person receiving the document or goods. Prefer Consignee, Buyer, Customer, Bill To, Ship To, Deliver To, or Receiver; for bills of lading prefer Consignee, and for invoices prefer Bill To or Buyer when explicit. Exclude banks, payment channels, sender addresses, and issuing companies unless explicitly marked as receiver.",
+    "origin: extract the logistics origin location only. Priority: Place of Receipt; Port of Loading; Origin; Ship From; From only when clearly a location. Use a port, city, region, country, or shipping address. Exclude sender names, products, destination, payment addresses, and unrelated addresses. Do not infer origin from a sender country without explicit OCR evidence.",
+    "destination: extract the logistics destination location only. Priority: Place of Delivery; Port of Discharge; Destination; Ship To; Deliver To. Use a port, city, region, country, or delivery address. Exclude receiver names, products, origin, and billing addresses unless explicitly the shipment destination. Do not infer destination from a receiver country without explicit OCR evidence.",
+    "reference_number: extract identifiers for another document or transaction, such as PO No., Booking No., Reference No., Customer Reference, or Contract No. Do not copy document_number into reference_number unless OCR explicitly identifies the same value as both.",
+    "unit_price: extract the price per unit from line-item information. Prefer Unit Price, Price, Rate, or Price Each. Exclude Quantity, Subtotal, Tax, Total, Amount Due, Grand Total, and other aggregate amounts. Return a numeric value without currency symbols or thousands separators.",
+    "total_amount: extract the final monetary total. Priority: Grand Total; Amount Due; Total Amount; Invoice Total; Net Total; Total. Exclude Unit Price, line-item amounts, Quantity, Tax, Discount, and Subtotal when a final total exists. Do not choose the largest number; use the label and context.",
+    "currency: extract currency only when explicitly supported by OCR, such as USD, THB, EUR, GBP, or an unambiguous symbol. Do not infer currency from country, location, or document language.",
     "Put source_file, quantity, vehicle, weight, tax, address, payment, and every non-canonical field inside json_schema.other.",
-    "Map invoice, B/L, document, and order numbers to document_number according to context.",
-    "Map Bill To, Ship To, Consignee, Buyer, Customer, and Receiver to receiver; map Vendor, Seller, Shipper, Issuer, and From to sender.",
-    "Map PO, booking, and related-document identifiers to reference_number when they are not the primary document number.",
     "Use confidence values from 0 to 100 and put low-confidence or conflicting values in review_items.",
 )
 DEFAULT_OUTPUT_RULES = (
-    "Normalize unambiguous dates to YYYY-MM-DD; use an empty string when a date is absent or ambiguous.",
-    "Return unit_price and total_amount as numeric values without commas; use 0.0 when absent.",
+    "Missing string fields must be an empty string; missing numeric fields must be 0.0. Normalize unambiguous dates to YYYY-MM-DD and use an empty string when a date is absent or ambiguous.",
+    "Return unit_price and total_amount as numeric values without currency symbols or thousands separators.",
     "Currency must follow symbols or values found in OCR; do not default to THB when USD or $ is present.",
 )
 DEFAULT_BENCHMARK_PROMPTS = {
@@ -69,9 +75,16 @@ DEFAULT_BENCHMARK_PROMPTS = {
     "few-shot": "Use the main extraction prompt with 3 to 5 labeled examples selected from the training split by OCR confidence.",
 }
 DEFAULT_FALLBACK_RULES = (
-    "When both Subtotal and Total Amount are present, use Total Amount.",
-    "Interpret Consignee, Ship To, and Deliver To as receiver according to document context.",
-    "Treat bank names as payment channels, not sender or receiver; put them in other.",
+    "Use only evidence from the current OCR text; never copy values from training examples. Training examples demonstrate mapping behavior only.",
+    "Return every canonical field even when no value is found. If evidence is insufficient, return the defined empty value instead of guessing.",
+    "When multiple candidates exist, prefer an explicitly labelled candidate, then one matching the document type, then one semantically valid for the field; otherwise return the empty value.",
+    "A nearby value is not automatically a field value. Verify label, semantic meaning, and OCR context together; do not select a value only because its visual or numeric format looks plausible.",
+    "Do not infer sender, receiver, origin, or destination from world knowledge. Do not infer origin from a sender address or destination from a receiver address unless OCR explicitly identifies the shipment location.",
+    "Do not treat DESCRIPTION, QTY, PRICE, AMOUNT, BILLING PERIOD, or ITEM table headers as extracted values.",
+    "Do not treat banks or payment providers as sender or receiver unless explicitly identified as such; put non-canonical values in json_schema.other and do not create extra top-level canonical fields.",
+    "Confidence represents confidence in the selected value, not general document confidence. Low OCR confidence does not automatically make a value incorrect; combine it with semantic consistency and context.",
+    "Put a field in review_items when OCR confidence is below the configured threshold, candidates conflict, the OCR value appears corrupted, or document context is inconsistent with the selected value.",
+    "When both Subtotal and Total Amount are present, use the final labelled total rather than Subtotal. Interpret Consignee, Ship To, and Deliver To as receiver; treat bank names as payment channels, not sender or receiver.",
 )
 
 
@@ -327,7 +340,7 @@ DEFAULT_ADMIN_CONFIG = {
     "benchmark_prompts": dict(DEFAULT_BENCHMARK_PROMPTS),
     "confidence_threshold": 85,
     "selected_model": "qwen-2.5-1.5b",
-    "monitored_fields": ["document_number", "document_date", "receiver", "total_amount"],
+    "monitored_fields": ["document_number", "document_date", "sender", "receiver", "origin", "destination", "total_amount"],
 }
 
 
