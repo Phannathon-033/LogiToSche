@@ -1,7 +1,6 @@
 import {
   Activity,
   AlertCircle,
-  ArrowLeft,
   Award,
   BarChart3,
   BookmarkCheck,
@@ -933,16 +932,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       <div className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md px-4 sm:px-6 py-3">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            {onBack && (
-              <button
-                type="button"
-                onClick={onBack}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>กลับ</span>
-              </button>
-            )}
             <div>
               <div className="flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700">

@@ -2,9 +2,7 @@ import {
   AlertCircle,
   BookmarkCheck,
   BrainCircuit,
-  Check,
   CheckCircle2,
-  Clock,
   Copy,
   Cpu,
   Edit3,
@@ -16,9 +14,7 @@ import {
   HelpCircle,
   Layers,
   LoaderCircle,
-  Play,
   Plus,
-  RefreshCw,
   RotateCcw,
   Save,
   Search,
@@ -31,10 +27,9 @@ import {
   Zap,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { CORE_FIELDS_DEF, EMPTY_JSON_SCHEMA } from "../../types";
+import { CORE_FIELDS_DEF } from "../../types";
 import type { AdminDocumentRecord, AdminPromptLabState, SlmPromptPresetResponse } from "../../types";
 import {
-  executeSlmPrompt,
   getSlmPrompts,
   resetSlmPrompts,
   saveSlmPrompts,
@@ -160,55 +155,6 @@ const DEFAULT_PRESETS_FALLBACK: SlmPromptPresetResponse[] = [
   },
 ];
 
-const SAMPLE_OCR_TEXTS = [
-  {
-    id: "inv1",
-    label: "ตัวอย่าง 1: ใบแจ้งหนี้สากล (TAX INVOICE)",
-    text: `TAX INVOICE / RECEIPT
-Invoice No: INV-2026-9999
-Date: 15/08/2026
-Shipper: Siam Global Freight Co., Ltd.
-Address: 88 Bangna-Trad Rd, Bangkok 10260, Thailand
-Consignee: Supreme Trading Corporation
-Address: 456 Sukhumvit Rd, Bangkok 10110, Thailand
-Origin: Bangkok Port, Thailand
-Destination: Tokyo Port, Japan
-PO Reference: PO-99412-TH
-Unit Price: 25,000.00 THB
-Total Amount: 125,000.00 THB
-Currency: THB`,
-  },
-  {
-    id: "bl2",
-    label: "ตัวอย่าง 2: ใบตราส่งทางเรือ (BILL OF LADING)",
-    text: `OCEAN BILL OF LADING
-B/L No: OOLU260192001
-Date of Issue: 2026-07-20
-Shipper: EASTERN MARITIME LOGISTICS PTE LTD (SINGAPORE)
-Consignee: PACIFIC RIM IMPORT & EXPORT CORP
-Port of Loading: SINGAPORE PORT
-Port of Discharge: LAEM CHABANG, THAILAND
-Booking Ref: BKG-SG-88210
-Total Amount: USD 3,450.00
-Currency: USD`,
-  },
-  {
-    id: "th3",
-    label: "ตัวอย่าง 3: ใบกำกับภาษีไทย (ค่าขนส่งตู้คอนเทนเนอร์)",
-    text: `บริษัท สยามทรานสปอร์ต แอนด์ ชิปปิ้ง จำกัด
-ใบกำกับภาษี / ใบส่งสินค้า
-เลขที่เอกสาร: DO-2569-0452
-วันที่: 12/09/2569
-ผู้ส่ง / ผู้ขาย: บริษัท สยามทรานสปอร์ต แอนด์ ชิปปิ้ง จำกัด
-ผู้รับสินค้า: บริษัท เคมีคอล ซัพพลาย จำกัด (มหาชน)
-ต้นทาง: ท่าเรือแหลมฉบัง จ.ชลบุรี
-ปลายทาง: นิคมอุตสาหกรรมบางปะอิน จ.พระนครศรีอยุธยา
-เลขที่ใบสั่งซื้อ (PO): PO-CHEM-8841
-ยอดเงินรวมสุทธิ: 51,360.00 บาท
-สกุลเงิน: THB`,
-  },
-];
-
 export function AdminPromptConfig({
   value,
   documents,
@@ -245,14 +191,6 @@ export function AdminPromptConfig({
     prompt: "",
   });
 
-  // Prompt Lab Playground State
-  const [selectedSampleId, setSelectedSampleId] = useState<string>("inv1");
-  const [customOcrInput, setCustomOcrInput] = useState<string>(SAMPLE_OCR_TEXTS[0].text);
-  const [activePlaygroundPresetId, setActivePlaygroundPresetId] = useState<string>("custom");
-  const [isTestingPrompt, setIsTestingPrompt] = useState<boolean>(false);
-  const [testResult, setTestResult] = useState<string>("");
-  const [testElapsedSec, setTestElapsedSec] = useState<number | null>(null);
-  const [copiedResult, setCopiedResult] = useState<boolean>(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   useEffect(() => {
@@ -435,34 +373,6 @@ export function AdminPromptConfig({
     showToast(`โหลดข้อความของ "${preset.title}" เข้าสู่คำสั่งหลัก (System Prompt) แล้ว`);
   }
 
-  // Load Preset into Live Playground & Execute
-  async function handleTestPresetOnPlayground(preset: SlmPromptPresetResponse) {
-    setActivePlaygroundPresetId(preset.id);
-    setIsTestingPrompt(true);
-    setTestResult("");
-    const start = Date.now();
-    try {
-      showToast(`กำลังส่งแม่แบบ "${preset.title}" ไปรันบน GPU CUDA...`);
-      const res = await executeSlmPrompt({
-        promptTemplateId: preset.id,
-        systemInstruction: value.systemPrompt,
-        userInstruction: preset.prompt,
-        ocrText: customOcrInput,
-        jsonSchema: EMPTY_JSON_SCHEMA,
-      });
-      const elapsed = ((Date.now() - start) / 1000).toFixed(2);
-      setTestElapsedSec(Number(elapsed));
-      setTestResult(res.resultText);
-      showToast(`Qwen SLM ประมวลผลแม่แบบ "${preset.badge}" สำเร็จในเวลา ${elapsed}s!`);
-      // Scroll to playground
-      document.getElementById("live-playground-section")?.scrollIntoView({ behavior: "smooth" });
-    } catch (err: any) {
-      setTestResult(err instanceof Error ? `เกิดข้อผิดพลาด: ${err.message}` : "การเชื่อมต่อ SLM ล้มเหลว");
-    } finally {
-      setIsTestingPrompt(false);
-    }
-  }
-
   function updateExtractionRule(index: number, nextValue: string) {
     onChange({
       ...value,
@@ -505,44 +415,6 @@ export function AdminPromptConfig({
     });
   }
 
-  function handleSelectSample(sampleId: string) {
-    setSelectedSampleId(sampleId);
-    const s = SAMPLE_OCR_TEXTS.find((item) => item.id === sampleId);
-    if (s) {
-      setCustomOcrInput(s.text);
-    }
-  }
-
-  async function handleExecuteCustomTestPrompt() {
-    if (!customOcrInput.trim()) return;
-    setIsTestingPrompt(true);
-    setTestResult("");
-    const start = Date.now();
-    try {
-      const res = await executeSlmPrompt({
-        promptTemplateId: activePlaygroundPresetId || "custom",
-        systemInstruction: value.systemPrompt,
-        userInstruction: "Extract 11 core logistics fields and explain mapping logic.",
-        ocrText: customOcrInput,
-        jsonSchema: EMPTY_JSON_SCHEMA,
-      });
-      const elapsed = ((Date.now() - start) / 1000).toFixed(2);
-      setTestElapsedSec(Number(elapsed));
-      setTestResult(res.resultText);
-    } catch (err) {
-      setTestResult(err instanceof Error ? `เกิดข้อผิดพลาด: ${err.message}` : "การเชื่อมต่อ SLM ล้มเหลว");
-    } finally {
-      setIsTestingPrompt(false);
-    }
-  }
-
-  async function handleCopyResult() {
-    if (!testResult) return;
-    await navigator.clipboard.writeText(testResult);
-    setCopiedResult(true);
-    setTimeout(() => setCopiedResult(false), 2000);
-  }
-
   return (
     <div className="space-y-6">
       {/* Toast Notification */}
@@ -555,193 +427,276 @@ export function AdminPromptConfig({
         </div>
       )}
 
+      <section className="overflow-hidden rounded-3xl border border-slate-200/80 bg-slate-950 p-5 text-white shadow-panel sm:p-7">
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+          <div className="max-w-2xl">
+            <div className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-blue-300">
+              <Settings className="h-3.5 w-3.5" />
+              Prompt Control Center
+            </div>
+            <h3 className="text-2xl font-black tracking-tight sm:text-3xl">ควบคุม Prompt และคุณภาพการสกัดข้อมูล</h3>
+            <p className="mt-2 max-w-xl text-xs font-medium leading-6 text-slate-300">
+              จัดการคำสั่งหลัก กฎ semantic และ preset ของ SLM จากพื้นที่เดียว ก่อนส่งไปใช้งานกับ OCR จริง
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 text-[11px] font-bold text-emerald-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              พร้อมใช้งาน
+            </span>
+            <button
+              type="button"
+              onClick={onSave}
+              disabled={loading || saving}
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-500 px-4 py-2.5 text-xs font-black text-white transition hover:bg-blue-400 disabled:opacity-50"
+            >
+              {saving ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              {saving ? "กำลังบันทึก..." : "บันทึกการตั้งค่า"}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {[
+          { label: "โมเดลที่ใช้งาน", value: value.selectedModel.replace("qwen-", "Qwen "), hint: "SLM runtime", tone: "blue" },
+          { label: "Confidence threshold", value: `${value.confidenceThreshold}%`, hint: "เกณฑ์ส่ง Manual Review", tone: "amber" },
+          { label: "Monitored fields", value: `${value.monitoredFields.length}/${CORE_FIELDS_DEF.length}`, hint: "ฟิลด์ที่เฝ้าระวัง", tone: "emerald" },
+          { label: "Prompt presets", value: `${presets.length}`, hint: "แม่แบบพร้อมใช้", tone: "purple" },
+        ].map((metric) => (
+          <div key={metric.label} className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-panel">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">{metric.label}</span>
+              <span className={`h-2 w-2 rounded-full ${metric.tone === "blue" ? "bg-blue-500" : metric.tone === "amber" ? "bg-amber-500" : metric.tone === "emerald" ? "bg-emerald-500" : "bg-purple-500"}`} />
+            </div>
+            <p className="mt-2 truncate text-lg font-black text-slate-900" title={metric.value}>{metric.value}</p>
+            <p className="mt-1 text-[10px] font-semibold text-slate-500">{metric.hint}</p>
+          </div>
+        ))}
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]">
+        <div className="space-y-6">
+          <div className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-panel sm:p-6">
+            <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="rounded-xl bg-blue-50 p-2 text-blue-600"><BrainCircuit className="h-4 w-4" /></span>
+                  <h3 className="text-sm font-black text-slate-900">System Prompt</h3>
+                  <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-black text-emerald-700">ใช้งานอยู่</span>
+                </div>
+                <p className="mt-2 text-xs font-medium leading-5 text-slate-500">คำสั่งหลักที่ส่งให้ Qwen SLM ทุกครั้ง เพื่อควบคุมรูปแบบและความถูกต้องของผลลัพธ์</p>
+              </div>
+              <span className="rounded-lg bg-slate-50 px-2.5 py-1.5 font-mono text-[10px] font-bold text-slate-500">{value.systemPrompt.length} ตัวอักษร</span>
+            </div>
+            <textarea
+              value={value.systemPrompt}
+              onChange={(event) => onChange({ ...value, systemPrompt: event.target.value })}
+              rows={8}
+              className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50/70 p-4 font-mono text-xs leading-6 text-slate-800 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+              placeholder="ระบุ System Prompt ที่นี่..."
+            />
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[10px] font-semibold text-slate-400">
+              <span>ส่งเป็น System Instruction ก่อน OCR context และ JSON schema</span>
+              <span>{value.systemPrompt.trim() ? "มีคำสั่งพร้อมใช้งาน" : "ยังไม่มีคำสั่ง"}</span>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-panel sm:p-6">
+            <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <FileCode className="h-4 w-4 text-indigo-600" />
+                  <h3 className="text-sm font-black text-slate-900">Extraction Rules</h3>
+                  <span className="rounded-full bg-indigo-50 px-2 py-1 text-[10px] font-black text-indigo-700">{value.extractionRules.length} rules</span>
+                </div>
+                <p className="mt-1.5 text-xs font-medium text-slate-500">กฎ priority และ mapping สำหรับสกัดข้อมูลจาก OCR</p>
+              </div>
+              <button type="button" onClick={handleAddExtractionRule} className="inline-flex items-center gap-1.5 rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-[11px] font-bold text-indigo-700 transition hover:bg-indigo-100"><Plus className="h-3.5 w-3.5" />เพิ่มกฎ</button>
+            </div>
+            <div className="space-y-2.5">
+              {value.extractionRules.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-slate-300 px-4 py-7 text-center text-xs font-semibold text-slate-400">ยังไม่มีกฎการสกัด เพิ่มกฎเพื่อกำหนดพฤติกรรมของโมเดล</div>
+              ) : value.extractionRules.map((rule, index) => (
+                <div key={`extraction-rule-${index}`} className="flex items-start gap-2 rounded-2xl border border-slate-100 bg-slate-50/60 p-2.5">
+                  <span className="mt-2.5 w-6 shrink-0 text-center font-mono text-[10px] font-black text-indigo-400">{String(index + 1).padStart(2, "0")}</span>
+                  <textarea value={rule} onChange={(event) => updateExtractionRule(index, event.target.value)} rows={2} className="min-w-0 flex-1 resize-y rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium leading-5 text-slate-800 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10" />
+                  <button type="button" onClick={() => handleDeleteExtractionRule(index)} className="rounded-lg p-2 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600" title="ลบกฎนี้"><Trash2 className="h-4 w-4" /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-amber-200/80 bg-white p-5 shadow-panel sm:p-6">
+            <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-amber-500" />
+                  <h3 className="text-sm font-black text-slate-900">Fallback & Semantic Rules</h3>
+                  <span className="rounded-full bg-amber-50 px-2 py-1 text-[10px] font-black text-amber-700">{value.fallbackRules.length} rules</span>
+                </div>
+                <p className="mt-1.5 text-xs font-medium text-slate-500">ข้อจำกัด anti-hallucination และเงื่อนไขเมื่อหลักฐานไม่เพียงพอ</p>
+              </div>
+              <button type="button" onClick={handleAddFallbackRule} className="inline-flex items-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] font-bold text-amber-700 transition hover:bg-amber-100"><Plus className="h-3.5 w-3.5" />เพิ่มกฎ</button>
+            </div>
+            <div className="space-y-2.5">
+              {value.fallbackRules.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-slate-300 px-4 py-7 text-center text-xs font-semibold text-slate-400">ยังไม่มี fallback rule เพิ่มกฎเพื่อกำหนดข้อจำกัดของโมเดล</div>
+              ) : value.fallbackRules.map((rule, index) => (
+                <div key={`fallback-rule-${index}`} className="flex items-start gap-2 rounded-2xl border border-amber-100 bg-amber-50/40 p-2.5">
+                  <span className="mt-2.5 w-6 shrink-0 text-center font-mono text-[10px] font-black text-amber-500">{String(index + 1).padStart(2, "0")}</span>
+                  <textarea value={rule} onChange={(event) => updateFallbackRule(index, event.target.value)} rows={2} className="min-w-0 flex-1 resize-y rounded-xl border border-amber-200/80 bg-white px-3 py-2 text-xs font-medium leading-5 text-slate-800 outline-none transition focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10" />
+                  <button type="button" onClick={() => handleDeleteFallbackRule(index)} className="rounded-lg p-2 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600" title="ลบกฎนี้"><Trash2 className="h-4 w-4" /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button type="button" onClick={onSave} disabled={loading || saving} className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-black text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-50">
+              {saving ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              {saving ? "กำลังบันทึก..." : "บันทึก Prompt Configuration"}
+            </button>
+          </div>
+        </div>
+
+        <aside className="space-y-6">
+          <div className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-panel sm:p-6">
+            <div className="mb-5 flex items-center gap-2 border-b border-slate-100 pb-4">
+              <Settings className="h-4 w-4 text-slate-500" />
+              <div><h3 className="text-sm font-black text-slate-900">Runtime Guardrails</h3><p className="mt-1 text-[10px] font-medium text-slate-400">ค่าที่มีผลต่อการตรวจสอบทุก request</p></div>
+            </div>
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700"><Cpu className="h-3.5 w-3.5 text-indigo-600" />SLM Model</label>
+                <select value={value.selectedModel} onChange={(event) => onChange({ ...value, selectedModel: event.target.value })} className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs font-semibold text-slate-800 outline-none transition focus:border-indigo-600">
+                  <option value="qwen-2.5-1.5b">Qwen2.5-1.5B-Instruct</option>
+                  <option value="qwen-2.5-7b">Qwen2.5-7B-Instruct</option>
+                  <option value="llama-3.1-8b">Llama-3.1-8B-Instruct</option>
+                </select>
+                <p className="text-[10px] font-medium text-slate-400">โมเดลที่ใช้ประมวลผลบน SLM runtime</p>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs font-bold"><span className="text-slate-700">Confidence threshold</span><span className="font-mono font-black text-blue-600">{value.confidenceThreshold}%</span></div>
+                <input type="range" min="50" max="98" value={value.confidenceThreshold} onChange={(event) => onChange({ ...value, confidenceThreshold: Number(event.target.value) })} className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-100 accent-blue-600" />
+                <div className="flex justify-between text-[10px] font-semibold text-slate-400"><span>50% เข้มงวดน้อย</span><span>98% เข้มงวดมาก</span></div>
+              </div>
+              <div className="border-t border-slate-100 pt-5">
+                <div className="mb-3 flex items-center justify-between"><p className="text-xs font-bold text-slate-700">Monitored fields</p><span className="rounded-full bg-blue-50 px-2 py-1 text-[10px] font-black text-blue-700">{value.monitoredFields.length} เลือกอยู่</span></div>
+                <div className="space-y-2">
+                  {CORE_FIELDS_DEF.map((field) => {
+                    const checked = value.monitoredFields.includes(field.key);
+                    return <label key={field.key} className={`flex cursor-pointer select-none items-center gap-2 rounded-xl border p-2.5 text-[11px] font-semibold transition ${checked ? "border-blue-300 bg-blue-50/60 text-blue-900" : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"}`}><input type="checkbox" checked={checked} onChange={(event) => { const monitoredFields = event.target.checked ? [...value.monitoredFields, field.key] : value.monitoredFields.filter((item) => item !== field.key); onChange({ ...value, monitoredFields }); }} className="h-3.5 w-3.5 rounded accent-blue-600" /><span>{field.label}</span></label>;
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-3xl border border-blue-200/80 bg-blue-50/60 p-5">
+            <div className="flex gap-3"><AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" /><div><p className="text-xs font-black text-blue-900">ก่อนบันทึก</p><p className="mt-1 text-[11px] font-medium leading-5 text-blue-800">การเปลี่ยนแปลงจะถูกใช้กับ request ใหม่เท่านั้น และไม่เปลี่ยนผลลัพธ์ที่บันทึกไว้แล้ว</p></div></div>
+          </div>
+        </aside>
+      </section>
+
       {/* =================================================================== */}
       {/* 1. PREDEFINED PROMPT PRESETS MANAGER (คลังพร้อมต์สำเร็จรูปทั้งหมด)    */}
       {/* =================================================================== */}
-      <div className="rounded-2xl border border-indigo-200 bg-gradient-to-r from-indigo-50/90 via-blue-50/50 to-white p-5 sm:p-6 shadow-xs space-y-4">
-        {/* Header and Global Actions */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-indigo-100 pb-4">
+      <div className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-panel sm:p-6">
+        <div className="mb-5 flex flex-col gap-4 border-b border-slate-100 pb-5 md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-2xs">
-                <BrainCircuit className="h-4 w-4" />
-              </div>
-              <h3 className="text-sm font-black uppercase tracking-wider text-slate-900">
-                คลังแม่แบบพร้อมต์สำเร็จรูปสำหรับ SLM (Predefined Prompt Presets Library)
-              </h3>
-              <span className="rounded-full bg-indigo-100 border border-indigo-300 px-2.5 py-0.5 text-[11px] font-black text-indigo-800">
-                {presets.length} แม่แบบพร้อมใช้
-              </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-lg bg-indigo-50 p-2 text-indigo-600"><BrainCircuit className="h-4 w-4" /></span>
+              <h3 className="text-sm font-black text-slate-900">คลัง Prompt สำเร็จรูป</h3>
+              <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-[10px] font-black text-indigo-700">{presets.length} presets</span>
             </div>
-            <p className="text-xs text-slate-600 mt-1 max-w-3xl leading-relaxed">
-              ชุดคำสั่งพร้อมต์ที่ตัว SLM จะเลือกใช้อ่านเบื้องหลังอัตโนมัติตามบริบทของเอกสาร (ผู้ใช้จะไม่เห็น Prompt ในขั้นตอนทั่วไป) แอดมินสามารถดู แก้ไข ปรับแต่งข้อความคำสั่ง หรือเพิ่มแม่แบบเฉพาะทางใหม่ๆ ได้อย่างอิสระ:
-            </p>
+            <p className="mt-2 text-xs font-medium text-slate-500">จัดการแม่แบบที่ใช้เป็นคำสั่งเฉพาะทางของ SLM แยกจากกฎหลักของระบบ</p>
           </div>
-
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={handleOpenCreatePreset}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-3.5 py-2 text-xs font-black text-white shadow-sm hover:bg-indigo-700 transition"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-3.5 py-2 text-xs font-black text-white shadow-sm transition hover:bg-indigo-700"
             >
               <Plus className="h-4 w-4" />
-              <span>+ สร้างแม่แบบใหม่</span>
+              สร้าง preset
             </button>
-
             <button
               type="button"
               onClick={handleSaveAllPresets}
               disabled={savingPresets}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition disabled:opacity-50"
-              title="บันทึกการเปลี่ยนแปลงของทุกแม่แบบลงเซิร์ฟเวอร์"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
             >
               {savingPresets ? <LoaderCircle className="h-3.5 w-3.5 animate-spin text-blue-600" /> : <Save className="h-3.5 w-3.5 text-blue-600" />}
-              <span>บันทึกทั้งหมด</span>
+              บันทึกทั้งหมด
             </button>
-
             <button
               type="button"
               onClick={handleResetDefaults}
               disabled={savingPresets}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 shadow-2xs hover:bg-slate-50 transition disabled:opacity-50"
-              title="คืนค่าแม่แบบทั้งหมดเป็นค่าเริ่มต้นของระบบ"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-50 disabled:opacity-50"
             >
               <RotateCcw className="h-3.5 w-3.5 text-slate-400" />
-              <span>รีเซ็ต</span>
+              รีเซ็ต
             </button>
           </div>
         </div>
-
-        {/* Search & Category Filter Pills */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-          <div className="flex flex-wrap items-center gap-1.5 text-xs">
-            {[
-              { id: "all", label: `ทั้งหมด (${presets.length})` },
-              { id: "extraction", label: "⚙️ สกัด 11 ฟิลด์" },
-              { id: "synonym", label: "🏷️ คำความหมายเดียวกัน" },
-              { id: "validation", label: "📊 ตรวจสอบตัวเลข" },
-              { id: "summary", label: "📝 วิเคราะห์ & สรุป" },
-              { id: "translation", label: "🌐 แปลภาษา & วันที่" },
-              { id: "custom", label: "✨ กำหนดเอง" },
-            ].map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
-                  selectedCategory === cat.id
-                    ? "bg-indigo-600 text-white shadow-xs"
-                    : "bg-white text-slate-600 border border-slate-200/80 hover:bg-slate-50 hover:text-slate-900"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="ค้นหาตามชื่อ หรือคำสั่ง..."
-              className="w-full rounded-xl border border-slate-200 bg-white pl-8 pr-3 py-1.5 text-xs font-medium text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:outline-none transition shadow-2xs"
-            />
+        <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3">
+          <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+            <div className="flex flex-wrap items-center gap-1.5 text-xs">
+              {[
+                { id: "all", label: `ทั้งหมด (${presets.length})` },
+                { id: "extraction", label: "สกัด 11 ฟิลด์" },
+                { id: "synonym", label: "คำความหมายเดียวกัน" },
+                { id: "validation", label: "ตรวจสอบตัวเลข" },
+                { id: "summary", label: "วิเคราะห์ & สรุป" },
+                { id: "translation", label: "แปลภาษา & วันที่" },
+                { id: "custom", label: "กำหนดเอง" },
+              ].map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`rounded-lg px-2.5 py-1.5 text-[11px] font-bold transition ${selectedCategory === cat.id ? "bg-indigo-600 text-white" : "text-slate-600 hover:bg-white"}`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+            <div className="relative w-full xl:w-64">
+              <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="ค้นหา preset..."
+                className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-8 pr-3 text-xs font-medium text-slate-800 placeholder-slate-400 outline-none transition focus:border-indigo-500"
+              />
+            </div>
           </div>
         </div>
-
-        {/* Grid of Presets */}
         {loadingPresets ? (
-          <div className="flex items-center justify-center py-12 text-slate-400 text-xs font-bold gap-2">
-            <LoaderCircle className="h-4 w-4 animate-spin text-indigo-600" />
-            <span>กำลังโหลดคลังแม่แบบพร้อมต์...</span>
-          </div>
+          <div className="flex items-center justify-center gap-2 py-12 text-xs font-bold text-slate-400"><LoaderCircle className="h-4 w-4 animate-spin text-indigo-600" />กำลังโหลด preset...</div>
         ) : filteredPresets.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-slate-300 bg-white/60 p-8 text-center text-slate-400 text-xs font-bold">
-            ไม่พบแม่แบบพร้อมต์ตรงตามหมวดหมู่หรือคำค้นหานี้
-          </div>
+          <div className="mt-4 rounded-xl border border-dashed border-slate-300 p-8 text-center text-xs font-bold text-slate-400">ไม่พบ preset ที่ตรงกับเงื่อนไข</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-1">
+          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
             {filteredPresets.map((preset) => (
-              <div
-                key={preset.id}
-                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 shadow-2xs hover:border-indigo-300 hover:shadow-xs transition"
-              >
-                <div className="space-y-2">
-                  {/* Category & Badge Header */}
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-2 py-0.5 text-[10px] font-black uppercase text-indigo-700">
-                      {preset.badge}
-                    </span>
-                    <span className="font-mono text-[10px] font-bold text-slate-400">
-                      #{preset.id}
-                    </span>
+              <div key={preset.id} className="group flex min-h-[210px] flex-col justify-between rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-indigo-300 hover:shadow-sm">
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="rounded-md bg-indigo-50 px-2 py-1 text-[10px] font-black uppercase text-indigo-700">{preset.badge}</span>
+                    <span className="font-mono text-[10px] font-bold text-slate-400">#{preset.id}</span>
                   </div>
-
-                  {/* Title */}
-                  <h4 className="text-xs font-black text-slate-900 group-hover:text-indigo-600 transition leading-snug">
-                    {preset.title}
-                  </h4>
-
-                  {/* Description */}
-                  <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
-                    {preset.description}
-                  </p>
-
-                  {/* Prompt Text Preview Box */}
-                  <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-2.5 font-mono text-[11px] text-slate-700 leading-relaxed max-h-20 overflow-hidden line-clamp-3 select-text">
-                    {preset.prompt}
-                  </div>
+                  <h4 className="mt-3 text-xs font-black leading-snug text-slate-900 group-hover:text-indigo-600">{preset.title}</h4>
+                  <p className="mt-1.5 line-clamp-2 text-[11px] font-medium leading-relaxed text-slate-500">{preset.description}</p>
+                  <div className="mt-3 line-clamp-3 rounded-xl border border-slate-100 bg-slate-50 p-2.5 font-mono text-[10px] leading-relaxed text-slate-600">{preset.prompt}</div>
                 </div>
-
-                {/* Bottom Card Actions */}
-                <div className="mt-3.5 flex items-center justify-between border-t border-slate-100 pt-2.5">
+                <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
+                  <button type="button" onClick={() => handleOpenEditPreset(preset)} className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[11px] font-bold text-slate-700 transition hover:border-indigo-300 hover:text-indigo-600"><Edit3 className="h-3 w-3" />แก้ไข</button>
                   <div className="flex items-center gap-1">
-                    <button
-                      type="button"
-                      onClick={() => handleOpenEditPreset(preset)}
-                      className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-bold text-slate-700 hover:border-indigo-300 hover:text-indigo-600 transition shadow-2xs"
-                      title="เปิดหน้าต่างแก้ไขคำสั่ง Prompt นี้"
-                    >
-                      <Edit3 className="h-3 w-3 text-indigo-600" />
-                      <span>แก้ไข Prompt</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleTestPresetOnPlayground(preset)}
-                      className="inline-flex items-center gap-1 rounded-lg border border-indigo-200 bg-indigo-50/60 px-2.5 py-1 text-[11px] font-bold text-indigo-700 hover:bg-indigo-100 transition shadow-2xs"
-                      title="ส่ง Prompt นี้ไปทดสอบสดกับ Qwen SLM บน GPU"
-                    >
-                      <Play className="h-3 w-3 fill-indigo-600" />
-                      <span>ทดสอบสด</span>
-                    </button>
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(preset.prompt);
-                        showToast(`คัดลอกข้อความของ "${preset.title}" แล้ว`);
-                      }}
-                      className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition"
-                      title="คัดลอกคำสั่ง Prompt"
-                    >
-                      <Copy className="h-3.5 w-3.5" />
-                    </button>
-
-                    {preset.category === "custom" && (
-                      <button
-                        type="button"
-                        onClick={() => handleDeletePreset(preset.id)}
-                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
-                        title="ลบแม่แบบนี้"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    )}
+                    <button type="button" onClick={() => handleApplyPresetAsSystemPrompt(preset)} className="rounded-lg px-2 py-1.5 text-[11px] font-bold text-indigo-600 transition hover:bg-indigo-50">ใช้เป็น System Prompt</button>
+                    <button type="button" onClick={() => { navigator.clipboard.writeText(preset.prompt); showToast(`คัดลอกข้อความของ "${preset.title}" แล้ว`); }} className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700" title="คัดลอกคำสั่ง Prompt"><Copy className="h-3.5 w-3.5" /></button>
+                    {preset.category === "custom" && <button type="button" onClick={() => handleDeletePreset(preset.id)} className="rounded-lg p-1.5 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600" title="ลบแม่แบบนี้"><Trash2 className="h-3.5 w-3.5" /></button>}
                   </div>
                 </div>
               </div>
@@ -924,350 +879,6 @@ export function AdminPromptConfig({
         </div>
       )}
 
-      {/* =================================================================== */}
-      {/* 2. MAIN SYSTEM PROMPT & MODEL CONFIGURATION                         */}
-      {/* =================================================================== */}
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* LEFT COLUMN: System Prompt Editor */}
-        <div className="space-y-6">
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-900">
-                <BrainCircuit className="h-4 w-4 text-indigo-600" />
-                <span>คำสั่งหลักของระบบ (System Prompt Editor)</span>
-              </h3>
-              <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-[10px] font-bold text-indigo-700">
-                Active System Instruction
-              </span>
-            </div>
-
-            <p className="text-xs text-slate-500">
-              ข้อความนี้จะถูกส่งเป็น <code>System Instruction</code> ให้ Qwen SLM ในทุก Request เพื่อควบคุมทิศทางการคิดและการสกัดข้อมูล:
-            </p>
-
-            <textarea
-              value={value.systemPrompt}
-              onChange={(event) => onChange({ ...value, systemPrompt: event.target.value })}
-              rows={6}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 font-mono text-xs leading-relaxed text-slate-800 focus:border-indigo-500 focus:bg-white focus:outline-none transition shadow-inner"
-              placeholder="ระบุ System Prompt ที่นี่..."
-            />
-
-            {/* Extraction Rules Editor */}
-            <div className="space-y-2.5 pt-2 border-t border-slate-100">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <FileCode className="h-3.5 w-3.5 text-indigo-500" />
-                    <span>กฎการสกัดข้อมูล (Extraction Rules)</span>
-                  </p>
-                  <p className="text-[10px] text-slate-400">กฎหลักสำหรับการ map และ normalize ข้อมูลจาก OCR</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleAddExtractionRule}
-                  className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-slate-50 transition shadow-2xs"
-                >
-                  <Plus className="h-3.5 w-3.5 text-blue-600" />
-                  <span>เพิ่มกฎใหม่</span>
-                </button>
-              </div>
-
-              <div className="space-y-2">
-                {value.extractionRules.map((rule, index) => (
-                  <div key={`extraction-rule-${index}`} className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-slate-400 w-5 text-right">{index + 1}.</span>
-                    <input
-                      type="text"
-                      value={rule}
-                      onChange={(event) => updateExtractionRule(index, event.target.value)}
-                      className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-800 focus:border-indigo-500 focus:outline-none transition"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteExtractionRule(index)}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
-                      title="ลบกฎนี้"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Fallback Rules Editor */}
-            <div className="space-y-2.5 pt-2 border-t border-slate-100">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <Zap className="h-3.5 w-3.5 text-amber-500" />
-                    <span>กฎเงื่อนไขเพิ่มเติม (Fallback & Semantic Rules)</span>
-                  </p>
-                  <p className="text-[10px] text-slate-400">กฎเหล่านี้จะถูกผนวกเข้ากับ System Prompt อัตโนมัติ</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleAddFallbackRule}
-                  className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-slate-50 transition shadow-2xs"
-                >
-                  <Plus className="h-3.5 w-3.5 text-blue-600" />
-                  <span>เพิ่มกฎใหม่</span>
-                </button>
-              </div>
-
-              <div className="space-y-2">
-                {value.fallbackRules.map((rule, index) => (
-                  <div key={`rule-${index}`} className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-slate-400 w-5 text-right">{index + 1}.</span>
-                    <input
-                      type="text"
-                      value={rule}
-                      onChange={(event) => updateFallbackRule(index, event.target.value)}
-                      className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-800 focus:border-indigo-500 focus:outline-none transition"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteFallbackRule(index)}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
-                      title="ลบกฎนี้"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="pt-2 flex items-center justify-between border-t border-slate-100">
-              <button
-                type="button"
-                onClick={onSave}
-                disabled={loading || saving}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm shadow-blue-600/20 hover:from-blue-700 hover:to-indigo-700 transition disabled:opacity-50"
-              >
-                {saving ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                <span>{saving ? "กำลังบันทึก..." : "บันทึกการตั้งค่า Prompt"}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: Model Parameters & Monitored Fields */}
-        <div className="space-y-6">
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs space-y-5">
-            <h3 className="flex items-center gap-1.5 border-b border-slate-100 pb-3 text-xs font-black uppercase tracking-wider text-slate-900">
-              <Settings className="h-4 w-4 text-slate-500" />
-              <span>พารามิเตอร์โมเดลและการเฝ้าระวัง (Model & Quality Thresholds)</span>
-            </h3>
-
-            {/* Model Selection */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                <Cpu className="h-3.5 w-3.5 text-indigo-600" />
-                <span>โมเดลภาษาขนาดเล็กที่เลือกใช้งาน (SLM Model)</span>
-              </label>
-              <select
-                value={value.selectedModel}
-                onChange={(event) => onChange({ ...value, selectedModel: event.target.value })}
-                className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs font-semibold text-slate-800 focus:border-indigo-600 focus:outline-none cursor-pointer"
-              >
-                <option value="qwen-2.5-1.5b">Qwen2.5-1.5B-Instruct (Recommended - Preloaded on CUDA GPU)</option>
-                <option value="qwen-2.5-7b">Qwen2.5-7B-Instruct (High Accuracy - Requires GPU VRAM &gt; 12GB)</option>
-                <option value="llama-3.1-8b">Llama-3.1-8B-Instruct (Standard Multilingual)</option>
-              </select>
-            </div>
-
-            {/* Confidence Threshold */}
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs font-bold">
-                <span className="text-slate-700">Confidence Threshold (เกณฑ์ความมั่นใจขั้นต่ำ)</span>
-                <span className="font-mono font-black text-blue-600">{value.confidenceThreshold}%</span>
-              </div>
-              <input
-                type="range"
-                min="50"
-                max="98"
-                value={value.confidenceThreshold}
-                onChange={(event) => onChange({ ...value, confidenceThreshold: Number(event.target.value) })}
-                className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-100 accent-blue-600"
-              />
-              <p className="text-[11px] text-slate-400">
-                ฟิลด์ที่มีความมั่นใจต่ำกว่า {value.confidenceThreshold}% จะถูกส่งเข้าคิว Manual Review อัตโนมัติ
-              </p>
-            </div>
-
-            {/* Monitored Fields */}
-            <div className="space-y-2 pt-2 border-t border-slate-100">
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-bold text-slate-700">ฟิลด์ที่กำหนดให้เฝ้าระวังเป็นพิเศษ (Monitored Fields)</p>
-                <span className="text-[10px] text-slate-400">{value.monitoredFields.length} ฟิลด์เลือกอยู่</span>
-              </div>
-              <div className="grid gap-2 sm:grid-cols-2">
-                {CORE_FIELDS_DEF.map((field) => {
-                  const checked = value.monitoredFields.includes(field.key);
-                  return (
-                    <label
-                      key={field.key}
-                      className={`flex items-center gap-2 rounded-xl border p-2 text-[11px] font-semibold transition cursor-pointer select-none ${
-                        checked
-                          ? "border-blue-300 bg-blue-50/50 text-blue-900"
-                          : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={(event) => {
-                          const monitoredFields = event.target.checked
-                            ? [...value.monitoredFields, field.key]
-                            : value.monitoredFields.filter((item) => item !== field.key);
-                          onChange({ ...value, monitoredFields });
-                        }}
-                        className="h-3.5 w-3.5 accent-blue-600 rounded"
-                      />
-                      <span>{field.label}</span>
-                    </label>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* =================================================================== */}
-      {/* 3. INTERACTIVE LIVE PROMPT PLAYGROUND (TEST STUDIO)                 */}
-      {/* =================================================================== */}
-      <div id="live-playground-section" className="rounded-2xl border border-indigo-200/90 bg-white p-6 shadow-panel space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-          <div>
-            <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-slate-900">
-              <Play className="h-4 w-4 fill-indigo-600 text-indigo-600" />
-              <span>ห้องทดสอบพร้อมต์สดบน GPU (Interactive Live Prompt Playground)</span>
-            </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
-              ทดสอบรัน Prompt สำเร็จรูปด้านบนหรือ System Prompt ร่วมกับข้อความ OCR ตัวอย่างได้ทันทีบน GPU CUDA
-            </p>
-          </div>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-700">
-            <Cpu className="h-3.5 w-3.5" />
-            CUDA:0 (RTX 3050 Laptop GPU)
-          </span>
-        </div>
-
-        {/* Sample Selector Buttons */}
-        <div className="space-y-2">
-          <label className="block text-xs font-bold text-slate-700">
-            เลือกข้อความ OCR ตัวอย่าง หรือป้อนข้อความของคุณเอง:
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {SAMPLE_OCR_TEXTS.map((sample) => (
-              <button
-                key={sample.id}
-                type="button"
-                onClick={() => handleSelectSample(sample.id)}
-                className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
-                  selectedSampleId === sample.id
-                    ? "bg-indigo-600 text-white shadow-xs"
-                    : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-                }`}
-              >
-                {sample.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* 2-Column Playground: OCR Input & SLM Output */}
-        <div className="grid gap-4 md:grid-cols-2">
-          {/* Left: OCR Text Area */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-slate-700 flex items-center gap-1.5">
-                <FileText className="h-3.5 w-3.5 text-slate-500" />
-                <span>ข้อความดิบจาก OCR (Input OCR Text)</span>
-              </span>
-              <span className="text-[10px] text-slate-400 font-mono">
-                {customOcrInput.length} ตัวอักษร
-              </span>
-            </div>
-            <textarea
-              value={customOcrInput}
-              onChange={(e) => setCustomOcrInput(e.target.value)}
-              rows={12}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50/70 p-3 font-mono text-xs leading-relaxed text-slate-800 focus:border-indigo-500 focus:bg-white focus:outline-none transition shadow-inner"
-              placeholder="วางข้อความ OCR ที่ต้องการทดสอบที่นี่..."
-            />
-            <div className="flex items-center justify-between pt-1">
-              <button
-                type="button"
-                onClick={handleExecuteCustomTestPrompt}
-                disabled={isTestingPrompt || !customOcrInput.trim()}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-2.5 text-xs font-black text-white shadow-md shadow-indigo-600/20 hover:from-indigo-700 hover:to-blue-700 transition disabled:opacity-50"
-              >
-                {isTestingPrompt ? (
-                  <>
-                    <LoaderCircle className="h-4 w-4 animate-spin text-white" />
-                    <span>กำลังรัน Qwen บน GPU...</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="h-4 w-4 fill-white text-white" />
-                    <span>รันการทดสอบทันที (Run Test on GPU)</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Right: SLM Response Output */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-slate-700 flex items-center gap-1.5">
-                <Cpu className="h-3.5 w-3.5 text-indigo-600" />
-                <span>ผลลัพธ์การวิเคราะห์จาก Qwen SLM (Live Response)</span>
-              </span>
-              <div className="flex items-center gap-2">
-                {testElapsedSec !== null && (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">
-                    <Clock className="h-3 w-3" />
-                    {testElapsedSec}s
-                  </span>
-                )}
-                {testResult && (
-                  <button
-                    type="button"
-                    onClick={handleCopyResult}
-                    className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 hover:text-indigo-600 transition"
-                  >
-                    {copiedResult ? <Check className="h-3 w-3 text-emerald-600" /> : <Copy className="h-3 w-3" />}
-                    <span>{copiedResult ? "คัดลอกแล้ว" : "คัดลอก"}</span>
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div className="h-[275px] w-full overflow-y-auto rounded-xl border border-slate-200 bg-slate-900 p-4 font-mono text-xs leading-relaxed text-slate-100 shadow-inner">
-              {isTestingPrompt ? (
-                <div className="flex h-full flex-col items-center justify-center gap-2 text-indigo-400">
-                  <RefreshCw className="h-6 w-6 animate-spin" />
-                  <span className="text-xs font-sans">กำลังส่งข้อความเข้าโมเดล Qwen2.5 บน CUDA:0...</span>
-                </div>
-              ) : testResult ? (
-                <pre className="whitespace-pre-wrap font-mono text-xs text-emerald-400">
-                  {testResult}
-                </pre>
-              ) : (
-                <div className="flex h-full flex-col items-center justify-center gap-1.5 text-slate-500 text-xs">
-                  <Play className="h-6 w-6 opacity-40" />
-                  <span>กดปุ่ม "รันการทดสอบทันที" เพื่อดูผลการสกัดจากโมเดล</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
