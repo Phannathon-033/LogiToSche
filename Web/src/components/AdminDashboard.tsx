@@ -446,17 +446,24 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
             </button>
 
             {/* Notification Bell */}
-            <button
-              type="button"
-              onClick={() => showToast("การแจ้งเตือน: มี 3 รายการรอการตรวจสอบ")}
-              className="relative rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
-              aria-label="การแจ้งเตือน"
-            >
-              <Bell className="h-4.5 w-4.5" />
-              <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 text-[9px] font-black text-white">
-                3
-              </span>
-            </button>
+            {(() => {
+              const pendingCount = documents.filter((d) => d.status === "review" || d.status === "error").length;
+              return (
+                <button
+                  type="button"
+                  onClick={() => showToast(pendingCount > 0 ? `การแจ้งเตือน: มี ${pendingCount} รายการรอการตรวจสอบ` : "ไม่มีการแจ้งเตือนค้างตรวจ")}
+                  className="relative rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                  aria-label="การแจ้งเตือน"
+                >
+                  <Bell className="h-4.5 w-4.5" />
+                  {pendingCount > 0 && (
+                    <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 text-[9px] font-black text-white">
+                      {pendingCount}
+                    </span>
+                  )}
+                </button>
+              );
+            })()}
 
             {/* Super Admin User Profile Pill */}
             <div className="flex items-center gap-2 rounded-xl border border-slate-200/80 bg-slate-50/80 px-2.5 py-1">
