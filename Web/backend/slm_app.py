@@ -469,7 +469,7 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
     ]
     text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer([text], return_tensors="pt").to(model.device)
-    max_tokens = 300 if benchmark_variant in ("zero-shot", "one-shot", "few-shot") else 400
+    max_tokens = 700 if benchmark_variant in ("zero-shot", "one-shot", "few-shot") else 800
     import time
     t0 = time.time()
     print(f"[SLM] Generating JSON for {payload.source_file} (variant={benchmark_variant}, in_tokens={inputs.input_ids.shape[1]}, max_out={max_tokens})...", flush=True)
@@ -706,6 +706,14 @@ def parse_json_object(text: str) -> dict[str, Any]:
     try:
         value = json.loads(stripped[start : end + 1])
     except json.JSONDecodeError as exc:
+        m = re.search(r'"json_schema"\s*:\s*(\{[\s\S]*?\n\s*\})', stripped)
+        if m:
+            try:
+                schema_dict = json.loads(m.group(1))
+                if isinstance(schema_dict, dict):
+                    return {"json_schema": schema_dict}
+            except Exception:
+                pass
         raise HTTPException(status_code=502, detail=f"SLM returned invalid JSON: {exc}") from exc
     if not isinstance(value, dict):
         raise HTTPException(status_code=502, detail="SLM returned a JSON value instead of an object")

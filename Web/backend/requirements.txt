@@ -12,8 +12,10 @@ psutil
 openpyxl==3.1.5
 pypdfium2
 PyMuPDF
+transformers>=4.40.0
+accelerate>=0.28.0
 --extra-index-url https://www.paddlepaddle.org.cn/packages/stable/cu129/
---extra-index-url https://download.pytorch.org/whl/cu126
+--extra-index-url https://download.pytorch.org/whl/cu128
 paddlepaddle-gpu==3.3.1
-torch==2.6.0+cu126
+torch==2.11.0+cu128
 paddleocr @ git+https://github.com/PaddlePaddle/PaddleOCR.git

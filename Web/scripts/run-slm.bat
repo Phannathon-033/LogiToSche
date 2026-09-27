@@ -9,4 +9,4 @@ if not exist ".venv\Scripts\python.exe" (
 )
 echo Starting LogiAI SLM Service on http://0.0.0.0:8001...
 ".venv\Scripts\python.exe" -m uvicorn slm_app:app --host 0.0.0.0 --port 8001
-pause
+
