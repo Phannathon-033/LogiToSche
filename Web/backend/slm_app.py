@@ -550,11 +550,16 @@ def benchmark_instruction_for_variant(variant: str, config: dict[str, Any]) -> s
 def build_json_schema_prompt(payload: SlmExtractRequest, config: dict[str, Any], variant: str, examples: list[dict[str, Any]]) -> str:
     benchmark_instruction = ""
     if variant in BENCHMARK_PROMPT_VARIANTS:
-        benchmark_instruction = (
-            f"Benchmark variant: {variant}. {benchmark_instruction_for_variant(variant, config)}\n"
-            "Use labeled examples only as formatting and mapping demonstrations; never copy values unless grounded in current OCR text.\n"
-            f"Examples:\n{json.dumps(examples, ensure_ascii=False, indent=2)}\n"
-        )
+        if examples:
+            benchmark_instruction = (
+                f"Benchmark variant: {variant}. {benchmark_instruction_for_variant(variant, config)}\n"
+                "Use labeled examples only as formatting and mapping demonstrations; never copy values unless grounded in current OCR text.\n"
+                f"Examples:\n{json.dumps(examples, ensure_ascii=False, indent=2)}\n"
+            )
+        else:
+            benchmark_instruction = (
+                f"Benchmark variant: {variant}. {benchmark_instruction_for_variant(variant, config)}\n"
+            )
     schema = {
         "json_schema": {
             "document_type": "invoice | bill_of_lading | packing_list | purchase_order | unknown",
@@ -1434,7 +1439,7 @@ def resolve_export_report(
                 except Exception:
                     pass
 
-    # 2. Specific Job ID (completed)
+    # 2. Specific Job ID (completed or stopped with completed documents)
     if job_id and re.fullmatch(r"eval_[A-Za-z0-9_-]+", job_id):
         try:
             try:
@@ -1442,8 +1447,28 @@ def resolve_export_report(
             except ImportError:
                 from .evaluation_job_manager import job_manager
             job = job_manager.get_status(job_id)
-            if job.get("job_id") == job_id and isinstance(job.get("final_report"), dict) and job["final_report"].get("folds"):
-                return job["final_report"]
+            if job.get("job_id") == job_id:
+                if isinstance(job.get("final_report"), dict) and job["final_report"].get("folds"):
+                    return job["final_report"]
+                completed_items = job.get("completed_items", [])
+                if completed_items:
+                    try:
+                        from kfold_evaluator import run_kfold_evaluation
+                        doc_ids = [item["id"] for item in completed_items if item.get("id")]
+                        target_fold = job.get("single_fold") if job.get("mode") == "single_fold" else None
+                        partial_rep = run_kfold_evaluation(
+                            k_splits=job.get("k_splits", 5),
+                            random_seed=job.get("random_seed", 42),
+                            single_fold=target_fold,
+                            selected_doc_ids=doc_ids,
+                            force_rerun=False,
+                            prompt_variant=job.get("prompt_variant", "zero-shot"),
+                        )
+                        job["final_report"] = partial_rep
+                        job_manager._write_job_file(job)
+                        return partial_rep
+                    except Exception as gen_err:
+                        print(f"[EXPORT] Failed on-the-fly compilation for job {job_id}: {gen_err}")
         except Exception:
             pass
 
@@ -1464,7 +1489,16 @@ def resolve_export_report(
                 except Exception:
                     pass
 
-    # 4. Automatic fallback: latest completed evaluation report in REPORT_DIR
+    # 4. Check latest active or recent job from job_manager
+    try:
+        from evaluation_job_manager import job_manager
+        current_job = job_manager.get_status()
+        if current_job and isinstance(current_job.get("final_report"), dict) and current_job["final_report"].get("folds"):
+            return current_job["final_report"]
+    except Exception:
+        pass
+
+    # 5. Automatic fallback: latest completed evaluation report in REPORT_DIR
     evaluation_files = sorted(
         REPORT_DIR.glob("*_evaluation.json"),
         key=lambda p: p.stat().st_mtime,

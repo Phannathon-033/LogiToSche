@@ -518,7 +518,7 @@ class EvaluationJobManager:
                         single_fold=target_single_fold,
                         doc_id=target_doc_id,
                         selected_doc_ids=list(live_extractions.keys()),
-                        force_rerun=True,
+                        force_rerun=False,
                         prompt_variant=prompt_variant,
                         precomputed_extractions=live_extractions,
                     )

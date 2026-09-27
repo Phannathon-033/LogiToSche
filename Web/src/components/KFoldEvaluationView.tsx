@@ -503,10 +503,14 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     try {
       showToast?.("กำลังสร้างและเตรียมดาวน์โหลดรายงานสรุป Excel อย่างละเอียด (.xlsx)...");
 
-      // 1. Resolve target run_id - prioritize newly completed evaluation job or fresh run!
+      // 1. Resolve target run_id or job_id - prioritize current evaluation job (completed or stopped!)
       let targetRunId = "";
-      if (evalJob?.status === "completed" && evalJob?.final_report?.run_id) {
-        targetRunId = evalJob.final_report.run_id;
+      let targetJobId = "";
+      if (evalJob?.job_id && ((evalJob.completed_docs ?? 0) > 0 || evalJob.final_report)) {
+        targetJobId = evalJob.job_id;
+        if (evalJob.final_report?.run_id) {
+          targetRunId = evalJob.final_report.run_id;
+        }
       } else if (freshStatus?.finished && freshStatus?.final_report?.run_id) {
         targetRunId = freshStatus.final_report.run_id;
       } else if (kfoldReport?.run_id && kfoldReport.run_id.startsWith("run_")) {
@@ -514,7 +518,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       }
 
       // 2. If no valid run_id in state, query the latest benchmark metadata
-      if (!targetRunId) {
+      if (!targetRunId && !targetJobId) {
         try {
           const kfRes = await apiFetch("/api/benchmark/kfold");
           if (kfRes.ok) {
@@ -532,10 +536,11 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
       }
 
       const exportParams = new URLSearchParams();
+      if (targetJobId) {
+        exportParams.set("job_id", targetJobId);
+      }
       if (targetRunId) {
         exportParams.set("run_id", targetRunId);
-      } else if (evalJob?.status === "completed" && evalJob?.job_id) {
-        exportParams.set("job_id", evalJob.job_id);
       }
       exportParams.set("_", `${Date.now()}`);
 
@@ -588,10 +593,14 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           if (res.ok) {
             const data: EvaluationJobStatus = await res.json();
             setEvalJob(data);
-            if (data.status === "completed" && data.final_report) {
+            if ((data.status === "completed" || data.status === "stopped") && data.final_report) {
               applyReport(data.final_report, "evaluation");
               setIsPollingJob(false);
-              showToast?.(`การประเมินผลเสร็จสิ้น 100%! ความแม่นยำ: ${data.final_accuracy || "-"}`);
+              showToast?.(
+                data.status === "completed"
+                  ? `การประเมินผลเสร็จสิ้น 100%! ความแม่นยำ: ${data.final_accuracy || "-"}`
+                  : `หยุดการประเมินแล้ว (ประมวลผล ${data.completed_docs || 0} ฉบับ) สรุปรายงานย่อยเรียบร้อย`
+              );
               fetchPerformanceLogs();
             } else if (data.status === "stopped" || data.status === "failed") {
               setIsPollingJob(false);
@@ -812,7 +821,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           setEvalJob(evalData);
           if (evalData.is_running) {
             setIsPollingJob(true);
-          } else if (evalData.status === "completed" && evalData.final_report) {
+          } else if ((evalData.status === "completed" || evalData.status === "stopped") && evalData.final_report) {
             restoredEvaluationReport = evalData.final_report;
           }
         }

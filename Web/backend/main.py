@@ -584,7 +584,15 @@ def get_kfold_excel_report_endpoint(
                     except Exception:
                         pass
 
-        if not report:
+        if job_id and not report:
+            cand_job = report_dir / "evaluation_jobs" / f"{job_id}.json"
+            if cand_job.is_file():
+                try:
+                    jd = json.loads(cand_job.read_text(encoding="utf-8"))
+                    if isinstance(jd.get("final_report"), dict) and jd["final_report"].get("folds"):
+                        report = jd["final_report"]
+                except Exception:
+                    pass
             eval_files = sorted(
                 report_dir.glob("*_evaluation.json"),
                 key=lambda p: p.stat().st_mtime,
