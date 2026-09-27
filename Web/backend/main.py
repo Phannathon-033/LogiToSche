@@ -538,6 +538,7 @@ def get_kfold_excel_report_endpoint(
     job_id: str | None = None,
     run_id: str | None = None,
 ) -> Any:
+    import json
     from fastapi.responses import Response
     from urllib.parse import urlencode
 
@@ -553,22 +554,85 @@ def get_kfold_excel_report_endpoint(
             headers=headers,
             timeout=300,
         )
-        if response.status_code >= 400:
-            detail = response.text[:500] or "SLM export failed"
-            raise HTTPException(status_code=response.status_code, detail=detail)
-        return Response(
-            content=response.content,
-            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={
-                "Content-Disposition": response.headers.get("Content-Disposition", "attachment"),
-                "Cache-Control": "no-store, no-cache, must-revalidate",
-                "Pragma": "no-cache",
-            },
-        )
-    except HTTPException:
-        raise
-    except requests.RequestException as exc:
-        raise HTTPException(status_code=503, detail=f"SLM service is unavailable: {exc}") from exc
+        if response.status_code == 200 and len(response.content) > 0:
+            return Response(
+                content=response.content,
+                media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                headers={
+                    "Content-Disposition": response.headers.get("Content-Disposition", "attachment; filename=\"LogiAI_KFold_Evaluation_Report.xlsx\""),
+                    "Cache-Control": "no-store, no-cache, must-revalidate",
+                    "Pragma": "no-cache",
+                },
+            )
+    except Exception as forward_exc:
+        print(f"[EXPORT GATEWAY] Forwarding to SLM failed: {forward_exc}, falling back to local export generator")
+
+    # Local Fallback: Load latest completed report and generate Excel directly
+    try:
+        from excel_report_generator import generate_kfold_excel_report
+        report_dir = BASE_DIR / "reports"
+        report = None
+
+        if run_id:
+            for cand in [report_dir / f"{run_id}_evaluation.json", report_dir / f"{run_id}.json"]:
+                if cand.is_file():
+                    try:
+                        d = json.loads(cand.read_text(encoding="utf-8"))
+                        if isinstance(d, dict) and d.get("folds"):
+                            report = d
+                            break
+                    except Exception:
+                        pass
+
+        if job_id and not report:
+            cand_job = report_dir / "evaluation_jobs" / f"{job_id}.json"
+            if cand_job.is_file():
+                try:
+                    jd = json.loads(cand_job.read_text(encoding="utf-8"))
+                    if isinstance(jd.get("final_report"), dict) and jd["final_report"].get("folds"):
+                        report = jd["final_report"]
+                except Exception:
+                    pass
+            eval_files = sorted(
+                report_dir.glob("*_evaluation.json"),
+                key=lambda p: p.stat().st_mtime,
+                reverse=True,
+            )
+            for ef in eval_files:
+                try:
+                    d = json.loads(ef.read_text(encoding="utf-8"))
+                    if isinstance(d, dict) and d.get("folds"):
+                        report = d
+                        break
+                except Exception:
+                    continue
+
+        if not report:
+            kfold_file = report_dir / "kfold_evaluation_report.json"
+            if kfold_file.is_file():
+                try:
+                    d = json.loads(kfold_file.read_text(encoding="utf-8"))
+                    if isinstance(d, dict) and d.get("folds"):
+                        report = d
+                except Exception:
+                    pass
+
+        if report:
+            excel_path = generate_kfold_excel_report(report)
+            resolved_id = str(report.get("run_id", "latest"))
+            return Response(
+                content=excel_path.read_bytes(),
+                media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                headers={
+                    "Content-Disposition": f'attachment; filename="LogiAI_KFold_Evaluation_Report_{resolved_id}.xlsx"',
+                    "Cache-Control": "no-store, no-cache, must-revalidate",
+                    "Pragma": "no-cache",
+                },
+            )
+    except Exception as local_err:
+        print(f"[EXPORT GATEWAY LOCAL ERR] {local_err}")
+
+    raise HTTPException(status_code=404, detail="ยังไม่พบไฟล์รายงานผลการประเมินที่เสร็จสมบูรณ์สำหรับ Export")
 
 
 # ---------------------------------------------------------------------------
@@ -613,10 +677,21 @@ def post_evaluation_reset() -> Any:
 def get_benchmark_image(file_name: str) -> Any:
     from fastapi.responses import FileResponse
 
-    base_testing_dir = Path(
-        os.environ.get("LOGIAI_DATASET_DIR", str(Path(__file__).resolve().parents[2] / "To_Testing"))
-    ).resolve()
+    backend_dir = Path(__file__).resolve().parent
+    repo_testing = backend_dir.parent.parent / "To_Testing"
+    web_testing = backend_dir.parent / "To_Testing"
+    configured_dir = os.environ.get("LOGIAI_DATASET_DIR", "").strip()
 
+    if configured_dir and Path(configured_dir).exists():
+        base_testing_dir = Path(configured_dir).resolve()
+    elif repo_testing.exists():
+        base_testing_dir = repo_testing.resolve()
+    elif web_testing.exists():
+        base_testing_dir = web_testing.resolve()
+    elif Path(r"E:\Logistics To JSON\To_Testing").exists():
+        base_testing_dir = Path(r"E:\Logistics To JSON\To_Testing").resolve()
+    else:
+        base_testing_dir = repo_testing.resolve()
     safe_name = Path(file_name).name
     img_path = (base_testing_dir / safe_name).resolve()
     if base_testing_dir not in img_path.parents or not img_path.is_file():
@@ -639,7 +714,7 @@ def save_benchmark_ground_truth(payload: GroundTruthEntry) -> Any:
 
 
 def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -> Any:
-    timeout = 300 if "benchmark" in path else (60 if method == "GET" else 120)
+    timeout = 300 if "benchmark" in path else (60 if method == "GET" else 180)
     if method == "GET":
         try:
             response = requests.get(

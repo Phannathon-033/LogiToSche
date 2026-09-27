@@ -126,3 +126,80 @@ export async function getSystemHealth(): Promise<SystemHealthData> {
   if (!res.ok) throw new Error("Failed to fetch system health");
   return (await res.json()) as SystemHealthData;
 }
+
+export interface PerformanceRecord {
+  timestamp: string;
+  doc_id: string;
+  file_name: string;
+  fold?: number;
+  ocr_time_sec: number;
+  slm_time_sec: number;
+  total_time_sec: number;
+  matched_fields: number;
+  total_fields: number;
+  accuracy_pct: number;
+}
+
+export interface PerformanceLogResponse {
+  records: PerformanceRecord[];
+  summary: {
+    total_documents_logged: number;
+    mean_ocr_time_sec: number;
+    mean_slm_time_sec: number;
+    mean_total_time_sec: number;
+    min_total_time_sec: number;
+    max_total_time_sec: number;
+  };
+}
+
+export interface EvaluationJobStatusResponse {
+  job_id?: string;
+  status: "idle" | "running" | "completed" | "stopped" | "failed" | string;
+  is_running?: boolean;
+  completed_docs?: number;
+  total_docs?: number;
+  current_fold?: number;
+  k_splits?: number;
+  current_doc_id?: string;
+  current_file_name?: string;
+  elapsed_seconds?: number;
+  live_accuracy_pct?: number;
+  logs?: string[];
+  recent_logs?: string[];
+  final_report?: any;
+  final_accuracy?: string;
+  final_f1?: string;
+  excel_report_file?: string;
+}
+
+export async function getPerformanceLogs(): Promise<PerformanceLogResponse> {
+  const res = await apiFetch("/api/benchmark/performance-log");
+  if (!res.ok) throw new Error("Failed to fetch performance logs");
+  return (await res.json()) as PerformanceLogResponse;
+}
+
+export async function getEvaluationJobStatus(): Promise<EvaluationJobStatusResponse> {
+  const res = await apiFetch("/api/evaluation/status");
+  if (!res.ok) throw new Error("Failed to fetch evaluation status");
+  return (await res.json()) as EvaluationJobStatusResponse;
+}
+
+export async function startEvaluation(payload?: Record<string, any>): Promise<any> {
+  const res = await apiFetch("/api/evaluation/start", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload || {}),
+  });
+  if (!res.ok) throw new Error("Failed to start evaluation job");
+  return await res.json();
+}
+
+export async function stopEvaluation(): Promise<any> {
+  const res = await apiFetch("/api/evaluation/stop", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Failed to stop evaluation job");
+  return await res.json();
+}
+

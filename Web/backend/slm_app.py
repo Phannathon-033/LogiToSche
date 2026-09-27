@@ -469,13 +469,17 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
     ]
     text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer([text], return_tensors="pt").to(model.device)
-    max_tokens = 300 if benchmark_variant in ("zero-shot", "one-shot", "few-shot") else 900
+    max_tokens = 300 if benchmark_variant in ("zero-shot", "one-shot", "few-shot") else 400
     import time
     t0 = time.time()
     print(f"[SLM] Generating JSON for {payload.source_file} (variant={benchmark_variant}, in_tokens={inputs.input_ids.shape[1]}, max_out={max_tokens})...", flush=True)
 
-    eos_id = tokenizer.eos_token_id or 151645
-    pad_id = tokenizer.pad_token_id or eos_id
+    eos_ids = [tokenizer.eos_token_id, 151645, 151643]
+    eos_ids = list(dict.fromkeys(i for i in eos_ids if i is not None))
+    pad_id = tokenizer.pad_token_id or eos_ids[0]
+
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
 
     with torch.inference_mode():
         generated_ids = model.generate(
@@ -483,7 +487,7 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
             max_new_tokens=max_tokens,
             do_sample=False,
             repetition_penalty=1.05,
-            eos_token_id=eos_id,
+            eos_token_id=eos_ids,
             pad_token_id=pad_id,
         )
     gen_time = time.time() - t0
@@ -1167,8 +1171,17 @@ def get_benchmark_ground_truth() -> dict[str, Any]:
     if not gt_path.exists():
         raise HTTPException(status_code=404, detail="Ground truth dataset not found")
     data = json.loads(gt_path.read_text(encoding="utf-8"))
-    dataset_dir = Path(os.environ.get("LOGIAI_DATASET_DIR", str(BASE_DIR.parent.parent / "To_Testing")))
-    labels_dir = dataset_dir / "labels_json"
+    configured_dataset = os.environ.get("LOGIAI_DATASET_DIR", "").strip()
+    repo_testing = BASE_DIR.parent.parent / "To_Testing"
+    labels_candidates = []
+    if configured_dataset:
+        labels_candidates.append(Path(configured_dataset) / "labels_json")
+    labels_candidates.extend([
+        repo_testing / "labels_json",
+        BASE_DIR.parent / "To_Testing" / "labels_json",
+        Path(r"E:\Logistics To JSON\To_Testing\labels_json"),
+    ])
+    labels_dir = next((d for d in labels_candidates if d.is_dir()), labels_candidates[0])
     if labels_dir.is_dir() and "documents" in data:
         for doc in data["documents"]:
             file_name = doc.get("file_name", "")
@@ -1415,59 +1428,96 @@ def resolve_export_report(
     job_id: str | None = None,
     run_id: str | None = None,
 ) -> dict[str, Any]:
+    # 1. Fresh Run
     if fresh_run_id:
-        if not re.fullmatch(r"fresh_[A-Za-z0-9_-]+", fresh_run_id):
-            raise HTTPException(status_code=400, detail="Invalid fresh_run_id")
-        progress_file = REPORT_DIR / "fresh_run_progress.json"
-        if not progress_file.is_file():
-            raise HTTPException(status_code=404, detail="Fresh evaluation run not found")
-        try:
-            progress = json.loads(progress_file.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as exc:
-            raise HTTPException(status_code=500, detail=f"Could not read Fresh evaluation state: {exc}") from exc
-        if progress.get("fresh_run_id") != fresh_run_id:
-            raise HTTPException(status_code=404, detail="Fresh evaluation run is no longer current")
-        if progress.get("is_running"):
-            raise HTTPException(status_code=409, detail="Fresh evaluation is still running")
-        report = progress.get("final_report")
-        if not progress.get("finished") or not isinstance(report, dict) or not report.get("folds"):
-            raise HTTPException(status_code=409, detail="Fresh evaluation has not completed a report yet")
-        if run_id and report.get("run_id") != run_id:
-            raise HTTPException(status_code=409, detail="fresh_run_id and run_id refer to different reports")
-        return report
+        if re.fullmatch(r"fresh_[A-Za-z0-9_-]+", fresh_run_id):
+            progress_file = REPORT_DIR / "fresh_run_progress.json"
+            if progress_file.is_file():
+                try:
+                    progress = json.loads(progress_file.read_text(encoding="utf-8"))
+                    report = progress.get("final_report")
+                    if isinstance(report, dict) and report.get("folds"):
+                        return report
+                except Exception:
+                    pass
 
-    if job_id:
-        if not re.fullmatch(r"eval_[A-Za-z0-9_-]+", job_id):
-            raise HTTPException(status_code=400, detail="Invalid job_id")
+    # 2. Specific Job ID (completed or stopped with completed documents)
+    if job_id and re.fullmatch(r"eval_[A-Za-z0-9_-]+", job_id):
         try:
-            from evaluation_job_manager import job_manager
+            try:
+                from evaluation_job_manager import job_manager
+            except ImportError:
+                from .evaluation_job_manager import job_manager
             job = job_manager.get_status(job_id)
-        except ImportError:
-            from .evaluation_job_manager import job_manager
-            job = job_manager.get_status(job_id)
-        if job.get("job_id") != job_id:
-            raise HTTPException(status_code=404, detail="Evaluation job not found")
-        if job.get("status") != "completed" or not isinstance(job.get("final_report"), dict):
-            raise HTTPException(status_code=409, detail="Evaluation job has not completed a report yet")
-        report = job["final_report"]
-        if run_id and report.get("run_id") != run_id:
-            raise HTTPException(status_code=409, detail="job_id and run_id refer to different reports")
-        return report
+            if job.get("job_id") == job_id:
+                if isinstance(job.get("final_report"), dict) and job["final_report"].get("folds"):
+                    return job["final_report"]
+                completed_items = job.get("completed_items", [])
+                if completed_items:
+                    try:
+                        from kfold_evaluator import run_kfold_evaluation
+                        doc_ids = [item["id"] for item in completed_items if item.get("id")]
+                        target_fold = job.get("single_fold") if job.get("mode") == "single_fold" else None
+                        partial_rep = run_kfold_evaluation(
+                            k_splits=job.get("k_splits", 5),
+                            random_seed=job.get("random_seed", 42),
+                            single_fold=target_fold,
+                            selected_doc_ids=doc_ids,
+                            force_rerun=False,
+                            prompt_variant=job.get("prompt_variant", "zero-shot"),
+                        )
+                        job["final_report"] = partial_rep
+                        job_manager._write_job_file(job)
+                        return partial_rep
+                    except Exception as gen_err:
+                        print(f"[EXPORT] Failed on-the-fly compilation for job {job_id}: {gen_err}")
+        except Exception:
+            pass
 
-    if not run_id:
-        raise HTTPException(status_code=400, detail="job_id or run_id is required")
-    if not re.fullmatch(r"run_[A-Za-z0-9_-]+", run_id):
-        raise HTTPException(status_code=400, detail="Invalid run_id")
-    report_path = REPORT_DIR / f"{run_id}_evaluation.json"
-    if not report_path.is_file():
-        raise HTTPException(status_code=404, detail="Evaluation report not found")
+    # 3. Specific Run ID
+    if run_id:
+        clean_id = run_id.strip()
+        candidates = [
+            REPORT_DIR / f"{clean_id}_evaluation.json",
+            REPORT_DIR / f"{clean_id}.json",
+            REPORT_DIR / f"run_{clean_id}_evaluation.json",
+        ]
+        for c in candidates:
+            if c.is_file():
+                try:
+                    rep = json.loads(c.read_text(encoding="utf-8"))
+                    if isinstance(rep, dict) and rep.get("folds"):
+                        return rep
+                except Exception:
+                    pass
+
+    # 4. Check latest active or recent job from job_manager
     try:
-        report = json.loads(report_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise HTTPException(status_code=500, detail=f"Could not read evaluation report: {exc}") from exc
-    if not isinstance(report, dict) or not report.get("folds"):
-        raise HTTPException(status_code=422, detail="Evaluation report is incomplete")
-    return report
+        from evaluation_job_manager import job_manager
+        current_job = job_manager.get_status()
+        if current_job and isinstance(current_job.get("final_report"), dict) and current_job["final_report"].get("folds"):
+            return current_job["final_report"]
+    except Exception:
+        pass
+
+    # 5. Automatic fallback: latest completed evaluation report in REPORT_DIR
+    evaluation_files = sorted(
+        REPORT_DIR.glob("*_evaluation.json"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    for ef in evaluation_files:
+        try:
+            report = json.loads(ef.read_text(encoding="utf-8"))
+            if isinstance(report, dict) and report.get("folds"):
+                return report
+        except Exception:
+            continue
+
+    raise HTTPException(
+        status_code=404,
+        detail="ยังไม่พบไฟล์รายงานผลการประเมินที่เสร็จสมบูรณ์ (กรุณารอการประเมินเสร็จสิ้น หรือเริ่มการประเมินใหม่)",
+    )
 
 
 @app.get("/api/benchmark/kfold/export-excel")

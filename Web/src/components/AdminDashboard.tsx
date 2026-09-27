@@ -8,9 +8,13 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  Search,
   Settings,
+  SlidersHorizontal,
+  Sun,
   Users,
   X,
+  Zap,
 } from "lucide-react";
 import type {
   AdminAnalyticsPoint,
@@ -206,7 +210,15 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
             error={documentsError}
             onRefresh={loadDocuments}
             onOpenDocument={openDocument}
-            onOpenPromptLab={() => setActiveView("prompt")}
+            onOpenPromptLab={() => {
+              setPromptQualityTab("prompt");
+              setActiveView("prompt");
+            }}
+            onOpenEvaluation={() => setActiveView("evaluation")}
+            onOpenReviewQueue={() => setActiveView("documents")}
+            promptLab={promptLab}
+            onUpdatePromptLab={setPromptLab}
+            onSavePromptConfig={handleSavePromptConfig}
           />
         );
       case "documents":
@@ -396,7 +408,7 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
       </aside>
 
       <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-slate-50">
-        <header className="sticky top-0 z-10 flex min-h-[56px] items-center justify-between gap-3 border-b border-slate-200/90 bg-white/95 px-3 py-2.5 backdrop-blur-md shadow-sm sm:px-5 lg:px-6">
+        <header className="sticky top-0 z-10 flex min-h-[60px] items-center justify-between gap-3 border-b border-slate-200/90 bg-white/95 px-4 py-2.5 backdrop-blur-md shadow-2xs sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-3">
             <button type="button" onClick={() => setSidebarOpen(true)} className="rounded-lg p-2 text-slate-600 hover:bg-blue-50 hover:text-blue-600 lg:hidden" aria-label="เปิดเมนู admin">
               <Menu className="h-5 w-5" />
@@ -407,17 +419,62 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
             </div>
           </div>
 
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
-            <button type="button" onClick={onSwitchToUser} className="hidden rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-extrabold text-slate-700 transition hover:bg-slate-50 sm:inline-flex">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            {/* Search Input */}
+            <div className="relative hidden md:block">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="ค้นหาเอกสาร, ผู้ใช้, logs... (⌘ K)"
+                className="h-9 w-60 rounded-xl border border-slate-200 bg-slate-50/70 pl-8 pr-3 text-xs font-medium text-slate-800 placeholder-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none lg:w-72"
+              />
+            </div>
+
+            <button type="button" onClick={onSwitchToUser} className="hidden rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-extrabold text-slate-700 transition hover:bg-slate-50 sm:inline-flex">
               สลับมุมมองผู้ใช้
             </button>
-            <button type="button" className="relative rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900" aria-label="การแจ้งเตือน">
-              <Bell className="h-5 w-5" />
-              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-orange-500" />
+
+            {/* Theme Toggle Button */}
+            <button
+              type="button"
+              onClick={() => showToast("เปิดใช้งานโหมด Light Console (ค่าเริ่มต้น)")}
+              className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+              title="สลับโหมดการแสดงผล"
+              aria-label="สลับโหมด"
+            >
+              <Sun className="h-4.5 w-4.5" />
             </button>
-            <button type="button" className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900" aria-label="ช่วยเหลือ">
-              <CircleHelp className="h-5 w-5" />
-            </button>
+
+            {/* Notification Bell */}
+            {(() => {
+              const pendingCount = documents.filter((d) => d.status === "review" || d.status === "error").length;
+              return (
+                <button
+                  type="button"
+                  onClick={() => showToast(pendingCount > 0 ? `การแจ้งเตือน: มี ${pendingCount} รายการรอการตรวจสอบ` : "ไม่มีการแจ้งเตือนค้างตรวจ")}
+                  className="relative rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                  aria-label="การแจ้งเตือน"
+                >
+                  <Bell className="h-4.5 w-4.5" />
+                  {pendingCount > 0 && (
+                    <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 text-[9px] font-black text-white">
+                      {pendingCount}
+                    </span>
+                  )}
+                </button>
+              );
+            })()}
+
+            {/* Super Admin User Profile Pill */}
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200/80 bg-slate-50/80 px-2.5 py-1">
+              <div className="relative flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
+                AD
+                <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full border border-white bg-emerald-500" />
+              </div>
+              <span className="hidden text-xs font-black text-slate-800 lg:inline">
+                Super Admin
+              </span>
+            </div>
           </div>
         </header>
 

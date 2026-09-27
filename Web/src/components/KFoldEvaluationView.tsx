@@ -44,6 +44,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import * as XLSX from "xlsx";
 import { API_BASE_URL, apiFetch } from "../services/apiClient";
 
 export interface KFoldEvaluationViewProps {
@@ -443,41 +444,110 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     window.open(`${API_BASE_URL}/api/benchmark/performance-log/csv`, "_blank");
   }
 
-  async function handleDownloadExcelReport() {
+  function handleDownloadPerfExcel() {
     try {
-      if (!kfoldReport) {
-        showToast?.("ต้องรันการประเมินก่อนดาวน์โหลดรายงาน Excel");
+      const recordsToExport = filteredPerfRecords.length > 0 ? filteredPerfRecords : perfLogs.records;
+      if (!recordsToExport || recordsToExport.length === 0) {
+        showToast?.("ยังไม่มีรายการ Log Performance สำหรับ Export");
         return;
       }
 
-      const exportParams = new URLSearchParams();
-      if (reportSource === "fresh") {
-        if (!freshStatus?.fresh_run_id || freshStatus.final_report?.run_id !== kfoldReport.run_id) {
-          showToast?.("ไม่พบ Fresh run ที่ตรงกับรายงานบนหน้าจอ");
-          return;
+      showToast?.("กำลังสร้างและดาวน์โหลดตาราง Log Performance แยกรายฉบับ (.xlsx)...");
+
+      const rows = recordsToExport.map((r, idx) => {
+        const formattedTime = r.timestamp ? new Date(r.timestamp).toLocaleString("th-TH") : "-";
+        const status = r.accuracy_pct >= 80 ? "PASS" : "REVIEW";
+        return {
+          "ลำดับ (#)": idx + 1,
+          "วัน-เวลาบันทึก (Timestamp)": formattedTime,
+          "รหัสเอกสาร": r.doc_id,
+          "ชื่อไฟล์ภาพ": r.file_name,
+          "Fold": r.fold ? `Fold ${r.fold}` : "-",
+          "เวลา OCR (วินาที)": Number(r.ocr_time_sec.toFixed(3)),
+          "เวลา SLM (วินาที)": Number(r.slm_time_sec.toFixed(3)),
+          "เวลารวมทั้งสิ้น (วินาที)": Number(r.total_time_sec.toFixed(3)),
+          "จุดตรวจสอบที่ตรง": `${r.matched_fields} / ${r.total_fields || 11} ฟิลด์`,
+          "ความแม่นยำ (%)": `${r.accuracy_pct.toFixed(1)}%`,
+          "สถานะ": status,
+        };
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+      worksheet["!cols"] = [
+        { wch: 8 },  // ลำดับ
+        { wch: 22 }, // Timestamp
+        { wch: 12 }, // รหัสเอกสาร
+        { wch: 42 }, // ชื่อไฟล์ภาพ
+        { wch: 10 }, // Fold
+        { wch: 18 }, // เวลา OCR
+        { wch: 18 }, // เวลา SLM
+        { wch: 22 }, // เวลารวม
+        { wch: 20 }, // จุดตรวจสอบที่ตรง
+        { wch: 16 }, // ความแม่นยำ
+        { wch: 12 }, // สถานะ
+      ];
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Per-Document Breakdown");
+
+      const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+      XLSX.writeFile(workbook, `LogiAI_Performance_Breakdown_${dateStr}.xlsx`);
+      showToast?.(`ดาวน์โหลดตาราง Log Performance (${recordsToExport.length} รายการ) เป็น Excel สำเร็จ!`);
+    } catch (err: any) {
+      console.error("Export Perf Excel error:", err);
+      showToast?.(`ไม่สามารถส่งออก Excel ได้: ${err.message || err}`);
+    }
+  }
+
+  async function handleDownloadExcelReport() {
+    try {
+      showToast?.("กำลังสร้างและเตรียมดาวน์โหลดรายงานสรุป Excel อย่างละเอียด (.xlsx)...");
+
+      // 1. Resolve target run_id or job_id - prioritize current evaluation job (completed or stopped!)
+      let targetRunId = "";
+      let targetJobId = "";
+      if (evalJob?.job_id && ((evalJob.completed_docs ?? 0) > 0 || evalJob.final_report)) {
+        targetJobId = evalJob.job_id;
+        if (evalJob.final_report?.run_id) {
+          targetRunId = evalJob.final_report.run_id;
         }
-        exportParams.set("fresh_run_id", freshStatus.fresh_run_id);
-        exportParams.set("run_id", kfoldReport.run_id || "");
-      } else {
-        const jobMatchesReport =
-          Boolean(evalJob?.job_id) &&
-          evalJob?.job_id !== "กำลังเริ่มงาน..." &&
-          evalJob?.final_report?.run_id === kfoldReport.run_id;
-        if (jobMatchesReport) {
-          exportParams.set("job_id", evalJob!.job_id!);
-        } else if (kfoldReport.run_id) {
-          exportParams.set("run_id", kfoldReport.run_id);
-        } else {
-          showToast?.("ไม่พบรหัสรายงานสำหรับ Export");
-          return;
+      } else if (freshStatus?.finished && freshStatus?.final_report?.run_id) {
+        targetRunId = freshStatus.final_report.run_id;
+      } else if (kfoldReport?.run_id && kfoldReport.run_id.startsWith("run_")) {
+        targetRunId = kfoldReport.run_id;
+      }
+
+      // 2. If no valid run_id in state, query the latest benchmark metadata
+      if (!targetRunId && !targetJobId) {
+        try {
+          const kfRes = await apiFetch("/api/benchmark/kfold");
+          if (kfRes.ok) {
+            const kfData: KFoldReport = await kfRes.json();
+            if (kfData?.run_id) {
+              targetRunId = kfData.run_id;
+              if (!kfoldReport) {
+                applyReport(kfData, "evaluation");
+              }
+            }
+          }
+        } catch (fetchErr) {
+          console.warn("Could not query latest benchmark run_id:", fetchErr);
         }
       }
 
-      showToast?.("กำลังสร้างและดาวน์โหลดรายงานสรุป Excel อย่างละเอียด (.xlsx)...");
+      const exportParams = new URLSearchParams();
+      if (targetJobId) {
+        exportParams.set("job_id", targetJobId);
+      }
+      if (targetRunId) {
+        exportParams.set("run_id", targetRunId);
+      }
       exportParams.set("_", `${Date.now()}`);
+
       const resp = await apiFetch(`/api/benchmark/kfold/export-excel?${exportParams.toString()}`, {
         cache: "no-store",
       });
+
       if (!resp.ok) {
         const errorBody = await resp.text();
         let detail = errorBody;
@@ -489,23 +559,23 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         }
         throw new Error(detail || `Download failed with status ${resp.status}`);
       }
-      const contentType = resp.headers.get("content-type") || "";
-      if (!contentType.includes("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-        throw new Error("Export endpoint did not return an Excel workbook");
-      }
+
       const blob = await resp.blob();
       if (blob.size === 0) {
-        throw new Error("Export endpoint returned an empty Excel workbook");
+        throw new Error("ไฟล์ Excel ที่ได้รับมีขนาดเป็น 0");
       }
+
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `LogiAI_KFold_Evaluation_Report_${kfoldReport.run_id || "latest"}.xlsx`;
+      const fileId = targetRunId || "latest";
+      a.download = `LogiAI_KFold_Evaluation_Report_${fileId}.xlsx`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-      showToast?.("ดาวน์โหลดรายงาน Excel อย่างละเอียดสำเร็จเรียบร้อยแล้ว!");
+
+      showToast?.("ดาวน์โหลดรายงาน Excel อย่างละเอียด (4 ชีต) สำเร็จเรียบร้อยแล้ว!");
     } catch (err) {
       console.error("Download Excel error:", err);
       const message = err instanceof Error ? err.message : "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ";
@@ -523,10 +593,14 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           if (res.ok) {
             const data: EvaluationJobStatus = await res.json();
             setEvalJob(data);
-            if (data.status === "completed" && data.final_report) {
+            if ((data.status === "completed" || data.status === "stopped") && data.final_report) {
               applyReport(data.final_report, "evaluation");
               setIsPollingJob(false);
-              showToast?.(`การประเมินผลเสร็จสิ้น 100%! ความแม่นยำ: ${data.final_accuracy || "-"}`);
+              showToast?.(
+                data.status === "completed"
+                  ? `การประเมินผลเสร็จสิ้น 100%! ความแม่นยำ: ${data.final_accuracy || "-"}`
+                  : `หยุดการประเมินแล้ว (ประมวลผล ${data.completed_docs || 0} ฉบับ) สรุปรายงานย่อยเรียบร้อย`
+              );
               fetchPerformanceLogs();
             } else if (data.status === "stopped" || data.status === "failed") {
               setIsPollingJob(false);
@@ -631,6 +705,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         status: "running",
         is_running: true,
         mode: modeToUse,
+        prompt_variant: promptVariant,
         current_doc_id: modeToUse === "single_doc" ? selectedTestDocId : undefined,
         overall_current: 0,
         overall_total: modeToUse === "single_doc" ? 1 : modeToUse === "single_fold" ? (customMaxDocs || 60) : 300,
@@ -746,7 +821,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           setEvalJob(evalData);
           if (evalData.is_running) {
             setIsPollingJob(true);
-          } else if (evalData.status === "completed" && evalData.final_report) {
+          } else if ((evalData.status === "completed" || evalData.status === "stopped") && evalData.final_report) {
             restoredEvaluationReport = evalData.final_report;
           }
         }
@@ -776,6 +851,18 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         applyReport(restoredFreshReport, "fresh");
       } else if (restoredEvaluationReport) {
         applyReport(restoredEvaluationReport, "evaluation");
+      } else {
+        try {
+          const kfoldRes = await apiFetch("/api/benchmark/kfold");
+          if (kfoldRes.ok) {
+            const savedReport: KFoldReport = await kfoldRes.json();
+            if (savedReport && savedReport.folds && savedReport.folds.length > 0) {
+              applyReport(savedReport, "evaluation");
+            }
+          }
+        } catch (kfErr) {
+          console.warn("Check saved benchmark on mount:", kfErr);
+        }
       }
     } catch (err) {
       console.error("Failed to load benchmark data:", err);
@@ -1285,6 +1372,19 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                     <span className="rounded-md bg-indigo-500/30 border border-indigo-400/30 px-2 py-0.5 font-mono text-[10px] font-bold text-indigo-200">
                       Job: {evalJob.job_id}
                     </span>
+                    {evalJob.prompt_variant && (
+                      <span
+                        className={`rounded-md px-2 py-0.5 font-mono text-[10px] font-bold border uppercase ${
+                          evalJob.prompt_variant === "one-shot"
+                            ? "bg-blue-500/25 text-blue-200 border-blue-400/50"
+                            : evalJob.prompt_variant === "few-shot"
+                            ? "bg-purple-500/25 text-purple-200 border-purple-400/50"
+                            : "bg-teal-500/25 text-teal-200 border-teal-400/50"
+                        }`}
+                      >
+                        Variant: {evalJob.prompt_variant}
+                      </span>
+                    )}
                     <span
                       className={`rounded-md px-2 py-0.5 font-mono text-[10px] font-bold border ${
                         evalJob.is_running
@@ -1312,8 +1412,10 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                       ? `ทดสอบรอบที่ ${evalJob.current_fold} (Fold ${evalJob.current_fold}: ชุดทดสอบ ${evalJob.fold_total} ฉบับ)`
                       : `ทดสอบสด 1 ฉบับ (${evalJob.current_doc_id})`}
                     {" · "}
-                    <span className="text-indigo-300">
-                      PaddleOCR แคชพร้อมใช้ 300 ฉบับ (ไม่ต้องทำซ้ำ) · บันทึกผลรายฉบับทันที
+                    <span className="text-emerald-400 font-medium">
+                      {(evalJob.resumed_cached_docs ?? evalJob.cached_count ?? 0) > 0
+                        ? `Resume ข้ามฉบับเดิม ${evalJob.resumed_cached_docs ?? evalJob.cached_count} ฉบับ · รันสดฉบับที่เหลือ`
+                        : "รันสด 100% (PaddleOCR + GPU SLM รันใหม่ทุกฉบับ ไม่ใช้แคช) · บันทึกผลรายฉบับทันที"}
                     </span>
                   </p>
                 </div>
@@ -1503,14 +1605,22 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
               <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3">
                 <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">
-                  แคชเดิม vs รันสด GPU
+                  การประมวลผล (GPU Inference)
                 </span>
                 <div className="flex items-baseline gap-1 text-sm font-bold">
-                  <span className="text-cyan-400">{evalJob.resumed_cached_docs ?? evalJob.cached_count ?? 0} แคช</span>
-                  <span className="text-slate-500">/</span>
-                  <span className="text-amber-400">{evalJob.live_gpu_docs ?? evalJob.live_gpu_count ?? 0} GPU สด</span>
+                  <span className="text-amber-400">{evalJob.live_gpu_docs ?? evalJob.live_gpu_count ?? evalJob.completed_docs ?? 0} GPU สด</span>
+                  {(evalJob.resumed_cached_docs ?? evalJob.cached_count ?? 0) > 0 && (
+                    <>
+                      <span className="text-slate-500">/</span>
+                      <span className="text-cyan-400">{evalJob.resumed_cached_docs ?? evalJob.cached_count} Resume</span>
+                    </>
+                  )}
                 </div>
-                <span className="text-[10px] text-slate-400">ประหยัดเวลาด้วยแคชเดิม</span>
+                <span className="text-[10px] text-emerald-400/90">
+                  {(evalJob.resumed_cached_docs ?? evalJob.cached_count ?? 0) > 0
+                    ? `ข้ามเอกสารเดิม ${evalJob.resumed_cached_docs ?? evalJob.cached_count} ฉบับ`
+                    : "✓ รันสดใหม่ทุกฉบับ ไม่ใช้แคช"}
+                </span>
               </div>
 
               <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3">
@@ -2304,12 +2414,22 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
                   <button
                     type="button"
-                    onClick={handleDownloadExcelReport}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition"
-                    title="ดาวน์โหลดรายงานผลสรุปและบันทึกเวลาเป็นไฟล์ Excel (.xlsx)"
+                    onClick={handleDownloadPerfExcel}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/80 bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 text-xs font-bold transition shadow-sm active:scale-95"
+                    title="ดาวน์โหลดเฉพาะตาราง Log Performance แยกรายฉบับนี้เป็นไฟล์ Excel (.xlsx)"
                   >
                     <FileSpreadsheet className="h-3.5 w-3.5" />
-                    <span>รายงานสรุป Excel (.xlsx)</span>
+                    <span>ส่งออกตารางนี้เป็น Excel (.xlsx)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleDownloadExcelReport}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 px-3 py-2 text-xs font-bold shadow-xs transition"
+                    title="ดาวน์โหลดรายงานสรุป K-Fold 4 ชีตอย่างละเอียดและบันทึกเวลาเป็นไฟล์ Excel (.xlsx)"
+                  >
+                    <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
+                    <span>รายงานสรุป K-Fold ทั้งหมด (.xlsx)</span>
                   </button>
 
                   <button
@@ -2428,6 +2548,16 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                       <X className="h-3.5 w-3.5" />
                     </button>
                   )}
+
+                  <button
+                    type="button"
+                    onClick={handleDownloadPerfExcel}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/80 bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 text-xs font-bold transition shadow-xs active:scale-95 shrink-0"
+                    title="ดาวน์โหลดข้อมูลตารางนี้เป็นไฟล์ Excel (.xlsx)"
+                  >
+                    <FileSpreadsheet className="h-3.5 w-3.5" />
+                    <span>ดาวน์โหลด Excel (.xlsx)</span>
+                  </button>
                 </div>
               </div>
 
