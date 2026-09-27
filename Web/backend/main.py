@@ -639,7 +639,7 @@ def save_benchmark_ground_truth(payload: GroundTruthEntry) -> Any:
 
 
 def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -> Any:
-    timeout = 300 if "benchmark" in path else (60 if method == "GET" else 120)
+    timeout = 300 if "benchmark" in path else (60 if method == "GET" else 180)
     if method == "GET":
         try:
             response = requests.get(
