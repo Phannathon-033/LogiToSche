@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>คู่มือการติดตั้งและรันระบบ LogiAI (Step-by-Step Setup Guide)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            thai: ['Sarabun', 'sans-serif'],
+            display: ['Chakra Petch', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Sarabun', sans-serif; }
+    h1, h2, h3, .heading-font { font-family: 'Chakra Petch', sans-serif; }
+    code, pre, .mono-font { font-family: 'JetBrains Mono', monospace; }
+    
+    .code-box {
+      position: relative;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+    }
+    
+    .copy-btn {
+      position: absolute;
+      top: 0.65rem;
+      right: 0.65rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 0.5rem;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(71, 85, 105, 0.6);
+      color: #94a3b8;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+    .copy-btn:hover {
+      background: #334155;
+      color: #f8fafc;
+      border-color: #64748b;
+    }
+    .copy-btn.copied {
+      background: #065f46;
+      border-color: #10b981;
+      color: #34d399;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Top Sticky Navigation -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
+          LA
+        </div>
+        <div>
+          <span class="font-bold text-sm tracking-wide text-white block heading-font">LogiAI Framework</span>
+          <span class="text-[11px] text-slate-400 block -mt-1">คู่มือติดตั้งและรันระบบฉบับสมบูรณ์ (Setup & Run Guide)</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 text-xs">
+        <a href="#quick-start" class="px-3 py-1.5 rounded-lg bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-600 hover:text-white transition font-semibold">
+          🚀 เริ่มต้นด่วน (Quick Start)
+        </a>
+        <a href="#gpu-verify" class="hidden md:inline-block px-3 py-1.5 rounded-lg bg-indigo-950/80 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-900/40 transition">
+          ⚡ ตรวจสอบ GPU / CUDA
+        </a>
+        <a href="#troubleshooting" class="hidden sm:inline-block px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition">
+          🛠️ แก้ปัญหา (Troubleshooting)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-8">
+    <div class="rounded-3xl border border-indigo-500/30 bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-950 p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+      <div class="absolute -right-16 -top-16 w-72 h-72 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 max-w-3xl space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-400/30 text-indigo-300 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Ready to Clone & Run · Python 3.10+ · CUDA 12.8 / RTX 50 Blackwell Ready · Node.js 18+
+        </div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+          คู่มือการติดตั้งและรันระบบ <span class="bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">LogiAI</span> สำหรับเพื่อนร่วมทีม
+        </h1>
+        <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
+          เอกสารนี้จัดทำขึ้นเพื่อให้ผู้ที่เพิ่ง <b>git clone / pull</b> โปรเจกต์นี้เป็นครั้งแรก สามารถติดตั้ง dependencies และเริ่มรันระบบสกัดข้อมูลเอกสารโลจิสติกส์สู่ 11 ฟิลด์มาตรฐาน (JSON Schema) พร้อมทดสอบ <b>5-Fold Cross-Validation (300 ฉบับ)</b> และดาวน์โหลดผลสรุป <b>Excel (.xlsx)</b> ได้ทันที พร้อมการตั้งค่า <b>NVIDIA GPU (RTX 40 / 50 Series)</b> ให้รันได้เต็มประสิทธิภาพ
+        </p>
+
+        <!-- System Architecture Badges -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex items-center gap-3">
+            <div class="h-8 w-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-xs">8000</div>
+            <div>
+              <span class="text-xs font-bold text-slate-200 block">AI Gateway & OCR</span>
+              <span class="text-[11px] text-slate-400 block">FastAPI + PaddleOCR Engine</span>
+            </div>
+          </div>
+          <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex items-center gap-3">
+            <div class="h-8 w-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs">8001</div>
+            <div>
+              <span class="text-xs font-bold text-slate-200 block">Dedicated SLM Engine</span>
+              <span class="text-[11px] text-slate-400 block">Qwen2.5-1.5B (CUDA 12.8 / Blackwell & CPU)</span>
+            </div>
+          </div>
+          <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 flex items-center gap-3">
+            <div class="h-8 w-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">5173</div>
+            <div>
+              <span class="text-xs font-bold text-slate-200 block">Modern Web UI</span>
+              <span class="text-[11px] text-slate-400 block">React 18 + Vite + Tailwind CSS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step by Step Guide -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 pb-20 space-y-10" id="quick-start">
+
+    <!-- Step 0: Prerequisites -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-6">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-800 text-indigo-400 font-bold text-sm">0</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">สิ่งที่ต้องติดตั้งก่อนเริ่ม (ดาวน์โหลดผ่านลิงก์ทางการ 4 รายการ)</h2>
+          <span class="text-xs text-slate-400">คลิกลิงก์ด้านล่างเพื่อดาวน์โหลดตัวติดตั้ง (.exe / .msi / Driver) และติดตั้งลงเครื่องของคุณให้เรียบร้อย</span>
+        </div>
+      </div>
+
+      <!-- 4 Software Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Software 1: Git -->
+        <div class="rounded-2xl border border-slate-800 bg-slate-950/80 p-5 space-y-4 flex flex-col justify-between hover:border-orange-500/40 transition">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-bold text-orange-400 flex items-center gap-2">
+                <span>📦 1. Git</span>
+              </span>
+              <span class="text-[10px] bg-orange-500/10 text-orange-300 border border-orange-500/30 px-2 py-0.5 rounded-full font-mono">จำเป็น</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              เครื่องมือจัดการเวอร์ชัน สำหรับโคลนและดึงซอร์สโค้ดโปรเจกต์จาก GitHub ลงเครื่อง
+            </p>
+          </div>
+          
+          <div class="space-y-3 pt-2 border-t border-slate-800">
+            <a href="https://git-scm.com/download/win" target="_blank" class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs shadow-lg shadow-orange-600/20 transition">
+              <span>📥 ดาวน์โหลด Git</span>
+            </a>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>ลิงก์ทางการ:</span>
+              <a href="https://git-scm.com/download/win" target="_blank" class="text-orange-400 hover:underline">git-scm.com</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Software 2: Python -->
+        <div class="rounded-2xl border-2 border-amber-500/50 bg-slate-950/90 p-5 space-y-4 flex flex-col justify-between hover:border-amber-400 transition shadow-lg shadow-amber-500/10">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-bold text-cyan-400 flex items-center gap-2">
+                <span>🐍 2. Python</span>
+              </span>
+              <span class="text-[10px] bg-red-500/20 text-red-300 border border-red-500/40 px-2 py-0.5 rounded-full font-bold font-mono">3.10.xx ⚠️</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              สำหรับรัน FastAPI, PyTorch, Qwen2.5 และ PaddleOCR
+            </p>
+            
+            <div class="rounded-xl bg-amber-500/15 border border-amber-500/40 p-2.5 space-y-1">
+              <span class="text-[11px] text-amber-300 font-bold block">🚨 ข้อกำหนดสำคัญ:</span>
+              <ul class="text-[10px] text-amber-200/90 space-y-0.5 list-disc list-inside leading-snug">
+                <li>เลือกติดตั้ง <b>Python 3.10.xx</b> เท่านั้น (แนะนำ <b>3.10.11</b>)</li>
+                <li>ติ๊กเลือก <b>"Add python.exe to PATH"</b> ก่อนกด Install</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="space-y-3 pt-2 border-t border-slate-800">
+            <a href="https://www.python.org/downloads/windows/" target="_blank" class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-lg shadow-cyan-600/20 transition">
+              <span>📥 ดาวน์โหลด Python 3.10</span>
+            </a>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>ลิงก์ทางการ:</span>
+              <a href="https://www.python.org/downloads/windows/" target="_blank" class="text-cyan-400 hover:underline">python.org</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Software 3: Node.js -->
+        <div class="rounded-2xl border border-slate-800 bg-slate-950/80 p-5 space-y-4 flex flex-col justify-between hover:border-emerald-500/40 transition">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-bold text-emerald-400 flex items-center gap-2">
+                <span>🟢 3. Node.js</span>
+              </span>
+              <span class="text-[10px] bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">LTS</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              สำหรับรันระบบหน้าบ้าน React 18, Tailwind CSS และ Vite Web UI
+            </p>
+            <span class="text-[11px] text-slate-400 block">
+              *แนะนำเวอร์ชัน <b>LTS (Long Term Support) v18 หรือ v20+</b>
+            </span>
+          </div>
+          
+          <div class="space-y-3 pt-2 border-t border-slate-800">
+            <a href="https://nodejs.org/en/download/" target="_blank" class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/20 transition">
+              <span>📥 ดาวน์โหลด Node.js</span>
+            </a>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>ลิงก์ทางการ:</span>
+              <a href="https://nodejs.org/en/download/" target="_blank" class="text-emerald-400 hover:underline">nodejs.org</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Software 4: NVIDIA GPU Driver / CUDA -->
+        <div class="rounded-2xl border-2 border-indigo-500/40 bg-slate-950/90 p-5 space-y-4 flex flex-col justify-between hover:border-indigo-400 transition shadow-lg shadow-indigo-500/10">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-bold text-indigo-400 flex items-center gap-2">
+                <span>⚡ 4. NVIDIA Driver</span>
+              </span>
+              <span class="text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 px-2 py-0.5 rounded-full font-bold font-mono">CUDA 12.8+</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              สำหรับผู้ใช้การ์ดจอ NVIDIA เพื่อเร่งความเร็ว AI SLM ให้เร็วขึ้น <b>10–50 เท่า</b>
+            </p>
+            <div class="rounded-xl bg-indigo-950/40 border border-indigo-500/30 p-2.5 space-y-1">
+              <span class="text-[11px] text-indigo-300 font-bold block">🚀 RTX 50-Series (Blackwell):</span>
+              <p class="text-[10px] text-slate-300 leading-tight">
+                ผู้ใช้ <b>RTX 5060 Ti / 5070 / 5080 / 5090</b> ต้องอัปเดต Driver เป็นเวอร์ชัน <b>572.xx+</b> ขึ้นไปเพื่อรองรับ CUDA 12.8 (`sm_120`)
+              </p>
+            </div>
+          </div>
+          
+          <div class="space-y-3 pt-2 border-t border-slate-800">
+            <a href="https://www.nvidia.com/Download/index.aspx" target="_blank" class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/20 transition">
+              <span>📥 ดาวน์โหลด NVIDIA Driver</span>
+            </a>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>ลิงก์ทางการ:</span>
+              <a href="https://www.nvidia.com/Download/index.aspx" target="_blank" class="text-indigo-400 hover:underline">nvidia.com/drivers</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hardware Note Banner -->
+      <div class="rounded-xl border border-slate-800 bg-slate-950/90 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+        <div class="space-y-1">
+          <span class="font-bold text-slate-200 block">💡 ข้อแนะนำด้านฮาร์ดแวร์ (Hardware Requirements & Fallback):</span>
+          <p class="text-slate-400">
+            • <b>โหมด GPU (แนะนำ):</b> ต้องการ NVIDIA GPU ที่มี VRAM &ge; 4 GB (เช่น RTX 3060, RTX 4060, RTX 5060 Ti) ใช้เวลาประมวลผล 15–18 วินาที/ฉบับ<br />
+            • <b>โหมด CPU / Rule-based Fallback:</b> หากเครื่องไม่มีการ์ดจอแยก NVIDIA ระบบจะทำงานในโหมด Fallback สกัดข้อมูลอัตโนมัติได้อย่างสมบูรณ์
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1: Clone Repository -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-4">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm">1</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">โคลนโปรเจกต์ (Git Clone) และเข้าสู่โฟลเดอร์ Web</h2>
+          <span class="text-xs text-slate-400">ดาวน์โหลดซอร์สโค้ดทั้งหมดลงในเครื่องของคุณ</span>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-300">
+        เปิด Terminal หรือ PowerShell ในโฟลเดอร์ที่คุณต้องการบันทึกโปรเจกต์ แล้วรันคำสั่ง:
+      </p>
+      <div class="code-box">
+        <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+        <pre class="text-xs sm:text-sm text-indigo-300"><code>git clone https://github.com/Phannathon-033/LogiToSche.git
+cd LogiToSche/Web</code></pre>
+      </div>
+    </div>
+
+    <!-- Step 2: Setup Environment Variables (.env) -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-4">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm">2</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">ตั้งค่าคอนฟิก Environment Variables (.env)</h2>
+          <span class="text-xs text-slate-400">คัดลอกไฟล์คอนฟิกพื้นฐานสำหรับ Frontend และ Backend</span>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-300">
+        คัดลอกไฟล์ <code class="text-amber-300">.env.example</code> ไปเป็น <code class="text-amber-300">.env</code> ทั้งใน Root และ Backend (ค่าเริ่มต้นรองรับทั้ง CUDA และ CPU):
+      </p>
+      
+      <!-- Universal 1-Command Option -->
+      <div class="rounded-xl border border-indigo-500/40 bg-indigo-950/30 p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-indigo-300">⭐ วิธีที่แนะนำ (คำสั่งเดียวผ่าน Node.js/npm - รันได้ทุก Terminal 100%):</span>
+          <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-mono">Cross-Platform</span>
+        </div>
+        <div class="code-box">
+          <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+          <code class="text-xs sm:text-sm text-emerald-300 font-bold">npm run setup:env</code>
+        </div>
+      </div>
+
+      <!-- Multiple Terminal Options -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
+        <!-- Option A: PowerShell -->
+        <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-3 space-y-2">
+          <span class="font-bold text-cyan-400 block">สำหรับ PowerShell:</span>
+          <div class="code-box text-xs py-2">
+            <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+            <pre class="text-slate-200"><code>Copy-Item .env.example .env
+Copy-Item backend/.env.example backend/.env</code></pre>
+          </div>
+        </div>
+
+        <!-- Option B: Git Bash -->
+        <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-3 space-y-2">
+          <span class="font-bold text-orange-400 block">สำหรับ Git Bash (ใช้ cp):</span>
+          <div class="code-box text-xs py-2">
+            <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+            <pre class="text-slate-200"><code>cp .env.example .env
+cp backend/.env.example backend/.env</code></pre>
+          </div>
+        </div>
+
+        <!-- Option C: CMD -->
+        <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-3 space-y-2">
+          <span class="font-bold text-emerald-400 block">สำหรับ Command Prompt (CMD):</span>
+          <div class="code-box text-xs py-2">
+            <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+            <pre class="text-slate-200"><code>copy .env.example .env
+copy backend\.env.example backend\.env</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Install Backend Dependencies & PyTorch GPU -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-5" id="gpu-verify">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm">3</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">สร้าง Virtual Environment และติดตั้งไลบรารี AI (พร้อมรองรับ CUDA GPU)</h2>
+          <span class="text-xs text-slate-400">สร้าง venv, ติดตั้ง PyTorch CUDA 12.8, Transformers, PaddleOCR และ FastAPI</span>
+        </div>
+      </div>
+
+      <!-- Part 3.1: Standard Installation -->
+      <div class="space-y-2">
+        <span class="text-xs font-bold text-slate-200 block">
+          📦 ขั้นที่ 3.1: รันคำสั่งสร้าง venv และติดตั้ง dependencies ทั้งหมดในคำสั่งเดียว:
+        </span>
+        <div class="code-box">
+          <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+          <pre class="text-xs sm:text-sm text-emerald-300"><code>python -m venv backend/.venv & "backend\.venv\Scripts\pip.exe" install --upgrade pip & "backend\.venv\Scripts\pip.exe" install -r backend/requirements.txt</code></pre>
+        </div>
+      </div>
+
+      <!-- Part 3.2: Special for RTX 50-Series (Blackwell) / CUDA 12.8 -->
+      <div class="rounded-xl border border-indigo-500/40 bg-indigo-950/30 p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-indigo-300 flex items-center gap-2">
+            <span>⚡ ขั้นที่ 3.2: สำหรับผู้ใช้การ์ดจอ NVIDIA RTX 50-Series (เช่น RTX 5060 Ti สถาปัตยกรรม Blackwell sm_120)</span>
+          </span>
+          <span class="text-[10px] bg-indigo-500/30 text-indigo-200 border border-indigo-400/40 px-2 py-0.5 rounded font-mono">CUDA 12.8 Wheel</span>
+        </div>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          หากใช้การ์ดจอ RTX 50-Series หรือ PyTorch ตัวเดิมฟ้องว่า <code class="text-amber-300">no kernel image is available</code> ให้รันคำสั่งติดตั้ง PyTorch CUDA 12.8 โดยตรง:
+        </p>
+        <div class="code-box">
+          <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+          <pre class="text-xs sm:text-sm text-cyan-300"><code>"backend\.venv\Scripts\pip.exe" install torch --index-url https://download.pytorch.org/whl/cu128
+"backend\.venv\Scripts\pip.exe" install transformers accelerate</code></pre>
+        </div>
+      </div>
+
+      <!-- Part 3.3: Verification Commands Suite -->
+      <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-4 space-y-4">
+        <span class="text-xs font-bold text-amber-400 block flex items-center gap-2">
+          <span>🔍 ขั้นที่ 3.3: ชุดคำสั่งทดสอบตรวจสอบความพร้อมของ GPU และ AI Model (สำคัญมาก!)</span>
+        </span>
+        <p class="text-xs text-slate-300">
+          รันคำสั่งด้านล่างนี้ใน Terminal เพื่อตรวจสอบว่า PyTorch และ CUDA พร้อมทำงานบนการ์ดจอของคุณ 100% หรือไม่:
+        </p>
+
+        <!-- Test 1: Check CUDA & Device Capability -->
+        <div class="space-y-1">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-slate-300 font-bold">1. ตรวจสอบการมองเห็นการ์ดจอและ Architecture List:</span>
+            <span class="text-slate-500">Device & Capability</span>
+          </div>
+          <div class="code-box text-xs">
+            <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+            <pre class="text-slate-200"><code>backend\.venv\Scripts\python.exe -c "import torch; print('CUDA Available:', torch.cuda.is_available()); print('Device Name:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'None'); print('Capability:', torch.cuda.get_device_capability(0) if torch.cuda.is_available() else 'None'); print('Arch List:', torch.cuda.get_arch_list())"</code></pre>
+          </div>
+          <span class="text-[11px] text-slate-400 block">
+            ✅ <b>ค่าที่ถูกต้อง:</b> <code class="text-emerald-400">CUDA Available: True</code>, Device เป็นชื่อการ์ดจอของคุณ (เช่น RTX 5060 Ti) และ Arch List มีสถาปัตยกรรมที่ตรงกัน (เช่น <code class="text-emerald-400">sm_120</code>)
+          </span>
+        </div>
+
+        <!-- Test 2: Matrix Multiplication Kernel Test -->
+        <div class="space-y-1 pt-1">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-slate-300 font-bold">2. ทดสอบรันการคำนวณจริงบน GPU (Matrix Multiplication Test):</span>
+            <span class="text-slate-500">Verify CUDA Kernel Execution</span>
+          </div>
+          <div class="code-box text-xs">
+            <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+            <pre class="text-slate-200"><code>backend\.venv\Scripts\python.exe -c "import torch; x=torch.randn(1024,1024,device='cuda'); y=x@x; torch.cuda.synchronize(); print('CUDA Kernel MatMul Test Success! Shape:', y.shape)"</code></pre>
+          </div>
+          <span class="text-[11px] text-slate-400 block">
+            ✅ <b>ผลลัพธ์:</b> ต้องขึ้น <code class="text-emerald-400">CUDA Kernel MatMul Test Success! Shape: torch.Size([1024, 1024])</code> โดยไม่ติด Error
+          </span>
+        </div>
+
+        <!-- Test 3: Qwen Model Loading Test -->
+        <div class="space-y-1 pt-1">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-slate-300 font-bold">3. ทดสอบโหลดโมเดล Qwen2.5-1.5B เข้าสู่ GPU VRAM:</span>
+            <span class="text-slate-500">Test Model Loading</span>
+          </div>
+          <div class="code-box text-xs">
+            <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+            <pre class="text-slate-200"><code>backend\.venv\Scripts\python.exe -c "import torch; from transformers import AutoTokenizer, AutoModelForCausalLM; m='Qwen/Qwen2.5-1.5B-Instruct'; t=AutoTokenizer.from_pretrained(m); model=AutoModelForCausalLM.from_pretrained(m, torch_dtype=torch.float16).to('cuda'); print('Qwen Loaded Successfully on:', model.device)"</code></pre>
+          </div>
+          <span class="text-[11px] text-slate-400 block">
+            ✅ <b>ผลลัพธ์:</b> <code class="text-emerald-400">Qwen Loaded Successfully on: cuda:0</code>
+          </span>
+        </div>
+      </div>
+
+      <!-- Part 3.4: GPU Compatibility & Upgrade Guide -->
+      <div class="rounded-xl border border-emerald-500/40 bg-emerald-950/20 p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-emerald-300 flex items-center gap-2">
+            <span>💡 ขั้นที่ 3.4: ถ้าเปลี่ยนหรืออัปเกรดการ์ดจอ (GPU) ต้องเปลี่ยน CUDA หรือลง PyTorch ใหม่ไหม?</span>
+          </span>
+          <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">Backward Compatible</span>
+        </div>
+        <div class="text-xs text-slate-300 space-y-2 leading-relaxed">
+          <p>
+            <b>คำตอบคือ: ส่วนใหญ่ไม่ต้องเปลี่ยนเลยครับ!</b> เพราะ PyTorch build <code class="text-emerald-400">torch-2.11.0+cu128</code> ที่เราติดตั้งนี้ ถูกคอมไพล์ไบนารีเคอร์เนลแบบ <b>Backward Compatible</b> ครอบคลุมสถาปัตยกรรมการ์ดจอ NVIDIA เกือบทุกรุ่นในปัจจุบัน:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 pt-1 font-mono text-[11px]">
+            <div class="rounded-lg bg-slate-950 p-2.5 border border-slate-800 space-y-1">
+              <span class="text-indigo-400 font-bold block">sm_75 (Turing)</span>
+              <span class="text-slate-400 text-[10px] block">RTX 2060, 2070, 2080, GTX 1660 Ti</span>
+            </div>
+            <div class="rounded-lg bg-slate-950 p-2.5 border border-slate-800 space-y-1">
+              <span class="text-cyan-400 font-bold block">sm_86 (Ampere)</span>
+              <span class="text-slate-400 text-[10px] block">RTX 3060, 3070, 3080, 3090</span>
+            </div>
+            <div class="rounded-lg bg-slate-950 p-2.5 border border-slate-800 space-y-1">
+              <span class="text-emerald-400 font-bold block">sm_90 (Ada/Hopper)</span>
+              <span class="text-slate-400 text-[10px] block">RTX 4060, 4070, 4080, 4090</span>
+            </div>
+            <div class="rounded-lg bg-slate-950 p-2.5 border border-slate-800 space-y-1">
+              <span class="text-amber-400 font-bold block">sm_120 (Blackwell)</span>
+              <span class="text-slate-400 text-[10px] block">RTX 5060 Ti, 5070, 5080, 5090</span>
+            </div>
+          </div>
+          <ul class="list-disc list-inside space-y-1 pt-1 text-[11px] text-slate-300">
+            <li><b>สลับไปใช้ RTX 20 / 30 / 40 Series:</b> เสียบการ์ดจอแล้วรันต่อได้ทันที ไม่ต้องรันคำสั่ง pip ติดตั้งอะไรเพิ่ม</li>
+            <li><b>ถอดการ์ดจอออกแล้วใช้ CPU:</b> ไม่ต้องลง PyTorch ใหม่ แค่เข้าไปปรับใน <code class="text-amber-300">backend/.env</code> เป็น <code class="text-emerald-400">LOGIAI_SLM_DEVICE=cpu</code></li>
+            <li><b>กรณีที่ต้องเปลี่ยน:</b> เฉพาะเมื่อเปลี่ยนไปใช้การ์ดจอรุ่นเก่ามากต่ำกว่า RTX 20 (เช่น GTX 10xx `sm_61`) หรือการ์ดจอค่ายอื่น (AMD ROCm / Intel Arc / Mac MPS)</li>
+          </ul>
+          <div class="space-y-1 pt-2">
+            <span class="text-slate-300 font-bold block">⚡ คำสั่งเช็คความเข้ากันได้หลังเปลี่ยนการ์ดจอ (คำสั่งเดียวจบ):</span>
+            <div class="code-box text-xs">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <pre class="text-emerald-300"><code>backend\.venv\Scripts\python.exe -c "import torch; print('GPU:', torch.cuda.get_device_name(0)); x=torch.randn(10,10,device='cuda'); print('CUDA Status: OK' if (x@x).is_cuda else 'Fail')"</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Install Frontend Dependencies -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-4">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm">4</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">ติดตั้งไลบรารี Frontend (Node.js Modules)</h2>
+          <span class="text-xs text-slate-400">ติดตั้ง React, Tailwind, Lucide Icons และ Vite</span>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-300">
+        ในโฟลเดอร์ <code class="text-cyan-300">Web</code> ให้รันคำสั่ง:
+      </p>
+      <div class="code-box">
+        <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+        <code class="text-xs sm:text-sm text-cyan-300">npm install</code>
+      </div>
+    </div>
+
+    <!-- Step 5: Run the Services -->
+    <div class="rounded-2xl border-2 border-indigo-500/50 bg-gradient-to-br from-slate-900 via-indigo-950/30 to-slate-900 p-6 sm:p-8 space-y-6 shadow-xl">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 to-emerald-400 text-slate-950 font-black text-sm">5</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">วิธีรันระบบ (Starting Services)</h2>
+          <span class="text-xs text-emerald-400 font-semibold">เลือกวิธีที่สะดวกที่สุดสำหรับคุณ</span>
+        </div>
+      </div>
+
+      <!-- Option 1: 1-Click Batch File -->
+      <div class="rounded-xl border border-indigo-500/40 bg-indigo-950/40 p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-bold text-white flex items-center gap-2">
+            <span>✨ วิธีที่ 1 (สะดวกที่สุด - 1-Click เปิด 3 หน้าต่างอัตโนมัติ)</span>
+          </span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-indigo-500 text-white">แนะนำ</span>
+        </div>
+        <p class="text-xs text-slate-300">
+          ดับเบิ้ลคลิกไฟล์ <code class="text-amber-300 font-bold">scripts\run-all-windows.bat</code> หรือพิมพ์คำสั่งนี้ใน Terminal:
+        </p>
+        <div class="code-box">
+          <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+          <code class="text-xs sm:text-sm text-emerald-300 font-bold">npm run dev:windows</code>
+        </div>
+        <p class="text-[11px] text-slate-400 italic">
+          *คำสั่งนี้จะเปิด 3 หน้าต่าง CMD แยกกันให้ทันที: (1) Frontend 5173, (2) Gateway 8000, (3) SLM Model 8001
+        </p>
+      </div>
+
+      <!-- Option 2: 3 Separate Terminals -->
+      <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-5 space-y-4">
+        <span class="text-sm font-bold text-slate-200 block">
+          💻 วิธีที่ 2: รันแยก 3 Terminal (สำหรับผู้ที่ต้องการดู Log แต่ละส่วนอย่างละเอียด)
+        </span>
+        
+        <div class="space-y-3">
+          <!-- Terminal 1 -->
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="font-bold text-indigo-400">Terminal 1: รัน SLM Model Service (Port 8001)</span>
+              <span class="text-slate-500">โมเดล Qwen2.5-1.5B (GPU / CPU)</span>
+            </div>
+            <div class="code-box text-xs">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <code class="text-indigo-200">backend\.venv\Scripts\python.exe -m uvicorn slm_app:app --host 0.0.0.0 --port 8001</code>
+            </div>
+          </div>
+
+          <!-- Terminal 2 -->
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="font-bold text-blue-400">Terminal 2: รัน AI Gateway & OCR Service (Port 8000)</span>
+              <span class="text-slate-500">PaddleOCR Engine</span>
+            </div>
+            <div class="code-box text-xs">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <code class="text-blue-200">backend\.venv\Scripts\python.exe -m uvicorn main:app --host 0.0.0.0 --port 8000</code>
+            </div>
+          </div>
+
+          <!-- Terminal 3 -->
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="font-bold text-emerald-400">Terminal 3: รัน Vite Frontend (Port 5173)</span>
+              <span class="text-slate-500">Web UI</span>
+            </div>
+            <div class="code-box text-xs">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <code class="text-emerald-200">npm run dev</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Log Monitoring Section (Essential for Background Runs) -->
+      <div class="rounded-xl border border-cyan-500/40 bg-cyan-950/20 p-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-bold text-cyan-300 flex items-center gap-2">
+            <span>📡 วิธีดู Log การทำงานสดแบบ Real-Time และตรวจสอบสถานะพอร์ต</span>
+          </span>
+          <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded font-mono">Live Logs</span>
+        </div>
+        
+        <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+          <p>
+            <b>ทำไมหน้าต่าง Terminal บางหน้าต่างถึงว่างเปล่าหรือไม่เห็น Log วิ่ง?</b><br />
+            สคริปต์แบ็กกราวด์ทำ <b>Log Redirection</b> ข้อความ stdout และ stderr ไปบันทึกที่ไฟล์ <code class="text-amber-300">backend-slm.log</code> และ <code class="text-amber-300">backend-ocr.log</code> เพื่อป้องกันไม่ให้ Windows Terminal เกิด Deadlock หรือค้างจากการแสดงผลข้อความความเร็วสูง
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+            <!-- Command to Stream SLM Log -->
+            <div class="rounded-lg bg-slate-950 p-3 border border-slate-800 space-y-2">
+              <span class="font-bold text-indigo-300 block">👀 ดู Log ของ SLM Model สด (Port 8001):</span>
+              <div class="code-box py-2">
+                <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+                <code class="text-slate-200">Get-Content -Path .\backend-slm.log -Wait</code>
+              </div>
+              <span class="text-[11px] text-slate-400 block">*จะเห็นการประมวลผลโทเคนและเวลาที่ใช้สกัดแต่ละเอกสารสดๆ</span>
+            </div>
+
+            <!-- Command to Check Service Health -->
+            <div class="rounded-lg bg-slate-950 p-3 border border-slate-800 space-y-2">
+              <span class="font-bold text-emerald-300 block">🩺 ตรวจสอบ Health Endpoint ของ SLM Model:</span>
+              <div class="code-box py-2">
+                <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+                <code class="text-slate-200">curl http://localhost:8001/api/slm/health</code>
+              </div>
+              <span class="text-[11px] text-slate-400 block">ควรได้รับ: <code class="text-emerald-400">{"status":"ok","device":"cuda:0"}</code></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6: How to Evaluate K-Fold & Download Excel -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-5">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-600 text-white font-bold text-sm">6</span>
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-white">การทดสอบประเมินผล K-Fold และดาวน์โหลด Excel (.xlsx)</h2>
+          <span class="text-xs text-slate-400">ขั้นตอนการรันประเมิน 300 ฉบับและนำผลไปเขียนรายงานวิทยานิพนธ์</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+        <div class="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-2">
+          <span class="h-6 w-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">1</span>
+          <span class="font-bold text-slate-200 block">เปิดหน้าเว็บ</span>
+          <p class="text-slate-400">เปิดบราวเซอร์ไปที่ <a href="http://localhost:5173" target="_blank" class="text-cyan-400 underline font-mono">http://localhost:5173</a> แล้วกดเลือกเมนู <b>"ประเมินผล K-Fold Cross-Validation"</b></p>
+        </div>
+        <div class="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-2">
+          <span class="h-6 w-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">2</span>
+          <span class="font-bold text-slate-200 block">เลือกโหมดประเมิน</span>
+          <p class="text-slate-400">เลือกโหมด <b>5-Fold Cross-Validation (ครบ 300 ฉบับ)</b> หรือทดลองแบบ <b>ทดสอบสด 1 ฉบับ (Single Doc)</b> เพื่อดูความเร็ว</p>
+        </div>
+        <div class="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-2">
+          <span class="h-6 w-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">3</span>
+          <span class="font-bold text-slate-200 block">กดเริ่มและปล่อยรัน</span>
+          <p class="text-slate-400">คลิกปุ่ม <b>"เริ่มประเมิน 5-Fold ครบ 300 ฉบับ"</b> ระบบจะรันใน Background ปล่อยเครื่องทิ้งไว้ได้เลย มีระบบ Auto-Reconnection ไม่หลุด Timeout</p>
+        </div>
+        <div class="rounded-xl border border-emerald-500/40 bg-emerald-950/30 p-4 space-y-2">
+          <span class="h-6 w-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold">4</span>
+          <span class="font-bold text-emerald-300 block">ดาวน์โหลด Excel</span>
+          <p class="text-slate-300">เมื่อครบ 300 ฉบับ จะมีปุ่มสีเขียว <b>"ดาวน์โหลดรายงานสรุป Excel (.xlsx)"</b> ปรากฏขึ้นมา สามารถกดรับไฟล์สรุป 4 ชีตได้ทันที</p>
+        </div>
+      </div>
+
+      <!-- Benchmark Speed Expectations & Fallback Detection Alert -->
+      <div class="rounded-xl border border-amber-500/40 bg-amber-950/20 p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-amber-300 flex items-center gap-2">
+            <span>⏱️ ความเร็วที่คาดหวังและวิธีสังเกตว่า AI กำลังทำงานจริง หรือติด Rule-based Fallback?</span>
+          </span>
+          <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono">Benchmark Quality</span>
+        </div>
+        <div class="space-y-2 text-xs text-slate-300 leading-relaxed">
+          <p>
+            • <b>การประมวลผลด้วย GPU จริง (RTX 5060 Ti / RTX 40xx):</b> จะใช้เวลาประมาณ <b>15–18 วินาทีต่อฉบับ</b> (เนื่องจากโมเดล Qwen2.5-1.5B ต้องสร้าง Token ประมาณ 500–600 โทเคนเพื่อแจกแจง 11 ฟิลด์พร้อมเหตุผลและ Confidence Score) การรัน 5-Fold ครบ 300 ฉบับจะใช้เวลาประมาณ 1 ชั่วโมง 15 นาที
+          </p>
+          <div class="rounded-lg bg-slate-950/80 p-3 border border-amber-500/30 text-amber-200/90 space-y-1">
+            <span class="font-bold text-xs text-amber-400 block">🚨 สัญญาณเตือนที่แสดงว่าตกไปเป็น Rule-based Fallback:</span>
+            <ul class="list-disc list-inside space-y-1 text-[11px]">
+              <li>การประเมิน 300 ฉบับเสร็จสิ้นเร็วผิดปกติ (เช่น ใช้เวลาเพียง <b>0.02 วินาที/ฉบับ</b> หรือเสร็จทั้ง 300 ฉบับในเวลาไม่ถึง 10 วินาที)</li>
+              <li>คะแนน Accuracy และ F1 ของโหมด <b>Zero-Shot</b> และ <b>One-Shot</b> ออกมา <b>เท่ากันเป๊ะ 100%</b> (เช่น Accuracy: 70.88%, F1: 73.02%)</li>
+            </ul>
+            <p class="text-[11px] text-slate-300 pt-1">
+              👉 หากพบอาการดังกล่าว แสดงว่า SLM Service ไม่ได้ถูกเรียก หรือ PyTorch ไม่สามารถรันบน GPU ได้ ให้ตรวจสอบไฟล์ <code class="text-cyan-300">backend-slm.log</code> และดูวิธีแก้ในหัวข้อ Troubleshooting ด้านล่างทันที
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Direct API Download URL -->
+      <div class="rounded-xl border border-slate-800 bg-slate-950 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div>
+          <span class="text-xs font-bold text-slate-200 block">💡 หรือดาวน์โหลดไฟล์ Excel รายงานล่าสุดผ่าน Direct URL:</span>
+          <span class="text-[11px] text-slate-400">สามารถคลิกลิงก์เพื่อดาวน์โหลดไฟล์ผลการประเมิน 4 ชีตได้โดยตรง:</span>
+        </div>
+        <a href="http://localhost:5173/api/benchmark/kfold/export-excel" target="_blank" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition whitespace-nowrap">
+          📥 ดาวน์โหลด Excel จาก API
+        </a>
+      </div>
+    </div>
+
+    <!-- Troubleshooting Section -->
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 space-y-4" id="troubleshooting">
+      <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-600 text-white font-bold text-sm">🛠️</span>
+        <h2 class="text-lg sm:text-xl font-bold text-white">คำถามและวิธีแก้ปัญหาที่พบบ่อย (Troubleshooting & FAQs)</h2>
+      </div>
+
+      <div class="space-y-3 text-xs sm:text-sm">
+        <!-- Issue 1: Port in use -->
+        <details class="group rounded-xl border border-slate-800 bg-slate-950 p-4">
+          <summary class="font-bold text-slate-200 cursor-pointer flex items-center justify-between">
+            <span>🔴 ปัญหาที่ 1: พอร์ตถูกใช้งานอยู่ (Port 8000, 8001 หรือ 5173 in use)</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-2 border-t border-slate-900 pt-3">
+            <p>เกิดจากมีเซอร์วิสเดิมค้างอยู่ ให้รันคำสั่ง PowerShell นี้เพื่อปิดโปรเซสที่ค้าง:</p>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <code>npm run stop</code>
+            </div>
+            <p>หรือค้นหาและปิดพอร์ตเฉพาะเจาะจง:</p>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <code>Get-NetTCPConnection -LocalPort 8000, 8001, 5173 -ErrorAction SilentlyContinue | Select-Object LocalPort, OwningProcess</code>
+            </div>
+          </div>
+        </details>
+
+        <!-- Issue 2: PowerShell Execution Policy -->
+        <details class="group rounded-xl border border-slate-800 bg-slate-950 p-4">
+          <summary class="font-bold text-slate-200 cursor-pointer flex items-center justify-between">
+            <span>🔴 ปัญหาที่ 2: Activate.ps1 cannot be loaded (Execution Policy Error)</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-2 border-t border-slate-900 pt-3">
+            <p>เป็นระบบความปลอดภัยเริ่มต้นของ Windows PowerShell ให้แก้โดยรันคำสั่งนี้ครั้งเดียวใน PowerShell:</p>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass</code>
+            </div>
+          </div>
+        </details>
+
+        <!-- Issue 3: CUDA VRAM / Out of Memory -->
+        <details class="group rounded-xl border border-slate-800 bg-slate-950 p-4">
+          <summary class="font-bold text-slate-200 cursor-pointer flex items-center justify-between">
+            <span>🔴 ปัญหาที่ 3: CUDA Out of Memory (การ์ดจอ VRAM ไม่พอ)</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-2 border-t border-slate-900 pt-3">
+            <p>โมเดล Qwen2.5-1.5B (FP16) ใช้ VRAM ประมาณ <b>3.0 GB</b> หากในเครื่องมีโปรแกรมอื่นกินการ์ดจอ (เช่น เกม, โปรแกรมจำลอง, แท็บบราวเซอร์จำนวนมาก) ให้ปิดโปรแกรมเหล่านั้นก่อนรัน หรือปรับใน <code class="text-amber-300">backend/.env</code>:</p>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <code>LOGIAI_SLM_DEVICE=cpu
+LOGIAI_OCR_DEVICE=cpu</code>
+            </div>
+          </div>
+        </details>
+
+        <!-- Issue 4: First time HuggingFace Model Download -->
+        <details class="group rounded-xl border border-slate-800 bg-slate-950 p-4">
+          <summary class="font-bold text-slate-200 cursor-pointer flex items-center justify-between">
+            <span>ℹ️ ปัญหาที่ 4: การดาวน์โหลดโมเดลครั้งแรก (Initial Model Download)</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-2 border-t border-slate-900 pt-3">
+            <p>เมื่อรันเซอร์วิสครั้งแรก ระบบจะดาวน์โหลดน้ำหนักโมเดล <b>Qwen/Qwen2.5-1.5B-Instruct</b> ขนาด ~3.1 GB จาก Hugging Face และโมเดล <b>PaddleOCR Thai+English</b> โดยอัตโนมัติ ซึ่งจะถูกบันทึกแคชไว้ในเครื่อง ทำให้ในการเปิดรอบถัดไปโมเดลจะโหลดขึ้นมาได้ทันทีในเวลาเพียง 2–4 วินาที</p>
+          </div>
+        </details>
+
+        <!-- Issue 5: RTX 50-Series Blackwell sm_120 CUDA Error -->
+        <details class="group rounded-xl border border-indigo-500/40 bg-slate-950 p-4" open>
+          <summary class="font-bold text-indigo-300 cursor-pointer flex items-center justify-between">
+            <span>⚡ ปัญหาที่ 5: "CUDA error: no kernel image is available for execution on the device" (การ์ดจอ RTX 50-Series / Blackwell sm_120)</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-3 border-t border-slate-900 pt-3">
+            <p>
+              <b>สาเหตุ:</b> การ์ดจอ NVIDIA ซีรีส์ใหม่ล่าสุด <b>RTX 50-Series (เช่น RTX 5060 Ti, 5070, 5080, 5090 สถาปัตยกรรม Blackwell)</b> ใช้ Compute Capability 12.0 (`sm_120`) ซึ่ง PyTorch build รุ่นเก่า (เช่น torch 2.6.0+cu126) ยังไม่มี Kernel ของ Blackwell คอมไพล์รวมอยู่ด้วย ทำให้เมื่อโมเดลพยายามคำนวณบน GPU จะเกิดข้อผิดพลาดนี้ทันที
+            </p>
+            <p><b>วิธีแก้ไข:</b></p>
+            <ol class="list-decimal list-inside space-y-2">
+              <li>อัปเดต <b>NVIDIA Driver เป็นเวอร์ชัน 572.xx ขึ้นไป</b> (ที่รองรับ CUDA 12.8)</li>
+              <li>ติดตั้ง PyTorch build ที่รองรับ CUDA 12.8 (`cu128`) ลงใน <code class="text-indigo-300">backend\.venv</code> โดยรัน:</li>
+            </ol>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <pre class="text-emerald-300"><code>"backend\.venv\Scripts\pip.exe" install torch --index-url https://download.pytorch.org/whl/cu128
+"backend\.venv\Scripts\pip.exe" install transformers accelerate</code></pre>
+            </div>
+            <p>จากนั้นทดสอบด้วย: <code class="text-cyan-300">backend\.venv\Scripts\python.exe -c "import torch; print(torch.cuda.get_arch_list())"</code> จะต้องมี <b class="text-emerald-400">'sm_120'</b> ปรากฏอยู่</p>
+          </div>
+        </details>
+
+        <!-- Issue 6: Zero-Shot & One-Shot Exact Same Score -->
+        <details class="group rounded-xl border border-amber-500/40 bg-slate-950 p-4" open>
+          <summary class="font-bold text-amber-300 cursor-pointer flex items-center justify-between">
+            <span>🚨 ปัญหาที่ 6: ผลประเมิน Zero-Shot และ One-Shot ได้คะแนนเท่ากันเป๊ะ (เช่น 70.88%) และเสร็จไวมาก (~0.02 วินาที/ฉบับ)</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-2 border-t border-slate-900 pt-3">
+            <p>
+              <b>สาเหตุ:</b> ระบบสกัดข้อมูลมีระบบนิรภัยอัตโนมัติ (Graceful Fallback) ซึ่งหากเซอร์วิส SLM ที่พอร์ต 8001 ขาดไลบรารี <code class="text-amber-300">transformers</code> หรือเกิด Error บน GPU ระบบจะตัดไปใช้ <b>Rule-based Extraction</b> แทนทันทีเพื่อให้โปรแกรมทำงานต่อได้จนจบ ทำให้ผลลัพธ์ของ Zero-Shot และ One-Shot กลายเป็นผลลัพธ์ของ Rule-based ชุดเดียวกันทั้งคู่
+            </p>
+            <p><b>วิธีตรวจสอบและแก้ไข:</b></p>
+            <ul class="list-disc list-inside space-y-1">
+              <li>ตรวจสอบ Service Health: <code class="text-cyan-300">curl http://localhost:8001/api/slm/health</code> ต้องตอบกลับว่า <code class="text-emerald-400">"status": "ok"</code> และ <code class="text-emerald-400">"device": "cuda:0"</code></li>
+              <li>เปิดดูข้อความ Error ในไฟล์ <code class="text-indigo-300">Web/backend-slm.log</code></li>
+              <li>ทดลองกดสกัดเอกสารเดี่ยว (Single Doc) ในหน้าเว็บ หากใช้เวลาประมาณ 10–18 วินาที และมีค่า Confidence Score แสดงว่า AI ทำงานจริงแล้ว</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Issue 7: Port 8001 Terminal Blank -->
+        <details class="group rounded-xl border border-slate-800 bg-slate-950 p-4">
+          <summary class="font-bold text-slate-200 cursor-pointer flex items-center justify-between">
+            <span>ℹ️ ปัญหาที่ 7: หน้าต่าง Terminal ของ Port 8001 ว่างเปล่า ไม่มีข้อความ Log ขยับ (Blank Window)</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-2 border-t border-slate-900 pt-3">
+            <p>
+              <b>สาเหตุ:</b> เพื่อความเสถียรสูงสุดและป้องกันปัญหา Windows Terminal ค้างจากการรับข้อมูลแบบ Stream ระบบจะ redirect ข้อมูลการทำงานทั้งหมดไปเก็บไว้ที่ไฟล์ <code class="text-amber-300">backend-slm.log</code> โดยตรง
+            </p>
+            <p><b>วิธีดู Log สด:</b> เปิด PowerShell ในโฟลเดอร์ <code class="text-cyan-300">Web</code> แล้วรันคำสั่ง:</p>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <code>Get-Content -Path .\backend-slm.log -Wait</code>
+            </div>
+          </div>
+        </details>
+
+        <!-- Issue 8: Output JSON Truncated -->
+        <details class="group rounded-xl border border-slate-800 bg-slate-950 p-4">
+          <summary class="font-bold text-slate-200 cursor-pointer flex items-center justify-between">
+            <span>ℹ️ ปัญหาที่ 8: JSON Output Truncated (ผลลัพธ์ JSON ขาดตอน ไม่สมบูรณ์)</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-2 border-t border-slate-900 pt-3">
+            <p>
+              <b>สาเหตุ:</b> การสกัดฟิลด์โลจิสติกส์ 11 ฟิลด์มาตรฐาน พร้อมโครงสร้าง Field Breakdown และ Confidence Object ใช้จำนวน Token ขาออกเฉลี่ย 500–600 โทเคน หากตั้งค่า <code class="text-amber-300">max_tokens</code> ต่ำเกินไป (เช่น 300) ผลลัพธ์จะถูกตัดทอนกลางคัน
+            </p>
+            <p>
+              <b>การแก้ไข:</b> ใน <code class="text-indigo-300">backend/slm_app.py</code> เวอร์ชันปัจจุบันได้ปรับเพิ่ม <code class="text-emerald-400">max_tokens=700</code> พร้อมเสริมระบบ Resilient Regex JSON Extractor เพื่อกู้คืนและปิดปีกกา JSON ให้อัตโนมัติเรียบร้อยแล้ว
+            </p>
+          </div>
+        </details>
+
+        <!-- Issue 9: Changing / Upgrading GPU FAQ -->
+        <details class="group rounded-xl border border-emerald-500/40 bg-slate-950 p-4">
+          <summary class="font-bold text-emerald-300 cursor-pointer flex items-center justify-between">
+            <span>❓ ปัญหาที่ 9: ถ้าเปลี่ยนหรืออัปเกรดการ์ดจอ (เช่น สลับไปใช้ RTX 3060, RTX 4070 หรือ CPU) ต้องลง CUDA หรือ PyTorch ใหม่ไหม?</span>
+            <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
+          </summary>
+          <div class="mt-3 text-slate-400 space-y-3 border-t border-slate-900 pt-3">
+            <p>
+              <b>ตอบ:</b> <b>ไม่ต้องเปลี่ยนเลยครับ!</b> หากเปลี่ยนไปใช้การ์ดจอ NVIDIA ในตระกูล <b>RTX 20, 30, 40 หรือ 50 Series</b> เนื่องจากชุด PyTorch build <code class="text-emerald-400">cu128</code> ที่ติดตั้งอยู่นี้ได้รวมไบนารีเคอร์เนลสำหรับสถาปัตยกรรม <b>sm_75, sm_80, sm_86, sm_90, sm_100, sm_120</b> ไว้อย่างสมบูรณ์แบบแล้ว
+            </p>
+            <div class="rounded-lg bg-slate-900 p-3 border border-slate-800 space-y-1.5 text-xs">
+              <span class="text-white font-bold block">สรุปแนวทางเมื่อเปลี่ยนฮาร์ดแวร์:</span>
+              <ul class="list-disc list-inside space-y-1 text-[11px] text-slate-300">
+                <li><b>เปลี่ยนเป็น RTX 30xx หรือ RTX 40xx:</b> สลับการ์ดจอ อัปเดต NVIDIA Driver ใน Windows แล้วสตาร์ทเซอร์วิสรันต่อได้ทันที</li>
+                <li><b>ถอดการ์ดจอออก / สลับไปใช้ CPU:</b> เปิดไฟล์ <code class="text-amber-300">backend/.env</code> แก้ไขเป็น <code class="text-emerald-400">LOGIAI_SLM_DEVICE=cpu</code> และ <code class="text-emerald-400">LOGIAI_OCR_DEVICE=cpu</code></li>
+                <li><b>เปลี่ยนเป็นการ์ดจอเก่ามาก (เช่น GTX 10xx / Pascal):</b> จำเป็นต้องถอย PyTorch ไปเป็นรุ่นเก่าที่รองรับ <code class="text-amber-300">sm_61</code></li>
+              </ul>
+            </div>
+            <p><b>คำสั่งทดสอบหลังเปลี่ยนการ์ดจอ:</b></p>
+            <div class="code-box">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <code>backend\.venv\Scripts\python.exe -c "import torch; print('GPU:', torch.cuda.get_device_name(0)); x=torch.randn(10,10,device='cuda'); print('CUDA Status: OK' if (x@x).is_cuda else 'Fail')"</code>
+            </div>
+            <p class="text-[11px] text-emerald-400">ถ้าผลลัพธ์ขึ้นว่า <b>CUDA Status: OK</b> แปลว่าพร้อมรัน 5-Fold Evaluation ต่อได้ทันที 100%</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 bg-slate-950 py-8 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 space-y-2">
+      <p class="font-semibold text-slate-400">LogiAI Document Intelligence Architecture · Final Thesis & Production Evaluation</p>
+      <p>ระบบแปลงเอกสารโลจิสติกส์สู่โครงสร้างข้อมูลมาตรฐาน JSON Schema ด้วยสถาปัตยกรรม Small Language Model</p>
+    </div>
+  </footer>
+
+  <!-- Interactive JavaScript for Copy Buttons -->
+  <script>
+    function copyCode(btn, text) {
+      let toCopy = text;
+      if (!toCopy || typeof toCopy !== 'string') {
+        const box = btn.closest('.code-box');
+        if (box) {
+          const codeElem = box.querySelector('code');
+          if (codeElem) {
+            toCopy = codeElem.innerText;
+          }
+        }
+      }
+      if (!toCopy) return;
+
+      toCopy = toCopy.trim();
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(toCopy)
+          .then(() => showCopied(btn))
+          .catch(() => fallbackCopy(btn, toCopy));
+      } else {
+        fallbackCopy(btn, toCopy);
+      }
+    }
+
+    function fallbackCopy(btn, text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.top = '0';
+      textarea.style.left = '0';
+      textarea.style.width = '2em';
+      textarea.style.height = '2em';
+      textarea.style.padding = '0';
+      textarea.style.border = 'none';
+      textarea.style.outline = 'none';
+      textarea.style.boxShadow = 'none';
+      textarea.style.background = 'transparent';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopied(btn);
+        } else {
+          showCopied(btn, '❌ คัดลอกไม่สำเร็จ');
+        }
+      } catch (err) {
+        console.error('Copy failed', err);
+        showCopied(btn, '❌ คัดลอกไม่สำเร็จ');
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function showCopied(btn, msg) {
+      const originalText = btn.getAttribute('data-orig') || btn.innerHTML;
+      if (!btn.getAttribute('data-orig')) {
+        btn.setAttribute('data-orig', originalText);
+      }
+      btn.innerHTML = msg || '✅ คัดลอกแล้ว!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

@@ -503,6 +503,46 @@ class EvaluationJobManager:
             job_state["recent_logs"].append(
                 f"[JOB {job_id}] Stopped by user. Processed {job_state['completed_docs']}/{job_state['overall_total']} documents ({total_elapsed}s). All progress is saved and can be resumed."
             )
+
+            # Compile partial report for processed documents so user can download Excel immediately
+            if live_extractions:
+                try:
+                    print(f"\n[JOB {job_id}] Compiling partial report for {len(live_extractions)} completed documents...")
+                    is_single_fold_mode = job_state["mode"] == "single_fold"
+                    is_single_doc_mode = job_state["mode"] == "single_doc"
+                    target_single_fold = job_state["single_fold"] if is_single_fold_mode else None
+                    target_doc_id = job_state.get("current_doc_id") if is_single_doc_mode else None
+                    partial_report = run_kfold_evaluation(
+                        k_splits=job_state["k_splits"],
+                        random_seed=job_state["random_seed"],
+                        single_fold=target_single_fold,
+                        doc_id=target_doc_id,
+                        selected_doc_ids=list(live_extractions.keys()),
+                        force_rerun=False,
+                        prompt_variant=prompt_variant,
+                        precomputed_extractions=live_extractions,
+                    )
+                    job_state["final_report"] = partial_report
+                    job_state["final_accuracy"] = str(partial_report["metrics_summary"]["accuracy_display"]).replace("±", "+/-")
+                    job_state["final_f1"] = str(partial_report["metrics_summary"]["f1_display"]).replace("±", "+/-")
+                    try:
+                        from excel_report_generator import generate_kfold_excel_report
+                        excel_file = generate_kfold_excel_report(partial_report)
+                        job_state["excel_report_file"] = str(excel_file.name)
+                        print(f"[JOB {job_id}] Auto-generated partial Excel report: {excel_file}")
+                    except Exception as ex_err:
+                        print(f"[WARN] Failed to auto-generate partial Excel report: {ex_err}")
+
+                    try:
+                        (REPORTS_DIR / "kfold_evaluation_report.json").write_text(
+                            json.dumps(partial_report, ensure_ascii=False, indent=2),
+                            encoding="utf-8",
+                        )
+                    except Exception:
+                        pass
+                except Exception as compile_err:
+                    print(f"[WARN] Could not compile partial report on stop: {compile_err}")
+
             self._write_job_file(job_state)
             with self._lock:
                 self._active_job_id = None
@@ -535,6 +575,14 @@ class EvaluationJobManager:
                 print(f"[JOB {job_id}] Auto-generated detailed Excel report: {excel_file}")
             except Exception as ex_err:
                 print(f"[WARN] Failed to auto-generate Excel report: {ex_err}")
+
+            try:
+                (REPORTS_DIR / "kfold_evaluation_report.json").write_text(
+                    json.dumps(final_report, ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
+            except Exception as sync_err:
+                print(f"[WARN] Failed to sync kfold_evaluation_report.json: {sync_err}")
         except Exception as e:
             print(f"[WARN] Error compiling final report: {e}")
 
