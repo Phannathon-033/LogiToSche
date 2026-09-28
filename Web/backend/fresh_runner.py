@@ -277,6 +277,17 @@ def run_fresh_fold(
     print(f"  Live Fold {fold} Accuracy: {progress_info['live_accuracy_pct']}%")
     print(f"{'='*70}\n")
 
+    if progress_info["failed_docs"]:
+        progress_info["is_running"] = False
+        progress_info["finished"] = False
+        progress_info["status"] = "failed"
+        progress_info["error"] = (
+            f"SLM extraction failed for {progress_info['failed_docs']} document(s); "
+            "no evaluation report was generated."
+        )
+        write_progress(progress_info)
+        raise RuntimeError(progress_info["error"])
+
     processed_doc_ids = [str(item["id"]) for item in progress_info["completed_items"]]
     if not processed_doc_ids:
         raise RuntimeError("Fresh inference produced no completed documents")

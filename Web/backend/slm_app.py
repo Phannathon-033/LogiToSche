@@ -62,9 +62,9 @@ NORMAL_PROMPT_VARIANT = "normal"
 MAX_BENCHMARK_EXAMPLE_LENGTH = 20000
 
 try:
-    from .logistics_field_parser import evaluate_11_fields, parse_grounded_amounts, parse_robust_quantity, repair_ocr_typos
+    from .logistics_field_parser import repair_ocr_typos
 except ImportError:
-    from logistics_field_parser import evaluate_11_fields, parse_grounded_amounts, parse_robust_quantity, repair_ocr_typos
+    from logistics_field_parser import repair_ocr_typos
 
 from dotenv import load_dotenv
 
@@ -368,32 +368,28 @@ def slm_extract(payload: SlmExtractRequest) -> SlmExtractResponse:
     enriched_payload = payload.model_copy(update={"ocr_text": fuse_image_ocr(payload)}) if hasattr(payload, "model_copy") else payload.copy(update={"ocr_text": fuse_image_ocr(payload)})
     try:
         data = generate_json(enriched_payload)
-        normalized = normalize_slm_output(
-            data,
-            enriched_payload.source_file,
-            enriched_payload.prompt_config,
-            ocr_lines=enriched_payload.ocr_lines,
-        )
-        config = prompt_config_for_request(enriched_payload.prompt_config)
-        return SlmExtractResponse(
-            json_schema=normalized["json_schema"],
-            fields=normalized["fields"],
-            confidence=normalized["confidence"],
-            review_items=normalized["review_items"],
-            model=get_active_model_id(config),
-            device="cuda:0",
-        )
+    except HTTPException:
+        raise
     except Exception as exc:
-        fallback = rule_based_fallback_extraction(enriched_payload)
-        return SlmExtractResponse(
-            json_schema=fallback["json_schema"],
-            fields=fallback["fields"],
-            confidence=fallback["confidence"],
-            review_items=fallback["review_items"],
-            performance=fallback["performance"],
-            model=f"{get_active_model_id(prompt_config_for_request(enriched_payload.prompt_config))} (Fallback: {exc})",
-            device="cpu/fallback",
-        )
+        raise HTTPException(status_code=502, detail=f"SLM extraction failed: {exc}") from exc
+
+    normalized = normalize_slm_output(
+        data,
+        enriched_payload.source_file,
+        enriched_payload.prompt_config,
+        ocr_lines=enriched_payload.ocr_lines,
+    )
+    config = prompt_config_for_request(enriched_payload.prompt_config)
+    return SlmExtractResponse(
+        json_schema=normalized["json_schema"],
+        fields=normalized["fields"],
+        confidence=normalized["confidence"],
+        review_items=normalized["review_items"],
+        model=get_active_model_id(config),
+        device="cuda:0",
+    )
+
+
 
 
 @app.post("/api/slm/execute-prompt", response_model=SlmPromptResponse)
@@ -420,8 +416,11 @@ def execute_slm_prompt(payload: SlmPromptRequest) -> SlmPromptResponse:
             model=get_active_model_id(),
             device="cuda:0",
         )
-    except Exception:
-        return execute_rule_based_prompt(payload)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"SLM prompt execution failed: {exc}") from exc
+
 
 
 _model_lock = threading.Lock()
@@ -985,160 +984,6 @@ def normalize_slm_output(
 
 
 
-def rule_based_fallback_extraction(payload: SlmExtractRequest) -> dict[str, Any]:
-    evaluated = evaluate_11_fields(payload.ocr_text)
-    values = dict(evaluated["extracted_values"])
-    total, total_source, subtotal, subtotal_source, vat, vat_source = parse_grounded_amounts(payload.ocr_text)
-    values["total_amount"] = values.get("total_amount") or total
-    other: dict[str, Any] = {"source_file": payload.source_file}
-    quantity = parse_robust_quantity(payload.ocr_text)
-    if quantity > 0:
-        other["quantity"] = quantity
-    if subtotal > 0:
-        other["subtotal_amount"] = subtotal
-    if vat > 0:
-        other["vat_amount"] = vat
-
-    valid_ocr_scores: list[int] = []
-    if payload.ocr_lines:
-        for line in payload.ocr_lines:
-            c = float(line.confidence or 0)
-            c_pct = round(c * 100 if c <= 1.0 else c)
-            if 0 < c_pct <= 100:
-                valid_ocr_scores.append(c_pct)
-    real_ocr_confidence = round(sum(valid_ocr_scores) / len(valid_ocr_scores)) if valid_ocr_scores else 95
-
-    fields = []
-    for field in CORE_FIELDS:
-        val = values.get(field, 0 if field in NUMERIC_CORE_FIELDS else "")
-        present = bool(evaluated["field_status"].get(field))
-        base_conf = 96 if present else 40
-        status = "success" if present else "review"
-        source_txt = str(val if present else "-")
-        ocr_match = find_ocr_line_for_value(val, payload.ocr_lines) if present else None
-        if ocr_match:
-            matched_txt, ocr_conf = ocr_match
-            source_txt = matched_txt
-            if ocr_conf > 0:
-                base_conf = round(0.4 * ocr_conf + 0.6 * base_conf)
-            if ocr_conf < 75:
-                status = "review"
-        fields.append({
-            "sourceText": source_txt,
-            "field": field,
-            "value": str(val if val is not None else ""),
-            "confidence": base_conf,
-            "status": status,
-            "isOther": False,
-        })
-    fields.extend(make_field(key, value, 92) for key, value in other.items())
-
-    review_items = [
-        {
-            "field": f["field"],
-            "ocrValue": str(f["sourceText"] if f["sourceText"] != "-" else "-"),
-            "slmValue": str(f["value"]),
-            "confidence": f["confidence"],
-            "status": "review",
-            "isOther": False,
-        }
-        for f in fields
-        if f["status"] == "review" and not f.get("isOther")
-    ]
-    score = int(evaluated["score"])
-    completeness = round(score / len(CORE_FIELDS) * 100)
-    math_status = "no_subtotal"
-    if subtotal > 0 and vat > 0:
-        math_status = "verified" if abs(float(values["total_amount"]) - subtotal - vat) < 1 else "discrepancy"
-    overall = round((real_ocr_confidence * 0.35) + (88 * 0.35) + (completeness * 0.30))
-    return {
-        "json_schema": {**values, "other": other},
-        "fields": fields,
-        "confidence": {
-            "overall": clamp_int(overall, 0, 100),
-            "ocr": real_ocr_confidence,
-            "slm": 88,
-            "mapping": completeness,
-            "completeness": completeness,
-        },
-        "review_items": review_items,
-        "performance": {
-            "accuracy_pct": float(completeness),
-            "inference_time_sec": 0.15,
-            "tokens_generated": 0,
-            "token_speed_tps": 0,
-            "core_fields_fill_rate_pct": float(completeness),
-            "schema_valid": True,
-            "math_integrity_status": math_status,
-            "math_integrity_notes": f"Sources: {total_source}, {subtotal_source}, {vat_source}".strip(", "),
-            "field_accuracies": {},
-        },
-    }
-
-
-
-def make_field(field: str, value: Any, confidence: int) -> dict[str, Any]:
-    present = value not in ("", "-", None, 0)
-    return {
-        "sourceText": str(value if present else "-"),
-        "field": field,
-        "value": str(value if value is not None else ""),
-        "confidence": confidence if present else 40,
-        "status": "success" if present else "review",
-        "isOther": field not in CORE_FIELDS,
-    }
-
-
-
-def execute_rule_based_prompt(payload: SlmPromptRequest) -> SlmPromptResponse:
-    schema = payload.json_schema
-    other = schema.get("other") if isinstance(schema.get("other"), dict) else {}
-    document_type = str(schema.get("document_type") or "เอกสารทั่วไป")
-    document_number = str(schema.get("document_number") or schema.get("document_no") or schema.get("invoice_no") or "")
-    document_date = str(schema.get("document_date") or "")
-    sender = str(schema.get("sender") or schema.get("sender_name") or "")
-    receiver = str(schema.get("receiver") or schema.get("receiver_name") or schema.get("party_name") or "")
-    origin = str(schema.get("origin") or "")
-    destination = str(schema.get("destination") or "")
-    reference_number = str(schema.get("reference_number") or "")
-    unit_price = to_number(schema.get("unit_price"))
-    total_amount = to_number(schema.get("total_amount"))
-    currency = str(schema.get("currency") or "")
-    display = lambda value: value or "-"
-
-    if payload.prompt_template_id == "synonym_party":
-        text = f"ผลการวิเคราะห์คำที่มีความหมายเดียวกัน:\n\n• sender (ผู้ส่ง/Vendor/Shipper/Seller): {display(sender)}\n• receiver (ผู้รับ/Buyer/Consignee/Customer): {display(receiver)}\n• origin → destination: {display(origin)} → {display(destination)}\n\nข้อมูลย่อยที่ไม่ใช่ 11 ฟิลด์ เช่น ชื่อตัวแทนหรือที่อยู่จะอยู่ใน other"
-    elif payload.prompt_template_id == "synonym_doc_no":
-        text = f"ผลการตรวจสอบเลขที่เอกสารและเลขอ้างอิง:\n\n• document_number: {display(document_number)}\n• reference_number: {display(reference_number)}\n• purchase order ใน other: {other.get('po_number') or other.get('po_no') or '-'}\n• tax ID ใน other: {other.get('tax_id') or '-'}\n\nเลขที่ Invoice, B/L, PO หรือเอกสารอื่นจะถูก map ตามบริบท โดยข้อมูลเสริมอยู่ใน other"
-    elif payload.prompt_template_id == "summarize_short":
-        text = f"เอกสาร {display(document_type)} เลขที่ {display(document_number)} วันที่ {display(document_date)} จาก {display(sender)} ถึง {display(receiver)} มียอดรวม {total_amount:,.2f} {display(currency)}"
-    elif payload.prompt_template_id == "summarize_goods":
-        text = f"สรุปรายการสินค้าและปริมาณ:\n\n• ประเภทเอกสาร: {display(document_type)}\n• จำนวนใน other: {to_number(other.get('quantity')):g} หน่วย\n• ราคาต่อหน่วย: {unit_price:,.2f} {display(currency)}\n• ยอดรวม: {total_amount:,.2f} {display(currency)}"
-    elif payload.prompt_template_id == "validate_numbers":
-        subtotal = to_number(other.get("subtotal_amount"))
-        vat = to_number(other.get("vat_amount"))
-        calculated_total = subtotal + vat
-        difference = abs(float(total_amount) - float(calculated_total))
-        result = "ตัวเลขสอดคล้องกัน" if subtotal == 0 or difference < 1 else f"พบส่วนต่าง {difference:,.2f}"
-        text = f"ผลการตรวจสอบตัวเลข:\n\n• Subtotal ใน other: {subtotal:,.2f}\n• VAT ใน other: {vat:,.2f}\n• Subtotal + VAT: {calculated_total:,.2f}\n• total_amount: {total_amount:,.2f} {display(currency)}\n\nข้อสรุป: {result}"
-    elif payload.prompt_template_id == "validate_core_fields":
-        missing = [field for field in CORE_FIELDS if not schema.get(field) or schema.get(field) == 0]
-        text = "ครบทั้ง 11 ฟิลด์หลัก" if not missing else f"ฟิลด์ที่ยังขาด: {', '.join(missing)}"
-    elif payload.prompt_template_id == "translate_format":
-        text = f"ผลการจัดรูปแบบมาตรฐาน:\n\n• document_type: {display(document_type)}\n• document_date (ISO): {display(document_date)}\n• sender → receiver: {display(sender)} → {display(receiver)}\n• currency: {display(currency)}"
-    else:
-        text = f"คำสั่ง: {payload.user_instruction or prompt_for_preset(payload.prompt_template_id)}\n\nเอกสาร {document_type} เลขที่ {document_number} มีข้อมูล 11 ฟิลด์หลักและข้อมูลเสริมใน other พร้อมให้ตรวจสอบ"
-
-    return SlmPromptResponse(
-        result_text=text,
-        reasoning="วิเคราะห์ด้วยระบบประมวลผลโลจิสติกส์อัจฉริยะ",
-        category=payload.prompt_template_id,
-        model=get_active_model_id(),
-        device="cpu/fallback",
-    )
-
-
-
 def to_number(value: Any) -> int | float:
     if isinstance(value, (int, float)):
         return value
@@ -1152,12 +997,14 @@ def to_number(value: Any) -> int | float:
 
 
 
+
 def clamp_int(value: Any, low: int, high: int) -> int:
     try:
         number = int(float(value))
     except (TypeError, ValueError):
         number = 0
     return max(low, min(high, number))
+
 
 
 

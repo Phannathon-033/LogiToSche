@@ -740,17 +740,11 @@ def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -
         value = response.json()
         if isinstance(value, (dict, list)):
             return value
-    except (requests.RequestException, ValueError):
-        pass
-    if path.endswith("/execute-prompt"):
-        return {
-            "result_text": "SLM service is unavailable. Please start the dedicated SLM service on port 8001.",
-            "reasoning": "No dedicated SLM service response was available.",
-            "category": body.get("prompt_template_id", "custom"),
-            "model": "unavailable",
-            "device": "cpu/fallback",
-        }
-    raise HTTPException(status_code=503, detail="SLM service is unavailable")
+    except requests.RequestException as exc:
+        raise HTTPException(status_code=503, detail=f"SLM service is unavailable: {exc}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=502, detail=f"SLM service returned invalid JSON: {exc}") from exc
+    raise HTTPException(status_code=502, detail="SLM service returned an empty response")
 
 
 def get_engine(lang: str) -> Any:

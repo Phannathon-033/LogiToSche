@@ -549,6 +549,24 @@ class EvaluationJobManager:
             print(f"[JOB {job_id}] Stopped gracefully.")
             return
 
+        if job_state["failed_docs"]:
+            total_elapsed = round(time.time() - start_time, 1)
+            job_state["status"] = "failed"
+            job_state["is_running"] = False
+            job_state["finished_at"] = datetime.now(timezone.utc).isoformat()
+            job_state["message"] = (
+                f"SLM extraction failed for {job_state['failed_docs']} document(s); "
+                "no evaluation report was generated."
+            )
+            job_state["recent_logs"].append(
+                f"[FAILED] Job {job_id} stopped without a report because "
+                f"{job_state['failed_docs']} document(s) failed."
+            )
+            self._write_job_file(job_state)
+            with self._lock:
+                self._active_job_id = None
+            return
+
         # Generate final comprehensive K-Fold evaluation report
         print(f"\n[JOB {job_id}] Aggregating predictions and generating final thesis report...")
         try:
