@@ -457,9 +457,19 @@ def _cache_path(document: dict[str, Any]) -> pathlib.Path:
 
 def _write_json(path: pathlib.Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(f"{path.suffix}.tmp")
-    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    temporary.replace(path)
+    text = json.dumps(value, ensure_ascii=False, indent=2) + "\n"
+    for attempt in range(5):
+        try:
+            temporary = path.with_suffix(f"{path.suffix}.{os.getpid()}.{attempt}.tmp")
+            temporary.write_text(text, encoding="utf-8")
+            temporary.replace(path)
+            return
+        except OSError:
+            time.sleep(0.05 * (attempt + 1))
+    try:
+        path.write_text(text, encoding="utf-8")
+    except Exception as exc:
+        print(f"[WARN] Could not write {path}: {exc}")
 
 
 def _get_ocr(document: dict[str, Any], force_rerun: bool = False) -> dict[str, Any]:

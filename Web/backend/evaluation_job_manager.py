@@ -80,17 +80,26 @@ class EvaluationJobManager:
         return cls._instance
 
     def _write_job_file(self, data: dict[str, Any]) -> None:
+        def _safe_write(target_path: Path, payload: str) -> None:
+            for attempt in range(5):
+                try:
+                    tmp = target_path.with_suffix(f".{os.getpid()}.{attempt}.tmp")
+                    tmp.write_text(payload, encoding="utf-8")
+                    tmp.replace(target_path)
+                    return
+                except OSError:
+                    time.sleep(0.04 * (attempt + 1))
+            try:
+                target_path.write_text(payload, encoding="utf-8")
+            except Exception:
+                pass
+
         try:
             job_id = data.get("job_id", "current")
             job_file = JOBS_DIR / f"{job_id}.json"
-            tmp = job_file.with_suffix(".tmp")
-            tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-            tmp.replace(job_file)
-
-            # Also update current pointer
-            tmp_cur = CURRENT_JOB_FILE.with_suffix(".tmp")
-            tmp_cur.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-            tmp_cur.replace(CURRENT_JOB_FILE)
+            content = json.dumps(data, ensure_ascii=False, indent=2)
+            _safe_write(job_file, content)
+            _safe_write(CURRENT_JOB_FILE, content)
         except Exception as e:
             print(f"[WARN] Error writing job file: {e}")
 
