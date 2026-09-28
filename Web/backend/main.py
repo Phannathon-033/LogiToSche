@@ -726,6 +726,10 @@ def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -
             value = response.json()
             if isinstance(value, (dict, list)):
                 return value
+        except requests.HTTPError as exc:
+            status = exc.response.status_code if exc.response is not None else 500
+            detail = exc.response.text if exc.response is not None else str(exc)
+            raise HTTPException(status_code=status, detail=detail)
         except (requests.RequestException, ValueError) as exc:
             raise HTTPException(status_code=503, detail=f"SLM service is unavailable: {exc}")
 
@@ -740,17 +744,21 @@ def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -
         value = response.json()
         if isinstance(value, (dict, list)):
             return value
-    except (requests.RequestException, ValueError):
-        pass
-    if path.endswith("/execute-prompt"):
-        return {
-            "result_text": "SLM service is unavailable. Please start the dedicated SLM service on port 8001.",
-            "reasoning": "No dedicated SLM service response was available.",
-            "category": body.get("prompt_template_id", "custom"),
-            "model": "unavailable",
-            "device": "cpu/fallback",
-        }
-    raise HTTPException(status_code=503, detail="SLM service is unavailable")
+    except requests.HTTPError as exc:
+        status = exc.response.status_code if exc.response is not None else 500
+        detail = exc.response.text if exc.response is not None else str(exc)
+        raise HTTPException(status_code=status, detail=detail)
+    except (requests.RequestException, ValueError) as exc:
+        if path.endswith("/execute-prompt"):
+            return {
+                "result_text": "SLM service is unavailable. Please start the dedicated SLM service on port 8001.",
+                "reasoning": "No dedicated SLM service response was available.",
+                "category": body.get("prompt_template_id", "custom"),
+                "model": "unavailable",
+                "device": "cpu/fallback",
+            }
+        raise HTTPException(status_code=503, detail=f"SLM service is unavailable: {exc}") from exc
+    raise HTTPException(status_code=502, detail="SLM service returned an empty response")
 
 
 def get_engine(lang: str) -> Any:

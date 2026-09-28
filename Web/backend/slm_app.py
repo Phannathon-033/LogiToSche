@@ -1232,6 +1232,24 @@ def get_kfold_report(
         return report
 
     if not (rerun or limit is not None or doc_id is not None or k <= 1 or single_fold is not None):
+        kfold_report_path = REPORT_DIR / "kfold_evaluation_report.json"
+        if kfold_report_path.is_file():
+            try:
+                report = json.loads(kfold_report_path.read_text(encoding="utf-8"))
+                if isinstance(report, dict) and report.get("folds"):
+                    return report
+            except Exception:
+                pass
+
+        run_files = sorted(REPORT_DIR.glob("run_*_evaluation.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+        for rf in run_files:
+            try:
+                report = json.loads(rf.read_text(encoding="utf-8"))
+                if isinstance(report, dict) and report.get("folds"):
+                    return report
+            except Exception:
+                continue
+
         raise HTTPException(
             status_code=409,
             detail="No evaluation report selected; provide run_id or set rerun=true",
