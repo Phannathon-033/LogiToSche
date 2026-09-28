@@ -351,7 +351,7 @@ def select_training_examples(
     if normalized not in {"one-shot", "few-shot"}:
         raise ValueError(f"Unsupported prompt variant: {prompt_variant}")
 
-    requested_count = 1 if normalized == "one-shot" else 5
+    requested_count = 1 if normalized == "one-shot" else 3
     ocr_loader = ocr_loader or _get_ocr
     ranked: list[tuple[float, str, dict[str, Any], dict[str, Any]]] = []
     for document in training_documents:
@@ -362,7 +362,7 @@ def select_training_examples(
     ranked.sort(key=lambda item: (-item[0], item[1]))
     selected_count = min(requested_count, len(ranked))
     if normalized == "few-shot" and len(ranked) >= 3:
-        selected_count = min(5, len(ranked))
+        selected_count = min(3, len(ranked))
 
     examples = []
     selected = []
@@ -371,7 +371,7 @@ def select_training_examples(
         examples.append({
             "document_id": doc_id,
             "source_file": document.get("file_name", ""),
-            "ocr_text": str(ocr.get("ocr_text", ""))[:1000],
+            "ocr_text": str(ocr.get("ocr_text", ""))[:500],
             "ocr_confidence": confidence,
             "json_schema": {field: truth.get(field, "") for field in CORE_FIELDS},
         })
@@ -605,7 +605,7 @@ def _extract(
             "benchmark_example_selection": prompt_snapshot.get("example_selection", {}),
         },
         headers=REQUEST_HEADERS,
-        timeout=float(os.environ.get("LOGIAI_SLM_TIMEOUT", "300")),
+        timeout=float(os.environ.get("LOGIAI_SLM_TIMEOUT", "600")),
     )
     slm_time_sec = round(time.time() - t_slm_start, 3)
     response.raise_for_status()
