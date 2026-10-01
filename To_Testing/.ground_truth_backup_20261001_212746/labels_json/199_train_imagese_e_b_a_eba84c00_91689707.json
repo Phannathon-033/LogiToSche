@@ -1,0 +1,27 @@
+{
+  "id": "DOC-199",
+  "rank": 199,
+  "file_name": "199_train_imagese_e_b_a_eba84c00_91689707.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "4103830",
+    "document_date": "1992-04-29",
+    "sender": "TimeInc.Magazines",
+    "receiver": "MS EILEEN ANTONIELLO",
+    "origin": "NEW YORK, NY 10020",
+    "destination": "NEW YORK, NY 10016",
+    "reference_number": "B0X",
+    "unit_price": 23199.81,
+    "total_amount": 23199.81,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:27:31"
+}

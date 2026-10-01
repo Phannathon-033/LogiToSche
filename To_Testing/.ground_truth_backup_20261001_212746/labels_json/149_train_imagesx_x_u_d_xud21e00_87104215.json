@@ -1,0 +1,27 @@
+{
+  "id": "DOC-149",
+  "rank": 149,
+  "file_name": "149_train_imagesx_x_u_d_xud21e00_87104215.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "311D",
+    "document_date": "1985-10-24",
+    "sender": "LABORATORIES AMERICA, INC.",
+    "receiver": "Dr. Connie Stone",
+    "origin": "Greensboro, NC 27420",
+    "destination": "VIENNA, VA",
+    "reference_number": "-",
+    "unit_price": 4500.0,
+    "total_amount": 4500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:20:59"
+}

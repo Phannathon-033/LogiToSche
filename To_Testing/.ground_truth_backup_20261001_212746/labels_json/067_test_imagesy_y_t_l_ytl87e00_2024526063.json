@@ -1,0 +1,27 @@
+{
+  "id": "DOC-067",
+  "rank": 67,
+  "file_name": "067_test_imagesy_y_t_l_ytl87e00_2024526063.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "4257",
+    "document_date": "1991-10-31",
+    "sender": "Park Avenue",
+    "receiver": "-",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 346.5,
+    "total_amount": 346.5,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:11:04"
+}

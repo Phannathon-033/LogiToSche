@@ -1,0 +1,27 @@
+{
+  "id": "DOC-119",
+  "rank": 119,
+  "file_name": "119_train_imagesh_h_g_b_hgb55f00_0060202534.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "0003584",
+    "document_date": "1992-02-27",
+    "sender": "THE AMERICAN TOBACCO COMPANY",
+    "receiver": "-",
+    "origin": "GREENWICH, CT 08870-0811",
+    "destination": "GREENWICH, CT 06870-0811",
+    "reference_number": "-",
+    "unit_price": 199500.0,
+    "total_amount": 2127500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:17:19"
+}

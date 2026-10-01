@@ -1,0 +1,27 @@
+{
+  "id": "DOC-029",
+  "rank": 29,
+  "file_name": "029_train_imagesh_h_a_n_han13e00_2057992645.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "1995-05-17",
+    "sender": "Philip Morris USA BUSINESS",
+    "receiver": "-",
+    "origin": "Richmond, VA 23284-3039",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 20000.0,
+    "total_amount": 20000.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:06:36"
+}

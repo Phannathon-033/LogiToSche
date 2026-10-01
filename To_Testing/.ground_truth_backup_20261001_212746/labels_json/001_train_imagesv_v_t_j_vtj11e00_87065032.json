@@ -1,0 +1,27 @@
+{
+  "id": "DOC-001",
+  "rank": 1,
+  "file_name": "001_train_imagesv_v_t_j_vtj11e00_87065032.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "9157",
+    "document_date": "1987-07-30",
+    "sender": "HOMEVIEWERPUBLICATIONS,INC.",
+    "receiver": "LORILLARD MEDIA",
+    "origin": "Philadelphia, PA 19106",
+    "destination": "new york, NY 10103",
+    "reference_number": "LM 2565",
+    "unit_price": 12675.0,
+    "total_amount": 10773.75,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:03:47"
+}

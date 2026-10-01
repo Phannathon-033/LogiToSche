@@ -1,0 +1,27 @@
+{
+  "id": "DOC-035",
+  "rank": 35,
+  "file_name": "035_train_imagesy_y_v_k_yvk53a00_2048386587.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "5323",
+    "document_date": "1996-02-02",
+    "sender": "FEB-02-1996",
+    "receiver": "Philip Morris",
+    "origin": "Bethel Park, PA 15102-3622",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 75.0,
+    "total_amount": 206.9,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:07:17"
+}

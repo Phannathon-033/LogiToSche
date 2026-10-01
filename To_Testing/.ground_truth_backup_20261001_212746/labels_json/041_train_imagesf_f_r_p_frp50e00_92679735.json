@@ -1,0 +1,27 @@
+{
+  "id": "DOC-041",
+  "rank": 41,
+  "file_name": "041_train_imagesf_f_r_p_frp50e00_92679735.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "041472",
+    "document_date": "2016-02-00",
+    "sender": "COMM",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "LORILLARD TOBACCO, CO",
+    "reference_number": "-",
+    "unit_price": 140.7,
+    "total_amount": 140.7,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:08:00"
+}

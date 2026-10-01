@@ -105,6 +105,10 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
   const [selectedDocumentId, setSelectedDocumentId] = useState<string>("");
   const [documentsLoading, setDocumentsLoading] = useState(true);
   const [documentsError, setDocumentsError] = useState<string | null>(null);
+  const [cloudAccessible, setCloudAccessible] = useState(true);
+  const [cloudCount, setCloudCount] = useState<number | null>(0);
+  const [localCount, setLocalCount] = useState(0);
+  const [cloudErrorCode, setCloudErrorCode] = useState<string | null>(null);
   const [promptLab, setPromptLab] = useState<AdminPromptLabState>(initialPromptLabState);
   const [promptQualityTab, setPromptQualityTab] = useState<PromptQualityTab>("prompt");
   const [usersSettingsTab, setUsersSettingsTab] = useState<UsersSettingsTab>("users");
@@ -117,8 +121,13 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
   const loadDocuments = useCallback(async () => {
     setDocumentsLoading(true);
     try {
-      const records = await fetchFirebaseDocuments(100);
+      const result = await fetchFirebaseDocuments(100);
+      const records = result.records;
       const adminDocuments = records.map(toAdminDocumentRecord);
+      setCloudAccessible(result.cloudAccessible);
+      setCloudCount(result.cloudCount);
+      setLocalCount(result.localCount);
+      setCloudErrorCode(result.cloudErrorCode);
       setFirebaseRecords(records);
       setDocuments(adminDocuments);
       setSelectedDocumentId((current) => current || adminDocuments[0]?.id || "");
@@ -206,6 +215,10 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
           <AdminOverview
             analytics={buildAnalytics(documents)}
             documents={documents}
+            cloudAccessible={cloudAccessible}
+            cloudCount={cloudCount}
+            localCount={localCount}
+            cloudErrorCode={cloudErrorCode}
             loading={documentsLoading}
             error={documentsError}
             onRefresh={loadDocuments}

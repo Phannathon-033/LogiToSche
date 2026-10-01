@@ -1,0 +1,27 @@
+{
+  "id": "DOC-293",
+  "rank": 293,
+  "file_name": "293_test_imagesm_m_x_c_mxc81f00_2025792689.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "F258416",
+    "document_date": "1991-08-20",
+    "sender": "NUMBER",
+    "receiver": "Gayle A. Chapman",
+    "origin": "STUDENT, ID",
+    "destination": "SOCIAL SECURITY, OR",
+    "reference_number": "MUMBEA",
+    "unit_price": 175661.0,
+    "total_amount": 175661.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:38:39"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-234",
+  "rank": 234,
+  "file_name": "234_train_imagesp_p_u_d_pud21e00_87104207.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "311D",
+    "document_date": "1986-02-07",
+    "sender": "LABORATORIESAMERICA",
+    "receiver": "Dr. Daniel J. Heck",
+    "origin": "Greensboro, NC 27420-1688",
+    "destination": "Mneneyer, OK",
+    "reference_number": "-",
+    "unit_price": 2250.0,
+    "total_amount": 2250.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:31:20"
+}

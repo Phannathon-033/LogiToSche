@@ -1,0 +1,27 @@
+{
+  "id": "DOC-076",
+  "rank": 76,
+  "file_name": "076_train_imagesm_m_m_j_mmj97e00_1000047237.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "17631",
+    "document_date": "1977-12-22",
+    "sender": "OUR AGENCY TO THE PARTICIPATING",
+    "receiver": "-",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 641.0,
+    "total_amount": 641.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:12:15"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-193",
+  "rank": 193,
+  "file_name": "193_test_imagesc_c_j_r_cjr03a00_518041941+-1945.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "052395",
+    "document_date": "2027-04-16",
+    "sender": "larry",
+    "receiver": "-",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 6747.65,
+    "total_amount": 6747.65,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:26:53"
+}

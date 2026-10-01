@@ -1,0 +1,27 @@
+{
+  "id": "DOC-007",
+  "rank": 7,
+  "file_name": "007_train_imagest_t_q_y_tqy64c00_91505655_5656.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "94604",
+    "document_date": "1985-01-22",
+    "sender": "OAKLAND TRIBUNE, INC.",
+    "receiver": "-",
+    "origin": "Oakland, CA 94604",
+    "destination": "NEW YCRK, NY 10019",
+    "reference_number": "DATE",
+    "unit_price": 5935.35,
+    "total_amount": 5935.35,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:04:24"
+}

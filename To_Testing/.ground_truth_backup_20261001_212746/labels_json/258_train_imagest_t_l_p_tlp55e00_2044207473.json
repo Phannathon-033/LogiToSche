@@ -1,0 +1,27 @@
+{
+  "id": "DOC-258",
+  "rank": 258,
+  "file_name": "258_train_imagest_t_l_p_tlp55e00_2044207473.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "2722",
+    "document_date": "1983-12-06",
+    "sender": "PM INC. REV. 1/79",
+    "receiver": "-",
+    "origin": "New York, NY 10016",
+    "destination": "CASH CONTROL, OR",
+    "reference_number": "-",
+    "unit_price": 96.56,
+    "total_amount": 96.56,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:34:16"
+}

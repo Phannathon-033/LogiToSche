@@ -1,0 +1,27 @@
+{
+  "id": "DOC-024",
+  "rank": 24,
+  "file_name": "024_train_imagesa_a_k_w_akw10c00_2085538660.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "59276-1",
+    "document_date": "2001-12-13",
+    "sender": "DEC 13 2001 11:24AM",
+    "receiver": "-",
+    "origin": "Richmond, VA 25234",
+    "destination": "Federal Employee, ID",
+    "reference_number": "3328",
+    "unit_price": 12667.55,
+    "total_amount": 4108.33,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:06:04"
+}

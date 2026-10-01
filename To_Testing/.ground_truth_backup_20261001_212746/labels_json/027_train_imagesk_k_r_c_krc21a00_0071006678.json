@@ -1,0 +1,27 @@
+{
+  "id": "DOC-027",
+  "rank": 27,
+  "file_name": "027_train_imagesk_k_r_c_krc21a00_0071006678.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "121710",
+    "document_date": "1994-11-17",
+    "sender": "MID AMERICA",
+    "receiver": "CHRIS BURT",
+    "origin": "NEENAH, WI 54957-0427",
+    "destination": "SURFACE SLIT, IN",
+    "reference_number": "-",
+    "unit_price": 3.0,
+    "total_amount": 321.63,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:06:25"
+}

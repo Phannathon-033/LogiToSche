@@ -1,0 +1,27 @@
+{
+  "id": "DOC-115",
+  "rank": 115,
+  "file_name": "115_train_imagesk_k_e_e_kee21e00_87104139.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "87104139",
+    "document_date": "1985-01-21",
+    "sender": "LABORATORIES AMERICA, INC.",
+    "receiver": "-",
+    "origin": "Greensboro, NC 27420",
+    "destination": "VIENNA, VA",
+    "reference_number": "354B",
+    "unit_price": 2050.0,
+    "total_amount": 2050.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:16:51"
+}

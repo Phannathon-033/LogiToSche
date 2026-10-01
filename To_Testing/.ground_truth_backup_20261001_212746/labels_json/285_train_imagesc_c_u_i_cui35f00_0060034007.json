@@ -1,0 +1,27 @@
+{
+  "id": "DOC-285",
+  "rank": 285,
+  "file_name": "285_train_imagesc_c_u_i_cui35f00_0060034007.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "1370",
+    "document_date": "1988-07-05",
+    "sender": "overhead will incur an additional labor and material charge",
+    "receiver": "-",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 144.0,
+    "total_amount": 144.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:37:40"
+}

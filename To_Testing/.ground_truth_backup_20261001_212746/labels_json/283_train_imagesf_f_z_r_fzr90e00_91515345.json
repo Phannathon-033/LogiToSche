@@ -1,0 +1,27 @@
+{
+  "id": "DOC-283",
+  "rank": 283,
+  "file_name": "283_train_imagesf_f_z_r_fzr90e00_91515345.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "339",
+    "document_date": "1985-03-29",
+    "sender": "APR 1",
+    "receiver": "-",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 3950.1,
+    "total_amount": 3950.1,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:37:23"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-263",
+  "rank": 263,
+  "file_name": "263_train_imagesb_b_s_z_bsz64c00_91508649.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "00443",
+    "document_date": "1984-10-09",
+    "sender": "THE CONTRACT RATE SHOWN",
+    "receiver": "STATEMENT NO",
+    "origin": "NEW YORK, NY",
+    "destination": "ADVERTISING CONTRACT IS, IN",
+    "reference_number": "-",
+    "unit_price": 3.11,
+    "total_amount": 3.11,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:34:53"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-143",
+  "rank": 143,
+  "file_name": "143_train_imagesj_j_t_u_jtu91a00_2063116799.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3488",
+    "document_date": "1996-11-04",
+    "sender": "COMPANY",
+    "receiver": "Lonnie Miller",
+    "origin": "itical Contribution",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 500.0,
+    "total_amount": 500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:20:07"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-161",
+  "rank": 161,
+  "file_name": "161_train_imagesa_a_x_g_axg43a00_89001768.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "152",
+    "document_date": "1984-05-04",
+    "sender": "LABORATORIES AMERICA,INC",
+    "receiver": "Melanee Bennett",
+    "origin": "Greensboro, NC 27420",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 1950.0,
+    "total_amount": 1950.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:22:39"
+}

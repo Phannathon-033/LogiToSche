@@ -1,0 +1,27 @@
+{
+  "id": "DOC-020",
+  "rank": 20,
+  "file_name": "020_val_imagesk_k_t_j_ktj11e00_87065022.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "11134",
+    "document_date": "1987-10-07",
+    "sender": "HOME VIEWER PUBLICATIONS, INC.",
+    "receiver": "LORILLARD MEDIA",
+    "origin": "Philadelphia, PA 19106",
+    "destination": "-",
+    "reference_number": "LM 1363",
+    "unit_price": 12575.0,
+    "total_amount": 10772.75,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:05:38"
+}

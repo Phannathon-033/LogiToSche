@@ -1,0 +1,27 @@
+{
+  "id": "DOC-122",
+  "rank": 122,
+  "file_name": "122_val_imagesz_z_v_k_zvk53a00_2048386586.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "15102",
+    "document_date": "1995-12-01",
+    "sender": "-",
+    "receiver": "Philip Morris",
+    "origin": "Bethel Park, PA 15102-3622",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 75.0,
+    "total_amount": 22.17,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:17:39"
+}

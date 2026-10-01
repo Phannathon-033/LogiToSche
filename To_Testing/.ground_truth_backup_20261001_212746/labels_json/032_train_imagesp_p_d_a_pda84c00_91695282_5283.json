@@ -1,0 +1,27 @@
+{
+  "id": "DOC-032",
+  "rank": 32,
+  "file_name": "032_train_imagesp_p_d_a_pda84c00_91695282_5283.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "14751",
+    "document_date": "1984-11-05",
+    "sender": "-",
+    "receiver": "CASHIER 5TH FLOOR",
+    "origin": "AL COPY",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 38733.26,
+    "total_amount": 38733.26,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:06:57"
+}

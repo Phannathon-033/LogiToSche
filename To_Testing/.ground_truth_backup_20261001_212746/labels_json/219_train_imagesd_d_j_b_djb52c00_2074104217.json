@@ -1,0 +1,27 @@
+{
+  "id": "DOC-219",
+  "rank": 219,
+  "file_name": "219_train_imagesd_d_j_b_djb52c00_2074104217.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "1961-09-24",
+    "sender": "n comrantes",
+    "receiver": "-",
+    "origin": "itical Contribution-Campaign",
+    "destination": "COMP ASI, ID",
+    "reference_number": "-",
+    "unit_price": 200.0,
+    "total_amount": 200.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:29:38"
+}

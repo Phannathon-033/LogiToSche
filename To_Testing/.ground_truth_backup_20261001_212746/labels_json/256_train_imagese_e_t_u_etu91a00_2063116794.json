@@ -1,0 +1,27 @@
+{
+  "id": "DOC-256",
+  "rank": 256,
+  "file_name": "256_train_imagese_e_t_u_etu91a00_2063116794.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "348R",
+    "document_date": "1996-11-04",
+    "sender": "COMPANY",
+    "receiver": "-",
+    "origin": "itical Contribution",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 175.0,
+    "total_amount": 175.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:34:04"
+}

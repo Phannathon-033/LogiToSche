@@ -1,0 +1,27 @@
+{
+  "id": "DOC-288",
+  "rank": 288,
+  "file_name": "288_val_imagesy_y_d_n_ydn00e00_92184746.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "021560",
+    "document_date": "2016-01-01",
+    "sender": "The New York Times Company Magazine Group",
+    "receiver": "-",
+    "origin": "NEW YORK, NY 10016",
+    "destination": "NEW YORK, NY 10008",
+    "reference_number": "BOX",
+    "unit_price": 22900.28,
+    "total_amount": 449617.26,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:38:02"
+}

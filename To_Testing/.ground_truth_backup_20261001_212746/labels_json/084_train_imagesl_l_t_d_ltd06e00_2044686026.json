@@ -1,0 +1,27 @@
+{
+  "id": "DOC-084",
+  "rank": 84,
+  "file_name": "084_train_imagesl_l_t_d_ltd06e00_2044686026.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "88649",
+    "document_date": "1985-04-23",
+    "sender": "ANNE ROTHSCHILD & CO., INC.",
+    "receiver": "GIVE INSTRUCTIONS HOW TO SHIP: VIA MAIL, UNITED",
+    "origin": "ALS AND PRINTS ARE NORMALLY RETURHED TOCUSTOM",
+    "destination": "Philip Morris",
+    "reference_number": "-",
+    "unit_price": 175.91,
+    "total_amount": 182.91,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:13:02"
+}

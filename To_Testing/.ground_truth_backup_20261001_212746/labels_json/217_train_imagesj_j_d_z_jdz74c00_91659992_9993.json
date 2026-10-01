@@ -1,0 +1,27 @@
+{
+  "id": "DOC-217",
+  "rank": 217,
+  "file_name": "217_train_imagesj_j_d_z_jdz74c00_91659992_9993.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "4244002514",
+    "document_date": "1984-08-31",
+    "sender": "THE CONTRACT RATE SHOWN",
+    "receiver": "LORILLARD MEDIA SERVICES",
+    "origin": "LOS ANGELES, CA",
+    "destination": "FIFTH AVENUE, NY 10103",
+    "reference_number": "-",
+    "unit_price": 65346.3,
+    "total_amount": 65346.3,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:29:26"
+}

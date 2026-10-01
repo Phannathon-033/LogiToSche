@@ -1,0 +1,27 @@
+{
+  "id": "DOC-206",
+  "rank": 206,
+  "file_name": "206_train_imagesq_q_n_b_qnb55f00_0060072410.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "M11170",
+    "document_date": "1989-07-05",
+    "sender": "-",
+    "receiver": "PACKAGES, CORRESPONDENCE AND INVOICES",
+    "origin": "MAIL YOUR INVOICES, IN",
+    "destination": "New York, NY 10165",
+    "reference_number": "3OX",
+    "unit_price": 74.95,
+    "total_amount": 74.95,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:28:16"
+}
