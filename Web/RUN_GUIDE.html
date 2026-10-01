@@ -375,37 +375,61 @@ copy backend\.env.example backend\.env</code></pre>
       <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
         <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm">3</span>
         <div>
-          <h2 class="text-lg sm:text-xl font-bold text-white">สร้าง Virtual Environment และติดตั้งไลบรารี AI (พร้อมรองรับ CUDA GPU)</h2>
-          <span class="text-xs text-slate-400">สร้าง venv, ติดตั้ง PyTorch CUDA 12.8, Transformers, PaddleOCR และ FastAPI</span>
+          <h2 class="text-lg sm:text-xl font-bold text-white">สร้าง Virtual Environment และติดตั้งไลบรารี AI ในคำสั่งเดียว (All-in-One Command)</h2>
+          <span class="text-xs text-slate-400">สร้าง venv, อัปเกรด pip, ติดตั้ง PyTorch CUDA 12.8 (รองรับ RTX 20/30/40/50), PaddleOCR และ FastAPI ครบจบในคำสั่งเดียว</span>
         </div>
       </div>
 
-      <!-- Part 3.1: Standard Installation -->
-      <div class="space-y-2">
-        <span class="text-xs font-bold text-slate-200 block">
-          📦 ขั้นที่ 3.1: รันคำสั่งสร้าง venv และติดตั้ง dependencies ทั้งหมดในคำสั่งเดียว:
-        </span>
-        <div class="code-box">
-          <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
-          <pre class="text-xs sm:text-sm text-emerald-300"><code>python -m venv backend/.venv & "backend\.venv\Scripts\pip.exe" install --upgrade pip & "backend\.venv\Scripts\pip.exe" install -r backend/requirements.txt</code></pre>
-        </div>
-      </div>
-
-      <!-- Part 3.2: Special for RTX 50-Series (Blackwell) / CUDA 12.8 -->
-      <div class="rounded-xl border border-indigo-500/40 bg-indigo-950/30 p-4 space-y-3">
+      <!-- Quick 1-Click Batch Option -->
+      <div class="rounded-xl border border-emerald-500/40 bg-emerald-950/30 p-4 space-y-2">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-indigo-300 flex items-center gap-2">
-            <span>⚡ ขั้นที่ 3.2: สำหรับผู้ใช้การ์ดจอ NVIDIA RTX 50-Series (เช่น RTX 5060 Ti สถาปัตยกรรม Blackwell sm_120)</span>
+          <span class="text-xs font-bold text-emerald-300 flex items-center gap-2">
+            <span>✨ ทางเลือกที่ 1 (สะดวกที่สุด - 1-Click Setup):</span>
           </span>
-          <span class="text-[10px] bg-indigo-500/30 text-indigo-200 border border-indigo-400/40 px-2 py-0.5 rounded font-mono">CUDA 12.8 Wheel</span>
+          <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono font-bold">1-Click All-in-One</span>
         </div>
-        <p class="text-xs text-slate-300 leading-relaxed">
-          หากใช้การ์ดจอ RTX 50-Series หรือ PyTorch ตัวเดิมฟ้องว่า <code class="text-amber-300">no kernel image is available</code> ให้รันคำสั่งติดตั้ง PyTorch CUDA 12.8 โดยตรง:
+        <p class="text-xs text-slate-300">
+          ดับเบิ้ลคลิกไฟล์ <code class="text-amber-300 font-bold">scripts\setup.bat</code> ในโฟลเดอร์โปรเจกต์ ระบบจะตรวจสอบ Python, Node.js, สร้าง venv, อัปเกรด pip, ติดตั้ง PyTorch CUDA + PaddleOCR และรัน <code class="text-cyan-300">npm install</code> หน้าเว็บให้จนเสร็จสมบูรณ์โดยอัตโนมัติ
         </p>
-        <div class="code-box">
-          <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
-          <pre class="text-xs sm:text-sm text-cyan-300"><code>"backend\.venv\Scripts\pip.exe" install torch --index-url https://download.pytorch.org/whl/cu128
-"backend\.venv\Scripts\pip.exe" install transformers accelerate</code></pre>
+      </div>
+
+      <!-- Unified 1-Command for PowerShell & CMD -->
+      <div class="space-y-4 pt-1">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-200">
+            📦 ทางเลือกที่ 2: รันคำสั่งเดียวผ่าน Terminal (รองรับ RTX 20 / 30 / 40 / 50 Blackwell ทันที):
+          </span>
+          <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-mono">CUDA 12.8 Built-in</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <!-- Option A: PowerShell -->
+          <div class="rounded-xl border border-cyan-500/40 bg-slate-950/90 p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-cyan-400">สำหรับ PowerShell (Windows 11 / Terminal):</span>
+              <span class="text-[10px] text-slate-500">ใช้เครื่องหมาย ;</span>
+            </div>
+            <div class="code-box text-xs">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <pre class="text-emerald-300"><code>python -m venv backend/.venv; backend\.venv\Scripts\python.exe -m pip install --upgrade pip; backend\.venv\Scripts\pip.exe install -r backend/requirements.txt</code></pre>
+            </div>
+          </div>
+
+          <!-- Option B: Command Prompt -->
+          <div class="rounded-xl border border-slate-800 bg-slate-950/90 p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-amber-400">สำหรับ Command Prompt (CMD):</span>
+              <span class="text-[10px] text-slate-500">ใช้เครื่องหมาย &&</span>
+            </div>
+            <div class="code-box text-xs">
+              <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
+              <pre class="text-amber-200"><code>python -m venv backend\.venv && "backend\.venv\Scripts\pip.exe" install --upgrade pip && "backend\.venv\Scripts\pip.exe" install -r backend\requirements.txt</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-lg bg-indigo-950/40 border border-indigo-500/30 p-3 text-[11px] text-slate-300 leading-relaxed">
+          💡 <b>ทำไมคำสั่งเดียวถึงรองรับได้ทุกการ์ดจอ?</b> เนื่องจากไฟล์ <code class="text-amber-300">backend/requirements.txt</code> ได้ฝังดัชนี <code class="text-cyan-300">cu128</code> และ <code class="text-cyan-300">cu129</code> พร้อมเวอร์ชัน <code class="text-emerald-400">torch==2.11.0+cu128</code> และ <code class="text-emerald-400">paddlepaddle-gpu==3.3.1</code> ไว้ครบถ้วนแล้ว จึงรองรับสถาปัตยกรรม <code class="text-emerald-400">sm_75, sm_80, sm_86, sm_90, sm_120</code> (Blackwell) ทั้งหมดได้ในคำสั่งเดียวจบ โดยไม่ต้องแยกติดตั้งเป็น 2 ขั้นตอนอีกต่อไป
         </div>
       </div>
 
@@ -614,8 +638,9 @@ copy backend\.env.example backend\.env</code></pre>
         
         <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
           <p>
-            <b>ทำไมหน้าต่าง Terminal บางหน้าต่างถึงว่างเปล่าหรือไม่เห็น Log วิ่ง?</b><br />
-            สคริปต์แบ็กกราวด์ทำ <b>Log Redirection</b> ข้อความ stdout และ stderr ไปบันทึกที่ไฟล์ <code class="text-amber-300">backend-slm.log</code> และ <code class="text-amber-300">backend-ocr.log</code> เพื่อป้องกันไม่ให้ Windows Terminal เกิด Deadlock หรือค้างจากการแสดงผลข้อความความเร็วสูง
+            <b>โหมดการแสดงผล Log ตามรูปแบบการรัน:</b><br />
+            • <b>กรณีรันด้วย <code class="text-emerald-300 font-bold">npm run dev:windows</code> (วิธีที่ 1 แนะนำ):</b> ข้อความ Log ของ Uvicorn และ Vite จะแสดงผลสดบนหน้าต่าง CMD ทั้ง 3 หน้าต่างโดยตรง<br />
+            • <b>กรณีรันด้วย <code class="text-cyan-300 font-bold">npm run dev:all</code> (Background Daemon ผ่าน PowerShell):</b> ระบบจะรันในพื้นหลังและทำ <b>Log Redirection</b> บันทึกผลไปที่ไฟล์ <code class="text-amber-300">backend-slm.log</code> และ <code class="text-amber-300">backend-ocr.log</code>
           </p>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
@@ -651,6 +676,15 @@ copy backend\.env.example backend\.env</code></pre>
           <h2 class="text-lg sm:text-xl font-bold text-white">การทดสอบประเมินผล K-Fold และดาวน์โหลด Excel (.xlsx)</h2>
           <span class="text-xs text-slate-400">ขั้นตอนการรันประเมิน 300 ฉบับและนำผลไปเขียนรายงานวิทยานิพนธ์</span>
         </div>
+      </div>
+
+      <!-- Dataset & Ground Truth Location Notice -->
+      <div class="rounded-xl border border-indigo-500/30 bg-slate-950/80 p-4 text-xs space-y-1">
+        <span class="font-bold text-indigo-300 block">📁 ตำแหน่งไฟล์ข้อมูลชุดทดสอบ (Dataset & Ground Truth):</span>
+        <p class="text-slate-300">
+          • ไฟล์เฉลยมาตรฐาน (Ground Truth) บรรจุ 300 ฉบับอยู่ที่: <code class="text-emerald-400 font-mono">backend/ground_truth_dataset.json</code><br />
+          • โฟลเดอร์จัดเก็บรูปภาพ/PDF สำหรับทดสอบ: ระบบจะอ่านจากโฟลเดอร์ <code class="text-amber-300 font-mono">../To_Testing</code> หรือตามที่กำหนดไว้ใน <code class="text-cyan-300 font-mono">backend/.env (LOGIAI_DATASET_DIR)</code>
+        </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
@@ -829,14 +863,14 @@ LOGIAI_OCR_DEVICE=cpu</code>
         <!-- Issue 7: Port 8001 Terminal Blank -->
         <details class="group rounded-xl border border-slate-800 bg-slate-950 p-4">
           <summary class="font-bold text-slate-200 cursor-pointer flex items-center justify-between">
-            <span>ℹ️ ปัญหาที่ 7: หน้าต่าง Terminal ของ Port 8001 ว่างเปล่า ไม่มีข้อความ Log ขยับ (Blank Window)</span>
+            <span>ℹ️ ปัญหาที่ 7: หน้าต่าง Terminal ของ Port 8001 ว่างเปล่า หรือต้องการดู Log ย้อนหลัง</span>
             <span class="text-slate-500 group-open:rotate-180 transition">▼</span>
           </summary>
           <div class="mt-3 text-slate-400 space-y-2 border-t border-slate-900 pt-3">
             <p>
-              <b>สาเหตุ:</b> เพื่อความเสถียรสูงสุดและป้องกันปัญหา Windows Terminal ค้างจากการรับข้อมูลแบบ Stream ระบบจะ redirect ข้อมูลการทำงานทั้งหมดไปเก็บไว้ที่ไฟล์ <code class="text-amber-300">backend-slm.log</code> โดยตรง
+              <b>ข้อสังเกต:</b> หากรันด้วย <code class="text-emerald-400">npm run dev:windows</code> หน้าต่าง CMD จะแสดงข้อความ Log สดตามปกติ แต่หากรันแบบ Daemon ผ่าน <code class="text-cyan-400">npm run dev:all</code> ระบบจะบันทึก Log ลงไฟล์ <code class="text-amber-300">backend-slm.log</code>
             </p>
-            <p><b>วิธีดู Log สด:</b> เปิด PowerShell ในโฟลเดอร์ <code class="text-cyan-300">Web</code> แล้วรันคำสั่ง:</p>
+            <p><b>วิธีดู Log สดเมื่อรันแบบ Daemon:</b> เปิด PowerShell ในโฟลเดอร์ <code class="text-cyan-300">Web</code> แล้วรันคำสั่ง:</p>
             <div class="code-box">
               <button class="copy-btn" onclick="copyCode(this)">📋 คัดลอก</button>
               <code>Get-Content -Path .\backend-slm.log -Wait</code>
