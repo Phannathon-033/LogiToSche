@@ -27,6 +27,7 @@ import {
   exportToJson,
 } from "./services/exportService";
 import { renderPdfPreview, runPaddleOcr, type OcrLanguage, type OcrLine } from "./services/ocrApi";
+import { clearCachedOcr, getCachedOcr, hashFile, saveCachedOcr } from "./services/ocrCache";
 import { runSlmExtraction } from "./services/slmApi";
 import { normalizeLogisticsJsonSchema } from "./services/dataValidationService";
 import { EMPTY_JSON_SCHEMA } from "./types";
@@ -117,10 +118,10 @@ export function App() {
     setToast(message);
   }
 
-  async function handleBatchFilesSelect(files: File[]) {
+  async function handleBatchFilesSelect(files: File[], replaceExisting = false) {
     if (!files || files.length === 0) return;
 
-    const startIndex = batchDocuments.length;
+    const startIndex = replaceExisting ? 0 : batchDocuments.length;
     const newItems: BatchDocumentItem[] = files.map((file, i) => ({
       id: `${Date.now()}_${startIndex + i}_${file.name}`,
       file,
@@ -141,6 +142,17 @@ export function App() {
       startedAt: new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }),
     }));
 
+    await Promise.all(
+      newItems.map(async (item) => {
+        if (!item.file) return;
+        try {
+          item.fileHash = await hashFile(item.file);
+        } catch {
+          item.fileHash = undefined;
+        }
+      }),
+    );
+
     newItems.forEach((item) => {
       const isPdf = item.file?.type === "application/pdf" || item.file?.name.toLowerCase().endsWith(".pdf");
       if (isPdf && item.file) {
@@ -153,9 +165,9 @@ export function App() {
       }
     });
 
-    const allDocs = [...batchDocuments, ...newItems];
+    const allDocs = replaceExisting ? newItems : [...batchDocuments, ...newItems];
     setBatchDocuments(allDocs);
-    if (batchDocuments.length === 0) {
+    if (replaceExisting || batchDocuments.length === 0) {
       setActiveDocIndex(0);
     }
     setIsBatchProcessing(true);
@@ -195,7 +207,10 @@ export function App() {
         try {
           const sourceFile = allDocs[i].file;
           if (!sourceFile) throw new Error("ไม่มีไฟล์ต้นฉบับสำหรับ OCR");
-          const ocr = await runPaddleOcr(sourceFile, ocrLanguage);
+          const fileHash = allDocs[i].fileHash;
+          const cachedOcr = fileHash ? getCachedOcr(fileHash, ocrLanguage) : null;
+          const ocr = cachedOcr || await runPaddleOcr(sourceFile, ocrLanguage);
+          if (!cachedOcr && fileHash) saveCachedOcr(fileHash, ocr);
           const text = ocr.text || "PaddleOCR ไม่พบข้อความในไฟล์นี้";
           allDocs[i] = {
             ...allDocs[i],
@@ -205,14 +220,16 @@ export function App() {
             ocrEngine: ocr.engine,
             ocrLanguage: ocr.language,
             pageCount: ocr.page_count ?? null,
-            previewUrl: ocr.image_preview || allDocs[i].previewUrl,
+            previewUrl: ("image_preview" in ocr ? ocr.image_preview : undefined) || allDocs[i].previewUrl,
             status: "ocr_completed",
-            statusLabel: `OCR สำเร็จ (${i + 1}/${allDocs.length})`,
+            statusLabel: cachedOcr ? `ใช้ OCR ที่บันทึกไว้ (${i + 1}/${allDocs.length})` : `OCR สำเร็จ (${i + 1}/${allDocs.length})`,
           };
           setBatchDocuments([...allDocs]);
           setJobs((current) =>
             current.map((job) =>
-              job.id === allDocs[i].id ? { ...job, statusLabel: "OCR สำเร็จ (รอคิว SLM)", result: "OCR Done" } : job,
+              job.id === allDocs[i].id
+                ? { ...job, statusLabel: cachedOcr ? "ใช้ OCR ที่บันทึกไว้ (รอคิว SLM)" : "OCR สำเร็จ (รอคิว SLM)", result: "OCR Done" }
+                : job,
             ),
           );
         } catch (err) {
@@ -338,6 +355,7 @@ export function App() {
       ocrText: record.ocrText || "",
       spatialText: record.spatialText || "",
       ocrLines: record.ocrLines || [],
+      fileHash: record.fileHash,
       pageCount: record.pageCount ?? null,
       jsonOutput: record.jsonSchema,
       fields: record.fields,
@@ -595,6 +613,7 @@ export function App() {
           ocrLines: activeDoc.ocrLines,
           ocrEngine: activeDoc.ocrEngine,
           ocrLanguage: activeDoc.ocrLanguage,
+          fileHash: activeDoc.fileHash,
           processingStatus: "completed",
           processedAt: activeDoc.completedAt || new Date().toISOString(),
           pageCount: activeDoc.pageCount ?? null,
@@ -883,9 +902,11 @@ export function App() {
                 onAddFiles={handleBatchFilesSelect}
                 onReRunOcr={() => {
                   const files = batchDocuments.map((d) => d.file).filter(Boolean) as File[];
+                  batchDocuments.forEach((doc) => {
+                    if (doc.fileHash) clearCachedOcr(doc.fileHash, ocrLanguage);
+                  });
                   if (files.length > 0) {
-                    setBatchDocuments([]);
-                    handleBatchFilesSelect(files);
+                    handleBatchFilesSelect(files, true);
                   } else {
                     showToast("กำลังประมวลผล OCR อีกครั้ง...");
                   }

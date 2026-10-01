@@ -24,6 +24,7 @@ const document = buildNormalizedDocumentPayload({
   fileName: "a.pdf",
   fileType: "application/pdf",
   fileSize: "1 MB",
+  fileHash: "hash-1",
   createdAt: "now",
   updatedAt: "now",
 });
@@ -45,6 +46,7 @@ const extracted = buildNormalizedExtractedDataPayload({
 const changed = diffJsonSchema(schema, { ...schema, other: { truck: "T2" } });
 
 assert.equal(document.document_id, id);
+assert.equal(document.file_hash, "hash-1");
 assert.equal(ocr.document_id, id);
 assert.equal(ocr.lines[0].bounding_box[0][0], 1);
 assert.equal(extracted.other.truck, "T");

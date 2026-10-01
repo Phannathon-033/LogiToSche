@@ -196,6 +196,7 @@ export interface BatchDocumentItem {
   ocrLines: import("./services/ocrApi").OcrLine[];
   ocrEngine?: string;
   ocrLanguage?: string;
+  fileHash?: string;
   pageCount?: number | null;
   jsonOutput: JsonSchemaOutput | null;
   fields: ExtractedField[];

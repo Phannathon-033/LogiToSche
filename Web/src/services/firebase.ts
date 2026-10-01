@@ -194,6 +194,7 @@ export interface FirebaseDocumentRecord {
   ocrLines?: OcrLine[];
   ocrEngine?: string;
   ocrLanguage?: string;
+  fileHash?: string;
   pageCount?: number | null;
   processingStatus?: string;
   processedAt?: Timestamp | string | any;
@@ -403,6 +404,7 @@ export async function saveDocumentToFirebase(
     source_file: record.fileName,
     file_name: record.fileName,
     file_size: record.fileSize,
+    file_hash: record.fileHash || "",
     file_type: record.fileType,
     fields: record.fields,
     confidence_scores: record.confidenceScores,
@@ -431,6 +433,7 @@ export async function saveDocumentToFirebase(
     fileName: record.fileName,
     fileType: record.fileType,
     fileSize: record.fileSize,
+    fileHash: record.fileHash,
     storagePath,
     storageUrl,
     processingStatus: record.processingStatus,
@@ -594,6 +597,7 @@ export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<F
         fileType: String(metadata.file_type || ""),
         storageUrl: String(metadata.storage_url || ""),
         storagePath: String(metadata.file_path || ""),
+        fileHash: String(metadata.file_hash || ""),
         documentType: schemaOut.document_type,
         jsonSchema: schemaOut,
         fields: Array.isArray(extracted.fields) ? extracted.fields as ExtractedField[] : buildStoredFields(schemaOut, schemaOut.other),
@@ -658,6 +662,7 @@ export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<F
         fileType: String(data.file_type || ""),
         storageUrl: String(data.storage_url || data.other?.storage_url || ""),
         storagePath: String(data.storage_path || ""),
+        fileHash: String(data.file_hash || ""),
         documentType: schemaOut.document_type,
         jsonSchema: schemaOut,
         fields: storedFields || buildStoredFields(schemaOut, data.other),

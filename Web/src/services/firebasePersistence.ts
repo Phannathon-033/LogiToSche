@@ -13,6 +13,7 @@ export interface NormalizedDocumentPayload {
   file_name: string;
   file_type: string;
   file_size: string;
+  file_hash: string;
   file_path: string;
   storage_url: string;
   processing_status: string;
@@ -122,6 +123,7 @@ export function buildNormalizedDocumentPayload(input: {
   fileName: string;
   fileType: string;
   fileSize: string;
+  fileHash?: string;
   storagePath?: string;
   storageUrl?: string;
   processingStatus?: string;
@@ -136,6 +138,7 @@ export function buildNormalizedDocumentPayload(input: {
     file_name: input.fileName,
     file_type: input.fileType,
     file_size: input.fileSize,
+    file_hash: input.fileHash || "",
     file_path: input.storagePath || "",
     storage_url: input.storageUrl || "",
     processing_status: input.processingStatus || "completed",
