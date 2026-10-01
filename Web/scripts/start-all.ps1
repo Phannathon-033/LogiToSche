@@ -94,7 +94,7 @@ if (Test-Port $SlmPort) {
   Start-BackgroundCommand `
     -Name "SLM API" `
     -WorkingDirectory $Backend `
-    -Command "`"$Python`" -m uvicorn slm_app:app --host $HostAddress --port $SlmPort" `
+    -Command "set LOGIAI_PRELOAD_SLM=true && `"$Python`" -m uvicorn slm_app:app --host $HostAddress --port $SlmPort" `
     -LogFile (Join-Path $Root "backend-slm.log") `
     -ErrorLogFile (Join-Path $Root "backend-slm.err.log")
 }

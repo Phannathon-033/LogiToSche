@@ -28,6 +28,7 @@ try:
     from kfold_evaluator import (
         CORE_FIELDS,
         GT_FILE,
+        check_live_services,
         PREDICTION_CACHE_DIR,
         _cache_path,
         _extract,
@@ -49,6 +50,7 @@ except ImportError:
     from .kfold_evaluator import (
         CORE_FIELDS,
         GT_FILE,
+        check_live_services,
         PREDICTION_CACHE_DIR,
         _cache_path,
         _extract,
@@ -86,6 +88,7 @@ def run_fresh_fold(
     fresh_run_id: str | None = None,
     prompt_variant: str = "zero-shot",
 ) -> dict:
+    check_live_services()
     if not GT_FILE.is_file():
         raise FileNotFoundError(f"Ground truth file not found at {GT_FILE}")
 

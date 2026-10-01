@@ -8,5 +8,6 @@ if not exist ".venv\Scripts\python.exe" (
     exit /b 1
 )
 echo Starting LogiAI SLM Service on http://0.0.0.0:8001...
+set LOGIAI_PRELOAD_SLM=true
 ".venv\Scripts\python.exe" -m uvicorn slm_app:app --host 0.0.0.0 --port 8001
 

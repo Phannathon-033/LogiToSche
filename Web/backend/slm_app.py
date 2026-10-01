@@ -468,7 +468,7 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
     ]
     text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer([text], return_tensors="pt").to(model.device)
-    max_tokens = 700 if benchmark_variant in ("zero-shot", "one-shot", "few-shot") else 800
+    max_tokens = 768 if benchmark_variant in ("zero-shot", "one-shot", "few-shot") else 768
     import time
     t0 = time.time()
     print(f"[SLM] Generating JSON for {payload.source_file} (variant={benchmark_variant}, in_tokens={inputs.input_ids.shape[1]}, max_out={max_tokens})...", flush=True)
@@ -495,7 +495,11 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
     print(f"[SLM] Generated {len(output_ids)} tokens in {gen_time:.2f}s ({len(output_ids)/max(gen_time, 0.01):.1f} tps)!", flush=True)
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
-    return parse_json_object(decoded)
+    try:
+        return parse_json_object(decoded)
+    except HTTPException:
+        print(f"[SLM] Invalid JSON output for {payload.source_file}: {decoded[:4000]}", flush=True)
+        raise
 
 
 def prompt_config_for_request(snapshot: SlmPromptConfig | None) -> dict[str, Any]:
@@ -576,9 +580,6 @@ def build_json_schema_prompt(payload: SlmExtractRequest, config: dict[str, Any],
             "currency": "THB | USD | EUR | JPY | SGD | CNY | GBP | empty string",
             "other": {"source_file": payload.source_file},
         },
-        "fields": [{"sourceText": "source text from OCR", "field": "document_number", "value": "normalized value", "confidence": 0, "status": "success | review | error | processing"}],
-        "confidence": {"overall": 0, "ocr": 0, "slm": 0, "mapping": 0, "completeness": 0},
-        "review_items": [{"field": "document_number", "ocrValue": "raw OCR value", "slmValue": "normalized value", "confidence": 0, "status": "review"}],
     }
     return (
         "Fill the required JSON contract using the current OCR text.\n"

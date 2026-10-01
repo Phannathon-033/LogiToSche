@@ -1,46 +1,27 @@
 import {
-  AlignLeft,
-  ArrowRight,
   BrainCircuit,
   Check,
-  Clock,
   Cloud,
   Code2,
   Copy,
-  Crosshair,
   Download,
-  Expand,
-  Eye,
-  FileCode,
   FileSpreadsheet,
   FileText,
-  Info,
-  LayoutGrid,
-  Layers,
   Loader2,
-  MapPin,
-  Maximize2,
-  Minimize2,
+  MoreVertical,
   Pencil,
   Plus,
   RefreshCw,
-  RotateCcw,
-  Scan,
   Search,
   Table,
-  Target,
   Trash2,
   X,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { EMPTY_JSON_SCHEMA, type BatchDocumentItem, type JsonSchemaOutput } from "../types";
 import type { OcrLine } from "../services/ocrApi";
-import { DocumentPreview } from "./DocumentPreview";
-import { DynamicStepTracker } from "./DynamicStepTracker";
-import { OcrProcessingAnimation } from "./OcrProcessingAnimation";
-import { SlmReasoningAnimation } from "./SlmReasoningAnimation";
-import { JSONOutputPanel } from "./JSONOutputPanel";
 import { calculateDocumentCompleteness } from "../services/dataValidationService";
+import { DocumentPreview } from "./DocumentPreview";
 
 interface UploadedWorkspaceViewProps {
   activeDoc: BatchDocumentItem | null;
@@ -66,6 +47,31 @@ interface UploadedWorkspaceViewProps {
   isProcessing?: boolean;
 }
 
+type SlmSubView = "form" | "json";
+
+type CoreField = {
+  key: keyof JsonSchemaOutput;
+  label: string;
+  input: "text" | "number" | "select";
+};
+
+const CORE_FIELDS: CoreField[] = [
+  { key: "document_type", label: "ประเภทเอกสาร", input: "select" },
+  { key: "document_number", label: "เลขที่เอกสาร", input: "text" },
+  { key: "document_date", label: "วันที่เอกสาร", input: "text" },
+  { key: "sender", label: "ผู้ส่ง / ผู้ขาย", input: "text" },
+  { key: "receiver", label: "ผู้รับ / ผู้ซื้อ", input: "text" },
+  { key: "origin", label: "ต้นทาง", input: "text" },
+  { key: "destination", label: "ปลายทาง", input: "text" },
+  { key: "reference_number", label: "เลขที่อ้างอิง", input: "text" },
+  { key: "unit_price", label: "ราคาต่อหน่วย", input: "number" },
+  { key: "total_amount", label: "มูลค่ารวม", input: "number" },
+  { key: "currency", label: "สกุลเงิน", input: "select" },
+];
+
+const DOC_TYPES = ["invoice", "bill_of_lading", "packing_list", "purchase_order", "unknown"];
+const CURRENCIES = ["", "THB", "USD", "EUR", "JPY", "SGD", "CNY", "GBP"];
+
 export function UploadedWorkspaceView({
   activeDoc,
   batchDocuments,
@@ -83,82 +89,64 @@ export function UploadedWorkspaceView({
   onSaveToFirebase,
   onUpdateLocalJson,
   isSavingToFirebase = false,
-  onMoveOtherToCore,
   onShowToast,
   onUpdateOcrLines,
   onReRunSlmWithOcr,
   isProcessing = false,
 }: UploadedWorkspaceViewProps) {
-  const [ocrSubView, setOcrSubView] = useState<"table" | "raw" | "json">("table");
-  const [isEditorExpanded, setIsEditorExpanded] = useState(false);
+  const [slmSubView, setSlmSubView] = useState<SlmSubView>("form");
   const [searchQuery, setSearchQuery] = useState("");
   const [confidenceFilter, setConfidenceFilter] = useState<"all" | "high" | "review">("all");
   const [selectedOcrIndex, setSelectedOcrIndex] = useState<number | null>(null);
-  const [showAllBoxes, setShowAllBoxes] = useState<boolean>(true);
-
-  // Manual OCR Editing & Deleting State
+  const [showAllBoxes, setShowAllBoxes] = useState(true);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editingText, setEditingText] = useState<string>("");
+  const [editingText, setEditingText] = useState("");
   const [deletingIndex, setDeletingIndex] = useState<number | null>(null);
   const [lastDeletedItem, setLastDeletedItem] = useState<{ line: OcrLine; index: number } | null>(null);
+  const [jsonDraft, setJsonDraft] = useState<JsonSchemaOutput>(EMPTY_JSON_SCHEMA);
+  const [jsonRawDraft, setJsonRawDraft] = useState("");
+  const [jsonError, setJsonError] = useState("");
+  const ocrTableScrollRef = useRef<HTMLDivElement | null>(null);
+  const ocrRowRefs = useRef<Record<number, HTMLTableRowElement | null>>({});
 
-  // Raw OCR Editing State
-  const [isEditingRaw, setIsEditingRaw] = useState<boolean>(false);
-  const [rawTextDraft, setRawTextDraft] = useState<string>("");
+  useEffect(() => {
+    const next = activeDoc?.jsonOutput || EMPTY_JSON_SCHEMA;
+    setJsonDraft(next);
+    setJsonRawDraft(JSON.stringify(next, null, 2));
+    setJsonError("");
+  }, [activeDoc?.id, activeDoc?.jsonOutput]);
 
-  if (!activeDoc) return null;
+  useEffect(() => {
+    if (selectedOcrIndex === null) return;
+    window.requestAnimationFrame(() => {
+      ocrRowRefs.current[selectedOcrIndex]?.scrollIntoView({ block: "center", behavior: "smooth" });
+    });
+  }, [selectedOcrIndex]);
 
-  const fileName = activeDoc.fileName;
-  const jsonOutput = activeDoc.jsonOutput || EMPTY_JSON_SCHEMA;
-  const performance = activeDoc.performance;
-  const ocrLines = activeDoc.ocrLines || [];
-  const accuracyPct = performance?.accuracy_pct ?? activeDoc.overallConfidence ?? 98.4;
-  const processingTime = performance?.inference_time_sec
-    ? `${performance.inference_time_sec.toFixed(2)}s`
-    : "0.85s";
-
+  const ocrLines = activeDoc?.ocrLines || [];
   const totalDocs = batchDocuments.length;
-  const completedDocs = batchDocuments.filter((d) => d.status === "completed").length;
-  const progressPercent = totalDocs > 0 ? Math.round((completedDocs / totalDocs) * 100) : 100;
+  const completedDocs = batchDocuments.filter((doc) => doc.status === "completed").length;
+  const otherEntries = Object.entries(jsonDraft.other || {}).filter(([, value]) => value !== undefined && value !== "");
 
-  // Filtered live OCR lines from PaddleOCR GPU with normalized confidence and preserved originalIndex
+  const filledCount = CORE_FIELDS.filter(({ key }) => {
+    const value = jsonDraft[key];
+    return typeof value === "number" ? value > 0 : String(value || "").trim().length > 0;
+  }).length;
+
   const filteredOcrLines = useMemo(() => {
     return ocrLines
       .map((line: any, originalIndex: number) => ({ ...line, originalIndex }))
       .filter((line: any) => {
-        const rawConf = line.confidence ?? 0.95;
-        const conf = rawConf > 1.0 ? rawConf / 100.0 : rawConf;
-        const matchesSearch =
-          !searchQuery.trim() || line.text.toLowerCase().includes(searchQuery.toLowerCase());
+        const conf = normalizedConfidence(line.confidence);
+        const matchesSearch = !searchQuery.trim() || String(line.text || "").toLowerCase().includes(searchQuery.toLowerCase());
         if (!matchesSearch) return false;
-        if (confidenceFilter === "high") return conf >= 0.85;
+        if (confidenceFilter === "high") return conf >= 0.9;
         if (confidenceFilter === "review") return conf < 0.85;
         return true;
       });
-  }, [ocrLines, searchQuery, confidenceFilter]);
+  }, [confidenceFilter, ocrLines, searchQuery]);
 
-  // Check if active document has bounding box coordinates
-  const hasAnyValidBox = useMemo(() => {
-    return ocrLines.some((l: any) => {
-      const b = l.bounding_box || l.box;
-      return Array.isArray(b) && b.length >= 4;
-    });
-  }, [ocrLines]);
-
-  // Format real OCR JSON output with standard schema
-  const ocrJsonString = useMemo(() => {
-    const ocrObjects = ocrLines.map((l) => ({
-      text: l.text,
-      confidence: Number((l.confidence ?? 0.95).toFixed(2)),
-      bounding_box: l.bounding_box || l.box || [],
-    }));
-    return JSON.stringify(ocrObjects, null, 2);
-  }, [ocrLines]);
-
-  // Check if active document has any manually edited or added lines
-  const hasEditedLines = useMemo(() => {
-    return ocrLines.some((l: any) => l.isEdited || l.isManual);
-  }, [ocrLines]);
+  if (!activeDoc) return null;
 
   function handleStartEdit(lineIdx: number, currentText: string) {
     setEditingIndex(lineIdx);
@@ -172,1196 +160,393 @@ export function UploadedWorkspaceView({
       onShowToast("ข้อความต้องไม่ว่างเปล่า");
       return;
     }
-    const updated = ocrLines.map((l: any, i: number) => {
-      if (i === lineIdx) {
-        return {
-          ...l,
-          text: trimmed,
-          isManual: true,
-          isEdited: true,
-          confidence: 1.0,
-        };
-      }
-      return l;
-    });
+    const updated = ocrLines.map((line: any, idx) => idx === lineIdx ? { ...line, text: trimmed, isManual: true, isEdited: true, confidence: 1 } : line);
     setEditingIndex(null);
     setEditingText("");
     onUpdateOcrLines?.(updated, true);
   }
 
-  function handleCancelEdit() {
-    setEditingIndex(null);
-    setEditingText("");
-  }
-
-  function handleConfirmDelete(lineIdx: number, e?: React.MouseEvent) {
-    e?.stopPropagation();
+  function handleConfirmDelete(lineIdx: number, event?: MouseEvent) {
+    event?.stopPropagation();
     const itemToDelete = ocrLines[lineIdx];
-    // Save for undo
     setLastDeletedItem({ line: itemToDelete, index: lineIdx });
-
-    const updated = ocrLines.filter((_: any, i: number) => i !== lineIdx);
-    if (selectedOcrIndex === lineIdx) {
-      setSelectedOcrIndex(null);
-    } else if (selectedOcrIndex !== null && selectedOcrIndex > lineIdx) {
-      setSelectedOcrIndex(selectedOcrIndex - 1);
-    }
-    if (editingIndex === lineIdx) {
-      setEditingIndex(null);
-    }
+    const updated = ocrLines.filter((_, idx) => idx !== lineIdx);
+    setSelectedOcrIndex((current) => current === lineIdx ? null : current !== null && current > lineIdx ? current - 1 : current);
     setDeletingIndex(null);
+    setEditingIndex(null);
     onUpdateOcrLines?.(updated, true);
   }
 
   function handleUndoDelete() {
     if (!lastDeletedItem) return;
-    const { line, index } = lastDeletedItem;
     const updated = [...ocrLines];
-    if (index >= 0 && index <= updated.length) {
-      updated.splice(index, 0, line);
-    } else {
-      updated.push(line);
-    }
+    updated.splice(lastDeletedItem.index, 0, lastDeletedItem.line);
     setLastDeletedItem(null);
     onUpdateOcrLines?.(updated, true);
   }
 
   function handleAddNewLine() {
-    const newLine = {
-      text: "ข้อความใหม่",
-      confidence: 1.0,
-      position: { region: "body" },
-      bounding_box: [],
-      isManual: true,
-      isEdited: true,
-    };
-    const updated = [...ocrLines, newLine];
+    const updated = [
+      ...ocrLines,
+      { text: "ข้อความใหม่", confidence: 1, position: { region: "body" }, bounding_box: [], isManual: true, isEdited: true },
+    ];
     const newIdx = updated.length - 1;
     onUpdateOcrLines?.(updated, false);
     setEditingIndex(newIdx);
     setEditingText("ข้อความใหม่");
-    setDeletingIndex(null);
-    onShowToast("เพิ่มข้อความใหม่แล้ว สามารถพิมพ์ข้อความจริงและกดบันทึกเพื่อให้ SLM วิเคราะห์ได้ทันที");
-    setTimeout(() => {
-      const el = document.getElementById(`ocr-row-${newIdx}`);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }, 80);
   }
 
-  function handleSaveRawText() {
-    const trimmedLines = rawTextDraft
-      .split("\n")
-      .map((t) => t.trim())
-      .filter((t) => t.length > 0);
-
-    if (trimmedLines.length === 0) {
-      onShowToast("ข้อความต้องไม่ว่างเปล่า");
-      return;
-    }
-
-    const updated = trimmedLines.map((txt, idx) => {
-      const existing = ocrLines[idx];
-      return {
-        text: txt,
-        confidence: 1.0,
-        position: existing?.position || { region: "body" },
-        bounding_box: existing?.bounding_box || existing?.box || [],
-        isManual: true,
-        isEdited: true,
-      };
-    });
-
-    setIsEditingRaw(false);
-    onUpdateOcrLines?.(updated, true);
+  function updateJsonField(key: keyof JsonSchemaOutput, value: string) {
+    setJsonDraft((current) => ({
+      ...current,
+      [key]: key === "unit_price" || key === "total_amount" ? Number(value) || 0 : value,
+    }));
   }
 
-  // Core 11 Fields extraction summary
-  const coreFieldsSummary = useMemo(() => {
-    const raw: any = activeDoc?.jsonOutput || {};
-    const docType = raw.document_type || "Invoice";
-    const docNumber = raw.document_number || raw.document_no || "-";
-    const docDate = raw.document_date || "-";
-    const sender = raw.sender || raw.party_name || "-";
-    const receiver = raw.receiver || "-";
-    const origin = raw.origin || "-";
-    const destination = raw.destination || "-";
-    const refNo = raw.reference_number || "-";
-    const unitPrice = raw.unit_price !== undefined ? Number(raw.unit_price) : 0;
-    const totalAmount = raw.total_amount !== undefined ? Number(raw.total_amount) : 0;
-    const currency = raw.currency || "THB";
+  function saveJsonDraft() {
+    onUpdateLocalJson?.(jsonDraft);
+    setJsonRawDraft(JSON.stringify(jsonDraft, null, 2));
+    onShowToast("บันทึก JSON ใน Workspace แล้ว");
+  }
 
-    const fields = [
-      { key: "document_type", label: "ประเภทเอกสาร", val: docType, isSet: Boolean(raw.document_type) },
-      { key: "document_number", label: "เลขที่เอกสาร", val: docNumber, isSet: docNumber !== "-" },
-      { key: "document_date", label: "วันที่เอกสาร", val: docDate, isSet: docDate !== "-" },
-      { key: "sender", label: "ผู้ส่ง / ผู้ขาย", val: sender, isSet: sender !== "-" },
-      { key: "receiver", label: "ผู้รับ / ผู้ซื้อ", val: receiver, isSet: receiver !== "-" },
-      { key: "origin", label: "ต้นทาง", val: origin, isSet: origin !== "-" },
-      { key: "destination", label: "ปลายทาง", val: destination, isSet: destination !== "-" },
-      { key: "reference_number", label: "เลขอ้างอิง", val: refNo, isSet: refNo !== "-" },
-      { key: "unit_price", label: "ราคาต่อหน่วย", val: unitPrice ? `${unitPrice.toLocaleString()} ${currency}` : "-", isSet: unitPrice > 0 },
-      { key: "total_amount", label: "ยอดรวมทั้งสิ้น", val: totalAmount ? `${totalAmount.toLocaleString()} ${currency}` : "-", isSet: totalAmount > 0 },
-      { key: "currency", label: "สกุลเงิน", val: currency, isSet: Boolean(raw.currency) },
-    ];
-
-    const filledCount = fields.filter((f) => f.isSet).length;
-    const otherKeys = raw.other ? Object.keys(raw.other).filter((k: string) => Boolean(raw.other[k])) : [];
-
-    return {
-      docType,
-      docNumber,
-      docDate,
-      sender,
-      receiver,
-      origin,
-      destination,
-      refNo,
-      unitPrice,
-      totalAmount,
-      currency,
-      fields,
-      filledCount,
-      otherKeys,
-    };
-  }, [activeDoc?.jsonOutput]);
-
-  function getHumanRegion(region?: string) {
-    switch (region) {
-      case "top-left":
-        return { label: "Header (Top-Left)", color: "bg-blue-100 text-blue-700" };
-      case "top-center":
-      case "top-right":
-        return { label: "Header (ส่วนหัว)", color: "bg-blue-100 text-blue-700" };
-      case "middle-left":
-      case "middle-right":
-        return { label: "Body (เนื้อหา)", color: "bg-purple-100 text-purple-700" };
-      case "bottom-left":
-      case "bottom-right":
-      case "bottom-center":
-        return { label: "Footer (ยอดเงิน/ท้าย)", color: "bg-emerald-100 text-emerald-700" };
-      default:
-        return { label: "Body", color: "bg-slate-100 text-slate-700" };
+  function handleRawJsonChange(value: string) {
+    setJsonRawDraft(value);
+    try {
+      const parsed = JSON.parse(value);
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        setJsonError("JSON ต้องเป็น object");
+        return;
+      }
+      setJsonDraft(parsed as JsonSchemaOutput);
+      setJsonError("");
+    } catch (error) {
+      setJsonError(error instanceof Error ? error.message : "JSON ไม่ถูกต้อง");
     }
   }
 
   return (
-    <div className="flex flex-col gap-3.5 py-1">
-      {/* ========================================================================= */}
-      {/* 1. BATCH WORKSPACE TOOLBAR                                                */}
-      {/* ========================================================================= */}
-      <section className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow-panel">
-        {/* Left: Document indicator + Batch Progress */}
-        <div className="flex items-center gap-3">
-          <div className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-blue-50 text-blue-600 border border-blue-100">
-            <FileText className="h-4 w-4" />
+    <div className="min-h-[calc(100vh-5rem)] space-y-3">
+      <section className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-panel">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="max-w-[62vw] truncate text-base font-bold text-slate-950">{activeDoc.fileName}</h1>
+            <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">{fileExt(activeDoc.fileName)}</span>
+            <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono text-slate-600">{activeDoc.fileSize}</span>
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-xs font-semibold text-slate-900 leading-tight">
-                {activeDoc.fileName}
-              </h2>
-              <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-mono text-slate-600">
-                {activeDoc.fileSize}
-              </span>
-            </div>
-            <div className="mt-0.5 flex items-center gap-2 text-[11px] text-slate-500">
-              <span>ชุดเอกสาร: {totalDocs} ไฟล์</span>
-              <div className="h-1.5 w-20 overflow-hidden rounded-full bg-slate-100 border border-slate-200">
-                <div
-                  className="h-full rounded-full bg-blue-600 transition-all duration-500"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-              <span className="font-mono text-[11px] font-medium text-slate-700">
-                {completedDocs}/{totalDocs}
-              </span>
-            </div>
-          </div>
+          <p className="mt-1 text-xs font-medium text-slate-600">เอกสารที่ {activeDocIndex + 1} จาก {totalDocs} · เสร็จแล้ว {completedDocs}/{totalDocs}</p>
         </div>
 
-        {/* Right: Actions Buttons */}
         <div className="flex flex-wrap items-center gap-2">
-          {/* Add More Files */}
-          <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-xs transition hover:bg-slate-50 hover:border-slate-300">
-            <Plus className="h-3.5 w-3.5 text-slate-500" />
-            <span>เพิ่มไฟล์ (Add Files)</span>
-            <input
-              type="file"
-              multiple
-              accept="image/*,.pdf,.jpg,.jpeg,.png,.tif,.tiff"
-              className="sr-only"
-              onChange={(e) => {
-                const files = Array.from(e.target.files || []);
-                if (files.length > 0) onAddFiles(files);
-                e.target.value = "";
-              }}
-            />
-          </label>
-
-          {/* Re-run OCR */}
-          <button
-            type="button"
-            onClick={onReRunOcr}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-xs transition hover:bg-slate-50 hover:border-slate-300"
-          >
-            <RefreshCw className="h-3.5 w-3.5 text-slate-500" />
-            <span>สแกน OCR ใหม่</span>
+          <button type="button" onClick={onReRunOcr} className="btn-secondary">
+            <RefreshCw className="h-4 w-4" /> รับ OCR ใหม่
           </button>
-
-          {/* Export Batch Buttons */}
-          {onExportAllExcel && (
-            <button
-              type="button"
-              onClick={onExportAllExcel}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-800 shadow-xs transition hover:bg-emerald-100"
-              title="ส่งออกเอกสารทั้งหมดในแบทช์เป็นไฟล์ Excel (.xlsx)"
-            >
-              <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
-              <span>Excel (.xlsx) ทั้งหมด</span>
+          <button type="button" onClick={() => onReRunSlmWithOcr?.()} disabled={!onReRunSlmWithOcr || activeDoc.status === "slm_processing"} className="btn-secondary text-blue-700">
+            <BrainCircuit className={`h-4 w-4 ${activeDoc.status === "slm_processing" ? "animate-spin" : ""}`} /> วิเคราะห์ใหม่ (SLM)
+          </button>
+          {activeDoc.status === "completed" && activeDoc.jsonOutput && (
+            <button type="button" onClick={onDownloadJson} className="btn-primary">
+              <Download className="h-4 w-4" /> ดาวน์โหลด JSON
             </button>
           )}
-
-          {onExportAllCsv && (
-            <button
-              type="button"
-              onClick={onExportAllCsv}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-teal-300 bg-teal-50 px-2.5 py-1.5 text-xs font-bold text-teal-800 shadow-xs transition hover:bg-teal-100"
-              title="ส่งออกเอกสารทั้งหมดในแบทช์เป็นไฟล์ CSV"
-            >
-              <FileText className="h-3.5 w-3.5 text-teal-600" />
-              <span>CSV ทั้งหมด</span>
-            </button>
-          )}
-
-          <button
-            type="button"
-            onClick={onExportAllJson}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-xs transition hover:bg-slate-50 hover:border-slate-300"
-            title="ส่งออกเอกสารทั้งหมดในแบทช์เป็นไฟล์ JSON"
-          >
-            <Download className="h-3.5 w-3.5 text-slate-500" />
-            <span>JSON ทั้งหมด</span>
-          </button>
         </div>
       </section>
 
-      {/* Multi-document Batch Switcher Pills (If more than 1 document) */}
-      {batchDocuments.length > 1 && (
-        <div className="rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2 dark:border-slate-800">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-extrabold text-navy dark:text-white whitespace-nowrap">
-                สลับดูเอกสารในแบทช์:
-              </span>
-              <span className="text-[11px] text-slate-500 font-medium">
-                (แสดงความครบถ้วนของ 11 ฟิลด์หลักหลัง SLM สกัดข้อมูล)
-              </span>
-            </div>
-            {/* Color Legend */}
-            <div className="flex flex-wrap items-center gap-3 text-[11px] font-bold">
-              <span className="inline-flex items-center gap-1.5 text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-md">
-                <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse shrink-0" />
-                แดง: ฟิลด์ไม่ครบ (&lt; 65%)
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
-                <span className="h-2 w-2 rounded-full bg-amber-500 shrink-0" />
-                เหลือง: ปานกลาง (65–84%)
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0" />
-                เขียว: สมบูรณ์ (≥ 85%)
-              </span>
-            </div>
+      <div className="grid gap-3 xl:grid-cols-[260px_minmax(0,1fr)_460px]">
+        <aside className="rounded-2xl border border-slate-200 bg-white p-3 shadow-panel">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <h2 className="text-sm font-bold text-slate-950">เอกสารในชุด ({totalDocs})</h2>
+            <label className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-bold text-blue-700 hover:bg-blue-100">
+              <Plus className="h-3.5 w-3.5" /> เพิ่ม
+              <input
+                type="file"
+                multiple
+                accept="image/*,.pdf,.jpg,.jpeg,.png,.tif,.tiff"
+                className="sr-only"
+                onChange={(event) => {
+                  const files = Array.from(event.target.files || []);
+                  if (files.length > 0) onAddFiles(files);
+                  event.target.value = "";
+                }}
+              />
+            </label>
           </div>
 
-          <div className="mt-2 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
-            {batchDocuments.map((doc, idx) => {
-              const isActive = idx === activeDocIndex;
-              const completeness = calculateDocumentCompleteness(doc);
-
-              // Determine color styles based on completeness after SLM
-              let pillClasses = "";
-              let badgeClasses = "";
-              let dotEl: JSX.Element | null = null;
-
-              if (completeness.level === "critical") {
-                // RED: < 65% completed fields
-                if (isActive) {
-                  pillClasses = "bg-rose-700 text-white border-rose-800 shadow-sm ring-2 ring-rose-300 font-bold";
-                  badgeClasses = "bg-rose-900/80 text-white font-mono font-black";
-                } else {
-                  pillClasses = "bg-rose-50 text-rose-900 border-rose-300 hover:bg-rose-100 hover:border-rose-400 font-bold shadow-xs";
-                  badgeClasses = "bg-rose-200 text-rose-950 font-mono font-black";
-                }
-                dotEl = <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse shrink-0" title="ฟิลด์ครบไม่ถึง 65% (ต้องตรวจสอบด่วน)" />;
-              } else if (completeness.level === "warning") {
-                // YELLOW/AMBER: 65% - 84% completed fields
-                if (isActive) {
-                  pillClasses = "bg-amber-600 text-white border-amber-700 shadow-sm ring-2 ring-amber-300 font-bold";
-                  badgeClasses = "bg-amber-900/80 text-white font-mono font-black";
-                } else {
-                  pillClasses = "bg-amber-50 text-amber-950 border-amber-300 hover:bg-amber-100 hover:border-amber-400 font-bold shadow-xs";
-                  badgeClasses = "bg-amber-200 text-amber-950 font-mono font-black";
-                }
-                dotEl = <span className="h-2 w-2 rounded-full bg-amber-500 shrink-0" title="ฟิลด์ครบระดับปานกลาง (65% - 84%)" />;
-              } else if (completeness.level === "good") {
-                // GREEN: >= 85% completed fields
-                if (isActive) {
-                  pillClasses = "bg-slate-900 text-white shadow-xs font-semibold";
-                  badgeClasses = "bg-white/20 text-white font-mono";
-                } else {
-                  pillClasses = "bg-white text-slate-700 border-slate-200 hover:bg-emerald-50/40 hover:border-emerald-200";
-                  badgeClasses = "bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono font-bold";
-                }
-                dotEl = <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" title="ฟิลด์ครบถ้วนสมบูรณ์ (≥ 85%)" />;
-              } else {
-                // PENDING: Still processing or queued
-                if (isActive) {
-                  pillClasses = "bg-slate-900 text-white shadow-xs font-medium";
-                  badgeClasses = "bg-white/20 text-white font-mono";
-                } else {
-                  pillClasses = "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50";
-                  badgeClasses = "bg-slate-100 text-slate-500 font-mono";
-                }
-              }
-
-              return (
-                <button
-                  key={doc.id}
-                  type="button"
-                  onClick={() => onSelectDocIndex(idx)}
-                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs transition-all ${pillClasses}`}
-                  title={`${doc.fileName} — ${completeness.label}`}
-                >
-                  {dotEl}
-                  <span className="truncate max-w-[135px]">{doc.fileName}</span>
-                  <span className={`rounded px-1.5 py-0.5 text-[10px] ${badgeClasses}`}>
-                    #{idx + 1}{completeness.level !== "pending" ? ` · ${completeness.pct}%` : ""}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* 3. WORKFLOW STEP TRACKER (แสดงขั้นตอนปัจจุบันแบบ Real-Time)               */}
-      {/* ========================================================================= */}
-      <DynamicStepTracker activeDoc={activeDoc} />
-
-      {/* ========================================================================= */}
-      {/* 4. ROW 1: OCR RESULT STUDIO (PaddleOCR GPU) - Full-Width Line             */}
-      {/* ========================================================================= */}
-      <section className="flex min-w-0 flex-col rounded-xl border border-slate-200 bg-white p-3.5 sm:p-4 shadow-panel">
-        {/* Section Header */}
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-2.5">
-          <div className="flex flex-wrap items-center gap-2.5">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-600 border border-blue-100 shadow-xs">
-              <Scan className="h-4 w-4" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-sm sm:text-base font-semibold text-slate-900">OCR Result (PaddleOCR GPU)</h2>
-                <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700 border border-emerald-200">
-                  {ocrLines.length} ข้อความสกัด
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500">
-                สกัดข้อความพร้อมตำแหน่ง Bounding Box ด้วยโมเดล PaddleOCR บนฮาร์ดแวร์ GPU แบบเรียลไทม์
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Re-run SLM Button when OCR has been edited or items deleted */}
-            {hasEditedLines && onReRunSlmWithOcr && (
+          <div className="space-y-2">
+            {batchDocuments.map((doc, idx) => (
               <button
+                key={doc.id}
                 type="button"
-                onClick={() => onReRunSlmWithOcr()}
-                disabled={activeDoc.status === "slm_processing"}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-300 bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-800 shadow-xs hover:bg-indigo-100 transition disabled:opacity-50"
-                title="ส่งข้อความ OCR ที่แก้ไขแล้วให้โมเดล Qwen SLM สกัดโครงสร้าง JSON อีกครั้ง"
+                onClick={() => onSelectDocIndex(idx)}
+                className={`flex w-full gap-2 rounded-xl border p-2 text-left transition ${idx === activeDocIndex ? "border-blue-300 bg-blue-50 shadow-xs" : "border-slate-200 bg-white hover:bg-slate-50"}`}
               >
-                <BrainCircuit className={`h-3.5 w-3.5 text-indigo-600 ${activeDoc.status === "slm_processing" ? "animate-spin" : ""}`} />
-                <span>{activeDoc.status === "slm_processing" ? "กำลังวิเคราะห์ SLM..." : "วิเคราะห์ SLM ใหม่อีกครั้ง"}</span>
-              </button>
-            )}
-
-            {/* CUDA GPU Status Badge */}
-            <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50/70 px-2.5 py-1 text-[11px] font-medium text-emerald-800">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              <span>CUDA GPU (Port 8000)</span>
-            </span>
-
-            {/* Sub-view Switcher Tabs */}
-            <div className="flex items-center rounded-lg bg-slate-100 p-0.5 text-xs font-medium border border-slate-200">
-              <button
-                type="button"
-                onClick={() => setOcrSubView("table")}
-                className={`flex items-center gap-1 rounded-md px-2.5 py-1 transition ${
-                  ocrSubView === "table"
-                    ? "bg-white text-slate-900 shadow-xs font-semibold"
-                    : "text-slate-500 hover:text-slate-900"
-                }`}
-              >
-                <Table className="h-3 w-3" />
-                <span>Table</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setOcrSubView("raw")}
-                className={`flex items-center gap-1 rounded-md px-2.5 py-1 transition ${
-                  ocrSubView === "raw"
-                    ? "bg-white text-slate-900 shadow-xs font-semibold"
-                    : "text-slate-500 hover:text-slate-900"
-                }`}
-              >
-                <AlignLeft className="h-3 w-3" />
-                <span>Raw Text</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setOcrSubView("json")}
-                className={`flex items-center gap-1 rounded-md px-2.5 py-1 transition ${
-                  ocrSubView === "json"
-                    ? "bg-white text-slate-900 shadow-xs font-semibold"
-                    : "text-slate-500 hover:text-slate-900"
-                }`}
-              >
-                <Code2 className="h-3 w-3" />
-                <span>JSON</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Section Body: Large Document Preview (Left) + Live OCR Data (Right) */}
-        <div className="grid min-w-0 gap-4 lg:grid-cols-12 items-start">
-          {/* Left: Extra Large Document Image Viewer (7 cols) */}
-          <div className="lg:col-span-6 xl:col-span-7 flex flex-col rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 shadow-inner">
-            <DocumentPreview
-              previewUrl={activeDoc.previewUrl}
-              previewName={fileName}
-              progress={activeDoc.status === "ocr_processing" ? 50 : 100}
-              isProcessing={activeDoc.status === "ocr_processing" || activeDoc.status === "slm_processing" || isProcessing}
-              ocrLines={ocrLines}
-              selectedOcrIndex={selectedOcrIndex}
-              onSelectOcrIndex={(idx) => {
-                setSelectedOcrIndex(idx);
-                if (idx !== null) {
-                  setTimeout(() => {
-                    const el = document.getElementById(`ocr-row-${idx}`);
-                    if (el) {
-                      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                    }
-                  }, 60);
-                }
-              }}
-              showAllBoxes={showAllBoxes}
-              onToggleShowAllBoxes={() => setShowAllBoxes((prev) => !prev)}
-              onToast={onShowToast}
-            />
-          </div>
-
-          {/* Right: Live PaddleOCR Extracted Lines / Text / JSON (5 cols) */}
-          <div className="lg:col-span-6 xl:col-span-5 flex flex-col min-w-0">
-            {activeDoc.status === "ocr_processing" || (ocrLines.length === 0 && isProcessing) ? (
-              <OcrProcessingAnimation fileName={fileName} isProcessing={true} />
-            ) : (
-              <div className="flex flex-col h-full min-w-0">
-                {/* Search & Confidence Filter in Table Mode */}
-                {ocrSubView === "table" && (
-                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2 rounded-lg bg-slate-50 p-2 border border-slate-200 text-xs">
-                    <div className="relative flex-1 min-w-[140px]">
-                      <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-slate-400" />
-                      <input
-                        type="text"
-                        placeholder="ค้นหาข้อความ OCR..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="h-7 w-full rounded-md border border-slate-200 bg-white pl-7 pr-2 text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-primary"
-                      />
-                    </div>
-
-                    <div className="flex items-center gap-1.5">
-                      <select
-                        value={confidenceFilter}
-                        onChange={(e) => setConfidenceFilter(e.target.value as "all" | "high" | "review")}
-                        className="h-7 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-medium text-slate-700 focus:outline-none"
-                      >
-                        <option value="all">ความมั่นใจทั้งหมด ({ocrLines.length})</option>
-                        <option value="high">มั่นใจสูง (≥90%)</option>
-                        <option value="review">รอตรวจ (&lt;85%)</option>
-                      </select>
-
-                      <button
-                        type="button"
-                        onClick={handleAddNewLine}
-                        className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-2.5 py-1 text-[11px] font-semibold text-white shadow-xs hover:bg-blue-700 transition"
-                        title="เพิ่มข้อความ OCR ด้วยตนเอง (Manual Add)"
-                      >
-                        <Plus className="h-3 w-3" />
-                        <span>เพิ่มข้อความ</span>
-                      </button>
-                    </div>
+                <div className="grid h-14 w-12 shrink-0 place-items-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+                  {doc.previewUrl ? <img src={doc.previewUrl} alt="" className="h-full w-full object-cover" /> : <FileText className="h-5 w-5 text-slate-400" />}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-1">
+                    <p className="truncate text-xs font-bold text-slate-900">{doc.fileName}</p>
+                    <MoreVertical className="h-3.5 w-3.5 shrink-0 text-slate-400" />
                   </div>
-                )}
+                  <p className="mt-0.5 text-[11px] font-mono text-slate-500">{fileExt(doc.fileName)} · {doc.fileSize}</p>
+                  <StatusPill doc={doc} />
+                </div>
+              </button>
+            ))}
+          </div>
 
-                {/* Sub-view Content */}
-                {ocrSubView === "table" && (
-                  <div className="flex-1 min-h-[360px] lg:min-h-[400px] xl:min-h-[440px] max-h-[540px] overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-xs">
-                    {/* Interactive Hint Bar */}
-                    <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-1.5 bg-blue-50/95 px-2.5 py-1.5 border-b border-blue-200 text-[11px] text-blue-900 shadow-2xs backdrop-blur-xs">
-                      <div className="flex items-center gap-1.5 font-medium">
-                        <Info className="h-3.5 w-3.5 text-blue-600 shrink-0" />
-                        <span>คลิกส่องกรอบ · ดับเบิ้ลคลิกหรือกดไอคอนดินสอเพื่อแก้ไข</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {lastDeletedItem && (
-                          <button
-                            type="button"
-                            onClick={handleUndoDelete}
-                            className="inline-flex items-center gap-1 font-semibold text-amber-800 hover:text-amber-950 underline text-[11px] cursor-pointer"
-                            title="กู้คืนข้อความที่เพิ่งลบไป"
-                          >
-                            <RotateCcw className="h-3 w-3" />
-                            <span>กู้คืนที่เพิ่งลบ</span>
-                          </button>
-                        )}
-                        {!hasAnyValidBox && ocrLines.length > 0 && (
-                          <button
-                            type="button"
-                            onClick={onReRunOcr}
-                            className="flex items-center gap-1 rounded bg-amber-600 hover:bg-amber-700 text-white font-medium px-2 py-0.5 text-[11px] shadow-xs transition"
-                            title="สแกนเอกสารนี้ใหม่เพื่อดึงพิกัด Bounding Box ลงบนภาพ"
-                          >
-                            <RefreshCw className="h-2.5 w-2.5 animate-spin" />
-                            <span>สแกนพิกัดใหม่ (Re-OCR)</span>
-                          </button>
-                        )}
-                        {selectedOcrIndex !== null && (
-                          <button
-                            type="button"
-                            onClick={() => setSelectedOcrIndex(null)}
-                            className="font-medium text-blue-700 hover:text-blue-950 underline text-[11px] cursor-pointer"
-                          >
-                            ล้างการส่อง (#{selectedOcrIndex + 1})
-                          </button>
-                        )}
-                      </div>
-                    </div>
+          <div className="mt-3 grid grid-cols-3 gap-1.5 border-t border-slate-100 pt-3">
+            {onExportAllExcel && <button type="button" onClick={onExportAllExcel} className="mini-action"><FileSpreadsheet className="h-3.5 w-3.5" />Excel</button>}
+            {onExportAllCsv && <button type="button" onClick={onExportAllCsv} className="mini-action"><FileText className="h-3.5 w-3.5" />CSV</button>}
+            <button type="button" onClick={onExportAllJson} className="mini-action"><Code2 className="h-3.5 w-3.5" />JSON</button>
+          </div>
+        </aside>
 
-                    <table className="w-full text-left text-xs font-sans">
-                      <thead className="sticky top-[29px] z-10 bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 shadow-xs">
-                        <tr>
-                          <th className="py-2 px-2.5 w-10 text-slate-400">#</th>
-                          <th className="py-2 px-2.5">Text (ข้อความที่สกัดได้)</th>
-                          <th className="py-2 px-2.5 text-center w-24">Confidence</th>
-                          <th className="py-2 px-2.5 text-right w-20">Location</th>
-                          <th className="py-2 px-2 text-center w-20">การจัดการ</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {filteredOcrLines.length === 0 ? (
-                          <tr>
-                            <td colSpan={5} className="p-6 text-center text-slate-400 font-medium">
-                              ไม่พบข้อความ OCR ที่ตรงกับเงื่อนไขการค้นหา
+        <main className="min-w-0 rounded-2xl border border-slate-200 bg-white p-3 shadow-panel">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 className="text-sm font-bold text-slate-950">เอกสารต้นฉบับ</h2>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
+              <span className="h-2 w-2 rounded-full bg-blue-600" /> แสดงกล่อง OCR
+            </span>
+          </div>
+
+          <div className="grid gap-3 xl:grid-cols-[minmax(280px,1fr)_minmax(320px,0.9fr)]">
+            <div className="min-w-0">
+              <DocumentPreview
+                previewUrl={activeDoc.previewUrl}
+                previewName={activeDoc.fileName}
+                progress={activeDoc.status === "ocr_processing" ? 50 : 100}
+                isProcessing={activeDoc.status === "ocr_processing" || activeDoc.status === "slm_processing" || isProcessing}
+                ocrLines={ocrLines}
+                selectedOcrIndex={selectedOcrIndex}
+                onSelectOcrIndex={(idx) => setSelectedOcrIndex(idx)}
+                showAllBoxes={showAllBoxes}
+                onToggleShowAllBoxes={() => setShowAllBoxes((current) => !current)}
+                onToast={onShowToast}
+              />
+            </div>
+
+            <section className="min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white xl:max-h-[calc(100vh-13rem)]">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 p-2">
+                <div className="inline-flex items-center gap-1.5 rounded-lg bg-white px-2 py-1.5 text-xs font-bold text-blue-700">
+                  <Table className="h-3.5 w-3.5" /> OCR ข้อความ ({ocrLines.length})
+                </div>
+                {lastDeletedItem && <button type="button" onClick={handleUndoDelete} className="text-xs font-bold text-amber-700 hover:underline">กู้คืนที่เพิ่งลบ</button>}
+              </div>
+
+              <div className="p-2">
+                <div className="mb-2 flex flex-wrap items-center gap-2">
+                  <div className="relative min-w-[220px] flex-1">
+                    <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+                    <input value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="ค้นหาข้อความ OCR..." className="h-9 w-full rounded-lg border border-slate-200 bg-white pl-8 pr-3 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none" />
+                  </div>
+                  <select value={confidenceFilter} onChange={(event) => setConfidenceFilter(event.target.value as "all" | "high" | "review")} className="h-9 rounded-lg border border-slate-200 bg-white px-2 text-xs font-bold text-slate-700 focus:outline-none">
+                    <option value="all">ทั้งหมด</option>
+                    <option value="high">มั่นใจสูง</option>
+                    <option value="review">รอตรวจ</option>
+                  </select>
+                  <button type="button" onClick={handleAddNewLine} className="btn-secondary h-9"><Plus className="h-3.5 w-3.5" /> เพิ่มข้อความ</button>
+                </div>
+
+                <div ref={ocrTableScrollRef} className="max-h-[420px] overflow-auto rounded-lg border border-slate-200 xl:max-h-[calc(100vh-24rem)]">
+                  <table className="w-full text-left text-xs">
+                    <thead className="sticky top-0 z-10 bg-slate-50 text-slate-600">
+                      <tr>
+                        <th className="w-12 px-3 py-2 font-bold">#</th>
+                        <th className="px-3 py-2 font-bold">ข้อความ</th>
+                        <th className="w-24 px-3 py-2 text-center font-bold">Conf.</th>
+                        <th className="w-20 px-3 py-2 text-center font-bold">จัดการ</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {filteredOcrLines.map((line: any) => {
+                        const lineIdx = line.originalIndex;
+                        const conf = normalizedConfidence(line.confidence);
+                        const isEditing = editingIndex === lineIdx;
+                        const isSelected = selectedOcrIndex === lineIdx;
+                        return (
+                          <tr
+                            key={lineIdx}
+                            ref={(node) => { ocrRowRefs.current[lineIdx] = node; }}
+                            onClick={() => !isEditing && setSelectedOcrIndex(isSelected ? null : lineIdx)}
+                            className={`${isSelected ? "bg-blue-50 ring-1 ring-inset ring-blue-300" : conf < 0.85 ? "bg-rose-50/60" : "hover:bg-slate-50"} cursor-pointer`}
+                          >
+                            <td className="px-3 py-2 font-mono text-slate-500">{lineIdx + 1}</td>
+                            <td className="px-3 py-2">
+                              {isEditing ? (
+                                <div className="flex gap-1.5">
+                                  <input autoFocus value={editingText} onChange={(event) => setEditingText(event.target.value)} onKeyDown={(event) => {
+                                    if (event.key === "Enter") handleSaveEdit(lineIdx);
+                                    if (event.key === "Escape") setEditingIndex(null);
+                                  }} className="min-w-0 flex-1 rounded-md border border-blue-300 px-2 py-1 text-xs focus:outline-none" />
+                                  <button type="button" onClick={() => handleSaveEdit(lineIdx)} className="rounded-md bg-blue-600 px-2 text-white"><Check className="h-3.5 w-3.5" /></button>
+                                  <button type="button" onClick={() => setEditingIndex(null)} className="rounded-md border border-slate-200 px-2 text-slate-600"><X className="h-3.5 w-3.5" /></button>
+                                </div>
+                              ) : (
+                                <span className="font-medium text-slate-900">{line.text}</span>
+                              )}
+                            </td>
+                            <td className="px-3 py-2 text-center"><ConfidencePill confidence={conf} /></td>
+                            <td className="px-3 py-2" onClick={(event) => event.stopPropagation()}>
+                              {deletingIndex === lineIdx ? (
+                                <div className="flex justify-center gap-1">
+                                  <button type="button" onClick={(event) => handleConfirmDelete(lineIdx, event)} className="rounded bg-rose-600 px-1.5 py-1 text-[10px] font-bold text-white">ลบ</button>
+                                  <button type="button" onClick={() => setDeletingIndex(null)} className="rounded border px-1.5 py-1 text-[10px]">ยกเลิก</button>
+                                </div>
+                              ) : (
+                                <div className="flex justify-center gap-1">
+                                  <button type="button" onClick={() => handleStartEdit(lineIdx, line.text)} className="rounded p-1 text-slate-500 hover:bg-blue-50 hover:text-blue-700"><Pencil className="h-3.5 w-3.5" /></button>
+                                  <button type="button" onClick={() => setDeletingIndex(lineIdx)} className="rounded p-1 text-slate-500 hover:bg-rose-50 hover:text-rose-700"><Trash2 className="h-3.5 w-3.5" /></button>
+                                </div>
+                              )}
                             </td>
                           </tr>
-                        ) : (
-                          filteredOcrLines.map((line: any) => {
-                            const lineIdx = line.originalIndex;
-                            const isSelected = selectedOcrIndex === lineIdx;
-                            const isEditing = editingIndex === lineIdx;
-                            const isDeleting = deletingIndex === lineIdx;
-                            const rawConf = line.confidence ?? 0.95;
-                            const conf = rawConf > 1.0 ? rawConf / 100.0 : rawConf;
-                            const pct = Math.round(conf * 100);
-                            const isLowConfidence = conf < 0.85;
-                            const region = getHumanRegion(line.position?.region);
-
-                            return (
-                              <tr
-                                key={lineIdx}
-                                id={`ocr-row-${lineIdx}`}
-                                onClick={() => {
-                                  if (!isEditing) {
-                                    setSelectedOcrIndex(isSelected ? null : lineIdx);
-                                  }
-                                }}
-                                className={`cursor-pointer transition-all duration-150 select-none ${
-                                  isSelected
-                                    ? "bg-blue-50/90 ring-1 ring-blue-500/40 text-blue-950 shadow-xs"
-                                    : isLowConfidence && !line.isEdited
-                                    ? "bg-rose-50/60 hover:bg-rose-100/60"
-                                    : "hover:bg-slate-50"
-                                }`}
-                                title={isEditing ? undefined : "คลิกเพื่อส่องตำแหน่งบนภาพ (ดับเบิ้ลคลิกเพื่อแก้ไข)"}
-                              >
-                                <td className="py-1.5 px-2.5 font-mono text-slate-400 text-[11px]">
-                                  <div className="flex items-center gap-1">
-                                    {isSelected ? (
-                                      <span className="flex h-4 items-center gap-1 rounded bg-blue-600 px-1 font-mono text-[10px] font-medium text-white shadow-xs">
-                                        <Crosshair className="h-2.5 w-2.5 shrink-0" />
-                                        <span>#{lineIdx + 1}</span>
-                                      </span>
-                                    ) : (
-                                      <span>#{lineIdx + 1}</span>
-                                    )}
-                                  </div>
-                                </td>
-
-                                {isEditing ? (
-                                  <td className="py-1.5 px-2.5" onClick={(e) => e.stopPropagation()}>
-                                    <div className="flex items-center gap-1.5">
-                                      <input
-                                        type="text"
-                                        value={editingText}
-                                        onChange={(e) => setEditingText(e.target.value)}
-                                        onKeyDown={(e) => {
-                                          if (e.key === "Enter") handleSaveEdit(lineIdx);
-                                          if (e.key === "Escape") handleCancelEdit();
-                                        }}
-                                        autoFocus
-                                        className="flex-1 rounded border border-blue-400 bg-white px-2 py-1 text-xs font-medium text-slate-900 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        placeholder="พิมพ์ข้อความที่ถูกต้อง..."
-                                      />
-                                      <button
-                                        type="button"
-                                        onClick={() => handleSaveEdit(lineIdx)}
-                                        className="inline-flex items-center gap-1 rounded bg-blue-600 px-2 py-1 text-[11px] font-medium text-white shadow-xs hover:bg-blue-700 transition shrink-0"
-                                        title="บันทึกข้อความ (Enter)"
-                                      >
-                                        <Check className="h-3 w-3" />
-                                        <span>บันทึก</span>
-                                      </button>
-                                      <button
-                                        type="button"
-                                        onClick={handleCancelEdit}
-                                        className="inline-flex items-center gap-1 rounded border border-slate-200 bg-white px-2 py-1 text-[11px] font-medium text-slate-600 hover:bg-slate-50 transition shrink-0"
-                                        title="ยกเลิก (Esc)"
-                                      >
-                                        <X className="h-3 w-3" />
-                                        <span>ยกเลิก</span>
-                                      </button>
-                                    </div>
-                                  </td>
-                                ) : (
-                                  <td
-                                    className={`py-1.5 px-2.5 break-words ${
-                                      isSelected
-                                        ? "text-blue-950 font-medium"
-                                        : isLowConfidence && !line.isEdited
-                                        ? "text-rose-950 font-medium"
-                                        : "text-slate-800"
-                                    }`}
-                                    onDoubleClick={(e) => {
-                                      e.stopPropagation();
-                                      handleStartEdit(lineIdx, line.text);
-                                    }}
-                                  >
-                                    <div className="flex items-center gap-1.5 flex-wrap">
-                                      {isLowConfidence && !isSelected && !line.isEdited && (
-                                        <span
-                                          className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-rose-500"
-                                          title="ความมั่นใจต่ำกว่าเกณฑ์"
-                                        />
-                                      )}
-                                      <span>{line.text}</span>
-                                      {line.isEdited && (
-                                        <span className="inline-flex items-center gap-0.5 rounded bg-amber-50 border border-amber-200 px-1.5 py-0.2 text-[9.5px] font-semibold text-amber-700">
-                                          แก้ไขแล้ว
-                                        </span>
-                                      )}
-                                      {isSelected && (
-                                        <span className="ml-1 inline-flex items-center gap-0.5 rounded border border-blue-200 bg-white px-1.5 py-0.2 text-[10px] font-medium text-blue-700">
-                                          <Eye className="h-2.5 w-2.5" />
-                                          ส่องบนภาพ
-                                        </span>
-                                      )}
-                                    </div>
-                                  </td>
-                                )}
-
-                                <td className="py-1.5 px-2.5 text-center">
-                                  {line.isEdited ? (
-                                    <span className="inline-flex items-center gap-1 rounded bg-amber-50 border border-amber-200 px-1.5 py-0.5 font-mono text-[11px] font-medium text-amber-700">
-                                      1.00 (100%)
-                                    </span>
-                                  ) : isLowConfidence ? (
-                                    <span className="inline-flex items-center gap-1 rounded bg-rose-50 border border-rose-200 px-1.5 py-0.5 font-mono text-[11px] font-medium text-rose-800">
-                                      <span className="h-1.5 w-1.5 rounded-full bg-rose-500 shrink-0" />
-                                      {conf.toFixed(2)} ({pct}%)
-                                    </span>
-                                  ) : (
-                                    <span className="inline-flex items-center gap-1 rounded bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 font-mono text-[11px] font-medium text-emerald-700">
-                                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
-                                      {conf.toFixed(2)} ({pct}%)
-                                    </span>
-                                  )}
-                                </td>
-
-                                <td className="py-1.5 px-2.5 text-right">
-                                  <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${region.color}`}>
-                                    {region.label}
-                                  </span>
-                                </td>
-
-                                <td className="py-1.5 px-2 text-center" onClick={(e) => e.stopPropagation()}>
-                                  {isDeleting ? (
-                                    <div className="flex items-center justify-center gap-1">
-                                      <span className="text-[10px] font-semibold text-rose-600">ลบ?</span>
-                                      <button
-                                        type="button"
-                                        onClick={(e) => handleConfirmDelete(lineIdx, e)}
-                                        className="rounded bg-rose-600 px-1.5 py-0.5 text-[10px] font-bold text-white hover:bg-rose-700 transition"
-                                        title="ยืนยันการลบข้อความนี้"
-                                      >
-                                        ลบ
-                                      </button>
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setDeletingIndex(null);
-                                        }}
-                                        className="rounded border border-slate-200 bg-white px-1.5 py-0.5 text-[10px] font-medium text-slate-600 hover:bg-slate-50 transition"
-                                        title="ยกเลิกการลบ"
-                                      >
-                                        ยกเลิก
-                                      </button>
-                                    </div>
-                                  ) : (
-                                    <div className="flex items-center justify-center gap-0.5">
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleStartEdit(lineIdx, line.text);
-                                        }}
-                                        className="rounded p-1 text-slate-400 hover:bg-blue-50 hover:text-blue-600 transition"
-                                        title="แก้ไขข้อความ (Manual Edit)"
-                                      >
-                                        <Pencil className="h-3.5 w-3.5" />
-                                      </button>
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setDeletingIndex(lineIdx);
-                                          setEditingIndex(null);
-                                        }}
-                                        className="rounded p-1 text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition"
-                                        title="ลบข้อความนี้"
-                                      >
-                                        <Trash2 className="h-3.5 w-3.5" />
-                                      </button>
-                                    </div>
-                                  )}
-                                </td>
-                              </tr>
-                            );
-                          })
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-
-                {ocrSubView === "raw" && (
-                  <div className="flex flex-col flex-1 min-h-[360px] lg:min-h-[400px] xl:min-h-[440px] max-h-[540px] rounded-lg border border-slate-200 bg-white overflow-hidden shadow-inner">
-                    <div className="flex items-center justify-between bg-slate-50 px-3 py-1.5 border-b border-slate-200 text-xs font-semibold text-slate-700">
-                      <span className="flex items-center gap-1.5">
-                        <AlignLeft className="h-3.5 w-3.5 text-slate-500" />
-                        <span>Raw OCR Text (ข้อความดิบ)</span>
-                      </span>
-                      {isEditingRaw ? (
-                        <div className="flex items-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={handleSaveRawText}
-                            className="inline-flex items-center gap-1 rounded bg-blue-600 px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-blue-700 transition shadow-xs cursor-pointer"
-                          >
-                            <Check className="h-3 w-3" />
-                            <span>บันทึก & SLM วิเคราะห์ใหม่</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setIsEditingRaw(false)}
-                            className="inline-flex items-center gap-1 rounded border border-slate-300 bg-white px-2 py-1 text-[11px] font-medium text-slate-600 hover:bg-slate-50 transition cursor-pointer"
-                          >
-                            <X className="h-3 w-3" />
-                            <span>ยกเลิก</span>
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setRawTextDraft(
-                              activeDoc.spatialText ||
-                                activeDoc.ocrText ||
-                                ocrLines.map((l: any) => l.text).join("\n"),
-                            );
-                            setIsEditingRaw(true);
-                          }}
-                          className="inline-flex items-center gap-1 rounded border border-slate-300 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-50 transition shadow-xs cursor-pointer"
-                        >
-                          <Pencil className="h-3 w-3 text-slate-500" />
-                          <span>แก้ไขข้อความดิบ</span>
-                        </button>
-                      )}
-                    </div>
-                    {isEditingRaw ? (
-                      <textarea
-                        value={rawTextDraft}
-                        onChange={(e) => setRawTextDraft(e.target.value)}
-                        className="flex-1 w-full p-3 font-mono text-xs text-slate-800 focus:outline-none resize-none leading-relaxed bg-slate-50 min-h-[300px]"
-                        placeholder="พิมพ์หรือแก้ไขข้อความ OCR ที่นี่..."
-                      />
-                    ) : (
-                      <div className="flex-1 p-3 font-mono text-xs text-slate-800 whitespace-pre-wrap overflow-y-auto leading-relaxed bg-slate-50">
-                        {activeDoc.spatialText || activeDoc.ocrText || "กำลังประมวลผลข้อความ OCR..."}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {ocrSubView === "json" && (
-                  <div className="flex-1 min-h-[360px] lg:min-h-[400px] xl:min-h-[440px] max-h-[540px] overflow-y-auto rounded-lg bg-[#0F172A] p-3 font-mono text-xs text-emerald-400 whitespace-pre border border-slate-800 shadow-inner scrollbar-thin">
-                    {ocrJsonString}
-                  </div>
-                )}
-
-                {/* OCR Bottom Status Line */}
-                <div className="mt-2.5 flex items-center justify-between border-t border-slate-100 pt-2 text-[10.5px] font-semibold text-slate-500">
-                  <div className="flex items-center gap-2">
-                    <span>PaddleOCR Lines: <b className="text-slate-800">{ocrLines.length}</b></span>
-                    <span className="text-slate-300">|</span>
-                    <span>แสดง: <b className="text-slate-800">{filteredOcrLines.length}</b></span>
-                  </div>
-                  <span className="inline-flex items-center gap-1 font-bold text-emerald-700">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    CUDA GPU Powered
-                  </span>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            )}
+            </section>
           </div>
-        </div>
-      </section>
+        </main>
 
-      {/* ========================================================================= */}
-      {/* 5. ROW 2: SLM JSON RESULT STUDIO - Full-Width Next Line                   */}
-      {/* ========================================================================= */}
-      <section className="flex min-w-0 flex-col rounded-xl border border-slate-200 bg-white p-3.5 sm:p-4 shadow-panel">
-        {/* Section Header */}
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-2.5">
-          <div className="flex flex-wrap items-center gap-2.5">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-xs">
-              <BrainCircuit className="h-4 w-4" />
-            </div>
+        <aside className="rounded-2xl border border-slate-200 bg-white p-3 shadow-panel">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-sm sm:text-base font-semibold text-slate-900">SLM JSON Result</h2>
-                <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-700 border border-indigo-200">
-                  Qwen2.5-1.5B (Local GPU)
-                </span>
-                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700 border border-blue-200 hidden sm:inline">
-                  11 Core Logistics Fields Schema
-                </span>
+                <h2 className="text-base font-bold text-slate-950">ผลการวิเคราะห์ (SLM)</h2>
+                <span className={activeDoc.status === "completed" ? "pill-success" : activeDoc.status === "error" ? "pill-error" : "pill-info"}>{statusText(activeDoc.status)}</span>
               </div>
-              <p className="text-[11px] text-slate-500">
-                วิเคราะห์โครงสร้างภาษาและจัดข้อมูลลงฟิลด์มาตรฐานโลจิสติกส์ 11 ฟิลด์พร้อมโหมดแก้ไขและบันทึกเฉลย Ground Truth
-              </p>
+              <p className="mt-1 text-xs font-medium text-slate-600">Qwen2.5-1.5B (Local GPU)</p>
             </div>
+            <span className="rounded-lg bg-blue-50 px-2 py-1 text-xs font-bold text-blue-700">{filledCount}/11</span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-1.5">
-            <button
-              type="button"
-              onClick={() => setIsEditorExpanded((prev) => !prev)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 transition shadow-xs"
-              title={isEditorExpanded ? "ย่อกลับเป็น 2 คอลัมน์" : "ขยายตัวแก้ไข JSON ให้เต็มความกว้าง"}
-            >
-              {isEditorExpanded ? <Minimize2 className="h-3.5 w-3.5" /> : <Expand className="h-3.5 w-3.5" />}
-              <span>{isEditorExpanded ? "Split View" : "Expand JSON"}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={onCopyJson}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-xs transition hover:bg-slate-50"
-            >
-              <Copy className="h-3.5 w-3.5 text-slate-500" />
-              <span>คัดลอก</span>
-            </button>
-
-            {onDownloadExcel && (
-              <button
-                type="button"
-                onClick={onDownloadExcel}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-800 shadow-xs transition hover:bg-emerald-100"
-                title="ดาวน์โหลดเฉพาะเอกสารนี้เป็น Excel (.xlsx)"
-              >
-                <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-600" />
-                <span>Excel</span>
-              </button>
-            )}
-
-            {onDownloadCsv && (
-              <button
-                type="button"
-                onClick={onDownloadCsv}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-teal-300 bg-teal-50 px-2.5 py-1.5 text-xs font-bold text-teal-800 shadow-xs transition hover:bg-teal-100"
-                title="ดาวน์โหลดเฉพาะเอกสารนี้เป็น CSV"
-              >
-                <FileText className="h-3.5 w-3.5 text-teal-600" />
-                <span>CSV</span>
-              </button>
-            )}
-
-            <button
-              type="button"
-              onClick={onDownloadJson}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-xs transition hover:bg-slate-50"
-              title="ดาวน์โหลดเฉพาะเอกสารนี้เป็น JSON"
-            >
-              <Download className="h-3.5 w-3.5 text-slate-500" />
-              <span>JSON</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onSaveToFirebase(jsonOutput)}
-              disabled={isSavingToFirebase}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3.5 py-1.5 text-xs font-extrabold text-white shadow-xs shadow-blue-500/20 transition hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50"
-              title="บันทึกข้อมูลและ JSON Schema ชุดนี้ลง Cloud Firebase"
-            >
-              <Cloud className="h-3.5 w-3.5" />
-              <span>{isSavingToFirebase ? "กำลังบันทึก..." : "บันทึก Firebase"}</span>
-            </button>
+          <div className="mb-3 flex rounded-lg bg-slate-100 p-0.5 text-xs font-bold">
+            <TabButton active={slmSubView === "form"} onClick={() => setSlmSubView("form")} label="ฟอร์มข้อมูล" />
+            <TabButton active={slmSubView === "json"} onClick={() => setSlmSubView("json")} label="JSON Raw" />
           </div>
-        </div>
 
-        {/* Section Body: 11 Core Logistics Fields Overview (Left) + Interactive JSON Studio (Right) */}
-        <div className="flex-1 min-w-0 flex flex-col">
           {activeDoc.status === "ocr_processing" ? (
-            /* State 1: OCR running, SLM waiting */
-            <div className="flex min-h-[320px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-indigo-200/80 bg-gradient-to-b from-indigo-50/30 via-white to-slate-50/60 p-6 text-center">
-              <div className="relative mb-4 flex items-center justify-center">
-                <div className="absolute h-24 w-24 rounded-full bg-indigo-500/10 blur-xl animate-pulse" />
-                <div className="absolute h-20 w-20 rounded-full border-2 border-dashed border-indigo-200 animate-spin-reverse-custom pointer-events-none" />
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 shadow-sm border border-indigo-100">
-                  <Loader2 className="absolute h-8 w-8 animate-spin-fast text-indigo-500/70" />
-                  <BrainCircuit className="h-5 w-5 opacity-90 text-indigo-700 animate-pulse" />
-                </div>
-              </div>
-              <h4 className="text-sm font-bold text-slate-800">
-                กำลังรอรับข้อมูลจาก PaddleOCR GPU...
-              </h4>
-              <p className="mt-1 text-xs text-slate-500 max-w-md leading-relaxed">
-                ระบบกำลังสแกนข้อความ OCR ในเอกสารด้านบน เมื่อเสร็จสิ้น โมเดล Qwen SLM (GPU) จะเริ่มสกัด 11 ฟิลด์มาตรฐานโดยอัตโนมัติ
-              </p>
-              <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-[11px] font-bold text-indigo-700 border border-indigo-200/80 shadow-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-ping" />
-                <span>ขั้นตอนถัดไป: สกัด 11 ฟิลด์หลักด้วย Qwen SLM (GPU)</span>
-              </div>
-            </div>
+            <EmptyState icon={<Loader2 className="h-5 w-5 animate-spin" />} title="รอ OCR" detail="ระบบจะวิเคราะห์ SLM หลัง OCR เสร็จ" />
           ) : activeDoc.status === "slm_processing" || (!activeDoc.jsonOutput && isProcessing) ? (
-            /* State 2: SLM reasoning */
-            <SlmReasoningAnimation
-              title="กำลังวิเคราะห์และจัดโครงสร้าง JSON Schema ด้วย Qwen SLM (GPU)"
-              fileName={fileName}
-              isProcessing={true}
-            />
-          ) : activeDoc.jsonOutput ? (
-            /* State 3: SLM Completed -> 11 Core Summary Card + JSONOutputPanel */
-            <div className={`grid min-w-0 gap-4 ${isEditorExpanded ? "grid-cols-1" : "lg:grid-cols-12"} items-start`}>
-              {!isEditorExpanded && (
-                /* Left Column: 11 Core Logistics Fields Overview Dashboard */
-                <div className="lg:col-span-5 xl:col-span-4 flex flex-col rounded-xl border border-slate-200 bg-slate-50/50 p-3 shadow-xs space-y-2.5">
-                  {/* Dashboard Header */}
-                  <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
-                    <div className="flex items-center gap-1.5">
-                      <Layers className="h-3.5 w-3.5 text-indigo-600" />
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-900">
-                        11 Core Logistics Fields
-                      </h3>
-                    </div>
-                    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium border ${
-                      coreFieldsSummary.filledCount >= 10
-                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                        : "bg-blue-50 text-blue-700 border-blue-200"
-                    }`}>
-                      <Check className="h-2.5 w-2.5" />
-                      <span>{coreFieldsSummary.filledCount}/11 ({Math.round((coreFieldsSummary.filledCount / 11) * 100)}%)</span>
-                    </span>
-                  </div>
-
-                  {/* Financial Highlight Box */}
-                  <div className="rounded-lg border border-emerald-200 bg-emerald-50/80 p-2.5 flex items-center justify-between shadow-xs">
-                    <div>
-                      <p className="text-[11px] font-medium text-emerald-800">ยอดเงินรวม (Total Amount)</p>
-                      <p className="text-base font-semibold text-emerald-950 font-mono mt-0.5">
-                        {coreFieldsSummary.totalAmount > 0
-                          ? `${coreFieldsSummary.totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${coreFieldsSummary.currency}`
-                          : "0.00 THB"}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[11px] font-medium text-emerald-700">ราคา/หน่วย</p>
-                      <p className="text-xs font-semibold text-emerald-900 font-mono">
-                        {coreFieldsSummary.unitPrice > 0
-                          ? `${coreFieldsSummary.unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                          : "-"}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Core Fields Grid List */}
-                  <div className="space-y-1.5 text-xs">
-                    {/* 1. Doc Type & No */}
-                    <div className="rounded-md bg-white p-2 border border-slate-200 shadow-xs">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-medium text-slate-500">1. ประเภทเอกสาร</span>
-                        <span className="rounded bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 text-[10px] font-medium text-indigo-700 uppercase">
-                          {coreFieldsSummary.docType}
-                        </span>
-                      </div>
-                      <div className="mt-1 flex items-center justify-between border-t border-slate-100 pt-1">
-                        <span className="text-[11px] font-medium text-slate-500">2. เลขที่เอกสาร</span>
-                        <span className="font-mono font-semibold text-blue-700">
-                          {coreFieldsSummary.docNumber}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* 2. Date & Reference */}
-                    <div className="rounded-md bg-white p-2 border border-slate-200 shadow-xs">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-medium text-slate-500">3. วันที่เอกสาร</span>
-                        <span className="font-mono font-medium text-slate-800">
-                          {coreFieldsSummary.docDate}
-                        </span>
-                      </div>
-                      <div className="mt-1 flex items-center justify-between border-t border-slate-100 pt-1">
-                        <span className="text-[11px] font-medium text-slate-500">8. เลขอ้างอิง (Ref)</span>
-                        <span className="font-mono font-medium text-slate-800">
-                          {coreFieldsSummary.refNo}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* 3. Sender & Receiver */}
-                    <div className="rounded-md bg-white p-2 border border-slate-200 shadow-xs space-y-1">
-                      <div>
-                        <span className="text-[11px] font-medium text-slate-400 block">4. ผู้ส่ง / ผู้ขาย (Sender)</span>
-                        <span className="font-semibold text-slate-900 block truncate text-xs" title={coreFieldsSummary.sender}>
-                          {coreFieldsSummary.sender}
-                        </span>
-                      </div>
-                      <div className="border-t border-slate-100 pt-1">
-                        <span className="text-[11px] font-medium text-slate-400 block">5. ผู้รับ / ผู้ซื้อ (Receiver)</span>
-                        <span className="font-semibold text-slate-900 block truncate text-xs" title={coreFieldsSummary.receiver}>
-                          {coreFieldsSummary.receiver}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* 4. Origin & Destination */}
-                    <div className="rounded-md bg-white p-2 border border-slate-200 shadow-xs">
-                      <span className="text-[11px] font-medium text-slate-400 block mb-0.5">6-7. เส้นทางขนส่ง (Route)</span>
-                      <div className="flex items-center gap-1.5 text-xs font-medium text-slate-800">
-                        <span className="truncate max-w-[110px]" title={coreFieldsSummary.origin}>
-                          {coreFieldsSummary.origin}
-                        </span>
-                        <ArrowRight className="h-2.5 w-2.5 text-indigo-500 shrink-0" />
-                        <span className="truncate max-w-[110px]" title={coreFieldsSummary.destination}>
-                          {coreFieldsSummary.destination}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Extra Other Fields if any */}
-                    {coreFieldsSummary.otherKeys.length > 0 && (
-                      <div className="rounded-md bg-blue-50/60 p-2 border border-blue-100 text-[11px]">
-                        <span className="font-medium text-blue-900 block mb-1">
-                          ฟิลด์เพิ่มเติม (Other): {coreFieldsSummary.otherKeys.length} รายการ
-                        </span>
-                        <div className="flex flex-wrap gap-1">
-                          {coreFieldsSummary.otherKeys.map((key) => (
-                            <span key={key} className="rounded bg-white px-1.5 py-0.5 font-mono text-[10px] font-medium text-blue-800 border border-blue-200">
-                              {key}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+            <EmptyState icon={<BrainCircuit className="h-5 w-5 animate-pulse" />} title="กำลังวิเคราะห์ SLM" detail="กำลังจัดข้อมูลลง 11 ฟิลด์หลัก" />
+          ) : activeDoc.status === "error" ? (
+            <EmptyState icon={<X className="h-5 w-5" />} title="ประมวลผลไม่สำเร็จ" detail={activeDoc.error || activeDoc.statusLabel} />
+          ) : slmSubView === "form" ? (
+            <div className="space-y-3">
+              <div className="space-y-2">
+                {CORE_FIELDS.map((field, index) => (
+                  <label key={field.key} className="grid grid-cols-[150px_minmax(0,1fr)] items-center gap-2 text-xs">
+                    <span className="font-medium text-slate-600">{index + 1}. {field.label}</span>
+                    {field.input === "select" ? (
+                      <select value={String(jsonDraft[field.key] ?? "")} onChange={(event) => updateJsonField(field.key, event.target.value)} className="field-input">
+                        {(field.key === "currency" ? CURRENCIES : DOC_TYPES).map((value) => <option key={value} value={value}>{value || "-"}</option>)}
+                      </select>
+                    ) : (
+                      <input type={field.input} value={String(jsonDraft[field.key] ?? "")} onChange={(event) => updateJsonField(field.key, event.target.value)} className="field-input" />
                     )}
-                  </div>
-                </div>
-              )}
+                  </label>
+                ))}
+              </div>
 
-              {/* Right Column (or Full Width when expanded): JSON Schema Output Panel */}
-              <div className={isEditorExpanded ? "w-full" : "lg:col-span-7 xl:col-span-8"}>
-                <JSONOutputPanel
-                  json={activeDoc.jsonOutput}
-                  onCopy={onCopyJson}
-                  onDownload={onDownloadJson}
-                  onDownloadExcel={onDownloadExcel}
-                  onDownloadCsv={onDownloadCsv}
-                  onMoveOtherToCore={onMoveOtherToCore}
-                  onSaveJson={onUpdateLocalJson}
-                />
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-2">
+                <div className="mb-2 flex items-center justify-between">
+                  <h3 className="text-xs font-bold text-slate-900">ข้อมูลเพิ่มเติม (other)</h3>
+                  <span className="rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-blue-700">{otherEntries.length} รายการ</span>
+                </div>
+                <div className="space-y-1.5">
+                  {otherEntries.length === 0 ? <p className="text-xs text-slate-500">ไม่มีข้อมูลเพิ่มเติม</p> : otherEntries.map(([key, value]) => (
+                    <div key={key} className="grid grid-cols-[120px_minmax(0,1fr)] gap-2 rounded-lg bg-white px-2 py-1.5 text-xs">
+                      <span className="truncate font-mono text-slate-600">{key}</span>
+                      <span className="truncate font-medium text-slate-900">{String(value)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <button type="button" onClick={saveJsonDraft} disabled={!onUpdateLocalJson} className="btn-secondary justify-center"><Check className="h-4 w-4" /> บันทึกแก้ไข</button>
+                <button type="button" onClick={onCopyJson} className="btn-secondary justify-center"><Copy className="h-4 w-4" /> คัดลอก JSON</button>
+                <button type="button" onClick={() => onSaveToFirebase(jsonDraft)} disabled={isSavingToFirebase} className="btn-secondary col-span-2 justify-center text-blue-700"><Cloud className="h-4 w-4" /> {isSavingToFirebase ? "กำลังบันทึก..." : "บันทึก Firebase"}</button>
+                <div className="col-span-2 grid grid-cols-3 gap-2">
+                  {onDownloadExcel && <button type="button" onClick={onDownloadExcel} className="mini-action"><FileSpreadsheet className="h-3.5 w-3.5" />Excel</button>}
+                  {onDownloadCsv && <button type="button" onClick={onDownloadCsv} className="mini-action"><FileText className="h-3.5 w-3.5" />CSV</button>}
+                  <button type="button" onClick={onDownloadJson} className="mini-action"><Download className="h-3.5 w-3.5" />JSON</button>
+                </div>
               </div>
             </div>
           ) : (
-            /* State 4: Standby */
-            <div className="flex min-h-[260px] flex-col items-center justify-center rounded-xl border border-slate-200 bg-slate-50 p-6 text-center text-slate-400">
-              <FileCode className="h-10 w-10 mb-2 opacity-50 text-indigo-400" />
-              <p className="text-xs font-bold text-slate-700">พร้อมสำหรับการวิเคราะห์ JSON Schema</p>
-              <p className="text-[11px] text-slate-500 mt-0.5">อัปโหลดเอกสารหรือกดรันเพื่อเริ่มสกัด 11 ฟิลด์มาตรฐาน</p>
+            <div className="space-y-2">
+              <textarea value={jsonRawDraft} onChange={(event) => handleRawJsonChange(event.target.value)} className="h-[520px] w-full resize-none rounded-xl border border-slate-800 bg-slate-950 p-3 font-mono text-xs leading-5 text-emerald-300 focus:outline-none" spellCheck={false} />
+              {jsonError && <p className="rounded-lg border border-rose-200 bg-rose-50 px-2 py-1.5 text-xs font-bold text-rose-700">{jsonError}</p>}
+              <button type="button" onClick={saveJsonDraft} disabled={Boolean(jsonError) || !onUpdateLocalJson} className="btn-primary w-full justify-center"><Check className="h-4 w-4" /> บันทึก JSON Raw</button>
             </div>
           )}
-        </div>
-      </section>
 
-      {/* ========================================================================= */}
-      {/* 4. SYSTEM TELEMETRY & ENGINE STATUS FOOTER                                */}
-      {/* ========================================================================= */}
-      <footer className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs text-slate-600 shadow-panel">
-        <div className="flex flex-wrap items-center gap-4 text-[11px]">
-          <div className="flex items-center gap-1.5 font-medium">
-            <Target className="h-3.5 w-3.5 text-blue-600" />
-            <span>ความแม่นยำ OCR:</span>
-            <span className="font-mono font-semibold text-slate-900">{accuracyPct}%</span>
+          <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800">
+            JSON ถูกต้องตาม Schema · อัปเดตล่าสุด {new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}
           </div>
-          <span className="text-slate-300">|</span>
-          <div className="flex items-center gap-1.5 font-medium">
-            <Layers className="h-3.5 w-3.5 text-indigo-600" />
-            <span>สกัดข้อความ:</span>
-            <span className="font-mono font-semibold text-slate-900">{ocrLines.length} บรรทัด</span>
-          </div>
-          <span className="text-slate-300">|</span>
-          <div className="flex items-center gap-1.5 font-medium">
-            <Clock className="h-3.5 w-3.5 text-purple-600" />
-            <span>เวลาประมวลผล:</span>
-            <span className="font-mono font-semibold text-slate-900">{processingTime}</span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 text-[11px] text-slate-500">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            <span>PaddleOCR GPU (Port 8000)</span>
-          </span>
-          <span>·</span>
-          <span>Qwen2.5-1.5B CUDA SLM (Port 8001)</span>
-        </div>
-      </footer>
-
-      
+        </aside>
+      </div>
     </div>
   );
+}
+
+function StatusPill({ doc }: { doc: BatchDocumentItem }) {
+  const completeness = calculateDocumentCompleteness(doc);
+  if (doc.status === "error") return <span className="mt-1 inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-[11px] font-bold text-rose-700">เกิดข้อผิดพลาด</span>;
+  if (doc.status === "completed") return <span className="mt-1 inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-700">เสร็จแล้ว {completeness.pct}%</span>;
+  if (doc.status === "slm_processing") return <span className="mt-1 inline-flex rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-blue-700">กำลัง SLM</span>;
+  if (doc.status === "ocr_processing") return <span className="mt-1 inline-flex rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-blue-700">กำลัง OCR</span>;
+  if (doc.status === "ocr_completed") return <span className="mt-1 inline-flex rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-700">รอ SLM</span>;
+  return <span className="mt-1 inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-600">รอคิว</span>;
+}
+
+function ConfidencePill({ confidence }: { confidence: number }) {
+  const pct = Math.round(confidence * 100);
+  const cls = confidence < 0.85 ? "bg-rose-50 text-rose-700" : confidence >= 0.9 ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700";
+  return <span className={`inline-flex rounded-md px-1.5 py-0.5 font-mono text-[11px] font-bold ${cls}`}>{pct}%</span>;
+}
+
+function TabButton({ active, onClick, icon, label }: { active: boolean; onClick: () => void; icon?: ReactNode; label: string }) {
+  return (
+    <button type="button" onClick={onClick} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 transition ${active ? "bg-white text-blue-700 shadow-xs" : "text-slate-600 hover:text-slate-950"}`}>
+      {icon}{label}
+    </button>
+  );
+}
+
+function EmptyState({ icon, title, detail }: { icon: ReactNode; title: string; detail: string }) {
+  return (
+    <div className="grid min-h-[280px] place-items-center rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center">
+      <div>
+        <div className="mx-auto mb-3 grid h-11 w-11 place-items-center rounded-xl bg-white text-blue-600 shadow-xs">{icon}</div>
+        <h3 className="text-sm font-bold text-slate-900">{title}</h3>
+        <p className="mt-1 text-xs font-medium text-slate-600">{detail}</p>
+      </div>
+    </div>
+  );
+}
+
+function normalizedConfidence(value: unknown) {
+  const numeric = Number(value ?? 0.95);
+  if (!Number.isFinite(numeric)) return 0.95;
+  return numeric > 1 ? numeric / 100 : numeric;
+}
+
+function fileExt(fileName: string) {
+  const ext = fileName.split(".").pop();
+  return (ext || "FILE").toUpperCase();
+}
+
+function statusText(status: BatchDocumentItem["status"]) {
+  switch (status) {
+    case "completed": return "เสร็จแล้ว";
+    case "error": return "ผิดพลาด";
+    case "ocr_processing": return "กำลัง OCR";
+    case "ocr_completed": return "รอ SLM";
+    case "slm_processing": return "กำลัง SLM";
+    default: return "รอคิว";
+  }
 }

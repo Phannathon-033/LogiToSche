@@ -36,6 +36,7 @@ try:
     from kfold_evaluator import (
         CORE_FIELDS,
         GT_FILE,
+        check_live_services,
         _extract,
         _get_document_ground_truth,
         _score,
@@ -52,6 +53,7 @@ except ImportError:
     from .kfold_evaluator import (
         CORE_FIELDS,
         GT_FILE,
+        check_live_services,
         _extract,
         _get_document_ground_truth,
         _score,
@@ -175,6 +177,7 @@ class EvaluationJobManager:
         doc_id: str | None = None,
     ) -> dict[str, Any]:
         """Creates an evaluation job and starts it in a background thread."""
+        check_live_services()
         if mode == "single_doc":
             validate_training_split(prompt_variant, 0)
         resume = False
@@ -602,7 +605,15 @@ class EvaluationJobManager:
             except Exception as sync_err:
                 print(f"[WARN] Failed to sync kfold_evaluation_report.json: {sync_err}")
         except Exception as e:
-            print(f"[WARN] Error compiling final report: {e}")
+            job_state["status"] = "failed"
+            job_state["is_running"] = False
+            job_state["finished_at"] = datetime.now(timezone.utc).isoformat()
+            job_state["message"] = f"Live evaluation report generation failed: {e}"
+            job_state["recent_logs"].append(f"[FAILED] Job {job_id} produced no report: {e}")
+            self._write_job_file(job_state)
+            with self._lock:
+                self._active_job_id = None
+            return
 
         job_state["status"] = "completed"
         job_state["is_running"] = False

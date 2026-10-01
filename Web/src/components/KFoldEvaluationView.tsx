@@ -385,14 +385,13 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     );
   }, [perfLogs.records, searchPerfQuery]);
 
-  // Background Evaluation Job System (Immediate response, resume capability, OCR cache)
+  // Background Evaluation Job System (each run performs live OCR and SLM inference)
   const [evalJob, setEvalJob] = useState<EvaluationJobStatus | null>(null);
   const [isPollingJob, setIsPollingJob] = useState<boolean>(false);
   const [freshStatus, setFreshStatus] = useState<FreshRunStatus | null>(null);
   const [expectedFreshRunId, setExpectedFreshRunId] = useState<string | null>(null);
   const [isPollingFresh, setIsPollingFresh] = useState<boolean>(false);
   const [reportSource, setReportSource] = useState<"fresh" | "evaluation" | null>(null);
-  const [autoResume, setAutoResume] = useState<boolean>(false);
 
   function applyReport(report: KFoldReport, source: "fresh" | "evaluation") {
     setKfoldReport(report);
@@ -724,8 +723,8 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         k: Math.max(2, kSplits),
         seed: randomSeed,
         prompt_variant: promptVariant,
-        resume: modeToUse === "single_doc" ? false : autoResume,
-        force_rerun_ocr: modeToUse === "single_doc" ? true : !autoResume,
+        resume: false,
+        force_rerun_ocr: true,
         max_docs: customMaxDocs,
         doc_id: selectedTestDocId,
       };
@@ -752,13 +751,21 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
           setEvalJob(await pollRes.json());
         }
       } else {
-        showToast?.("ไม่สามารถเริ่มงานประเมินได้");
-        setIsPollingJob(false);
+        const body = await resp.text();
+        let detail = body;
+        try {
+          const parsed = JSON.parse(body) as { detail?: string };
+          detail = parsed.detail || body;
+        } catch {
+          // Keep the raw response when the gateway did not return JSON.
+        }
+        throw new Error(detail || `Evaluation start failed (${resp.status})`);
       }
     } catch (err) {
       console.error("Start evaluation job failed:", err);
-      showToast?.("เกิดข้อผิดพลาดในการเริ่มงานประเมิน");
+      showToast?.(`เริ่มการประเมินสดไม่ได้: ${err instanceof Error ? err.message : String(err)}`);
       setIsPollingJob(false);
+      setEvalJob(null);
     }
   }
 
@@ -1413,26 +1420,14 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                       : `ทดสอบสด 1 ฉบับ (${evalJob.current_doc_id})`}
                     {" · "}
                     <span className="text-emerald-400 font-medium">
-                      {(evalJob.resumed_cached_docs ?? evalJob.cached_count ?? 0) > 0
-                        ? `Resume ข้ามฉบับเดิม ${evalJob.resumed_cached_docs ?? evalJob.cached_count} ฉบับ · รันสดฉบับที่เหลือ`
-                        : "รันสด 100% (PaddleOCR + GPU SLM รันใหม่ทุกฉบับ ไม่ใช้แคช) · บันทึกผลรายฉบับทันที"}
+                      รันสด 100% (PaddleOCR + GPU SLM ใหม่ทุกฉบับ · ไม่ใช้ cache)
                     </span>
                   </p>
                 </div>
               </div>
 
-              {/* Action Controls: Resume Toggle, Stop / Resume Buttons */}
+              {/* Action Controls: live run and stop controls */}
               <div className="flex flex-wrap items-center gap-2 shrink-0">
-                <label className="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer select-none bg-slate-900/80 px-2.5 py-1.5 rounded-lg border border-slate-700">
-                  <input
-                    type="checkbox"
-                    checked={autoResume}
-                    onChange={(e) => setAutoResume(e.target.checked)}
-                    className="rounded border-slate-600 text-indigo-600 focus:ring-0 cursor-pointer"
-                  />
-                  <span>Resume (ข้ามเอกสารเดิม)</span>
-                </label>
-
                 {evalJob.is_running ? (
                   <button
                     type="button"
@@ -1451,7 +1446,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                     >
                       <Play className="h-3.5 w-3.5 fill-emerald-400 text-emerald-400" />
                       <span>
-                        {evalJob.status === "stopped" ? "ทำต่อจากจุดเดิม (Resume)" : "รันใหม่อีกรอบ (Re-run)"}
+                        รันใหม่อีกรอบ (Live Re-run)
                       </span>
                     </button>
                     <button
@@ -1515,8 +1510,9 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                     <span>ความคืบหน้าภาพรวม (Overall Progress)</span>
                   </span>
                   <span className="font-mono font-black text-blue-400">
-                    {evalJob.overall_current} / {evalJob.overall_total} ฉบับ (
-                    {Math.round(((evalJob.overall_current || 0) / (evalJob.overall_total || 1)) * 100)}%)
+                    {evalJob.completed_docs || 0} / {evalJob.overall_total} ฉบับสำเร็จ (
+                    {Math.round(((evalJob.completed_docs || 0) / (evalJob.overall_total || 1)) * 100)}%)
+                    {(evalJob.failed_docs || 0) > 0 ? ` · ล้มเหลว ${evalJob.failed_docs}` : ""}
                   </span>
                 </div>
                 <div className="h-2.5 w-full rounded-full bg-slate-800 overflow-hidden border border-slate-700/80">
@@ -1525,7 +1521,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                     style={{
                       width: `${Math.min(
                         100,
-                        Math.round(((evalJob.overall_current || 0) / (evalJob.overall_total || 1)) * 100)
+                        Math.round(((evalJob.completed_docs || 0) / (evalJob.overall_total || 1)) * 100)
                       )}%`,
                     }}
                   />
@@ -1609,18 +1605,8 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 </span>
                 <div className="flex items-baseline gap-1 text-sm font-bold">
                   <span className="text-amber-400">{evalJob.live_gpu_docs ?? evalJob.live_gpu_count ?? evalJob.completed_docs ?? 0} GPU สด</span>
-                  {(evalJob.resumed_cached_docs ?? evalJob.cached_count ?? 0) > 0 && (
-                    <>
-                      <span className="text-slate-500">/</span>
-                      <span className="text-cyan-400">{evalJob.resumed_cached_docs ?? evalJob.cached_count} Resume</span>
-                    </>
-                  )}
                 </div>
-                <span className="text-[10px] text-emerald-400/90">
-                  {(evalJob.resumed_cached_docs ?? evalJob.cached_count ?? 0) > 0
-                    ? `ข้ามเอกสารเดิม ${evalJob.resumed_cached_docs ?? evalJob.cached_count} ฉบับ`
-                    : "✓ รันสดใหม่ทุกฉบับ ไม่ใช้แคช"}
-                </span>
+                <span className="text-[10px] text-emerald-400/90">✓ รันสดใหม่ทุกฉบับ ไม่ใช้ cache</span>
               </div>
 
               <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3">

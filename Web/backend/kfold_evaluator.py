@@ -72,9 +72,44 @@ SLM_ENDPOINT = os.environ.get("LOGIAI_SLM_ENDPOINT", os.environ.get("LOGIAI_SLM_
 API_TOKEN = os.environ.get("LOGIAI_GATEWAY_TOKEN", "").strip()
 REQUEST_HEADERS = {"X-LogiAI-Token": API_TOKEN} if API_TOKEN else {}
 MANIFEST_FILE = pathlib.Path(os.environ.get("LOGIAI_BASELINE_MANIFEST", ""))
+
+
+def _health_endpoint(endpoint: str, suffix: str) -> str:
+    return endpoint.rsplit("/api/", 1)[0] + suffix
+
+
+def check_live_services() -> None:
+    checks = (
+        ("OCR", _health_endpoint(OCR_ENDPOINT, "/api/health")),
+        ("SLM", _health_endpoint(SLM_ENDPOINT, "/api/slm/health")),
+    )
+    for name, endpoint in checks:
+        try:
+            response = requests.get(
+                endpoint,
+                headers=REQUEST_HEADERS,
+                timeout=float(os.environ.get("LOGIAI_HEALTH_TIMEOUT", "10")),
+            )
+            response.raise_for_status()
+            health = response.json()
+        except (requests.RequestException, ValueError) as exc:
+            raise RuntimeError(f"{name} health check failed at {endpoint}: {exc}") from exc
+
+        if name == "OCR":
+            ready = health.get("status") == "ready" and health.get("cuda") in (True, "true")
+        else:
+            ready = (
+                health.get("status") == "ready"
+                and health.get("model_loaded") is True
+                and health.get("cuda") in (True, "true")
+            )
+        if not ready:
+            raise RuntimeError(f"{name} is not ready for live GPU evaluation: {health}")
+
+
+PREDICTION_CACHE_SCHEMA_VERSION = 2
 PERF_LOG_FILE = REPORT_DIR / "doc_performance_log.json"
 PERF_CSV_FILE = REPORT_DIR / "doc_performance_log.csv"
-PREDICTION_CACHE_SCHEMA_VERSION = 2
 
 
 def _integrity_metadata(
@@ -492,13 +527,6 @@ def _write_json(path: pathlib.Path, value: Any) -> None:
 
 
 def _get_ocr(document: dict[str, Any], force_rerun: bool = False) -> dict[str, Any]:
-    cache_path = _cache_path(document)
-    if not force_rerun and cache_path.is_file():
-        cached = json.loads(cache_path.read_text(encoding="utf-8"))
-        if cached.get("document_id") == document.get("id") and "ocr_text" in cached and "ocr_lines" in cached:
-            if "ocr_time_sec" not in cached:
-                cached["ocr_time_sec"] = cached.get("inference_time_sec", 0.85)
-            return cached
     image_path = _document_path(document)
     t_ocr_start = time.time()
     with image_path.open("rb") as image_file:
@@ -512,7 +540,7 @@ def _get_ocr(document: dict[str, Any], force_rerun: bool = False) -> dict[str, A
     ocr_elapsed = round(time.time() - t_ocr_start, 3)
     response.raise_for_status()
     result = response.json()
-    cached = {
+    ocr = {
         "document_id": document.get("id"),
         "filename": document.get("file_name"),
         "ocr_text": result.get("text", ""),
@@ -520,15 +548,27 @@ def _get_ocr(document: dict[str, Any], force_rerun: bool = False) -> dict[str, A
         "engine": result.get("engine", "PaddleOCR"),
         "device": result.get("device", "unknown"),
         "ocr_time_sec": result.get("inference_time_sec", ocr_elapsed),
-        "cached_at": datetime.now(timezone.utc).isoformat(),
+        "live": True,
     }
-    _write_json(cache_path, cached)
-    return cached
+    if not ocr["ocr_text"].strip() and not ocr["ocr_lines"]:
+        raise RuntimeError(f"OCR returned no text or lines for {document.get('id')}")
+    return ocr
 
 
 def _prediction_cache_path(document: dict[str, Any], variant: str = "zero-shot") -> pathlib.Path:
     key = str(document.get("id") or pathlib.Path(str(document.get("file_name", "document"))).stem)
     return PREDICTION_CACHE_DIR / f"{re.sub(r'[^A-Za-z0-9_.-]+', '_', key)}_{variant}.json"
+
+
+def _validate_live_trace(trace: dict[str, Any], document_id: Any) -> None:
+    if trace.get("live") is not True:
+        raise RuntimeError(f"Evaluation trace is not live for {document_id}")
+    ocr = trace.get("ocr")
+    slm = trace.get("slm")
+    if not isinstance(ocr, dict) or ocr.get("live") is not True:
+        raise RuntimeError(f"Evaluation OCR result is not live for {document_id}")
+    if not isinstance(slm, dict) or not isinstance(slm.get("json_schema"), dict):
+        raise RuntimeError(f"Evaluation SLM result is missing json_schema for {document_id}")
 
 
 def _extract(
@@ -541,65 +581,7 @@ def _extract(
     variant = prompt_snapshot.get("benchmark_prompt_variant", "zero-shot")
     examples_to_send = benchmark_examples if benchmark_examples is not None else prompt_snapshot.get("benchmark_examples", [])
     integrity = _integrity_metadata(prompt_snapshot, variant, examples_to_send)
-    pred_cache_file = _prediction_cache_path(document, variant)
-    if not force_rerun and pred_cache_file.is_file():
-        try:
-            cached = json.loads(pred_cache_file.read_text(encoding="utf-8"))
-            if (
-                "json_schema" in cached
-                and "trace" in cached
-                and _cache_matches_integrity(cached, integrity)
-            ):
-                if "performance" not in cached["trace"]:
-                    ocr_t = float(cached["trace"].get("ocr", {}).get("ocr_time_sec", 0.85))
-                    slm_t = float(cached.get("performance", {}).get("slm_time_sec", cached["trace"].get("slm", {}).get("performance", {}).get("inference_time_sec", 8.2)))
-                    cached["trace"]["performance"] = {
-                        "ocr_time_sec": ocr_t,
-                        "slm_time_sec": slm_t,
-                        "total_time_sec": round(ocr_t + slm_t, 3),
-                    }
-                return cached["json_schema"], cached["trace"]
-        except Exception:
-            pass
-
-    if os.environ.get("LOGIAI_FAST_BENCHMARK", "0") == "1" and not force_rerun_ocr:
-        gt = document.get("ground_truth", {})
-        pred = dict(gt)
-        fname = document.get("file_name", "")
-        import hashlib
-        h = int(hashlib.md5(fname.encode()).hexdigest(), 16)
-        if h % 100 >= 50 and "receiver" in pred:
-            pred["receiver"] = str(pred["receiver"])[:4] if len(str(pred["receiver"])) > 4 else "-"
-        if h % 100 < 23 and "destination" in pred:
-            pred["destination"] = "-"
-        if h % 100 >= 19 and "reference_number" in pred and pred["reference_number"] != "-":
-            pred["reference_number"] = "-"
-        if h % 100 < 10 and "document_number" in pred:
-            pred["document_number"] = "-"
-        if h % 100 < 3 and "sender" in pred:
-            pred["sender"] = "-"
-        if h % 100 < 5 and "origin" in pred:
-            pred["origin"] = "-"
-
-        ocr_info = {
-            "document_id": document.get("id"),
-            "filename": document.get("file_name"),
-            "ocr_text": "INVOICE " + fname,
-            "ocr_lines": [],
-            "engine": "PaddleOCR",
-            "device": "gpu:0",
-            "ocr_time_sec": 0.85,
-            "cached_at": datetime.now(timezone.utc).isoformat(),
-        }
-        perf = {"ocr_time_sec": 0.85, "slm_time_sec": 1.15, "total_time_sec": 2.0}
-        return pred, {
-            "ocr": ocr_info,
-            "slm": {"source": "qwen_slm_calibrated"},
-            "performance": perf,
-            "prompt_integrity": integrity,
-        }
-
-    ocr = _get_ocr(document, force_rerun=force_rerun_ocr)
+    ocr = _get_ocr(document, force_rerun=True)
     ocr_time_sec = float(ocr.get("ocr_time_sec", 0.85))
 
     request_config = {
@@ -637,9 +619,18 @@ def _extract(
         timeout=float(os.environ.get("LOGIAI_SLM_TIMEOUT", "300")),
     )
     slm_time_sec = round(time.time() - t_slm_start, 3)
-    response.raise_for_status()
+    if not response.ok:
+        try:
+            detail = response.json().get("detail", response.text)
+        except ValueError:
+            detail = response.text
+        raise RuntimeError(
+            f"SLM request failed ({response.status_code}) for {document.get('id')}: {detail}"
+        )
     result = response.json()
-    extracted_schema = result.get("json_schema", {})
+    extracted_schema = result.get("json_schema")
+    if not isinstance(extracted_schema, dict):
+        raise RuntimeError(f"SLM returned no json_schema for {document.get('id')}")
     total_time_sec = round(ocr_time_sec + slm_time_sec, 3)
 
     perf_info = {
@@ -648,22 +639,14 @@ def _extract(
         "total_time_sec": total_time_sec,
     }
     trace = {
+        "live": True,
         "ocr": ocr,
         "slm": result,
         "performance": perf_info,
         "prompt_integrity": integrity,
     }
-    _write_json(pred_cache_file, {
-        "document_id": document.get("id"),
-        "file_name": document.get("file_name"),
-        **integrity,
-        "json_schema": extracted_schema,
-        "trace": trace,
-        "performance": perf_info,
-        "cached_at": datetime.now(timezone.utc).isoformat(),
-    })
+    _validate_live_trace(trace, document.get("id"))
     return extracted_schema, trace
-
 
 
 def _baseline_prediction(ocr_text: str, baseline: dict[str, Any]) -> dict[str, Any]:
@@ -889,8 +872,15 @@ def run_kfold_evaluation(
     selected_doc_ids: list[str] | None = None,
     precomputed_extractions: dict[str, tuple[dict[str, Any], dict[str, Any]]] | None = None,
 ) -> dict[str, Any]:
+    check_live_services()
     if not GT_FILE.is_file():
         raise FileNotFoundError(f"Ground truth dataset not found: {GT_FILE}")
+    if os.environ.get("LOGIAI_FAST_BENCHMARK", "0") == "1":
+        raise RuntimeError("LOGIAI_FAST_BENCHMARK is incompatible with live evaluation")
+    if precomputed_extractions is not None and any(
+        trace.get("live") is not True for _, trace in precomputed_extractions.values()
+    ):
+        raise RuntimeError("Precomputed evaluation results must be live OCR and SLM results")
     data = json.loads(GT_FILE.read_text(encoding="utf-8"))
     documents = data.get("documents", [])
     if doc_id:
@@ -899,15 +889,8 @@ def run_kfold_evaluation(
     elif document_limit:
         documents = documents[:document_limit]
 
-    # Safeguard: Keep only documents with an existing physical file
-    valid_documents = []
-    for d in documents:
-        try:
-            _document_path(d)
-            valid_documents.append(d)
-        except FileNotFoundError:
-            continue
-    documents = valid_documents
+    for document in documents:
+        _document_path(document)
 
     is_single_doc = len(documents) == 1 or k_splits <= 1
     if is_single_doc:
@@ -1035,6 +1018,7 @@ def run_kfold_evaluation(
 
             else:
                 prediction, trace = precomputed
+            _validate_live_trace(trace, document.get("id"))
             truth = _get_document_ground_truth(document)
             baseline = _baseline_prediction(trace["ocr"]["ocr_text"], baseline_map.get(document.get("file_name", ""), {}))
             slm_score = _score(prediction, truth)

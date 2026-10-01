@@ -9,7 +9,6 @@ import { Toast } from "./components/Toast";
 import { UploadedWorkspaceView } from "./components/UploadedWorkspaceView";
 import { FirebaseSaveSuccessModal } from "./components/FirebaseSaveSuccessModal";
 import { SlmPromptAssistantModal } from "./components/SlmPromptAssistantModal";
-import { SlmPromptAssistantPanel } from "./components/SlmPromptAssistantPanel";
 import { KFoldEvaluationView } from "./components/KFoldEvaluationView";
 import {
   fetchFirebaseDocuments,
@@ -896,14 +895,6 @@ export function App() {
                 onReRunSlmWithOcr={handleReRunSlmForActiveDoc}
                 isProcessing={isBatchProcessing}
               />
-              <div className="mt-4">
-                <SlmPromptAssistantPanel
-                  ocrText={activeDoc?.ocrText || ""}
-                  jsonSchema={jsonOutput}
-                  onOpenFullAssistant={() => setShowPromptAssistantModal(true)}
-                  onShowToast={showToast}
-                />
-              </div>
             </div>
           )}
         </div>
