@@ -421,6 +421,7 @@ export async function saveDocumentToFirebase(
     processed_at: processedAt,
     storage_url: storageUrl || "",
     storage_path: storagePath || "",
+    document_id: docId,
     user_id: userId,
     user_email: record.userEmail ?? "",
     user_name: record.userName ?? "",
@@ -551,7 +552,17 @@ export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<F
   let cloudErrorCode: string | null = null;
 
   try {
-    const normalizedSnapshot = await getDocs(query(collection(db, "documents"), limit(limitCount)));
+    const currentUser = auth.currentUser;
+    const profileSnapshot = currentUser
+      ? await getDoc(doc(db, "users", currentUser.uid))
+      : null;
+    const canReadAllDocuments = profileSnapshot?.data()?.role === "Admin";
+    const normalizedQuery = canReadAllDocuments
+      ? query(collection(db, "documents"), limit(limitCount))
+      : currentUser
+        ? query(collection(db, "documents"), where("user_id", "==", currentUser.uid), limit(limitCount))
+        : query(collection(db, "documents"), limit(limitCount));
+    const normalizedSnapshot = await getDocs(normalizedQuery);
     const normalizedRecords = await Promise.all(normalizedSnapshot.docs.map(async (documentSnap) => {
       const metadata = documentSnap.data() as any;
       const [extractedSnapshot, ocrSnapshot, userSnapshot, correctionsSnapshot] = await Promise.all([
@@ -630,7 +641,17 @@ export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<F
   }
 
   try {
-    const legacySnapshot = await getDocs(query(collection(db, "logistics_extractions"), limit(limitCount)));
+    const currentUser = auth.currentUser;
+    const profileSnapshot = currentUser
+      ? await getDoc(doc(db, "users", currentUser.uid))
+      : null;
+    const canReadAllDocuments = profileSnapshot?.data()?.role === "Admin";
+    const legacyQuery = canReadAllDocuments
+      ? query(collection(db, "logistics_extractions"), limit(limitCount))
+      : currentUser
+        ? query(collection(db, "logistics_extractions"), where("user_id", "==", currentUser.uid), limit(limitCount))
+        : query(collection(db, "logistics_extractions"), limit(limitCount));
+    const legacySnapshot = await getDocs(legacyQuery);
     cloudAccessible = true;
     for (const docSnap of legacySnapshot.docs) {
       if (cloudDocs.some((record) => record.id === docSnap.id)) continue;

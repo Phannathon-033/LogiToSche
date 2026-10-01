@@ -208,7 +208,7 @@ service cloud.firestore {
 
     match /users/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
-      allow create: if signedIn() && request.auth.uid == uid;
+      allow create: if signedIn() && request.auth.uid == uid && request.resource.data.uid == request.auth.uid && request.resource.data.role != 'Admin';
       allow update: if isAdmin() || (signedIn() && request.auth.uid == uid && request.resource.data.role == resource.data.role && request.resource.data.uid == resource.data.uid);
       allow delete: if isAdmin();
     }
@@ -236,7 +236,10 @@ service cloud.firestore {
     }
 
     match /logistics_extractions/{documentId} {
-      allow read, write: if signedIn();
+      allow create: if isAdmin() || (signedIn() && request.resource.data.document_id == documentId && request.resource.data.user_id == request.auth.uid && ownsDocumentOrAfter(documentId));
+      allow read: if isAdmin() || (signedIn() && resource.data.user_id == request.auth.uid);
+      allow update: if isAdmin() || (signedIn() && resource.data.user_id == request.auth.uid && request.resource.data.document_id == resource.data.document_id && request.resource.data.user_id == resource.data.user_id);
+      allow delete: if isAdmin() || (signedIn() && resource.data.user_id == request.auth.uid);
     }
   }
 }`;
