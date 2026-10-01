@@ -17,10 +17,10 @@ import {
   getDocs,
   getFirestore,
   limit,
-  orderBy,
   query,
-  serverTimestamp,
   setDoc,
+  where,
+  writeBatch,
   type Timestamp,
 } from "firebase/firestore";
 import {
@@ -31,6 +31,7 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import type {
+  AdminCorrectionEntry,
   AdminDocumentRecord,
   ConfidenceScore,
   DocumentType,
@@ -40,6 +41,15 @@ import type {
   SlmPerformanceMetrics,
   UserSession,
 } from "../types";
+import type { OcrLine } from "./ocrApi";
+import {
+  buildNormalizedCorrectionPayload,
+  buildNormalizedDocumentPayload,
+  buildNormalizedExtractedDataPayload,
+  buildNormalizedOcrPayload,
+  diffJsonSchema,
+  normalizedOcrId,
+} from "./firebasePersistence";
 
 // User's provided Firebase configuration
 const firebaseConfig = {
@@ -71,6 +81,7 @@ function profileToSession(user: User, profile?: Partial<UserProfile>): UserSessi
   const email = profile?.email || user.email || "";
   const name = profile?.name || user.displayName || email.split("@")[0] || "ผู้ใช้";
   return {
+    uid: user.uid,
     username: email.split("@")[0] || user.uid,
     name,
     role: profile?.role || "เจ้าหน้าที่โลจิสติกส์",
@@ -180,11 +191,27 @@ export interface FirebaseDocumentRecord {
   reviewItems?: ReviewItem[];
   ocrText?: string;
   spatialText?: string;
+  ocrLines?: OcrLine[];
+  ocrEngine?: string;
+  ocrLanguage?: string;
+  pageCount?: number | null;
+  processingStatus?: string;
+  processedAt?: Timestamp | string | any;
+  correctionHistory?: AdminCorrectionEntry[];
   createdAt?: Timestamp | string | any;
+  userId?: string;
   userEmail?: string;
   userName?: string;
   cloudSyncStatus?: "synced" | "local_saved" | "failed";
   cloudSyncNote?: string;
+}
+
+export interface FirebaseDocumentsResult {
+  records: FirebaseDocumentRecord[];
+  cloudAccessible: boolean;
+  cloudCount: number | null;
+  localCount: number;
+  cloudErrorCode: string | null;
 }
 
 const LOCAL_STORAGE_KEY = "logiai_saved_documents_cache";
@@ -283,6 +310,7 @@ export async function saveDocumentToFirebase(
   record: Omit<FirebaseDocumentRecord, "id" | "createdAt"> & {
     id?: string;
     createdAt?: FirebaseDocumentRecord["createdAt"];
+    correctionEvents?: ReturnType<typeof buildNormalizedCorrectionPayload>[];
   },
   file?: File | null
 ): Promise<FirebaseDocumentRecord> {
@@ -340,6 +368,25 @@ export async function saveDocumentToFirebase(
   const otherObj = schema.other && typeof schema.other === "object" ? { ...schema.other } : {};
   delete (otherObj as any).storage_url;
 
+  const normalizedSchema: JsonSchemaOutput = {
+    ...schema,
+    document_type: docType,
+    document_number: docNumber,
+    document_date: docDate,
+    sender,
+    receiver,
+    origin,
+    destination,
+    reference_number: refNo,
+    unit_price: unitPrice,
+    total_amount: totalAmount,
+    currency,
+    other: otherObj,
+  };
+  const updatedAt = new Date().toISOString();
+  const createdAt = record.createdAt || new Date().toISOString();
+  const processedAt = record.processedAt || updatedAt;
+  const userId = record.userId || auth.currentUser?.uid || "";
   const dataToSave = sanitizeForFirestore({
     document_type: docType,
     document_number: docNumber,
@@ -364,12 +411,54 @@ export async function saveDocumentToFirebase(
     review_items: record.reviewItems ?? [],
     ocr_text: record.ocrText ?? "",
     spatial_text: record.spatialText ?? "",
+    ocr_lines: record.ocrLines ?? [],
+    ocr_engine: record.ocrEngine || "PaddleOCR",
+    ocr_language: record.ocrLanguage || "unknown",
+    page_count: record.pageCount ?? null,
+    processing_status: record.processingStatus || "completed",
+    processed_at: processedAt,
     storage_url: storageUrl || "",
     storage_path: storagePath || "",
+    user_id: userId,
     user_email: record.userEmail ?? "",
     user_name: record.userName ?? "",
-    created_at: record.createdAt || new Date().toISOString(),
-    updated_at: new Date().toISOString(),
+    created_at: createdAt,
+    updated_at: updatedAt,
+  });
+  const normalizedDocument = buildNormalizedDocumentPayload({
+    id: docId,
+    userId: record.userId || auth.currentUser?.uid || "",
+    fileName: record.fileName,
+    fileType: record.fileType,
+    fileSize: record.fileSize,
+    storagePath,
+    storageUrl,
+    processingStatus: record.processingStatus,
+    createdAt,
+    processedAt,
+    pageCount: record.pageCount,
+    updatedAt,
+  });
+  const normalizedOcr = buildNormalizedOcrPayload({
+    documentId: docId,
+    rawText: record.ocrText,
+    spatialText: record.spatialText,
+    lines: record.ocrLines,
+    pageCount: record.pageCount,
+    engine: record.ocrEngine || "PaddleOCR",
+    language: record.ocrLanguage || "unknown",
+    processedAt,
+  });
+  const normalizedExtracted = buildNormalizedExtractedDataPayload({
+    documentId: docId,
+    schema: normalizedSchema,
+    fields: record.fields,
+    confidenceScores: record.confidenceScores,
+    overallConfidence: record.overallConfidence,
+    performance: record.performance,
+    reviewItems: record.reviewItems,
+    extractedAt: processedAt,
+    updatedAt,
   });
   const persistedData = dataToSave as Record<string, any>;
   persistedData.other = otherObj;
@@ -378,15 +467,39 @@ export async function saveDocumentToFirebase(
   persistedData.storage_path = storagePath || "";
 
   try {
-    const docRef = doc(db, "logistics_extractions", docId);
-    await setDoc(docRef, dataToSave, { merge: false });
+    const batch = writeBatch(db);
+    if (userId) {
+      batch.set(doc(db, "users", userId), sanitizeForFirestore({
+        uid: userId,
+        name: record.userName || "",
+        username: record.userEmail?.split("@")[0] || userId,
+        email: record.userEmail || auth.currentUser?.email || "",
+        updated_at: updatedAt,
+      }), { merge: true });
+    }
+    batch.set(doc(db, "documents", docId), sanitizeForFirestore(normalizedDocument));
+    batch.set(doc(db, "ocr_results", normalizedOcrId(docId)), sanitizeForFirestore(normalizedOcr));
+    batch.set(doc(db, "extracted_data", docId), sanitizeForFirestore(normalizedExtracted));
+    batch.set(doc(db, "logistics_extractions", docId), dataToSave, { merge: false });
+    for (const correction of record.correctionEvents || []) {
+      batch.set(doc(db, "corrections", correction.correction_id), sanitizeForFirestore(correction));
+    }
+    await batch.commit();
 
     const syncedRecord: FirebaseDocumentRecord = {
       ...localRecord,
+      userId,
+      processedAt,
+      processingStatus: record.processingStatus || "completed",
+      pageCount: record.pageCount ?? null,
+      ocrLines: record.ocrLines || [],
+      ocrEngine: record.ocrEngine,
+      ocrLanguage: record.ocrLanguage,
       storageUrl: storageUrl || localRecord.storageUrl,
       storagePath: storagePath || localRecord.storagePath,
+      correctionHistory: record.correctionHistory || [],
       cloudSyncStatus: "synced",
-      cloudSyncNote: "บันทึกใน Cloud Firestore (11 ฟิลด์หลัก + other) สำเร็จ",
+      cloudSyncNote: "บันทึกใน Cloud Firestore (normalized + legacy) สำเร็จ",
     };
     saveToLocalCache(syncedRecord);
     return syncedRecord;
@@ -396,9 +509,28 @@ export async function saveDocumentToFirebase(
 
     const partialRecord: FirebaseDocumentRecord = {
       ...localRecord,
+      userId,
+      processedAt,
+      processingStatus: record.processingStatus || "completed",
+      pageCount: record.pageCount ?? null,
+      ocrLines: record.ocrLines || [],
+      ocrEngine: record.ocrEngine,
+      ocrLanguage: record.ocrLanguage,
+      correctionHistory: [
+        ...(record.correctionHistory || []),
+        ...(record.correctionEvents || []).map((correction) => ({
+          id: correction.correction_id,
+          field: correction.field as keyof JsonSchemaOutput,
+          previousValue: correction.previous_value,
+          nextValue: correction.next_value,
+          reason: correction.reason,
+          correctedBy: correction.corrected_by,
+          correctedAt: String(correction.corrected_at),
+        })),
+      ],
       storageUrl: storageUrl || localRecord.storageUrl,
       storagePath: storagePath || localRecord.storagePath,
-      cloudSyncStatus: cloudUploaded ? "synced" : "local_saved",
+      cloudSyncStatus: "local_saved",
       cloudSyncNote: `บันทึกลง Local Workspace (${errorMsg})`,
     };
     saveToLocalCache(partialRecord);
@@ -409,15 +541,95 @@ export async function saveDocumentToFirebase(
 /**
  * Fetch past documents from Firestore + Local Cache
  */
-export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<FirebaseDocumentRecord[]> {
+export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<FirebaseDocumentsResult> {
   const localDocs = getLocalCachedDocuments();
   const cloudDocs: FirebaseDocumentRecord[] = [];
+  let cloudAccessible = false;
+  let cloudErrorCode: string | null = null;
 
   try {
-    const collRef = collection(db, "logistics_extractions");
-    const querySnapshot = await getDocs(query(collRef, limit(limitCount)));
+    const normalizedSnapshot = await getDocs(query(collection(db, "documents"), limit(limitCount)));
+    const normalizedRecords = await Promise.all(normalizedSnapshot.docs.map(async (documentSnap) => {
+      const metadata = documentSnap.data() as any;
+      const [extractedSnapshot, ocrSnapshot, userSnapshot, correctionsSnapshot] = await Promise.all([
+        getDoc(doc(db, "extracted_data", documentSnap.id)),
+        getDoc(doc(db, "ocr_results", normalizedOcrId(documentSnap.id))),
+        metadata.user_id ? getDoc(doc(db, "users", metadata.user_id)) : Promise.resolve(null),
+        getDocs(query(collection(db, "corrections"), where("document_id", "==", documentSnap.id))),
+      ]);
+      const extracted = extractedSnapshot.exists() ? extractedSnapshot.data() as any : {};
+      const ocr = ocrSnapshot.exists() ? ocrSnapshot.data() as any : {};
+      const user = userSnapshot?.exists() ? userSnapshot.data() as any : {};
+      const schemaOut: JsonSchemaOutput = {
+        document_type: extracted.document_type || "invoice",
+        document_number: extracted.document_number || "",
+        document_date: extracted.document_date || "",
+        sender: extracted.sender || "",
+        receiver: extracted.receiver || "",
+        origin: extracted.origin || "",
+        destination: extracted.destination || "",
+        reference_number: extracted.reference_number || "",
+        unit_price: Number(extracted.unit_price) || 0,
+        total_amount: Number(extracted.total_amount) || 0,
+        currency: extracted.currency || "",
+        other: extracted.other && typeof extracted.other === "object" ? extracted.other : {},
+      };
+      const correctionHistory = correctionsSnapshot.docs.map((correction) => {
+        const data = correction.data() as any;
+        return {
+          id: correction.id,
+          field: data.field,
+          previousValue: String(data.previous_value || ""),
+          nextValue: String(data.next_value || ""),
+          reason: String(data.reason || ""),
+          correctedBy: String(data.corrected_by || ""),
+          correctedAt: String(data.corrected_at || ""),
+        } as AdminCorrectionEntry;
+      });
+      const performance = extracted.performance && typeof extracted.performance === "object" ? extracted.performance as SlmPerformanceMetrics : null;
+      return {
+        id: documentSnap.id,
+        fileName: String(metadata.file_name || documentSnap.id),
+        fileSize: String(metadata.file_size || ""),
+        fileType: String(metadata.file_type || ""),
+        storageUrl: String(metadata.storage_url || ""),
+        storagePath: String(metadata.file_path || ""),
+        documentType: schemaOut.document_type,
+        jsonSchema: schemaOut,
+        fields: Array.isArray(extracted.fields) ? extracted.fields as ExtractedField[] : buildStoredFields(schemaOut, schemaOut.other),
+        confidenceScores: Array.isArray(extracted.confidence_scores) ? extracted.confidence_scores as ConfidenceScore[] : [],
+        overallConfidence: Number(extracted.overall_confidence) || performance?.accuracy_pct || 0,
+        performance,
+        reviewItems: Array.isArray(extracted.review_items) ? extracted.review_items as ReviewItem[] : [],
+        ocrText: String(ocr.raw_text || ""),
+        spatialText: String(ocr.spatial_text || ""),
+        ocrLines: Array.isArray(ocr.lines) ? ocr.lines as OcrLine[] : [],
+        ocrEngine: String(ocr.engine || "PaddleOCR"),
+        ocrLanguage: String(ocr.language || "unknown"),
+        pageCount: metadata.page_count ?? ocr.page_count ?? null,
+        processingStatus: String(metadata.processing_status || "completed"),
+        processedAt: metadata.processed_at || ocr.processed_at || "",
+        createdAt: metadata.created_at || metadata.updated_at || "",
+        userId: String(metadata.user_id || ""),
+        userEmail: String(user.email || ""),
+        userName: String(user.name || ""),
+        correctionHistory,
+        cloudSyncStatus: "synced",
+        cloudSyncNote: "อ่านจาก normalized Firestore collections สำเร็จ",
+      } satisfies FirebaseDocumentRecord;
+    }));
+    cloudDocs.push(...normalizedRecords);
+    cloudAccessible = true;
+  } catch (normalizedError: any) {
+    cloudErrorCode = typeof normalizedError?.code === "string" ? normalizedError.code : "unknown";
+    console.warn("Normalized Firestore read unavailable; trying legacy records:", normalizedError?.message || normalizedError);
+  }
 
-    querySnapshot.forEach((docSnap) => {
+  try {
+    const legacySnapshot = await getDocs(query(collection(db, "logistics_extractions"), limit(limitCount)));
+    cloudAccessible = true;
+    for (const docSnap of legacySnapshot.docs) {
+      if (cloudDocs.some((record) => record.id === docSnap.id)) continue;
       const data = docSnap.data() as any;
       const schemaOut: JsonSchemaOutput = {
         document_type: data.document_type || "invoice",
@@ -437,70 +649,65 @@ export async function fetchFirebaseDocuments(limitCount: number = 40): Promise<F
         quantity: data.quantity ?? 0,
         other: data.other && typeof data.other === "object" ? data.other : {},
       };
-
       const storedFields = Array.isArray(data.fields) ? data.fields as ExtractedField[] : null;
-      const storedReviewItems = Array.isArray(data.review_items) ? data.review_items as ReviewItem[] : [];
-      const storedConfidenceScores = Array.isArray(data.confidence_scores) ? data.confidence_scores as ConfidenceScore[] : null;
       const storedPerformance = data.performance && typeof data.performance === "object" ? data.performance as SlmPerformanceMetrics : null;
-      const createdAt = data.created_at || data.updated_at || "";
-      const userEmail = String(data.user_email || "");
-      const userName = String(data.user_name || "");
-      const fileName = String(data.file_name || data.source_file || docSnap.id);
-      const fileSize = String(data.file_size || "");
-      const fileType = String(data.file_type || "");
-      const storageUrl = String(data.storage_url || data.other?.storage_url || "");
-      const storagePath = String(data.storage_path || "");
-      const overallConfidence = Number(data.overall_confidence) || storedPerformance?.accuracy_pct || 0;
-      const fields = storedFields || buildStoredFields(schemaOut, data.other);
-      const confidenceScores = storedConfidenceScores || [];
-
-      const otherObj = schemaOut.other || {};
       cloudDocs.push({
         id: docSnap.id,
-        fileName,
-        fileSize,
-        fileType,
-        storageUrl,
-        storagePath,
+        fileName: String(data.file_name || data.source_file || docSnap.id),
+        fileSize: String(data.file_size || ""),
+        fileType: String(data.file_type || ""),
+        storageUrl: String(data.storage_url || data.other?.storage_url || ""),
+        storagePath: String(data.storage_path || ""),
         documentType: schemaOut.document_type,
         jsonSchema: schemaOut,
-        fields,
-        confidenceScores,
-        overallConfidence,
+        fields: storedFields || buildStoredFields(schemaOut, data.other),
+        confidenceScores: Array.isArray(data.confidence_scores) ? data.confidence_scores as ConfidenceScore[] : [],
+        overallConfidence: Number(data.overall_confidence) || storedPerformance?.accuracy_pct || 0,
         performance: storedPerformance,
-        reviewItems: storedReviewItems,
+        reviewItems: Array.isArray(data.review_items) ? data.review_items as ReviewItem[] : [],
         ocrText: String(data.ocr_text || ""),
         spatialText: String(data.spatial_text || ""),
-        createdAt,
-        userEmail,
-        userName,
+        ocrLines: Array.isArray(data.ocr_lines) ? data.ocr_lines as OcrLine[] : [],
+        ocrEngine: String(data.ocr_engine || "PaddleOCR"),
+        ocrLanguage: String(data.ocr_language || "unknown"),
+        pageCount: data.page_count ?? null,
+        processingStatus: String(data.processing_status || "completed"),
+        processedAt: data.processed_at || "",
+        createdAt: data.created_at || data.updated_at || "",
+        userId: String(data.user_id || ""),
+        userEmail: String(data.user_email || ""),
+        userName: String(data.user_name || ""),
         cloudSyncStatus: "synced",
-        cloudSyncNote: "บันทึกใน Cloud Firestore (11 ฟิลด์หลัก + other) สำเร็จ",
+        cloudSyncNote: "อ่านจาก legacy Firestore collection สำเร็จ",
       });
-
-      void otherObj;
-    });
+    }
   } catch (error: any) {
-    console.warn("Notice reading from Cloud Firestore (showing local documents):", error?.message || error);
+    if (!cloudAccessible) cloudErrorCode = typeof error?.code === "string" ? error.code : cloudErrorCode || "unknown";
+    console.warn("Legacy Firestore read unavailable; showing local documents:", error?.message || error);
   }
 
-  // Merge Cloud + Local records, avoiding duplicates
   const map = new Map<string, FirebaseDocumentRecord>();
-  for (const doc of localDocs) {
-    map.set(doc.id, doc);
-  }
-  for (const doc of cloudDocs) {
-    map.set(doc.id, doc);
-  }
-
-  const allRecords = Array.from(map.values());
-  allRecords.sort((a, b) => {
+  for (const localDoc of localDocs) map.set(localDoc.id, localDoc);
+  for (const cloudDoc of cloudDocs) map.set(cloudDoc.id, cloudDoc);
+  const records = Array.from(map.values());
+  records.sort((a, b) => {
     const tA = typeof a.createdAt === "string" ? new Date(a.createdAt).getTime() : (a.createdAt?.toMillis ? a.createdAt.toMillis() : 0);
     const tB = typeof b.createdAt === "string" ? new Date(b.createdAt).getTime() : (b.createdAt?.toMillis ? b.createdAt.toMillis() : 0);
     return tB - tA;
   });
-
-  return allRecords;
+  const cloudIds = new Set(cloudDocs.map((record) => record.id));
+  const displayRecords = cloudAccessible ? records : records.map((record) => ({
+    ...record,
+    cloudSyncStatus: "local_saved" as const,
+    cloudSyncNote: "แสดงจาก Local Cache เนื่องจากยังอ่าน Cloud Firestore ไม่ได้",
+  }));
+  return {
+    records: displayRecords,
+    cloudAccessible,
+    cloudCount: cloudAccessible ? cloudDocs.length : null,
+    localCount: displayRecords.filter((record) => !cloudIds.has(record.id)).length,
+    cloudErrorCode,
+  };
 }
 
 /**
@@ -582,17 +789,22 @@ export function toAdminDocumentRecord(record: FirebaseDocumentRecord): AdminDocu
     jsonOutput: schema,
     extractedFields: record.fields,
     reviewItems: record.reviewItems || [],
-    correctionHistory: [],
+    correctionHistory: record.correctionHistory || [],
     promptSignals: [],
     metrics: {
       ocrTime: record.performance ? `${record.performance.inference_time_sec}s` : "-",
       slmTime: record.performance ? `${record.performance.inference_time_sec}s` : "-",
       totalTime: record.performance ? `${record.performance.inference_time_sec}s` : "-",
       device: record.performance?.device || "-",
-      ocrEngine: "PaddleOCR",
+      ocrEngine: record.ocrEngine || "PaddleOCR",
       slmModel: record.performance?.model || "Qwen2.5-1.5B",
     },
-    ocrLines: [],
+    ocrLines: (record.ocrLines || []).map((line, index) => ({
+      id: `${record.id}-ocr-${index + 1}`,
+      text: line.text,
+      confidence: line.confidence,
+      box: (line.box || line.bounding_box || []).flat().slice(0, 4) as [number, number, number, number],
+    })),
   };
 }
 
@@ -617,11 +829,23 @@ export async function updateFirebaseDocument(
 ): Promise<FirebaseDocumentRecord> {
   const fields = buildStoredFields(jsonSchema, jsonSchema.other);
   const reviewItems = (record.reviewItems || []).map((item) => ({ ...item, status: "resolved" as const }));
+  const correctedAt = new Date().toISOString();
+  const correctionEvents = diffJsonSchema(record.jsonSchema, jsonSchema).map((diff) => buildNormalizedCorrectionPayload({
+    documentId: record.id,
+    userId: record.userId || auth.currentUser?.uid || "",
+    field: diff.field,
+    previousValue: diff.previousValue,
+    nextValue: diff.nextValue,
+    reason: correctionReason || "แก้ไขข้อมูลเอกสาร",
+    correctedBy: record.userEmail || auth.currentUser?.email || "",
+    correctedAt,
+  }));
   return saveDocumentToFirebase({
     ...record,
     jsonSchema,
     fields,
     reviewItems,
+    correctionEvents,
     cloudSyncStatus: undefined,
     cloudSyncNote: correctionReason,
   });
@@ -631,10 +855,20 @@ export async function deleteDocumentFromFirebase(docId: string, storagePath?: st
   removeFromLocalCache(docId);
 
   try {
-    const docRef = doc(db, "logistics_extractions", docId);
-    await deleteDoc(docRef);
+    const corrections = await getDocs(query(collection(db, "corrections"), where("document_id", "==", docId)));
+    const batch = writeBatch(db);
+    batch.delete(doc(db, "documents", docId));
+    batch.delete(doc(db, "ocr_results", normalizedOcrId(docId)));
+    batch.delete(doc(db, "extracted_data", docId));
+    batch.delete(doc(db, "logistics_extractions", docId));
+    corrections.forEach((correction) => batch.delete(correction.ref));
+    await batch.commit();
   } catch {
-    // ignore
+    try {
+      await deleteDoc(doc(db, "logistics_extractions", docId));
+    } catch {
+      // ignore
+    }
   }
 
   if (storagePath) {

@@ -1,0 +1,77 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin';
+    }
+
+    function ownsDocument(documentId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/documents/$(documentId))
+        && get(/databases/$(database)/documents/documents/$(documentId)).data.user_id == request.auth.uid;
+    }
+
+    function ownsDocumentAfter(documentId) {
+      return signedIn()
+        && getAfter(/databases/$(database)/documents/documents/$(documentId)).data.user_id == request.auth.uid;
+    }
+
+    function ownsDocumentOrAfter(documentId) {
+      return ownsDocument(documentId) || ownsDocumentAfter(documentId);
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if signedIn() && request.auth.uid == uid;
+      allow update: if isAdmin()
+        || (signedIn()
+          && request.auth.uid == uid
+          && request.resource.data.role == resource.data.role
+          && request.resource.data.uid == resource.data.uid);
+      allow delete: if isAdmin();
+    }
+
+    match /documents/{documentId} {
+      allow create: if signedIn() && request.resource.data.user_id == request.auth.uid;
+      allow read: if isAdmin() || (signedIn() && resource.data.user_id == request.auth.uid);
+      allow update: if isAdmin()
+        || (signedIn()
+          && resource.data.user_id == request.auth.uid
+          && request.resource.data.user_id == resource.data.user_id);
+      allow delete: if isAdmin() || (signedIn() && resource.data.user_id == request.auth.uid);
+    }
+
+    match /ocr_results/{ocrId} {
+      allow read: if isAdmin() || ownsDocument(resource.data.document_id);
+      allow create, update: if isAdmin() || ownsDocumentOrAfter(request.resource.data.document_id);
+      allow delete: if isAdmin() || ownsDocument(resource.data.document_id);
+    }
+
+    match /extracted_data/{documentId} {
+      allow read: if isAdmin() || ownsDocument(resource.data.document_id);
+      allow create, update: if isAdmin() || ownsDocumentOrAfter(request.resource.data.document_id);
+      allow delete: if isAdmin() || ownsDocument(resource.data.document_id);
+    }
+
+    match /corrections/{correctionId} {
+      allow read: if isAdmin() || ownsDocument(resource.data.document_id);
+      allow create: if isAdmin()
+        || (signedIn()
+          && request.resource.data.user_id == request.auth.uid
+          && request.resource.data.corrected_by == request.auth.token.email
+          && ownsDocument(request.resource.data.document_id));
+      allow update, delete: if isAdmin();
+    }
+
+    match /logistics_extractions/{documentId} {
+      allow read, write: if signedIn();
+    }
+  }
+}

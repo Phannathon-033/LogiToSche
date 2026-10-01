@@ -194,6 +194,9 @@ export interface BatchDocumentItem {
   ocrText: string;
   spatialText?: string;
   ocrLines: import("./services/ocrApi").OcrLine[];
+  ocrEngine?: string;
+  ocrLanguage?: string;
+  pageCount?: number | null;
   jsonOutput: JsonSchemaOutput | null;
   fields: ExtractedField[];
   confidenceScores: ConfidenceScore[];
@@ -305,6 +308,7 @@ export interface AdminFewShotExample {
 }
 
 export interface UserSession {
+  uid: string;
   username: string;
   name: string;
   role: string;

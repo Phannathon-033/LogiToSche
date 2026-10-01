@@ -14,6 +14,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "typecheck": "tsc -b",
+    "check:persistence": "node --experimental-strip-types scripts/check-persistence.mjs",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
