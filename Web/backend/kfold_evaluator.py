@@ -514,9 +514,20 @@ def _document_path(document: dict[str, Any]) -> pathlib.Path:
     raise FileNotFoundError(f"Dataset file not found for {document.get('id') or filename}: {candidates}")
 
 
+OCR_CACHE_SCHEMA_VERSION = 1
+
+
 def _cache_path(document: dict[str, Any]) -> pathlib.Path:
     key = str(document.get("id") or pathlib.Path(str(document.get("file_name", "document"))).stem)
     return CACHE_DIR / f"{re.sub(r'[^A-Za-z0-9_.-]+', '_', key)}.json"
+
+
+def _file_sha256(path: pathlib.Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as image_file:
+        for chunk in iter(lambda: image_file.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _write_json(path: pathlib.Path, value: Any) -> None:
@@ -526,14 +537,60 @@ def _write_json(path: pathlib.Path, value: Any) -> None:
     temporary.replace(path)
 
 
+def _ocr_cache_matches(
+    cached: dict[str, Any],
+    file_sha256: str,
+    language: str,
+) -> bool:
+    return (
+        cached.get("cache_schema_version") == OCR_CACHE_SCHEMA_VERSION
+        and cached.get("file_sha256") == file_sha256
+        and cached.get("language") == language
+    )
+
+
+def _read_cached_ocr(
+    document: dict[str, Any],
+    image_path: pathlib.Path,
+    file_sha256: str,
+    language: str,
+) -> dict[str, Any] | None:
+    try:
+        cached = json.loads(_cache_path(document).read_text(encoding="utf-8"))
+        if not _ocr_cache_matches(cached, file_sha256, language):
+            return None
+        ocr = cached.get("ocr")
+        if not isinstance(ocr, dict):
+            return None
+        if not str(ocr.get("ocr_text", "")).strip() and not ocr.get("ocr_lines"):
+            return None
+        return {
+            **ocr,
+            "document_id": document.get("id"),
+            "filename": document.get("file_name") or image_path.name,
+            "cache_hit": True,
+            "cache_source": "ocr_cache",
+            "live": True,
+        }
+    except (OSError, json.JSONDecodeError, TypeError, AttributeError):
+        return None
+
+
 def _get_ocr(document: dict[str, Any], force_rerun: bool = False) -> dict[str, Any]:
     image_path = _document_path(document)
+    language = os.environ.get("LOGIAI_OCR_LANGUAGE", "th")
+    file_sha256 = _file_sha256(image_path)
+    if not force_rerun:
+        cached = _read_cached_ocr(document, image_path, file_sha256, language)
+        if cached is not None:
+            return cached
+
     t_ocr_start = time.time()
     with image_path.open("rb") as image_file:
         response = requests.post(
             OCR_ENDPOINT,
             files={"file": (image_path.name, image_file, "application/octet-stream")},
-            data={"lang": os.environ.get("LOGIAI_OCR_LANGUAGE", "th")},
+            data={"lang": language},
             headers=REQUEST_HEADERS,
             timeout=float(os.environ.get("LOGIAI_OCR_TIMEOUT", "300")),
         )
@@ -548,10 +605,25 @@ def _get_ocr(document: dict[str, Any], force_rerun: bool = False) -> dict[str, A
         "engine": result.get("engine", "PaddleOCR"),
         "device": result.get("device", "unknown"),
         "ocr_time_sec": result.get("inference_time_sec", ocr_elapsed),
+        "cache_hit": False,
+        "cache_source": "ocr_endpoint",
         "live": True,
     }
     if not ocr["ocr_text"].strip() and not ocr["ocr_lines"]:
         raise RuntimeError(f"OCR returned no text or lines for {document.get('id')}")
+    try:
+        _write_json(
+            _cache_path(document),
+            {
+                "cache_schema_version": OCR_CACHE_SCHEMA_VERSION,
+                "file_sha256": file_sha256,
+                "language": language,
+                "cached_at": datetime.now(timezone.utc).isoformat(),
+                "ocr": ocr,
+            },
+        )
+    except OSError:
+        pass
     return ocr
 
 
@@ -581,7 +653,7 @@ def _extract(
     variant = prompt_snapshot.get("benchmark_prompt_variant", "zero-shot")
     examples_to_send = benchmark_examples if benchmark_examples is not None else prompt_snapshot.get("benchmark_examples", [])
     integrity = _integrity_metadata(prompt_snapshot, variant, examples_to_send)
-    ocr = _get_ocr(document, force_rerun=True)
+    ocr = _get_ocr(document, force_rerun=force_rerun_ocr)
     ocr_time_sec = float(ocr.get("ocr_time_sec", 0.85))
 
     request_config = {
@@ -834,6 +906,39 @@ def _self_check_example_selection() -> None:
     assert metadata["actual_count"] == 3
 
 
+def _self_check_ocr_cache() -> None:
+    assert _ocr_cache_matches(
+        {
+            "cache_schema_version": OCR_CACHE_SCHEMA_VERSION,
+            "file_sha256": "hash-1",
+            "language": "th",
+        },
+        "hash-1",
+        "th",
+    )
+    assert not _ocr_cache_matches(
+        {
+            "cache_schema_version": OCR_CACHE_SCHEMA_VERSION,
+            "file_sha256": "hash-1",
+            "language": "th",
+        },
+        "hash-2",
+        "th",
+    )
+    assert not _ocr_cache_matches(
+        {
+            "cache_schema_version": OCR_CACHE_SCHEMA_VERSION,
+            "file_sha256": "hash-1",
+            "language": "th",
+        },
+        "hash-1",
+        "en",
+    )
+
+
+_self_check_ocr_cache()
+
+
 def _self_check_prompt_integrity() -> None:
     snapshot = {
         "base_prompt": "base",
@@ -1012,7 +1117,7 @@ def run_kfold_evaluation(
                     document,
                     prompt_snapshot,
                     force_rerun=True,
-                    force_rerun_ocr=True,
+                    force_rerun_ocr=False,
                     benchmark_examples=benchmark_examples,
                 )
 
