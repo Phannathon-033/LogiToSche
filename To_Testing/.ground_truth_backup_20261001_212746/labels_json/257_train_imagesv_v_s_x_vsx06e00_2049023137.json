@@ -1,0 +1,27 @@
+{
+  "id": "DOC-257",
+  "rank": 257,
+  "file_name": "257_train_imagesv_v_s_x_vsx06e00_2049023137.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "233546",
+    "document_date": "1983-06-03",
+    "sender": "-",
+    "receiver": "-",
+    "origin": "D NEW YORK\"",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 1500.0,
+    "total_amount": 1500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:34:10"
+}

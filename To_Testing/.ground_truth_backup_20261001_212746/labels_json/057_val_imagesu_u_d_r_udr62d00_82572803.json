@@ -1,0 +1,27 @@
+{
+  "id": "DOC-057",
+  "rank": 57,
+  "file_name": "057_val_imagesu_u_d_r_udr62d00_82572803.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "115741",
+    "document_date": "2024-01-05",
+    "sender": "01/31/00",
+    "receiver": "PO NO",
+    "origin": "Bowling Grgen, KY 42102",
+    "destination": "REIDSUILLE CRO, CO",
+    "reference_number": "SHIV",
+    "unit_price": 6357.2,
+    "total_amount": 6357.2,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:09:53"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-055",
+  "rank": 55,
+  "file_name": "055_train_imagesy_y_l_i_yli35e00_2024526282.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "M00136",
+    "document_date": "1992-02-19",
+    "sender": "Healthy Buildings International.Inc.",
+    "receiver": "-",
+    "origin": "Fairfax, VA 22030",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 5.76,
+    "total_amount": 2572.22,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:09:37"
+}

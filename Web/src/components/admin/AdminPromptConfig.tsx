@@ -427,21 +427,21 @@ export function AdminPromptConfig({
         </div>
       )}
 
-      <section className="overflow-hidden rounded-3xl border border-slate-200/80 bg-slate-950 p-5 text-white shadow-panel sm:p-7">
+      <section className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 text-slate-900 shadow-panel sm:p-7">
         <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
           <div className="max-w-2xl">
-            <div className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-blue-300">
+            <div className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-blue-600">
               <Settings className="h-3.5 w-3.5" />
               Prompt Control Center
             </div>
             <h3 className="text-2xl font-black tracking-tight sm:text-3xl">ควบคุม Prompt และคุณภาพการสกัดข้อมูล</h3>
-            <p className="mt-2 max-w-xl text-xs font-medium leading-6 text-slate-300">
+            <p className="mt-2 max-w-xl text-xs font-medium leading-6 text-slate-500">
               จัดการคำสั่งหลัก กฎ semantic และ preset ของ SLM จากพื้นที่เดียว ก่อนส่งไปใช้งานกับ OCR จริง
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 text-[11px] font-bold text-emerald-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-bold text-emerald-700">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
               พร้อมใช้งาน
             </span>
             <button

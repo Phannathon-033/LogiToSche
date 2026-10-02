@@ -1,0 +1,27 @@
+{
+  "id": "DOC-255",
+  "rank": 255,
+  "file_name": "255_train_imagesl_l_m_h_lmh43a00_89001160.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "032",
+    "document_date": "1986-08-15",
+    "sender": "-",
+    "receiver": "SHIPPED TO",
+    "origin": "AL INVOICE",
+    "destination": "3967091",
+    "reference_number": "-",
+    "unit_price": 4400.0,
+    "total_amount": 4400.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:33:58"
+}

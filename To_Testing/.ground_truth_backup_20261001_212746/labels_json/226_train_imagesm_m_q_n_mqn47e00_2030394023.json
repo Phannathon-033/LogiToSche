@@ -1,0 +1,27 @@
+{
+  "id": "DOC-226",
+  "rank": 226,
+  "file_name": "226_train_imagesm_m_q_n_mqn47e00_2030394023.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "C954846-N",
+    "document_date": "1991-03-27",
+    "sender": "BL NO",
+    "receiver": "ACCOUNTS PAYABLE",
+    "origin": "BL NO",
+    "destination": "RICHMOND, VA 23261",
+    "reference_number": "1151DP4E22M181",
+    "unit_price": 1160.5,
+    "total_amount": 1160.5,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:30:25"
+}

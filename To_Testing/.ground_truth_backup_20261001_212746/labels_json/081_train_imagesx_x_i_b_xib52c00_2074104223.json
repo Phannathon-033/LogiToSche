@@ -1,0 +1,27 @@
+{
+  "id": "DOC-081",
+  "rank": 81,
+  "file_name": "081_train_imagesx_x_i_b_xib52c00_2074104223.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "1961-09-24",
+    "sender": "ID",
+    "receiver": "-",
+    "origin": "itical Contribution-Campaign",
+    "destination": "U COHIANLS, ID",
+    "reference_number": "-",
+    "unit_price": 500.0,
+    "total_amount": 500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:12:45"
+}

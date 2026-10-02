@@ -1,0 +1,27 @@
+{
+  "id": "DOC-238",
+  "rank": 238,
+  "file_name": "238_train_imagesx_x_p_z_xpz47c00_2072654445.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "222-1903",
+    "document_date": "2010-08-04",
+    "sender": "SAMELSONHLEDN CO",
+    "receiver": "-",
+    "origin": "SAMELSONHLEDN, CO",
+    "destination": "MEMPHIS, TN 38118",
+    "reference_number": "-",
+    "unit_price": 1.3,
+    "total_amount": 801.6,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:31:49"
+}

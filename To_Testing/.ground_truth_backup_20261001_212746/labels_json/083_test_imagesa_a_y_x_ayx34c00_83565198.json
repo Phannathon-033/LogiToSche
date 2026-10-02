@@ -1,0 +1,27 @@
+{
+  "id": "DOC-083",
+  "rank": 83,
+  "file_name": "083_test_imagesa_a_y_x_ayx34c00_83565198.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "?50",
+    "document_date": "1998-11-30",
+    "sender": "-",
+    "receiver": "-",
+    "origin": "GORDON FLESCH, CO",
+    "destination": "CDOUGALL, SC",
+    "reference_number": "-",
+    "unit_price": 1.71,
+    "total_amount": 1.71,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:12:57"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-096",
+  "rank": 96,
+  "file_name": "096_train_imagesy_y_h_i_yhi35e00_2024526012.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "CH0156",
+    "document_date": "2023-08-00",
+    "sender": "Healthy Buildings Intemational,Inc.",
+    "receiver": "-",
+    "origin": "Fairfax, VA 22030",
+    "destination": "Washington, DC",
+    "reference_number": "-",
+    "unit_price": 8000.0,
+    "total_amount": 4567.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:14:18"
+}

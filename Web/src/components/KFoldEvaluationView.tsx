@@ -385,7 +385,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     );
   }, [perfLogs.records, searchPerfQuery]);
 
-  // Background Evaluation Job System (each run performs live OCR and SLM inference)
+  // Background Evaluation Job System (live SLM inference with reusable OCR)
   const [evalJob, setEvalJob] = useState<EvaluationJobStatus | null>(null);
   const [isPollingJob, setIsPollingJob] = useState<boolean>(false);
   const [freshStatus, setFreshStatus] = useState<FreshRunStatus | null>(null);
@@ -724,7 +724,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         seed: randomSeed,
         prompt_variant: promptVariant,
         resume: false,
-        force_rerun_ocr: true,
+        force_rerun_ocr: false,
         max_docs: customMaxDocs,
         doc_id: selectedTestDocId,
       };
@@ -1420,7 +1420,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                       : `ทดสอบสด 1 ฉบับ (${evalJob.current_doc_id})`}
                     {" · "}
                     <span className="text-emerald-400 font-medium">
-                      รันสด 100% (PaddleOCR + GPU SLM ใหม่ทุกฉบับ · ไม่ใช้ cache)
+                      OCR ใช้ cache ได้ · GPU SLM รันสดใหม่ทุกฉบับ
                     </span>
                   </p>
                 </div>
@@ -1606,7 +1606,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 <div className="flex items-baseline gap-1 text-sm font-bold">
                   <span className="text-amber-400">{evalJob.live_gpu_docs ?? evalJob.live_gpu_count ?? evalJob.completed_docs ?? 0} GPU สด</span>
                 </div>
-                <span className="text-[10px] text-emerald-400/90">✓ รันสดใหม่ทุกฉบับ ไม่ใช้ cache</span>
+                <span className="text-[10px] text-emerald-400/90">✓ SLM สดทุกฉบับ · OCR cache {evalJob.cached_count ?? 0} รายการ</span>
               </div>
 
               <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3">

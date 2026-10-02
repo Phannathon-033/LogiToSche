@@ -1,0 +1,27 @@
+{
+  "id": "DOC-251",
+  "rank": 251,
+  "file_name": "251_train_imagesd_d_l_o_dlo20d00_525460342+-0342.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "1119",
+    "document_date": "2016-02-12",
+    "sender": "BEST",
+    "receiver": "-",
+    "origin": "NSURANCE, CO",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 848.03,
+    "total_amount": 848.03,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:33:30"
+}

@@ -1,0 +1,187 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin';
+    }
+
+    function ownsDocument(documentId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/documents/$(documentId))
+        && get(/databases/$(database)/documents/documents/$(documentId)).data.user_id == request.auth.uid;
+    }
+
+    function ownsDocumentAfter(documentId) {
+      return signedIn()
+        && getAfter(/databases/$(database)/documents/documents/$(documentId)).data.user_id == request.auth.uid;
+    }
+
+    function ownsDocumentOrAfter(documentId) {
+      return ownsDocument(documentId) || ownsDocumentAfter(documentId);
+    }
+
+    match /users/{userId} {
+      allow create: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.role != 'Admin';
+
+      allow read: if signedIn()
+        && (request.auth.uid == userId || isAdmin());
+
+      allow update: if isAdmin()
+        || (
+          signedIn()
+          && request.auth.uid == userId
+          && request.resource.data.uid == resource.data.uid
+          && request.resource.data.role == resource.data.role
+        );
+
+      allow delete: if isAdmin();
+    }
+
+    match /documents/{documentId} {
+      allow create: if signedIn()
+        && request.resource.data.document_id == documentId
+        && request.resource.data.user_id == request.auth.uid;
+
+      allow read: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.user_id == request.auth.uid
+        );
+
+      allow update: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.user_id == request.auth.uid
+          && request.resource.data.document_id == resource.data.document_id
+          && request.resource.data.user_id == resource.data.user_id
+        );
+
+      allow delete: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.user_id == request.auth.uid
+        );
+    }
+
+    match /ocr_results/{ocrId} {
+      allow create: if isAdmin()
+        || (
+          signedIn()
+          && request.resource.data.document_id is string
+          && ownsDocumentOrAfter(request.resource.data.document_id)
+        );
+
+      allow read: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.document_id is string
+          && ownsDocument(resource.data.document_id)
+        );
+
+      allow update: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.document_id == request.resource.data.document_id
+          && ownsDocument(resource.data.document_id)
+        );
+
+      allow delete: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.document_id is string
+          && ownsDocument(resource.data.document_id)
+        );
+    }
+
+    match /extracted_data/{documentId} {
+      allow create: if isAdmin()
+        || (
+          signedIn()
+          && request.resource.data.document_id == documentId
+          && ownsDocumentOrAfter(request.resource.data.document_id)
+        );
+
+      allow read: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.document_id is string
+          && ownsDocument(resource.data.document_id)
+        );
+
+      allow update: if isAdmin()
+        || (
+          signedIn()
+          && request.resource.data.document_id == resource.data.document_id
+          && ownsDocument(resource.data.document_id)
+        );
+
+      allow delete: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.document_id is string
+          && ownsDocument(resource.data.document_id)
+        );
+    }
+
+    match /corrections/{correctionId} {
+      allow create: if isAdmin()
+        || (
+          signedIn()
+          && request.resource.data.correction_id == correctionId
+          && request.resource.data.document_id is string
+          && request.resource.data.user_id == request.auth.uid
+          && request.resource.data.corrected_by == request.auth.token.email
+          && ownsDocumentOrAfter(request.resource.data.document_id)
+        );
+
+      allow read: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.document_id is string
+          && ownsDocument(resource.data.document_id)
+        );
+
+      allow update, delete: if isAdmin();
+    }
+
+    match /logistics_extractions/{documentId} {
+      allow create: if isAdmin()
+        || (
+          signedIn()
+          && request.resource.data.document_id == documentId
+          && request.resource.data.user_id == request.auth.uid
+          && ownsDocumentOrAfter(documentId)
+        );
+
+      allow read: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.user_id == request.auth.uid
+        );
+
+      allow update: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.user_id == request.auth.uid
+          && request.resource.data.document_id == resource.data.document_id
+          && request.resource.data.user_id == resource.data.user_id
+        );
+
+      allow delete: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.user_id == request.auth.uid
+        );
+    }
+  }
+}

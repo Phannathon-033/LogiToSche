@@ -1,0 +1,27 @@
+{
+  "id": "DOC-023",
+  "rank": 23,
+  "file_name": "023_train_imagesk_k_f_z_kfz64c00_91507726_7727.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "102",
+    "document_date": "1984-08-07",
+    "sender": "LORILLARD MEDIA SERVICES (LMS)",
+    "receiver": "LORILARD,BULOVA, CHA, LOENS CORP",
+    "origin": "MATIONAL, CO",
+    "destination": "ARE, IN",
+    "reference_number": "-",
+    "unit_price": 208.65,
+    "total_amount": 208.65,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:05:56"
+}

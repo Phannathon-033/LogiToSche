@@ -1,0 +1,27 @@
+{
+  "id": "DOC-079",
+  "rank": 79,
+  "file_name": "079_train_imagesj_j_i_b_jib52c00_2074104237.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "2024-09-26",
+    "sender": "ID",
+    "receiver": "-",
+    "origin": "itical Contribution-Campaign",
+    "destination": "KOR ASE RY MCUACOS AY P, CO",
+    "reference_number": "-",
+    "unit_price": 200.0,
+    "total_amount": 200.0,
+    "currency": "GBP"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:12:33"
+}

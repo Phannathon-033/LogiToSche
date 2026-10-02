@@ -1,0 +1,27 @@
+{
+  "id": "DOC-266",
+  "rank": 266,
+  "file_name": "266_val_imagesq_q_g_w_qgw61f00_2015016478.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "34BB",
+    "document_date": "2013-02-07",
+    "sender": "CORPORATE",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "APP, ID",
+    "reference_number": "-",
+    "unit_price": 431924.0,
+    "total_amount": 431924.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:35:17"
+}

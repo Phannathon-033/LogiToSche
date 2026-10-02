@@ -1,0 +1,27 @@
+{
+  "id": "DOC-243",
+  "rank": 243,
+  "file_name": "243_val_imagesj_j_w_q_jwq48d00_2063233952.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "1501",
+    "document_date": "1978-01-01",
+    "sender": "CORPORATE",
+    "receiver": "-",
+    "origin": "cies",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 22627.0,
+    "total_amount": 22627.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:32:28"
+}

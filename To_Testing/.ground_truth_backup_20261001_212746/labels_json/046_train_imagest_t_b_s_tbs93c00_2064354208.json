@@ -1,0 +1,27 @@
+{
+  "id": "DOC-046",
+  "rank": 46,
+  "file_name": "046_train_imagest_t_b_s_tbs93c00_2064354208.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "PX0185",
+    "document_date": "1997-09-30",
+    "sender": "Shunichi Kuriyama",
+    "receiver": "-",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 100.0,
+    "total_amount": 800.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:08:34"
+}

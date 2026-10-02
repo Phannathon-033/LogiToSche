@@ -1,0 +1,27 @@
+{
+  "id": "DOC-202",
+  "rank": 202,
+  "file_name": "202_train_imagesy_y_d_x_ydx5aa00_11301252.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "00329-1",
+    "document_date": "1995-11-01",
+    "sender": "AmericanAirlines",
+    "receiver": "-",
+    "origin": "LICE ASST TR",
+    "destination": "NEWARK, NJ",
+    "reference_number": "BOX",
+    "unit_price": 3783.84,
+    "total_amount": 3783.84,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:27:49"
+}

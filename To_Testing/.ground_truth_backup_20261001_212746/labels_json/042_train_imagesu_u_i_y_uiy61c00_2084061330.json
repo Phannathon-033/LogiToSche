@@ -1,0 +1,27 @@
+{
+  "id": "DOC-042",
+  "rank": 42,
+  "file_name": "042_train_imagesu_u_i_y_uiy61c00_2084061330.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "1304",
+    "document_date": "2015-03-07",
+    "sender": "PROFESSIONAL SPORTS MARKETING, INC.",
+    "receiver": "MR. GARY CAPREOL",
+    "origin": "New York, NY 10017",
+    "destination": "San Francisco, CA",
+    "reference_number": "-",
+    "unit_price": 187500.0,
+    "total_amount": 187500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:08:07"
+}

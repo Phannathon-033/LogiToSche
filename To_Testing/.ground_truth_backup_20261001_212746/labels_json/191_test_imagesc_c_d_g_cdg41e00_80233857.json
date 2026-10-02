@@ -1,0 +1,27 @@
+{
+  "id": "DOC-191",
+  "rank": 191,
+  "file_name": "191_test_imagesc_c_d_g_cdg41e00_80233857.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "511114",
+    "document_date": "1985-05-17",
+    "sender": "LABORATORIES AMERICA, INC.",
+    "receiver": "-",
+    "origin": "Greensboro, NC 27420",
+    "destination": "VIENNA, VA",
+    "reference_number": "-",
+    "unit_price": 400.0,
+    "total_amount": 400.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:26:39"
+}

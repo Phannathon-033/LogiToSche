@@ -49,6 +49,10 @@ export function FirebaseCloudHistoryModal({
   onShowToast,
 }: FirebaseCloudHistoryModalProps) {
   const [documents, setDocuments] = useState<FirebaseDocumentRecord[]>([]);
+  const [cloudAccessible, setCloudAccessible] = useState(true);
+  const [cloudCount, setCloudCount] = useState<number | null>(0);
+  const [localCount, setLocalCount] = useState(0);
+  const [cloudErrorCode, setCloudErrorCode] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [syncingAll, setSyncingAll] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -78,8 +82,13 @@ export function FirebaseCloudHistoryModal({
   async function loadDocuments() {
     setLoading(true);
     try {
-      const records = await fetchFirebaseDocuments(50);
+      const result = await fetchFirebaseDocuments(50);
+      const records = result.records;
       setDocuments(records);
+      setCloudAccessible(result.cloudAccessible);
+      setCloudCount(result.cloudCount);
+      setLocalCount(result.localCount);
+      setCloudErrorCode(result.cloudErrorCode);
       if (records.length > 0) {
         setSelectedRecord((prev) => {
           if (prev) {
@@ -168,7 +177,72 @@ export function FirebaseCloudHistoryModal({
   }
 
   function handleCopyRules() {
-    const rules = `rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /logistics_extractions/{document} {\n      allow read, write: if request.auth != null;\n    }\n  }\n}`;
+    const rules = `rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin';
+    }
+
+    function ownsDocument(documentId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/documents/$(documentId))
+        && get(/databases/$(database)/documents/documents/$(documentId)).data.user_id == request.auth.uid;
+    }
+
+    function ownsDocumentAfter(documentId) {
+      return signedIn()
+        && getAfter(/databases/$(database)/documents/documents/$(documentId)).data.user_id == request.auth.uid;
+    }
+
+    function ownsDocumentOrAfter(documentId) {
+      return ownsDocument(documentId) || ownsDocumentAfter(documentId);
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if signedIn() && request.auth.uid == uid && request.resource.data.uid == request.auth.uid && request.resource.data.role != 'Admin';
+      allow update: if isAdmin() || (signedIn() && request.auth.uid == uid && request.resource.data.role == resource.data.role && request.resource.data.uid == resource.data.uid);
+      allow delete: if isAdmin();
+    }
+
+    match /documents/{documentId} {
+      allow create: if signedIn() && request.resource.data.user_id == request.auth.uid;
+      allow read, delete: if isAdmin() || (signedIn() && resource.data.user_id == request.auth.uid);
+      allow update: if isAdmin() || (signedIn() && resource.data.user_id == request.auth.uid && request.resource.data.user_id == resource.data.user_id);
+    }
+
+    match /ocr_results/{ocrId} {
+      allow read, delete: if isAdmin() || ownsDocument(resource.data.document_id);
+      allow create, update: if isAdmin() || ownsDocumentOrAfter(request.resource.data.document_id);
+    }
+
+    match /extracted_data/{documentId} {
+      allow read, delete: if isAdmin() || ownsDocument(resource.data.document_id);
+      allow create, update: if isAdmin() || ownsDocumentOrAfter(request.resource.data.document_id);
+    }
+
+    match /corrections/{correctionId} {
+      allow read: if isAdmin() || ownsDocument(resource.data.document_id);
+      allow create: if isAdmin() || (signedIn() && request.resource.data.user_id == request.auth.uid && ownsDocumentOrAfter(request.resource.data.document_id));
+      allow update, delete: if isAdmin();
+    }
+
+    match /logistics_extractions/{documentId} {
+      allow create: if isAdmin() || (signedIn() && request.resource.data.document_id == documentId && request.resource.data.user_id == request.auth.uid && ownsDocumentOrAfter(documentId));
+      allow read: if isAdmin() || (signedIn() && resource.data.user_id == request.auth.uid);
+      allow update: if isAdmin() || (signedIn() && resource.data.user_id == request.auth.uid && request.resource.data.document_id == resource.data.document_id && request.resource.data.user_id == resource.data.user_id);
+      allow delete: if isAdmin() || (signedIn() && resource.data.user_id == request.auth.uid);
+    }
+  }
+}`;
     navigator.clipboard.writeText(rules);
     setCopiedRules(true);
     onShowToast("คัดลอกตัวอย่าง Firestore Rules แล้ว ต้องปรับตามระบบ Auth ก่อนใช้งานจริง");
@@ -199,9 +273,6 @@ export function FirebaseCloudHistoryModal({
       return fileName.includes(q) || docType.includes(q) || docNo.includes(q) || party.includes(q);
     });
   }, [documents, filterType, searchQuery]);
-
-  const cloudCount = documents.filter((d) => d.cloudSyncStatus === "synced").length;
-  const localCount = documents.filter((d) => d.cloudSyncStatus !== "synced").length;
 
   if (!isOpen) return null;
 
@@ -366,6 +437,13 @@ export function FirebaseCloudHistoryModal({
           </div>
         )}
 
+        {!cloudAccessible && (
+          <div className="flex-shrink-0 border-b border-amber-200 bg-amber-50 px-5 py-3 text-xs text-amber-900 sm:px-6">
+            <p className="font-bold">ยังอ่าน Cloud Firestore ไม่ได้ จึงกำลังแสดงข้อมูลจาก Local Cache</p>
+            <p className="mt-0.5">ยังยืนยันจำนวนเอกสารบน Cloud ไม่ได้ ({cloudErrorCode || "unknown"})</p>
+          </div>
+        )}
+
         {/* ================================================================= */}
         {/* 2. MAIN 2-COLUMN BODY (Left List, Right Inspector)                */}
         {/* ================================================================= */}
@@ -419,7 +497,7 @@ export function FirebaseCloudHistoryModal({
                       : "hover:text-slate-900"
                   }`}
                 >
-                  ☁️ Cloud ({cloudCount})
+                  ☁️ Cloud ({cloudCount === null ? "ไม่ทราบ" : cloudCount})
                 </button>
                 <button
                   type="button"

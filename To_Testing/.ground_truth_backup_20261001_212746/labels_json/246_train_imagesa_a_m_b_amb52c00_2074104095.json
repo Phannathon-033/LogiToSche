@@ -1,0 +1,27 @@
+{
+  "id": "DOC-246",
+  "rank": 246,
+  "file_name": "246_train_imagesa_a_m_b_amb52c00_2074104095.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "-",
+    "document_date": "1996-04-09",
+    "sender": "COMPANY",
+    "receiver": "-",
+    "origin": "itical Contribution -- Annual Fundralser bein",
+    "destination": "Eimhurst, IL",
+    "reference_number": "Box33",
+    "unit_price": 25000.0,
+    "total_amount": 25000.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:32:51"
+}

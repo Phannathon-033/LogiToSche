@@ -59,6 +59,10 @@ function sparkHeight(value: number): number {
 export interface AdminOverviewProps {
   analytics: AdminAnalyticsPoint[];
   documents: AdminDocumentRecord[];
+  cloudAccessible?: boolean;
+  cloudCount?: number | null;
+  localCount?: number;
+  cloudErrorCode?: string | null;
   loading?: boolean;
   error?: string | null;
   onRefresh?: () => void;
@@ -74,6 +78,10 @@ export interface AdminOverviewProps {
 export function AdminOverview({
   analytics: _analytics,
   documents,
+  cloudAccessible = true,
+  cloudCount = documents.length,
+  localCount = 0,
+  cloudErrorCode = null,
   loading = false,
   error = null,
   onRefresh,
@@ -481,6 +489,16 @@ export function AdminOverview({
 
   return (
     <div className="space-y-6">
+      {!cloudAccessible && (
+        <div className="flex items-start gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+          <div>
+            <p className="font-bold">Cloud Firestore ยังไม่พร้อมใช้งาน</p>
+            <p className="mt-0.5">กำลังแสดงเอกสารจาก Local Cache {localCount} รายการ จึงยังยืนยันจำนวนบน Cloud ไม่ได้ ({cloudErrorCode || "unknown"})</p>
+          </div>
+        </div>
+      )}
+
       {/* ------------------------------------------------------------- */}
       {/* ROW 1: 4 Top KPI Metric Cards (100% Real Data) */}
       {/* ------------------------------------------------------------- */}
@@ -491,15 +509,19 @@ export function AdminOverview({
             <span className="text-xs font-bold text-slate-500">เอกสารทั้งหมด</span>
             <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-blue-700">
               <TrendingUp className="h-3 w-3" />
-              {totalDocs} รายการ
+              {cloudAccessible ? `${cloudCount ?? 0} Cloud` : `${localCount} Local`}
             </span>
           </div>
           <div className="mt-2 text-3xl font-black tracking-tight text-slate-900">
-            {totalDocs.toLocaleString()}
+            {(cloudAccessible ? cloudCount ?? 0 : localCount).toLocaleString()}
           </div>
           <div className="mt-4 flex items-end justify-between">
             <span className="text-[11px] font-medium text-slate-400">
-              {totalDocs > 0 ? "จากฐานข้อมูลเอกสารจริง" : "ยังไม่มีเอกสารในคิว"}
+              {totalDocs > 0
+                ? cloudAccessible
+                  ? `จาก Cloud Firestore (${cloudCount} รายการ)`
+                  : `จาก Local Cache (${localCount} รายการ)`
+                : "ยังไม่มีเอกสารในคิว"}
             </span>
             <div className="flex items-end gap-1">
               {realSparklines.total.map((h, i) => (
@@ -972,7 +994,9 @@ export function AdminOverview({
                 Recent Actionable Documents
               </h3>
               <p className="text-xs text-slate-500">
-                เอกสารจริงล่าสุดจากคิวงาน ({totalDocs} รายการ)
+                {cloudAccessible
+                  ? `เอกสารจริงล่าสุดจาก Cloud Firestore (${cloudCount} รายการ)`
+                  : `เอกสารจาก Local Cache (${localCount} รายการ)`}
               </p>
             </div>
             {onOpenReviewQueue && (

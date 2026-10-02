@@ -1,0 +1,27 @@
+{
+  "id": "DOC-281",
+  "rank": 281,
+  "file_name": "281_test_imagesd_d_z_r_dzr90e00_91515343.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "91515343",
+    "document_date": "1985-03-29",
+    "sender": "APR 1",
+    "receiver": "-",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 1054.17,
+    "total_amount": 1054.17,
+    "currency": "GBP"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:37:09"
+}

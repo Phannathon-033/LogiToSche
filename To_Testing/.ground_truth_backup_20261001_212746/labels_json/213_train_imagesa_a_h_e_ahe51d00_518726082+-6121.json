@@ -1,0 +1,27 @@
+{
+  "id": "DOC-213",
+  "rank": 213,
+  "file_name": "213_train_imagesa_a_h_e_ahe51d00_518726082+-6121.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "bill_of_lading",
+    "document_number": "275-0132",
+    "document_date": "1995-10-16",
+    "sender": "A FUTURE PAYMENT ****",
+    "receiver": "UNION TOBACCO COMPANY",
+    "origin": "NEW BEDFORD, MA",
+    "destination": "f lading NUMBER PURCHASE CRDER, OR",
+    "reference_number": "BOX",
+    "unit_price": 722.0,
+    "total_amount": 722.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:28:59"
+}

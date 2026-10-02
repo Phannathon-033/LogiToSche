@@ -1,0 +1,27 @@
+{
+  "id": "DOC-267",
+  "rank": 267,
+  "file_name": "267_val_imagesb_b_y_c_byc37c00_2047190666.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "231GY6",
+    "document_date": "2011-07-01",
+    "sender": "MANAGEMENT CORPORATION",
+    "receiver": "-",
+    "origin": "icy",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 25000.0,
+    "total_amount": 25000.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:35:25"
+}

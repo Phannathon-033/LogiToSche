@@ -1,0 +1,27 @@
+{
+  "id": "DOC-052",
+  "rank": 52,
+  "file_name": "052_train_imagesv_v_c_a_vca84c00_91695242_5243.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "15272",
+    "document_date": "1984-12-10",
+    "sender": "-",
+    "receiver": "EBETTY EFFEESCN",
+    "origin": "AL COPY",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 49451.6,
+    "total_amount": 49451.6,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:09:15"
+}

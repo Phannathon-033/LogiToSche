@@ -1,0 +1,27 @@
+{
+  "id": "DOC-053",
+  "rank": 53,
+  "file_name": "053_train_imagesu_u_y_f_uyf70e00_91573805.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "01832",
+    "document_date": "1989-12-31",
+    "sender": "Post-Tribune",
+    "receiver": "-",
+    "origin": "Gary, IN 46402",
+    "destination": "NEWYORK, NY 10016-5895",
+    "reference_number": "-",
+    "unit_price": 2240.8,
+    "total_amount": 2240.8,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:09:23"
+}

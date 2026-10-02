@@ -1,0 +1,27 @@
+{
+  "id": "DOC-212",
+  "rank": 212,
+  "file_name": "212_test_imagesk_k_v_d_kvd21e00_87104228.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "608032",
+    "document_date": "1986-02-04",
+    "sender": "Lorillard, Inc.",
+    "receiver": "Dr. Daniel J. Heck",
+    "origin": "VIENNA, VA 22180",
+    "destination": "Greensboro, NC 27420-1688",
+    "reference_number": "-",
+    "unit_price": 1200.0,
+    "total_amount": 1200.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:28:52"
+}

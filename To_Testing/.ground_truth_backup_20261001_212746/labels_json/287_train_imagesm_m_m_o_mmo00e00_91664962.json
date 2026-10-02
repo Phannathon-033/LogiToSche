@@ -1,0 +1,27 @@
+{
+  "id": "DOC-287",
+  "rank": 287,
+  "file_name": "287_train_imagesm_m_m_o_mmo00e00_91664962.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "031601",
+    "document_date": "2007-02-02",
+    "sender": "The New York Times Company Magazine Group",
+    "receiver": "EILEEN ANTIONIELLO",
+    "origin": "NEW YORK, NY 10016",
+    "destination": "NEW YORK, NY 10008",
+    "reference_number": "BOX",
+    "unit_price": 4794.6,
+    "total_amount": 4794.6,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:37:55"
+}

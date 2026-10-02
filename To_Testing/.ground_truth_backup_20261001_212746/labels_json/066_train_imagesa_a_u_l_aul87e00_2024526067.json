@@ -1,0 +1,27 @@
+{
+  "id": "DOC-066",
+  "rank": 66,
+  "file_name": "066_train_imagesa_a_u_l_aul87e00_2024526067.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "4258",
+    "document_date": "1991-10-31",
+    "sender": "-",
+    "receiver": "-",
+    "origin": "Fin, VA 22030",
+    "destination": "inax, VA 22030",
+    "reference_number": "-",
+    "unit_price": 2500.0,
+    "total_amount": 6177.02,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:10:57"
+}

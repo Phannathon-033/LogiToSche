@@ -1,0 +1,27 @@
+{
+  "id": "DOC-128",
+  "rank": 128,
+  "file_name": "128_train_imagesi_i_v_g_ivg43a00_89001813.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "505054",
+    "document_date": "1984-11-12",
+    "sender": "LABORATORIES AMERICA INC",
+    "receiver": "-",
+    "origin": "Greensboro, NC 27420",
+    "destination": "LABORATORIES AMERICA, NC",
+    "reference_number": "-",
+    "unit_price": 2050.0,
+    "total_amount": 2050.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:18:21"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-250",
+  "rank": 250,
+  "file_name": "250_train_imagesl_l_i_s_lis53e00_2015020090.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "2722",
+    "document_date": "2019-07-23",
+    "sender": "PM INC. REV. 1/79",
+    "receiver": "-",
+    "origin": "New York, NY 10022",
+    "destination": "CASH CONTROL, OR",
+    "reference_number": "-",
+    "unit_price": 19.81,
+    "total_amount": 19.81,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:33:22"
+}

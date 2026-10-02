@@ -1,0 +1,27 @@
+{
+  "id": "DOC-159",
+  "rank": 159,
+  "file_name": "159_val_imagesc_c_n_i_cni91e00_00921704.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "406205",
+    "document_date": "1983-12-22",
+    "sender": "LABORATORIES AMERICA,INC",
+    "receiver": "Dr. Connie J. Stone",
+    "origin": "Greensboro, NC 27420",
+    "destination": "VIENNA, VA",
+    "reference_number": "-",
+    "unit_price": 1950.0,
+    "total_amount": 1950.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:22:22"
+}

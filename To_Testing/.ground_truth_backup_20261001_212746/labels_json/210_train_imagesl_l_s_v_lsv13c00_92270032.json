@@ -1,0 +1,27 @@
+{
+  "id": "DOC-210",
+  "rank": 210,
+  "file_name": "210_train_imagesl_l_s_v_lsv13c00_92270032.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "6645",
+    "document_date": "1996-04-01",
+    "sender": "Only Ferns and Conditions, and those incorporaled by",
+    "receiver": "-",
+    "origin": "NEW YORK, NY 10010",
+    "destination": "SHE LOVES, ME",
+    "reference_number": "DATE",
+    "unit_price": 13715.0,
+    "total_amount": 13715.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:28:41"
+}

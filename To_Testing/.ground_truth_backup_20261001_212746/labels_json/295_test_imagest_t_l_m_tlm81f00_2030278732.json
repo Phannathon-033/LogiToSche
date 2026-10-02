@@ -1,0 +1,27 @@
+{
+  "id": "DOC-295",
+  "rank": 295,
+  "file_name": "295_test_imagest_t_l_m_tlm81f00_2030278732.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "$99.55",
+    "document_date": "1992-09-16",
+    "sender": "Summerell Co., Inc",
+    "receiver": "Park 500, North Warehouse",
+    "origin": "Mechanicsville, VA 23111",
+    "destination": "Shipping Point",
+    "reference_number": "NUMBER",
+    "unit_price": 99.55,
+    "total_amount": 271.87,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:38:54"
+}

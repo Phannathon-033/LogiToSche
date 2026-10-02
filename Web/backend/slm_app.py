@@ -1416,7 +1416,7 @@ class StartEvaluationRequest(BaseModel):
     seed: int = 42
     prompt_variant: str = "zero-shot"
     resume: bool = False
-    force_rerun_ocr: bool = True
+    force_rerun_ocr: bool = False
     max_docs: int | None = None
     doc_id: str | None = None
 

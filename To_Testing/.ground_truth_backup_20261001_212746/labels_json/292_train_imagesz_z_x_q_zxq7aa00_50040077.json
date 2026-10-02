@@ -1,0 +1,27 @@
+{
+  "id": "DOC-292",
+  "rank": 292,
+  "file_name": "292_train_imagesz_z_x_q_zxq7aa00_50040077.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "bill_of_lading",
+    "document_number": "5—11-1-71—300,000",
+    "document_date": "1972-02-29",
+    "sender": "COMMONWEALTH OF VIRGINIA",
+    "receiver": "-",
+    "origin": "al bill",
+    "destination": "SHIPMENT, OR",
+    "reference_number": "promptly",
+    "unit_price": 485.66,
+    "total_amount": 485.66,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:38:31"
+}

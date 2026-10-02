@@ -1,0 +1,27 @@
+{
+  "id": "DOC-056",
+  "rank": 56,
+  "file_name": "056_val_imagesw_w_c_o_wco00e00_91694232.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "235",
+    "document_date": "1990-05-13",
+    "sender": "New Nork",
+    "receiver": "NEW YORK",
+    "origin": "MELVILLE, NY 11747",
+    "destination": "NEW YORK, NY 10016",
+    "reference_number": "-",
+    "unit_price": 219.73,
+    "total_amount": 8695.6,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:09:45"
+}

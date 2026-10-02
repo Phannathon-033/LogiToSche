@@ -1,0 +1,27 @@
+{
+  "id": "DOC-070",
+  "rank": 70,
+  "file_name": "070_train_imagesg_g_i_t_git54a00_91654505.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "12-7",
+    "document_date": "1990-02-01",
+    "sender": "M. Carlus",
+    "receiver": "-",
+    "origin": "NEW YORK, NY 10036",
+    "destination": "NEW YORK, NY 10038",
+    "reference_number": "-",
+    "unit_price": 4615.0,
+    "total_amount": 43078.28,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:11:25"
+}

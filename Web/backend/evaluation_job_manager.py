@@ -4,7 +4,7 @@ Provides asynchronous, non-blocking background job execution for K-Fold evaluati
 Features:
 1. Immediate HTTP response upon job creation (no browser timeout).
 2. Per-document immediate saving of predictions and performance logs.
-3. Live evaluation: every document bypasses prediction and OCR caches.
+3. Live evaluation: every document bypasses prediction cache, while OCR cache reuse is allowed.
 4. Real-time progress tracking (overall progress, fold progress, elapsed time, live logs).
 5. Graceful stop and cancel controls.
 """
@@ -172,7 +172,7 @@ class EvaluationJobManager:
         random_seed: int = 42,
         prompt_variant: str = "zero-shot",
         resume: bool = False,
-        force_rerun_ocr: bool = True,
+        force_rerun_ocr: bool = False,
         max_docs: int | None = None,
         doc_id: str | None = None,
     ) -> dict[str, Any]:
@@ -181,7 +181,7 @@ class EvaluationJobManager:
         if mode == "single_doc":
             validate_training_split(prompt_variant, 0)
         resume = False
-        force_rerun_ocr = True
+        force_rerun_ocr = bool(force_rerun_ocr)
         with self._lock:
             # Check if an active job is already running
             if self._active_job_id:
@@ -220,8 +220,8 @@ class EvaluationJobManager:
                         doc_idx = i
                         break
                 target_splits = [(1, [], [doc_idx])]
-                resume = False  # Always run fresh on GPU to measure live performance!
-                force_rerun_ocr = True  # Always re-read OCR on image fresh!
+                resume = False
+                force_rerun_ocr = True
             else:
                 effective_k = max(2, min(k_splits, len(documents)))
                 kf = KFold(n_splits=effective_k, shuffle=True, random_state=random_seed)
@@ -345,7 +345,7 @@ class EvaluationJobManager:
 
         print(f"\n{'='*70}")
         print(f"  [JOB {job_id}] Started: {job_state['mode']} ({job_state['overall_total']} documents)")
-        print(f"  Live evaluation: prediction and OCR cache bypassed | Prompt: {prompt_variant} | OCR: Forced Fresh Read")
+        print(f"  Live evaluation: prediction cache bypassed, SLM live, OCR cache enabled | Prompt: {prompt_variant} | OCR: {'Forced Fresh Read' if force_rerun_ocr else 'Cache Reuse'}")
         print(f"{'='*70}\n")
 
         for fold, train_indices, validation_indices in target_splits:
@@ -424,9 +424,10 @@ class EvaluationJobManager:
                         doc,
                         prompt_snapshot,
                         force_rerun=True,
-                        force_rerun_ocr=True,
+                        force_rerun_ocr=force_rerun_ocr,
                         benchmark_examples=benchmark_examples,
                     )
+                    is_cached = trace.get("ocr", {}).get("cache_hit") is True
                     live_extractions[str(doc_id)] = (pred, trace)
                     doc_elapsed = round(time.time() - t_doc_start, 2)
                     perf = trace.get("performance", {})

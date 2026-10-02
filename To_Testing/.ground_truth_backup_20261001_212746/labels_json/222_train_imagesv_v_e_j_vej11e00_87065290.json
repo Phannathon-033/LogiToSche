@@ -1,0 +1,27 @@
+{
+  "id": "DOC-222",
+  "rank": 222,
+  "file_name": "222_train_imagesv_v_e_j_vej11e00_87065290.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "7273002390",
+    "document_date": "1987-09-30",
+    "sender": "THE CONTRACT RATE SHOWN",
+    "receiver": "LORILLARD MEDIA SERVICES",
+    "origin": "LOS ANGELES, CA",
+    "destination": "NEW YORK, NY 10103",
+    "reference_number": "-",
+    "unit_price": 17895.05,
+    "total_amount": 17895.05,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:29:58"
+}

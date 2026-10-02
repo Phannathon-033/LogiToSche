@@ -1,0 +1,27 @@
+{
+  "id": "DOC-062",
+  "rank": 62,
+  "file_name": "062_train_imagesv_v_f_i_vfi35e00_2024526069.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "M00094",
+    "document_date": "1991-10-23",
+    "sender": "Healthy Buildings Intemaional.Inc",
+    "receiver": "-",
+    "origin": "Fairfax, VA 22030",
+    "destination": "Fairax, VA 22030",
+    "reference_number": "-",
+    "unit_price": 10062.68,
+    "total_amount": 10062.68,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:10:29"
+}
