@@ -1,0 +1,54 @@
+{
+  "started_at": "2026-10-02T01:47:40.672289",
+  "processed": [
+    {
+      "file_name": "001_train_imagesv_v_t_j_vtj11e00_87065032.png",
+      "rank": 1,
+      "seconds": 91.7,
+      "changed_fields": [
+        "document_number",
+        "document_date",
+        "sender",
+        "receiver",
+        "origin",
+        "destination",
+        "unit_price",
+        "total_amount"
+      ],
+      "filled": 11
+    },
+    {
+      "file_name": "002_train_imagesw_w_h_d_whd35f00_0060118998.png",
+      "rank": 2,
+      "seconds": 115.55,
+      "changed_fields": [
+        "sender",
+        "receiver",
+        "origin",
+        "destination",
+        "reference_number",
+        "unit_price",
+        "total_amount"
+      ],
+      "filled": 11
+    },
+    {
+      "file_name": "003_train_imagesm_m_o_m_mom34c00_83645350_5352.png",
+      "rank": 3,
+      "seconds": 103.75,
+      "changed_fields": [
+        "document_date",
+        "sender",
+        "receiver",
+        "origin",
+        "destination",
+        "reference_number",
+        "unit_price"
+      ],
+      "filled": 11
+    }
+  ],
+  "failed": [],
+  "finished_at": "2026-10-02T01:52:51.779283",
+  "total_results": 300
+}

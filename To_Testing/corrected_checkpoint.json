@@ -1,0 +1,515 @@
+{
+  "001_train_imagesv_v_t_j_vtj11e00_87065032.png": {
+    "id": "DOC-001",
+    "rank": 1,
+    "file_name": "001_train_imagesv_v_t_j_vtj11e00_87065032.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "11009",
+      "document_date": "1987-08-01",
+      "sender": "Home Viewer Publications, Inc.",
+      "receiver": "Lorillard Media Services",
+      "origin": "New York, NY",
+      "destination": "New York, NY",
+      "reference_number": "LM 2565",
+      "unit_price": 0.0,
+      "total_amount": 190175.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 92.0,
+      "ocr": 96,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 01:49:12"
+  },
+  "002_train_imagesw_w_h_d_whd35f00_0060118998.png": {
+    "id": "DOC-002",
+    "rank": 2,
+    "file_name": "002_train_imagesw_w_h_d_whd35f00_0060118998.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "121737",
+      "document_date": "1994-11-16",
+      "sender": "MENASHA CORPORATION",
+      "receiver": "AMERICAN TOBACCO",
+      "origin": "NEENAH WI 54957-0427",
+      "destination": "STAMFORD CT 06904-23BO",
+      "reference_number": "P.082/002",
+      "unit_price": 0.0,
+      "total_amount": 0.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 89.0,
+      "ocr": 93,
+      "slm": 90,
+      "mapping": 82,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 01:51:07"
+  },
+  "003_train_imagesm_m_o_m_mom34c00_83645350_5352.png": {
+    "id": "DOC-003",
+    "rank": 3,
+    "file_name": "003_train_imagesm_m_o_m_mom34c00_83645350_5352.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "21998-8",
+      "document_date": "1998-19-02",
+      "sender": "Lorillard Tobacco Company",
+      "receiver": "ANA",
+      "origin": "Greensboro, NC 27408",
+      "destination": "New York, NY 10017",
+      "reference_number": "ANA",
+      "unit_price": 0.0,
+      "total_amount": 16750.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 93.0,
+      "ocr": 99,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 01:52:51"
+  },
+  "004_train_imagesh_h_o_m_hom34c00_83645348.png": {
+    "id": "DOC-004",
+    "rank": 4,
+    "file_name": "004_train_imagesh_h_o_m_hom34c00_83645348.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "21998-8",
+      "document_date": "1998-19-02",
+      "sender": "Lorillard Tobacco Company",
+      "receiver": "ANA",
+      "origin": "Greensboro, NC 27408",
+      "destination": "New York, NY 10017",
+      "reference_number": "83645348",
+      "unit_price": 0.0,
+      "total_amount": 16750.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 93.0,
+      "ocr": 99,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 01:55:06"
+  },
+  "005_train_imagesk_k_s_d_ksd53c00_92243414_3421.png": {
+    "id": "DOC-005",
+    "rank": 5,
+    "file_name": "005_train_imagesk_k_s_d_ksd53c00_92243414_3421.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "INV/REF",
+      "document_date": "1989-19-10",
+      "sender": "TIME & LIFE BUILDING • ROCKEFELLER CENTER • NEW YORK, NY 10020",
+      "receiver": "TIME & LIFE BUILDING • ROCKEFELLER CENTER • NEW YORK, NY 10020",
+      "origin": "NEW YORK, NY, 10249",
+      "destination": "NEW YORK, NY, 10249",
+      "reference_number": "INV/REF",
+      "unit_price": 0.0,
+      "total_amount": 118.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 93.0,
+      "ocr": 98,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 01:57:20"
+  },
+  "006_train_imagesg_g_o_i_goi66d00_514225065+-5065.png": {
+    "id": "DOC-006",
+    "rank": 6,
+    "file_name": "006_train_imagesg_g_o_i_goi66d00_514225065+-5065.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "8.197 5nm 0581",
+      "document_date": "1999-22-12",
+      "sender": "RJReynolds",
+      "receiver": "Group Manager - Sales Materials Management, Sales Materials Management, Plaza 12.",
+      "origin": "Plaza 12.",
+      "destination": "Purchasing Department",
+      "reference_number": "8.197 5nm 0581",
+      "unit_price": 0.0,
+      "total_amount": 9627.16,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 87.0,
+      "ocr": 96,
+      "slm": 90,
+      "mapping": 73,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 01:58:55"
+  },
+  "007_train_imagest_t_q_y_tqy64c00_91505655_5656.png": {
+    "id": "DOC-007",
+    "rank": 7,
+    "file_name": "007_train_imagest_t_q_y_tqy64c00_91505655_5656.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "418855",
+      "document_date": "1985-22-01",
+      "sender": "LCRILLARD INC",
+      "receiver": "NEW YORK TIMES",
+      "origin": "NEW YORK",
+      "destination": "NEW YORK",
+      "reference_number": "418855",
+      "unit_price": 0.0,
+      "total_amount": 5935.35,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 92.0,
+      "ocr": 96,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:00:16"
+  },
+  "008_train_imagesx_x_u_j_xuj11e00_87064711.png": {
+    "id": "DOC-008",
+    "rank": 8,
+    "file_name": "008_train_imagesx_x_u_j_xuj11e00_87064711.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "063161002",
+      "document_date": "1987-06-25",
+      "sender": "MCA Advertising AdvertiserloesCorp",
+      "receiver": "CBS Magazines",
+      "origin": "New York, NY",
+      "destination": "Stamford, CT",
+      "reference_number": "0601871",
+      "unit_price": 0.0,
+      "total_amount": 1690.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 93.0,
+      "ocr": 97,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:01:31"
+  },
+  "009_train_imagesv_v_b_e_vbe63e00_2030138090.png": {
+    "id": "DOC-009",
+    "rank": 9,
+    "file_name": "009_train_imagesv_v_b_e_vbe63e00_2030138090.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "A22745359",
+      "document_date": "1992-30-09",
+      "sender": "FISHER SCIENTIFIC",
+      "receiver": "PHILIP MORRIS USA",
+      "origin": "RALEIGH NC 27629",
+      "destination": "VA 23831",
+      "reference_number": "SPO2875",
+      "unit_price": 0.0,
+      "total_amount": 943.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 94.0,
+      "ocr": 100,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:03:31"
+  },
+  "010_train_imagesu_u_c_o_uco00e00_91694224.png": {
+    "id": "DOC-010",
+    "rank": 10,
+    "file_name": "010_train_imagesu_u_c_o_uco00e00_91694224.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "15154",
+      "document_date": "1990-05-18",
+      "sender": "New York",
+      "receiver": "Newport/B Epperson",
+      "origin": "MELVILLE, NY 11747",
+      "destination": "MELVILLE, NY 11747",
+      "reference_number": "SPAID",
+      "unit_price": 0.0,
+      "total_amount": 91694224.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 93.0,
+      "ocr": 98,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:07:05"
+  },
+  "011_val_imagest_t_m_m_tmm44a00_82293532.png": {
+    "id": "DOC-011",
+    "rank": 11,
+    "file_name": "011_val_imagest_t_m_m_tmm44a00_82293532.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "DEN024259",
+      "document_date": "1999-07-26",
+      "sender": "FREEBORN",
+      "receiver": "JOHNS/MANVILLE",
+      "origin": "DENVER, CO 80202",
+      "destination": "DENVER, CO 80202",
+      "reference_number": "99050006",
+      "unit_price": 0.0,
+      "total_amount": 2414.69,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 92.0,
+      "ocr": 95,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:10:51"
+  },
+  "012_train_imagesc_c_f_r_cfr47e00_2030413033.png": {
+    "id": "DOC-012",
+    "rank": 12,
+    "file_name": "012_train_imagesc_c_f_r_cfr47e00_2030413033.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "04/24/92",
+      "document_date": "1925059",
+      "sender": "Anderson Machine Mfg. Co., Inc.",
+      "receiver": "Philip Morris U.SA.",
+      "origin": "USA",
+      "destination": "USA",
+      "reference_number": "P079529",
+      "unit_price": 0.0,
+      "total_amount": 1270.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 92.0,
+      "ocr": 96,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:13:30"
+  },
+  "013_train_imageso_o_k_z_okz00e00_94415089.png": {
+    "id": "DOC-013",
+    "rank": 13,
+    "file_name": "013_train_imageso_o_k_z_okz00e00_94415089.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "1300",
+      "document_date": "1991-05-01",
+      "sender": "Finney Outdoor Advertising",
+      "receiver": "Lorillard",
+      "origin": "New Bedford Market, Mattapoisett",
+      "destination": "New Bedford Market, New Bedford",
+      "reference_number": "94415089",
+      "unit_price": 0.0,
+      "total_amount": 3704.85,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 93.0,
+      "ocr": 97,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:16:13"
+  },
+  "014_train_imagesi_i_o_e_ioe23d00_513261428_513261430.png": {
+    "id": "DOC-014",
+    "rank": 14,
+    "file_name": "014_train_imagesi_i_o_e_ioe23d00_513261428_513261430.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "04-73-4603-8390-859",
+      "document_date": "1990-30-03",
+      "sender": "PROMOTLONAL MARKET INC.",
+      "receiver": "R. J. REYNOLDS TOBACCO USA",
+      "origin": "Place of Receipt",
+      "destination": "Delivery Location",
+      "reference_number": "04-73-4603-8390-859",
+      "unit_price": 0.0,
+      "total_amount": 499231.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 93.0,
+      "ocr": 97,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:20:07"
+  },
+  "015_val_imagesp_p_p_r_ppr90d00_518253442+-3448.png": {
+    "id": "DOC-015",
+    "rank": 15,
+    "file_name": "015_val_imagesp_p_p_r_ppr90d00_518253442+-3448.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "518253442",
+      "document_date": "1998-03-04",
+      "sender": "REYNOLDS",
+      "receiver": "MELISSA MONTGOMERY",
+      "origin": "CHARLESTON, SC",
+      "destination": "COLUMBIA, SC",
+      "reference_number": "BOE MYRY",
+      "unit_price": 0.0,
+      "total_amount": 374.81,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 91.0,
+      "ocr": 99,
+      "slm": 90,
+      "mapping": 82,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:22:19"
+  },
+  "016_val_imagesj_j_u_f_juf43c00_99403740.png": {
+    "id": "DOC-016",
+    "rank": 16,
+    "file_name": "016_val_imagesj_j_u_f_juf43c00_99403740.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "110 SWIFT AVE",
+      "document_date": "24JAN01",
+      "sender": "Laohley RUSD  (919)416-3722",
+      "receiver": "Mr. Harry Huge (843)722-9074",
+      "origin": "Durham, NC, 27705",
+      "destination": "Charleston, SC, 29401",
+      "reference_number": "MSA",
+      "unit_price": 0.0,
+      "total_amount": 0.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 90.0,
+      "ocr": 96,
+      "slm": 90,
+      "mapping": 82,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:24:00"
+  },
+  "017_train_imagesp_p_d_r_pdr62d00_82572796.png": {
+    "id": "DOC-017",
+    "rank": 17,
+    "file_name": "017_train_imagesp_p_d_r_pdr62d00_82572796.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "82572796",
+      "document_date": "2000-01-24",
+      "sender": "ALLISON WHOLESAL, INC.",
+      "receiver": "Liggett Group, South",
+      "origin": "Durham, NC",
+      "destination": "Johnson Road, PAINT ROCK, AL",
+      "reference_number": "PO Box 10, Johnson Road, PAINT ROCK, AL 35764",
+      "unit_price": 0.0,
+      "total_amount": 3015.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 92.0,
+      "ocr": 95,
+      "slm": 90,
+      "mapping": 91,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:26:17"
+  },
+  "018_test_imagesq_q_m_a_qma54c00_80703458.png": {
+    "id": "DOC-018",
+    "rank": 18,
+    "file_name": "018_test_imagesq_q_m_a_qma54c00_80703458.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "2196",
+      "document_date": "1981-11-01",
+      "sender": "A. H. VILLEPIGUE, INC.",
+      "receiver": "LORILLARD OH-114",
+      "origin": "Kings Plaza",
+      "destination": "Corner Ave. U and Flatbush",
+      "reference_number": "629",
+      "unit_price": 0.0,
+      "total_amount": 0.0,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 90.0,
+      "ocr": 96,
+      "slm": 90,
+      "mapping": 82,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:27:17"
+  },
+  "019_test_imagesw_w_n_x_wnx18d00_2020157193.png": {
+    "id": "DOC-019",
+    "rank": 19,
+    "file_name": "019_test_imagesw_w_n_x_wnx18d00_2020157193.png",
+    "category": "commercial_invoice",
+    "ground_truth": {
+      "document_type": "invoice",
+      "document_number": "90517",
+      "document_date": "1988-01-22",
+      "sender": "Coors Ceramics Company",
+      "receiver": "Philip Morris U.S.A.",
+      "origin": "Golden Plant",
+      "destination": "Golden",
+      "reference_number": "PO Number: 2:4257",
+      "unit_price": 0.27,
+      "total_amount": 61155.76,
+      "currency": "USD"
+    },
+    "confidence": {
+      "overall": 95.0,
+      "ocr": 96,
+      "slm": 90,
+      "mapping": 100,
+      "completeness": 100
+    },
+    "annotated_at": "2026-10-02 02:29:03"
+  }
+}

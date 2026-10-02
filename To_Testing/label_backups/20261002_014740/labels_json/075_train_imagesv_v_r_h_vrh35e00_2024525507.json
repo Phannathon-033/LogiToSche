@@ -1,0 +1,27 @@
+{
+  "id": "DOC-075",
+  "rank": 75,
+  "file_name": "075_train_imagesv_v_r_h_vrh35e00_2024525507.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "5717",
+    "document_date": "1994-01-31",
+    "sender": "A2)",
+    "receiver": "-",
+    "origin": "Fairiax, VA 22030",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 8000.0,
+    "total_amount": 1350.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:12:08"
+}

@@ -5,6 +5,7 @@ import {
   Bell,
   CircleHelp,
   FileSearch,
+  FileSpreadsheet,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -51,6 +52,7 @@ import { AdminActivityLogs } from "./admin/AdminActivityLogs";
 import { AdminUserSettings } from "./admin/AdminUserSettings";
 import { GroundTruthViewerModal } from "./GroundTruthViewerModal";
 import { KFoldEvaluationView } from "./KFoldEvaluationView";
+import { AdminFileTypeLiveTest } from "./admin/AdminFileTypeLiveTest";
 
 function buildAnalytics(documents: AdminDocumentRecord[]): AdminAnalyticsPoint[] {
   const total = documents.length;
@@ -86,7 +88,7 @@ function buildErrorClusters(documents: AdminDocumentRecord[]): AdminErrorCluster
     }));
 }
 
-type AdminView = "dashboard" | "documents" | "document-detail" | "users" | "prompt" | "evaluation";
+type AdminView = "dashboard" | "documents" | "document-detail" | "users" | "prompt" | "evaluation" | "file-type-test";
 type PromptQualityTab = "prompt" | "reports";
 type UsersSettingsTab = "users" | "activity";
 
@@ -316,6 +318,8 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
             showToast={showToast}
           />
         );
+      case "file-type-test":
+        return <AdminFileTypeLiveTest showToast={showToast} />;
     }
   }
 
@@ -324,7 +328,9 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
       ? "Dashboard"
       : activeView === "evaluation"
         ? "K-Fold & Model Evaluation"
-        : activeView === "documents"
+        : activeView === "file-type-test"
+          ? "File Type Live Test"
+          : activeView === "documents"
           ? "Documents & Review Queue"
           : activeView === "document-detail"
             ? "Document Detail"
@@ -335,6 +341,7 @@ export function AdminDashboard({ onUpdateJob, showToast, onLogout, onSwitchToUse
   const adminMenuItems = [
     { id: "dashboard" as const, name: "Dashboard", icon: LayoutDashboard },
     { id: "evaluation" as const, name: "ทดสอบ K-Fold & F1", icon: BarChart3 },
+    { id: "file-type-test" as const, name: "ทดสอบชนิดไฟล์", icon: FileSpreadsheet },
     { id: "documents" as const, name: "Documents", icon: FileSearch },
     { id: "users" as const, name: "Users & Settings", icon: Users },
     { id: "prompt" as const, name: "Prompt & Quality", icon: Settings },

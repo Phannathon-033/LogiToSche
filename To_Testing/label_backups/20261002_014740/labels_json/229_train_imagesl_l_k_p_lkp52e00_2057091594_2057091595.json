@@ -1,0 +1,27 @@
+{
+  "id": "DOC-229",
+  "rank": 229,
+  "file_name": "229_train_imagesl_l_k_p_lkp52e00_2057091594_2057091595.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "38047851",
+    "document_date": "1993-07-17",
+    "sender": "JFK",
+    "receiver": "PARTY;",
+    "origin": "ICY # R35389. CLAIMS PAYABLE IN NEW YORK",
+    "destination": "UNITED STATÉS LAW PROHIBITS",
+    "reference_number": "20102195",
+    "unit_price": 8648.64,
+    "total_amount": 8648.64,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:30:45"
+}

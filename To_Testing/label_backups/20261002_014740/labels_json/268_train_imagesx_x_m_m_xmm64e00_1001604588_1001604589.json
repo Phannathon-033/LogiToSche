@@ -1,0 +1,27 @@
+{
+  "id": "DOC-268",
+  "rank": 268,
+  "file_name": "268_train_imagesx_x_m_m_xmm64e00_1001604588_1001604589.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "D243997",
+    "document_date": "1965-03-22",
+    "sender": "SHIP TO –",
+    "receiver": "Service Dept",
+    "origin": "AL INVOICE",
+    "destination": "mEM No",
+    "reference_number": "-",
+    "unit_price": 48.2,
+    "total_amount": 270.23,
+    "currency": "THB"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:35:33"
+}

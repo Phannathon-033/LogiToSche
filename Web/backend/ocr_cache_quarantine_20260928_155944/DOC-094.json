@@ -1,0 +1,1511 @@
+{
+  "document_id": "DOC-094",
+  "filename": "094_test_imagesu_u_b_k_ubk97e00_1000047656.png",
+  "ocr_text": "INVOICE\nHILLER TRAVEL SERVICE, INC.\n200 EAST 42nd STREET\nNEW YORKNEW YORK 10017\nPhone:YUkon 6-0380\nDr. Ragnar Rylander\nNC 18634\nDepartment of Environmental Hygiene\nUniversity of Gothenburg\n400 33 GOTEBORG 33 SWEDEN\n19 November 75\nDATE\na/c Dr. Rylander:\nvia SK TKr Nr. 117:3425:610:581/592\nF\n11/Dec\n0000047656\nGothenburg/Copenhagen/Bruxelles\n12/Dec\nBrurrelles/Geneva\n15/Dec\nGeneva/London\n16/Dec\nC\nLondon/Dusseldorf\n17/Dec\nDusseldorf/Amsterdam/Gothenburg\n$528.40 USD\nTHIS INVOICE REPRESEITS AN MMEDIATE TRANSFER OF FUNDS FROM OUR AGENCY TO THE PARTICIPATING\nCARRIERS UPCN ISSUANCE GF TICKETS. YOUR PROMPT REMITTANCE WILL BE APPRECIATED",
+  "ocr_lines": [
+    {
+      "text": "INVOICE",
+      "confidence": 0.99,
+      "bounding_box": [
+        [
+          351.0,
+          397.0
+        ],
+        [
+          417.0,
+          397.0
+        ],
+        [
+          417.0,
+          415.0
+        ],
+        [
+          351.0,
+          415.0
+        ]
+      ],
+      "box": [
+        [
+          351.0,
+          397.0
+        ],
+        [
+          417.0,
+          397.0
+        ],
+        [
+          417.0,
+          415.0
+        ],
+        [
+          351.0,
+          415.0
+        ]
+      ],
+      "position": {
+        "x": 351,
+        "y": 397,
+        "width": 66,
+        "height": 18,
+        "center_x": 384.0,
+        "center_y": 406.0,
+        "region": "middle",
+        "tag": "[y:397, x:351]"
+      }
+    },
+    {
+      "text": "HILLER TRAVEL SERVICE, INC.",
+      "confidence": 0.96,
+      "bounding_box": [
+        [
+          249.0,
+          421.0
+        ],
+        [
+          513.0,
+          421.0
+        ],
+        [
+          513.0,
+          445.0
+        ],
+        [
+          249.0,
+          445.0
+        ]
+      ],
+      "box": [
+        [
+          249.0,
+          421.0
+        ],
+        [
+          513.0,
+          421.0
+        ],
+        [
+          513.0,
+          445.0
+        ],
+        [
+          249.0,
+          445.0
+        ]
+      ],
+      "position": {
+        "x": 249,
+        "y": 421,
+        "width": 264,
+        "height": 24,
+        "center_x": 381.0,
+        "center_y": 433.0,
+        "region": "middle",
+        "tag": "[y:421, x:249]"
+      }
+    },
+    {
+      "text": "200 EAST 42nd STREET",
+      "confidence": 0.93,
+      "bounding_box": [
+        [
+          307.0,
+          443.0
+        ],
+        [
+          476.0,
+          443.0
+        ],
+        [
+          476.0,
+          457.0
+        ],
+        [
+          307.0,
+          457.0
+        ]
+      ],
+      "box": [
+        [
+          307.0,
+          443.0
+        ],
+        [
+          476.0,
+          443.0
+        ],
+        [
+          476.0,
+          457.0
+        ],
+        [
+          307.0,
+          457.0
+        ]
+      ],
+      "position": {
+        "x": 307,
+        "y": 443,
+        "width": 169,
+        "height": 14,
+        "center_x": 391.5,
+        "center_y": 450.0,
+        "region": "middle",
+        "tag": "[y:443, x:307]"
+      }
+    },
+    {
+      "text": "NEW YORKNEW YORK 10017",
+      "confidence": 0.95,
+      "bounding_box": [
+        [
+          288.0,
+          456.0
+        ],
+        [
+          477.0,
+          456.0
+        ],
+        [
+          477.0,
+          476.0
+        ],
+        [
+          288.0,
+          476.0
+        ]
+      ],
+      "box": [
+        [
+          288.0,
+          456.0
+        ],
+        [
+          477.0,
+          456.0
+        ],
+        [
+          477.0,
+          476.0
+        ],
+        [
+          288.0,
+          476.0
+        ]
+      ],
+      "position": {
+        "x": 288,
+        "y": 456,
+        "width": 189,
+        "height": 20,
+        "center_x": 382.5,
+        "center_y": 466.0,
+        "region": "middle",
+        "tag": "[y:456, x:288]"
+      }
+    },
+    {
+      "text": "Phone:YUkon 6-0380",
+      "confidence": 0.91,
+      "bounding_box": [
+        [
+          318.0,
+          474.0
+        ],
+        [
+          446.0,
+          474.0
+        ],
+        [
+          446.0,
+          491.0
+        ],
+        [
+          318.0,
+          491.0
+        ]
+      ],
+      "box": [
+        [
+          318.0,
+          474.0
+        ],
+        [
+          446.0,
+          474.0
+        ],
+        [
+          446.0,
+          491.0
+        ],
+        [
+          318.0,
+          491.0
+        ]
+      ],
+      "position": {
+        "x": 318,
+        "y": 474,
+        "width": 128,
+        "height": 17,
+        "center_x": 382.0,
+        "center_y": 482.5,
+        "region": "middle",
+        "tag": "[y:474, x:318]"
+      }
+    },
+    {
+      "text": "Dr. Ragnar Rylander",
+      "confidence": 0.98,
+      "bounding_box": [
+        [
+          99.0,
+          555.0
+        ],
+        [
+          249.0,
+          555.0
+        ],
+        [
+          249.0,
+          573.0
+        ],
+        [
+          99.0,
+          573.0
+        ]
+      ],
+      "box": [
+        [
+          99.0,
+          555.0
+        ],
+        [
+          249.0,
+          555.0
+        ],
+        [
+          249.0,
+          573.0
+        ],
+        [
+          99.0,
+          573.0
+        ]
+      ],
+      "position": {
+        "x": 99,
+        "y": 555,
+        "width": 150,
+        "height": 18,
+        "center_x": 174.0,
+        "center_y": 564.0,
+        "region": "middle-left",
+        "tag": "[y:555, x:99]"
+      }
+    },
+    {
+      "text": "NC 18634",
+      "confidence": 0.97,
+      "bounding_box": [
+        [
+          618.0,
+          558.0
+        ],
+        [
+          726.0,
+          561.0
+        ],
+        [
+          725.0,
+          590.0
+        ],
+        [
+          617.0,
+          588.0
+        ]
+      ],
+      "box": [
+        [
+          618.0,
+          558.0
+        ],
+        [
+          726.0,
+          561.0
+        ],
+        [
+          725.0,
+          590.0
+        ],
+        [
+          617.0,
+          588.0
+        ]
+      ],
+      "position": {
+        "x": 617,
+        "y": 558,
+        "width": 109,
+        "height": 32,
+        "center_x": 671.5,
+        "center_y": 574.0,
+        "region": "middle-right",
+        "tag": "[y:558, x:617]"
+      }
+    },
+    {
+      "text": "Department of Environmental Hygiene",
+      "confidence": 0.98,
+      "bounding_box": [
+        [
+          101.0,
+          572.0
+        ],
+        [
+          368.0,
+          572.0
+        ],
+        [
+          368.0,
+          589.0
+        ],
+        [
+          101.0,
+          589.0
+        ]
+      ],
+      "box": [
+        [
+          101.0,
+          572.0
+        ],
+        [
+          368.0,
+          572.0
+        ],
+        [
+          368.0,
+          589.0
+        ],
+        [
+          101.0,
+          589.0
+        ]
+      ],
+      "position": {
+        "x": 101,
+        "y": 572,
+        "width": 267,
+        "height": 17,
+        "center_x": 234.5,
+        "center_y": 580.5,
+        "region": "middle-left",
+        "tag": "[y:572, x:101]"
+      }
+    },
+    {
+      "text": "University of Gothenburg",
+      "confidence": 0.96,
+      "bounding_box": [
+        [
+          100.0,
+          586.0
+        ],
+        [
+          287.0,
+          587.0
+        ],
+        [
+          287.0,
+          604.0
+        ],
+        [
+          100.0,
+          603.0
+        ]
+      ],
+      "box": [
+        [
+          100.0,
+          586.0
+        ],
+        [
+          287.0,
+          587.0
+        ],
+        [
+          287.0,
+          604.0
+        ],
+        [
+          100.0,
+          603.0
+        ]
+      ],
+      "position": {
+        "x": 100,
+        "y": 586,
+        "width": 187,
+        "height": 18,
+        "center_x": 193.5,
+        "center_y": 595.0,
+        "region": "middle-left",
+        "tag": "[y:586, x:100]"
+      }
+    },
+    {
+      "text": "400 33 GOTEBORG 33 SWEDEN",
+      "confidence": 0.95,
+      "bounding_box": [
+        [
+          102.0,
+          603.0
+        ],
+        [
+          296.0,
+          603.0
+        ],
+        [
+          296.0,
+          617.0
+        ],
+        [
+          102.0,
+          617.0
+        ]
+      ],
+      "box": [
+        [
+          102.0,
+          603.0
+        ],
+        [
+          296.0,
+          603.0
+        ],
+        [
+          296.0,
+          617.0
+        ],
+        [
+          102.0,
+          617.0
+        ]
+      ],
+      "position": {
+        "x": 102,
+        "y": 603,
+        "width": 194,
+        "height": 14,
+        "center_x": 199.0,
+        "center_y": 610.0,
+        "region": "middle-left",
+        "tag": "[y:603, x:102]"
+      }
+    },
+    {
+      "text": "19 November 75",
+      "confidence": 0.97,
+      "bounding_box": [
+        [
+          572.0,
+          614.0
+        ],
+        [
+          688.0,
+          612.0
+        ],
+        [
+          688.0,
+          632.0
+        ],
+        [
+          573.0,
+          634.0
+        ]
+      ],
+      "box": [
+        [
+          572.0,
+          614.0
+        ],
+        [
+          688.0,
+          612.0
+        ],
+        [
+          688.0,
+          632.0
+        ],
+        [
+          573.0,
+          634.0
+        ]
+      ],
+      "position": {
+        "x": 572,
+        "y": 612,
+        "width": 116,
+        "height": 22,
+        "center_x": 630.0,
+        "center_y": 623.0,
+        "region": "middle-right",
+        "tag": "[y:612, x:572]"
+      }
+    },
+    {
+      "text": "DATE",
+      "confidence": 0.95,
+      "bounding_box": [
+        [
+          521.0,
+          623.0
+        ],
+        [
+          559.0,
+          623.0
+        ],
+        [
+          559.0,
+          634.0
+        ],
+        [
+          521.0,
+          634.0
+        ]
+      ],
+      "box": [
+        [
+          521.0,
+          623.0
+        ],
+        [
+          559.0,
+          623.0
+        ],
+        [
+          559.0,
+          634.0
+        ],
+        [
+          521.0,
+          634.0
+        ]
+      ],
+      "position": {
+        "x": 521,
+        "y": 623,
+        "width": 38,
+        "height": 11,
+        "center_x": 540.0,
+        "center_y": 628.5,
+        "region": "middle-right",
+        "tag": "[y:623, x:521]"
+      }
+    },
+    {
+      "text": "a/c Dr. Rylander:",
+      "confidence": 0.93,
+      "bounding_box": [
+        [
+          231.0,
+          691.0
+        ],
+        [
+          361.0,
+          691.0
+        ],
+        [
+          361.0,
+          711.0
+        ],
+        [
+          231.0,
+          711.0
+        ]
+      ],
+      "box": [
+        [
+          231.0,
+          691.0
+        ],
+        [
+          361.0,
+          691.0
+        ],
+        [
+          361.0,
+          711.0
+        ],
+        [
+          231.0,
+          711.0
+        ]
+      ],
+      "position": {
+        "x": 231,
+        "y": 691,
+        "width": 130,
+        "height": 20,
+        "center_x": 296.0,
+        "center_y": 701.0,
+        "region": "middle",
+        "tag": "[y:691, x:231]"
+      }
+    },
+    {
+      "text": "via SK TKr Nr. 117:3425:610:581/592",
+      "confidence": 0.91,
+      "bounding_box": [
+        [
+          155.0,
+          723.0
+        ],
+        [
+          424.0,
+          721.0
+        ],
+        [
+          424.0,
+          738.0
+        ],
+        [
+          155.0,
+          740.0
+        ]
+      ],
+      "box": [
+        [
+          155.0,
+          723.0
+        ],
+        [
+          424.0,
+          721.0
+        ],
+        [
+          424.0,
+          738.0
+        ],
+        [
+          155.0,
+          740.0
+        ]
+      ],
+      "position": {
+        "x": 155,
+        "y": 721,
+        "width": 269,
+        "height": 19,
+        "center_x": 289.5,
+        "center_y": 730.5,
+        "region": "bottom-center",
+        "tag": "[y:721, x:155]"
+      }
+    },
+    {
+      "text": "F",
+      "confidence": 0.16,
+      "bounding_box": [
+        [
+          441.0,
+          726.0
+        ],
+        [
+          452.0,
+          726.0
+        ],
+        [
+          452.0,
+          736.0
+        ],
+        [
+          441.0,
+          736.0
+        ]
+      ],
+      "box": [
+        [
+          441.0,
+          726.0
+        ],
+        [
+          452.0,
+          726.0
+        ],
+        [
+          452.0,
+          736.0
+        ],
+        [
+          441.0,
+          736.0
+        ]
+      ],
+      "position": {
+        "x": 441,
+        "y": 726,
+        "width": 11,
+        "height": 10,
+        "center_x": 446.5,
+        "center_y": 731.0,
+        "region": "bottom-center",
+        "tag": "[y:726, x:441]"
+      }
+    },
+    {
+      "text": "11/Dec",
+      "confidence": 0.98,
+      "bounding_box": [
+        [
+          417.0,
+          749.0
+        ],
+        [
+          469.0,
+          751.0
+        ],
+        [
+          468.0,
+          769.0
+        ],
+        [
+          417.0,
+          767.0
+        ]
+      ],
+      "box": [
+        [
+          417.0,
+          749.0
+        ],
+        [
+          469.0,
+          751.0
+        ],
+        [
+          468.0,
+          769.0
+        ],
+        [
+          417.0,
+          767.0
+        ]
+      ],
+      "position": {
+        "x": 417,
+        "y": 749,
+        "width": 52,
+        "height": 20,
+        "center_x": 443.0,
+        "center_y": 759.0,
+        "region": "bottom-center",
+        "tag": "[y:749, x:417]"
+      }
+    },
+    {
+      "text": "0000047656",
+      "confidence": 0.93,
+      "bounding_box": [
+        [
+          697.0,
+          747.0
+        ],
+        [
+          724.0,
+          747.0
+        ],
+        [
+          724.0,
+          892.0
+        ],
+        [
+          697.0,
+          892.0
+        ]
+      ],
+      "box": [
+        [
+          697.0,
+          747.0
+        ],
+        [
+          724.0,
+          747.0
+        ],
+        [
+          724.0,
+          892.0
+        ],
+        [
+          697.0,
+          892.0
+        ]
+      ],
+      "position": {
+        "x": 697,
+        "y": 747,
+        "width": 27,
+        "height": 145,
+        "center_x": 710.5,
+        "center_y": 819.5,
+        "region": "bottom-right",
+        "tag": "[y:747, x:697]"
+      }
+    },
+    {
+      "text": "Gothenburg/Copenhagen/Bruxelles",
+      "confidence": 0.97,
+      "bounding_box": [
+        [
+          156.0,
+          751.0
+        ],
+        [
+          394.0,
+          751.0
+        ],
+        [
+          394.0,
+          768.0
+        ],
+        [
+          156.0,
+          768.0
+        ]
+      ],
+      "box": [
+        [
+          156.0,
+          751.0
+        ],
+        [
+          394.0,
+          751.0
+        ],
+        [
+          394.0,
+          768.0
+        ],
+        [
+          156.0,
+          768.0
+        ]
+      ],
+      "position": {
+        "x": 156,
+        "y": 751,
+        "width": 238,
+        "height": 17,
+        "center_x": 275.0,
+        "center_y": 759.5,
+        "region": "bottom-center",
+        "tag": "[y:751, x:156]"
+      }
+    },
+    {
+      "text": "12/Dec",
+      "confidence": 0.93,
+      "bounding_box": [
+        [
+          418.0,
+          764.0
+        ],
+        [
+          469.0,
+          766.0
+        ],
+        [
+          468.0,
+          785.0
+        ],
+        [
+          418.0,
+          782.0
+        ]
+      ],
+      "box": [
+        [
+          418.0,
+          764.0
+        ],
+        [
+          469.0,
+          766.0
+        ],
+        [
+          468.0,
+          785.0
+        ],
+        [
+          418.0,
+          782.0
+        ]
+      ],
+      "position": {
+        "x": 418,
+        "y": 764,
+        "width": 51,
+        "height": 21,
+        "center_x": 443.5,
+        "center_y": 774.5,
+        "region": "bottom-center",
+        "tag": "[y:764, x:418]"
+      }
+    },
+    {
+      "text": "Brurrelles/Geneva",
+      "confidence": 0.96,
+      "bounding_box": [
+        [
+          155.0,
+          769.0
+        ],
+        [
+          279.0,
+          769.0
+        ],
+        [
+          279.0,
+          782.0
+        ],
+        [
+          155.0,
+          782.0
+        ]
+      ],
+      "box": [
+        [
+          155.0,
+          769.0
+        ],
+        [
+          279.0,
+          769.0
+        ],
+        [
+          279.0,
+          782.0
+        ],
+        [
+          155.0,
+          782.0
+        ]
+      ],
+      "position": {
+        "x": 155,
+        "y": 769,
+        "width": 124,
+        "height": 13,
+        "center_x": 217.0,
+        "center_y": 775.5,
+        "region": "bottom-left",
+        "tag": "[y:769, x:155]"
+      }
+    },
+    {
+      "text": "15/Dec",
+      "confidence": 0.89,
+      "bounding_box": [
+        [
+          417.0,
+          778.0
+        ],
+        [
+          469.0,
+          781.0
+        ],
+        [
+          468.0,
+          800.0
+        ],
+        [
+          417.0,
+          797.0
+        ]
+      ],
+      "box": [
+        [
+          417.0,
+          778.0
+        ],
+        [
+          469.0,
+          781.0
+        ],
+        [
+          468.0,
+          800.0
+        ],
+        [
+          417.0,
+          797.0
+        ]
+      ],
+      "position": {
+        "x": 417,
+        "y": 778,
+        "width": 52,
+        "height": 22,
+        "center_x": 443.0,
+        "center_y": 789.0,
+        "region": "bottom-center",
+        "tag": "[y:778, x:417]"
+      }
+    },
+    {
+      "text": "Geneva/London",
+      "confidence": 0.99,
+      "bounding_box": [
+        [
+          156.0,
+          783.0
+        ],
+        [
+          257.0,
+          783.0
+        ],
+        [
+          257.0,
+          797.0
+        ],
+        [
+          156.0,
+          797.0
+        ]
+      ],
+      "box": [
+        [
+          156.0,
+          783.0
+        ],
+        [
+          257.0,
+          783.0
+        ],
+        [
+          257.0,
+          797.0
+        ],
+        [
+          156.0,
+          797.0
+        ]
+      ],
+      "position": {
+        "x": 156,
+        "y": 783,
+        "width": 101,
+        "height": 14,
+        "center_x": 206.5,
+        "center_y": 790.0,
+        "region": "bottom-left",
+        "tag": "[y:783, x:156]"
+      }
+    },
+    {
+      "text": "16/Dec",
+      "confidence": 0.94,
+      "bounding_box": [
+        [
+          417.0,
+          794.0
+        ],
+        [
+          470.0,
+          797.0
+        ],
+        [
+          469.0,
+          816.0
+        ],
+        [
+          417.0,
+          813.0
+        ]
+      ],
+      "box": [
+        [
+          417.0,
+          794.0
+        ],
+        [
+          470.0,
+          797.0
+        ],
+        [
+          469.0,
+          816.0
+        ],
+        [
+          417.0,
+          813.0
+        ]
+      ],
+      "position": {
+        "x": 417,
+        "y": 794,
+        "width": 53,
+        "height": 22,
+        "center_x": 443.5,
+        "center_y": 805.0,
+        "region": "bottom-center",
+        "tag": "[y:794, x:417]"
+      }
+    },
+    {
+      "text": "C",
+      "confidence": 0.86,
+      "bounding_box": [
+        [
+          25.0,
+          797.0
+        ],
+        [
+          45.0,
+          797.0
+        ],
+        [
+          45.0,
+          822.0
+        ],
+        [
+          25.0,
+          822.0
+        ]
+      ],
+      "box": [
+        [
+          25.0,
+          797.0
+        ],
+        [
+          45.0,
+          797.0
+        ],
+        [
+          45.0,
+          822.0
+        ],
+        [
+          25.0,
+          822.0
+        ]
+      ],
+      "position": {
+        "x": 25,
+        "y": 797,
+        "width": 20,
+        "height": 25,
+        "center_x": 35.0,
+        "center_y": 809.5,
+        "region": "bottom-left",
+        "tag": "[y:797, x:25]"
+      }
+    },
+    {
+      "text": "London/Dusseldorf",
+      "confidence": 0.98,
+      "bounding_box": [
+        [
+          154.0,
+          798.0
+        ],
+        [
+          285.0,
+          798.0
+        ],
+        [
+          285.0,
+          812.0
+        ],
+        [
+          154.0,
+          812.0
+        ]
+      ],
+      "box": [
+        [
+          154.0,
+          798.0
+        ],
+        [
+          285.0,
+          798.0
+        ],
+        [
+          285.0,
+          812.0
+        ],
+        [
+          154.0,
+          812.0
+        ]
+      ],
+      "position": {
+        "x": 154,
+        "y": 798,
+        "width": 131,
+        "height": 14,
+        "center_x": 219.5,
+        "center_y": 805.0,
+        "region": "bottom-left",
+        "tag": "[y:798, x:154]"
+      }
+    },
+    {
+      "text": "17/Dec",
+      "confidence": 0.89,
+      "bounding_box": [
+        [
+          416.0,
+          809.0
+        ],
+        [
+          470.0,
+          812.0
+        ],
+        [
+          469.0,
+          831.0
+        ],
+        [
+          416.0,
+          828.0
+        ]
+      ],
+      "box": [
+        [
+          416.0,
+          809.0
+        ],
+        [
+          470.0,
+          812.0
+        ],
+        [
+          469.0,
+          831.0
+        ],
+        [
+          416.0,
+          828.0
+        ]
+      ],
+      "position": {
+        "x": 416,
+        "y": 809,
+        "width": 54,
+        "height": 22,
+        "center_x": 443.0,
+        "center_y": 820.0,
+        "region": "bottom-center",
+        "tag": "[y:809, x:416]"
+      }
+    },
+    {
+      "text": "Dusseldorf/Amsterdam/Gothenburg",
+      "confidence": 0.97,
+      "bounding_box": [
+        [
+          154.0,
+          812.0
+        ],
+        [
+          392.0,
+          810.0
+        ],
+        [
+          393.0,
+          829.0
+        ],
+        [
+          154.0,
+          830.0
+        ]
+      ],
+      "box": [
+        [
+          154.0,
+          812.0
+        ],
+        [
+          392.0,
+          810.0
+        ],
+        [
+          393.0,
+          829.0
+        ],
+        [
+          154.0,
+          830.0
+        ]
+      ],
+      "position": {
+        "x": 154,
+        "y": 810,
+        "width": 239,
+        "height": 20,
+        "center_x": 273.5,
+        "center_y": 820.0,
+        "region": "bottom-center",
+        "tag": "[y:810, x:154]"
+      }
+    },
+    {
+      "text": "$528.40 USD",
+      "confidence": 0.91,
+      "bounding_box": [
+        [
+          534.0,
+          826.0
+        ],
+        [
+          643.0,
+          826.0
+        ],
+        [
+          643.0,
+          846.0
+        ],
+        [
+          534.0,
+          846.0
+        ]
+      ],
+      "box": [
+        [
+          534.0,
+          826.0
+        ],
+        [
+          643.0,
+          826.0
+        ],
+        [
+          643.0,
+          846.0
+        ],
+        [
+          534.0,
+          846.0
+        ]
+      ],
+      "position": {
+        "x": 534,
+        "y": 826,
+        "width": 109,
+        "height": 20,
+        "center_x": 588.5,
+        "center_y": 836.0,
+        "region": "bottom-right",
+        "tag": "[y:826, x:534]"
+      }
+    },
+    {
+      "text": "THIS INVOICE REPRESEITS AN MMEDIATE TRANSFER OF FUNDS FROM OUR AGENCY TO THE PARTICIPATING",
+      "confidence": 0.93,
+      "bounding_box": [
+        [
+          82.0,
+          946.0
+        ],
+        [
+          688.0,
+          946.0
+        ],
+        [
+          688.0,
+          966.0
+        ],
+        [
+          82.0,
+          966.0
+        ]
+      ],
+      "box": [
+        [
+          82.0,
+          946.0
+        ],
+        [
+          688.0,
+          946.0
+        ],
+        [
+          688.0,
+          966.0
+        ],
+        [
+          82.0,
+          966.0
+        ]
+      ],
+      "position": {
+        "x": 82,
+        "y": 946,
+        "width": 606,
+        "height": 20,
+        "center_x": 385.0,
+        "center_y": 956.0,
+        "region": "bottom-center",
+        "tag": "[y:946, x:82]"
+      }
+    },
+    {
+      "text": "CARRIERS UPCN ISSUANCE GF TICKETS. YOUR PROMPT REMITTANCE WILL BE APPRECIATED",
+      "confidence": 0.9,
+      "bounding_box": [
+        [
+          131.0,
+          961.0
+        ],
+        [
+          642.0,
+          961.0
+        ],
+        [
+          642.0,
+          978.0
+        ],
+        [
+          131.0,
+          978.0
+        ]
+      ],
+      "box": [
+        [
+          131.0,
+          961.0
+        ],
+        [
+          642.0,
+          961.0
+        ],
+        [
+          642.0,
+          978.0
+        ],
+        [
+          131.0,
+          978.0
+        ]
+      ],
+      "position": {
+        "x": 131,
+        "y": 961,
+        "width": 511,
+        "height": 17,
+        "center_x": 386.5,
+        "center_y": 969.5,
+        "region": "bottom-center",
+        "tag": "[y:961, x:131]"
+      }
+    }
+  ],
+  "engine": "PaddleOCR",
+  "device": "gpu:0",
+  "ocr_time_sec": 0.669,
+  "cached_at": "2026-09-28T08:53:18.571357+00:00"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-095",
+  "rank": 95,
+  "file_name": "095_val_imagesl_l_a_t_lat54a00_91693312.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "95246",
+    "document_date": "1992-12-02",
+    "sender": "PETERSEN PUBLISHING COMPANY",
+    "receiver": "-",
+    "origin": "PETERSEN PUBLISHING, CO",
+    "destination": "CHICASO, IL 60554",
+    "reference_number": "-",
+    "unit_price": 4292.5,
+    "total_amount": 4292.5,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:14:09"
+}

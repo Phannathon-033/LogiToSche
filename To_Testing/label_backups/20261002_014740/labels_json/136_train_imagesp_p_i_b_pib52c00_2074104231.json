@@ -1,0 +1,27 @@
+{
+  "id": "DOC-136",
+  "rank": 136,
+  "file_name": "136_train_imagesp_p_i_b_pib52c00_2074104231.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "1996-09-01",
+    "sender": "ID",
+    "receiver": "-",
+    "origin": "Cape Coral, FL 33910",
+    "destination": "FOR SOT NUSAOSR O, CO",
+    "reference_number": "IO",
+    "unit_price": 500.0,
+    "total_amount": 500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:19:17"
+}

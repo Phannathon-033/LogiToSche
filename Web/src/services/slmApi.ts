@@ -22,6 +22,7 @@ interface SlmExtractRequest {
   ocrLines: OcrLine[];
   imageFile?: File | Blob;
   imageBase64?: string;
+  benchmarkPromptVariant?: "zero-shot" | "one-shot" | "few-shot";
 }
 
 function fileToBase64(file: File | Blob): Promise<string> {
@@ -102,9 +103,10 @@ export async function runSlmExtraction({
   ocrLines,
   imageFile,
   imageBase64: providedBase64,
+  benchmarkPromptVariant,
 }: SlmExtractRequest): Promise<SlmExtractionResult> {
   let imageBase64: string | undefined = providedBase64;
-  if (!imageBase64 && imageFile) {
+  if (!imageBase64 && imageFile && !ocrText.trim()) {
     try {
       imageBase64 = await fileToBase64(imageFile);
     } catch (err) {
@@ -121,6 +123,7 @@ export async function runSlmExtraction({
       ocr_text: ocrText,
       ocr_lines: ocrLines,
       image_base64: imageBase64,
+      benchmark_prompt_variant: benchmarkPromptVariant,
     }),
   });
 

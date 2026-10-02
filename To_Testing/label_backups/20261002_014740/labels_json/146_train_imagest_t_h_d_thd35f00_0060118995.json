@@ -1,0 +1,27 @@
+{
+  "id": "DOC-146",
+  "rank": 146,
+  "file_name": "146_train_imagest_t_h_d_thd35f00_0060118995.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "54957-0427",
+    "document_date": "2022-11-01",
+    "sender": "MID AMERICA",
+    "receiver": "MATT STOCK",
+    "origin": "America, CT",
+    "destination": "STAMFORD, CT",
+    "reference_number": "-",
+    "unit_price": 89.97,
+    "total_amount": 89.97,
+    "currency": "THB"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:20:33"
+}

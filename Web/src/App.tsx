@@ -230,7 +230,6 @@ export function App() {
       for (let i = 0; i < allDocs.length; i++) {
         if (allDocs[i].status === "completed" || allDocs[i].status === "error") continue;
 
-        // Give a clear 1.2s visual transition so the user sees OCR finished and SLM reasoning starts
         allDocs[i] = {
           ...allDocs[i],
           status: "slm_processing",
@@ -243,10 +242,7 @@ export function App() {
           ),
         );
 
-        await new Promise((resolve) => setTimeout(resolve, 1400));
         if (allDocs[i].status === "completed" || allDocs[i].status === "error") continue;
-
-
 
         try {
           const slm = await runSlmExtraction({
@@ -254,8 +250,6 @@ export function App() {
             sourceFile: allDocs[i].fileName,
             ocrText: allDocs[i].ocrText,
             ocrLines: allDocs[i].ocrLines,
-            imageFile: allDocs[i].file,
-            imageBase64: allDocs[i].previewUrl?.startsWith("data:image/") ? (allDocs[i].previewUrl as string) : undefined,
           });
 
           // Apply automatic logistics business validation & normalization (ISO 8601 / ISO 4217)
@@ -726,8 +720,6 @@ export function App() {
         sourceFile: targetDoc.fileName,
         ocrText: textToUse,
         ocrLines: linesToUse,
-        imageFile: targetDoc.file,
-        imageBase64: targetDoc.previewUrl?.startsWith("data:image/") ? targetDoc.previewUrl : undefined,
       });
 
       setBatchDocuments((prev) =>

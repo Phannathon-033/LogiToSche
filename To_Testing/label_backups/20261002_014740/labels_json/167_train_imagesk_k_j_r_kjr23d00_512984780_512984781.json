@@ -1,0 +1,27 @@
+{
+  "id": "DOC-167",
+  "rank": 167,
+  "file_name": "167_train_imagesk_k_j_r_kjr23d00_512984780_512984781.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "10017",
+    "document_date": "2028-03-00",
+    "sender": "McCANN-ERICKSON",
+    "receiver": "RJT",
+    "origin": "NEW YORK, NY 10017-0000",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 5000.0,
+    "total_amount": 5000.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:23:43"
+}

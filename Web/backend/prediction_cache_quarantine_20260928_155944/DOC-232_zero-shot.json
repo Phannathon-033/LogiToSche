@@ -1,0 +1,3952 @@
+{
+  "document_id": "DOC-232",
+  "file_name": "232_train_imagesa_a_l_g_alg62d00_83545550.png",
+  "cache_schema_version": 2,
+  "prompt_hash": "e1abb4746f2a86199e65819797164ad347862007f0f20aecb2f2f57c31e4911d",
+  "variant": "zero-shot",
+  "benchmark_example_ids": [],
+  "benchmark_example_confidences": [],
+  "training_document_ids": [
+    "DOC-001",
+    "DOC-002",
+    "DOC-003",
+    "DOC-004",
+    "DOC-005",
+    "DOC-007",
+    "DOC-009",
+    "DOC-011",
+    "DOC-012",
+    "DOC-013",
+    "DOC-014",
+    "DOC-015",
+    "DOC-016",
+    "DOC-017",
+    "DOC-019",
+    "DOC-020",
+    "DOC-021",
+    "DOC-022",
+    "DOC-023",
+    "DOC-024",
+    "DOC-027",
+    "DOC-028",
+    "DOC-029",
+    "DOC-030",
+    "DOC-031",
+    "DOC-032",
+    "DOC-033",
+    "DOC-035",
+    "DOC-036",
+    "DOC-037",
+    "DOC-038",
+    "DOC-039",
+    "DOC-040",
+    "DOC-041",
+    "DOC-042",
+    "DOC-044",
+    "DOC-045",
+    "DOC-048",
+    "DOC-049",
+    "DOC-050",
+    "DOC-051",
+    "DOC-052",
+    "DOC-053",
+    "DOC-054",
+    "DOC-055",
+    "DOC-056",
+    "DOC-057",
+    "DOC-059",
+    "DOC-060",
+    "DOC-062",
+    "DOC-063",
+    "DOC-065",
+    "DOC-066",
+    "DOC-067",
+    "DOC-068",
+    "DOC-069",
+    "DOC-070",
+    "DOC-071",
+    "DOC-072",
+    "DOC-073",
+    "DOC-075",
+    "DOC-080",
+    "DOC-081",
+    "DOC-082",
+    "DOC-083",
+    "DOC-084",
+    "DOC-085",
+    "DOC-086",
+    "DOC-087",
+    "DOC-088",
+    "DOC-089",
+    "DOC-090",
+    "DOC-092",
+    "DOC-095",
+    "DOC-096",
+    "DOC-097",
+    "DOC-099",
+    "DOC-100",
+    "DOC-101",
+    "DOC-102",
+    "DOC-103",
+    "DOC-104",
+    "DOC-106",
+    "DOC-107",
+    "DOC-108",
+    "DOC-109",
+    "DOC-111",
+    "DOC-113",
+    "DOC-115",
+    "DOC-116",
+    "DOC-117",
+    "DOC-118",
+    "DOC-119",
+    "DOC-121",
+    "DOC-122",
+    "DOC-123",
+    "DOC-124",
+    "DOC-125",
+    "DOC-126",
+    "DOC-127",
+    "DOC-128",
+    "DOC-129",
+    "DOC-130",
+    "DOC-131",
+    "DOC-132",
+    "DOC-133",
+    "DOC-134",
+    "DOC-135",
+    "DOC-136",
+    "DOC-137",
+    "DOC-138",
+    "DOC-139",
+    "DOC-140",
+    "DOC-141",
+    "DOC-142",
+    "DOC-143",
+    "DOC-144",
+    "DOC-146",
+    "DOC-147",
+    "DOC-148",
+    "DOC-150",
+    "DOC-151",
+    "DOC-152",
+    "DOC-154",
+    "DOC-155",
+    "DOC-156",
+    "DOC-157",
+    "DOC-159",
+    "DOC-160",
+    "DOC-161",
+    "DOC-162",
+    "DOC-163",
+    "DOC-164",
+    "DOC-167",
+    "DOC-168",
+    "DOC-169",
+    "DOC-170",
+    "DOC-171",
+    "DOC-172",
+    "DOC-173",
+    "DOC-174",
+    "DOC-175",
+    "DOC-177",
+    "DOC-178",
+    "DOC-179",
+    "DOC-180",
+    "DOC-182",
+    "DOC-184",
+    "DOC-185",
+    "DOC-186",
+    "DOC-187",
+    "DOC-188",
+    "DOC-189",
+    "DOC-190",
+    "DOC-191",
+    "DOC-192",
+    "DOC-194",
+    "DOC-195",
+    "DOC-196",
+    "DOC-198",
+    "DOC-199",
+    "DOC-200",
+    "DOC-201",
+    "DOC-202",
+    "DOC-203",
+    "DOC-205",
+    "DOC-206",
+    "DOC-207",
+    "DOC-208",
+    "DOC-209",
+    "DOC-210",
+    "DOC-211",
+    "DOC-213",
+    "DOC-214",
+    "DOC-215",
+    "DOC-217",
+    "DOC-218",
+    "DOC-220",
+    "DOC-221",
+    "DOC-223",
+    "DOC-224",
+    "DOC-225",
+    "DOC-226",
+    "DOC-228",
+    "DOC-229",
+    "DOC-231",
+    "DOC-233",
+    "DOC-236",
+    "DOC-237",
+    "DOC-241",
+    "DOC-242",
+    "DOC-243",
+    "DOC-244",
+    "DOC-245",
+    "DOC-246",
+    "DOC-247",
+    "DOC-248",
+    "DOC-249",
+    "DOC-252",
+    "DOC-253",
+    "DOC-254",
+    "DOC-255",
+    "DOC-256",
+    "DOC-257",
+    "DOC-258",
+    "DOC-259",
+    "DOC-260",
+    "DOC-261",
+    "DOC-262",
+    "DOC-263",
+    "DOC-264",
+    "DOC-265",
+    "DOC-266",
+    "DOC-268",
+    "DOC-269",
+    "DOC-270",
+    "DOC-271",
+    "DOC-272",
+    "DOC-273",
+    "DOC-274",
+    "DOC-275",
+    "DOC-276",
+    "DOC-277",
+    "DOC-278",
+    "DOC-280",
+    "DOC-281",
+    "DOC-283",
+    "DOC-284",
+    "DOC-285",
+    "DOC-286",
+    "DOC-288",
+    "DOC-289",
+    "DOC-291",
+    "DOC-292",
+    "DOC-293",
+    "DOC-294",
+    "DOC-295",
+    "DOC-297",
+    "DOC-299",
+    "DOC-300"
+  ],
+  "json_schema": {
+    "document_type": "invoice",
+    "document_number": "121732",
+    "document_date": "1999-11-13",
+    "sender": "",
+    "receiver": "",
+    "origin": "AL AND 1 COPY OF TRANSCRIPT OP",
+    "destination": "Durham, NC 27705",
+    "reference_number": "",
+    "unit_price": 835455.5,
+    "total_amount": 835455.5,
+    "currency": "USD",
+    "other": {
+      "source_file": "232_train_imagesa_a_l_g_alg62d00_83545550.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-232",
+      "filename": "232_train_imagesa_a_l_g_alg62d00_83545550.png",
+      "ocr_text": "3รี\nWRT REPORTING\nUnited-Womack Reporting\n1235 North Loop West, Suite 510\n0IC E\nHouston, TX 77008-4704\n(713) 426-0400\nFax (713) 426-0600\nINVOICE NO.\nDATE\nJOB NUMBER\n121732\n11/16/99\n01-44644\nREPORTER(S)\nCASE NUMBER\nJOB DATE\n11/13/99\nBURNHO\nARBITRATION\nr\n7\nMs. Lashley P. Russ\nCASE CAPTION\nDuke University School of Law\nDuke University\nPrivate Adjudication Center 110 Swift Ave., Suite Two\nDurham, NC 27705\nTERMS\nNet 30 Days\nL\nL\n1 COPY OF TRANSCRIPT OF:\nArbitration Hearing-Morning\n880.05\nORIGINAL AND 1 COPY OF TRANSCRIPT OP:\nArbitration Hearing-Morning\n2,686.65\nCharge Includes Additional Copy with Condensed Transcript\n& Ascir-Disk Delivered Overnight to Tom Gardner\n76-0022475\n(919) 416-3722\nTAX ID NO.\nPlease detach and return this portion with your payment\nMs. Lashley P. Russ\nDuke University School of Law\nPrivate Adjudication Center\nInvoice No.: 121732\n110 Swift Ave., Suite Two\nDate\nTOTAL DUE : 3,566.70\n: 11/16/99\nDurham, NC 27705\n3,887.70 APTER 12/16/99\nJob No.\n: 01-44644\n835455.50\nCase No.\n: ARBITRATION\nDuke University\nRemit To: United-Womack Reporting\n1235 North Loop West, Suite 510\nHouston, TX 77008-4704\n0EC 7\n*-",
+      "ocr_lines": [
+        {
+          "text": "3รี",
+          "confidence": 0.31,
+          "bounding_box": [
+            [
+              650.0,
+              62.0
+            ],
+            [
+              684.0,
+              44.0
+            ],
+            [
+              712.0,
+              99.0
+            ],
+            [
+              678.0,
+              117.0
+            ]
+          ],
+          "box": [
+            [
+              650.0,
+              62.0
+            ],
+            [
+              684.0,
+              44.0
+            ],
+            [
+              712.0,
+              99.0
+            ],
+            [
+              678.0,
+              117.0
+            ]
+          ],
+          "position": {
+            "x": 650,
+            "y": 44,
+            "width": 62,
+            "height": 73,
+            "center_x": 681.0,
+            "center_y": 80.5,
+            "region": "top-right",
+            "tag": "[y:44, x:650]"
+          }
+        },
+        {
+          "text": "WRT REPORTING",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              479.0,
+              73.0
+            ],
+            [
+              637.0,
+              73.0
+            ],
+            [
+              637.0,
+              87.0
+            ],
+            [
+              479.0,
+              87.0
+            ]
+          ],
+          "box": [
+            [
+              479.0,
+              73.0
+            ],
+            [
+              637.0,
+              73.0
+            ],
+            [
+              637.0,
+              87.0
+            ],
+            [
+              479.0,
+              87.0
+            ]
+          ],
+          "position": {
+            "x": 479,
+            "y": 73,
+            "width": 158,
+            "height": 14,
+            "center_x": 558.0,
+            "center_y": 80.0,
+            "region": "top-right",
+            "tag": "[y:73, x:479]"
+          }
+        },
+        {
+          "text": "United-Womack Reporting",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              53.0,
+              83.0
+            ],
+            [
+              184.0,
+              84.0
+            ],
+            [
+              184.0,
+              98.0
+            ],
+            [
+              53.0,
+              97.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              83.0
+            ],
+            [
+              184.0,
+              84.0
+            ],
+            [
+              184.0,
+              98.0
+            ],
+            [
+              53.0,
+              97.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 83,
+            "width": 131,
+            "height": 15,
+            "center_x": 118.5,
+            "center_y": 90.5,
+            "region": "top-left",
+            "tag": "[y:83, x:53]"
+          }
+        },
+        {
+          "text": "1235 North Loop West, Suite 510",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              54.0,
+              98.0
+            ],
+            [
+              217.0,
+              98.0
+            ],
+            [
+              217.0,
+              111.0
+            ],
+            [
+              54.0,
+              111.0
+            ]
+          ],
+          "box": [
+            [
+              54.0,
+              98.0
+            ],
+            [
+              217.0,
+              98.0
+            ],
+            [
+              217.0,
+              111.0
+            ],
+            [
+              54.0,
+              111.0
+            ]
+          ],
+          "position": {
+            "x": 54,
+            "y": 98,
+            "width": 163,
+            "height": 13,
+            "center_x": 135.5,
+            "center_y": 104.5,
+            "region": "top-left",
+            "tag": "[y:98, x:54]"
+          }
+        },
+        {
+          "text": "0IC E",
+          "confidence": 0.81,
+          "bounding_box": [
+            [
+              534.0,
+              92.0
+            ],
+            [
+              641.0,
+              92.0
+            ],
+            [
+              641.0,
+              113.0
+            ],
+            [
+              534.0,
+              113.0
+            ]
+          ],
+          "box": [
+            [
+              534.0,
+              92.0
+            ],
+            [
+              641.0,
+              92.0
+            ],
+            [
+              641.0,
+              113.0
+            ],
+            [
+              534.0,
+              113.0
+            ]
+          ],
+          "position": {
+            "x": 534,
+            "y": 92,
+            "width": 107,
+            "height": 21,
+            "center_x": 587.5,
+            "center_y": 102.5,
+            "region": "top-right",
+            "tag": "[y:92, x:534]"
+          }
+        },
+        {
+          "text": "Houston, TX 77008-4704",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              53.0,
+              111.0
+            ],
+            [
+              177.0,
+              111.0
+            ],
+            [
+              177.0,
+              124.0
+            ],
+            [
+              53.0,
+              124.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              111.0
+            ],
+            [
+              177.0,
+              111.0
+            ],
+            [
+              177.0,
+              124.0
+            ],
+            [
+              53.0,
+              124.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 111,
+            "width": 124,
+            "height": 13,
+            "center_x": 115.0,
+            "center_y": 117.5,
+            "region": "top-left",
+            "tag": "[y:111, x:53]"
+          }
+        },
+        {
+          "text": "(713) 426-0400",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              53.0,
+              124.0
+            ],
+            [
+              133.0,
+              123.0
+            ],
+            [
+              134.0,
+              137.0
+            ],
+            [
+              53.0,
+              138.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              124.0
+            ],
+            [
+              133.0,
+              123.0
+            ],
+            [
+              134.0,
+              137.0
+            ],
+            [
+              53.0,
+              138.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 123,
+            "width": 81,
+            "height": 15,
+            "center_x": 93.5,
+            "center_y": 130.5,
+            "region": "top-left",
+            "tag": "[y:123, x:53]"
+          }
+        },
+        {
+          "text": "Fax (713) 426-0600",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              133.0,
+              124.0
+            ],
+            [
+              239.0,
+              124.0
+            ],
+            [
+              239.0,
+              137.0
+            ],
+            [
+              133.0,
+              137.0
+            ]
+          ],
+          "box": [
+            [
+              133.0,
+              124.0
+            ],
+            [
+              239.0,
+              124.0
+            ],
+            [
+              239.0,
+              137.0
+            ],
+            [
+              133.0,
+              137.0
+            ]
+          ],
+          "position": {
+            "x": 133,
+            "y": 124,
+            "width": 106,
+            "height": 13,
+            "center_x": 186.0,
+            "center_y": 130.5,
+            "region": "top-left",
+            "tag": "[y:124, x:133]"
+          }
+        },
+        {
+          "text": "INVOICE NO.",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              413.0,
+              122.0
+            ],
+            [
+              474.0,
+              122.0
+            ],
+            [
+              474.0,
+              133.0
+            ],
+            [
+              413.0,
+              133.0
+            ]
+          ],
+          "box": [
+            [
+              413.0,
+              122.0
+            ],
+            [
+              474.0,
+              122.0
+            ],
+            [
+              474.0,
+              133.0
+            ],
+            [
+              413.0,
+              133.0
+            ]
+          ],
+          "position": {
+            "x": 413,
+            "y": 122,
+            "width": 61,
+            "height": 11,
+            "center_x": 443.5,
+            "center_y": 127.5,
+            "region": "top-center",
+            "tag": "[y:122, x:413]"
+          }
+        },
+        {
+          "text": "DATE",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              527.0,
+              120.0
+            ],
+            [
+              559.0,
+              122.0
+            ],
+            [
+              558.0,
+              137.0
+            ],
+            [
+              526.0,
+              135.0
+            ]
+          ],
+          "box": [
+            [
+              527.0,
+              120.0
+            ],
+            [
+              559.0,
+              122.0
+            ],
+            [
+              558.0,
+              137.0
+            ],
+            [
+              526.0,
+              135.0
+            ]
+          ],
+          "position": {
+            "x": 526,
+            "y": 120,
+            "width": 33,
+            "height": 17,
+            "center_x": 542.5,
+            "center_y": 128.5,
+            "region": "top-right",
+            "tag": "[y:120, x:526]"
+          }
+        },
+        {
+          "text": "JOB NUMBER",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              603.0,
+              124.0
+            ],
+            [
+              667.0,
+              124.0
+            ],
+            [
+              667.0,
+              135.0
+            ],
+            [
+              603.0,
+              135.0
+            ]
+          ],
+          "box": [
+            [
+              603.0,
+              124.0
+            ],
+            [
+              667.0,
+              124.0
+            ],
+            [
+              667.0,
+              135.0
+            ],
+            [
+              603.0,
+              135.0
+            ]
+          ],
+          "position": {
+            "x": 603,
+            "y": 124,
+            "width": 64,
+            "height": 11,
+            "center_x": 635.0,
+            "center_y": 129.5,
+            "region": "top-right",
+            "tag": "[y:124, x:603]"
+          }
+        },
+        {
+          "text": "121732",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              408.0,
+              138.0
+            ],
+            [
+              448.0,
+              138.0
+            ],
+            [
+              448.0,
+              156.0
+            ],
+            [
+              408.0,
+              156.0
+            ]
+          ],
+          "box": [
+            [
+              408.0,
+              138.0
+            ],
+            [
+              448.0,
+              138.0
+            ],
+            [
+              448.0,
+              156.0
+            ],
+            [
+              408.0,
+              156.0
+            ]
+          ],
+          "position": {
+            "x": 408,
+            "y": 138,
+            "width": 40,
+            "height": 18,
+            "center_x": 428.0,
+            "center_y": 147.0,
+            "region": "top-center",
+            "tag": "[y:138, x:408]"
+          }
+        },
+        {
+          "text": "11/16/99",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              513.0,
+              141.0
+            ],
+            [
+              559.0,
+              141.0
+            ],
+            [
+              559.0,
+              156.0
+            ],
+            [
+              513.0,
+              156.0
+            ]
+          ],
+          "box": [
+            [
+              513.0,
+              141.0
+            ],
+            [
+              559.0,
+              141.0
+            ],
+            [
+              559.0,
+              156.0
+            ],
+            [
+              513.0,
+              156.0
+            ]
+          ],
+          "position": {
+            "x": 513,
+            "y": 141,
+            "width": 46,
+            "height": 15,
+            "center_x": 536.0,
+            "center_y": 148.5,
+            "region": "top-right",
+            "tag": "[y:141, x:513]"
+          }
+        },
+        {
+          "text": "01-44644",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              604.0,
+              141.0
+            ],
+            [
+              651.0,
+              141.0
+            ],
+            [
+              651.0,
+              156.0
+            ],
+            [
+              604.0,
+              156.0
+            ]
+          ],
+          "box": [
+            [
+              604.0,
+              141.0
+            ],
+            [
+              651.0,
+              141.0
+            ],
+            [
+              651.0,
+              156.0
+            ],
+            [
+              604.0,
+              156.0
+            ]
+          ],
+          "position": {
+            "x": 604,
+            "y": 141,
+            "width": 47,
+            "height": 15,
+            "center_x": 627.5,
+            "center_y": 148.5,
+            "region": "top-right",
+            "tag": "[y:141, x:604]"
+          }
+        },
+        {
+          "text": "REPORTER(S)",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              509.0,
+              164.0
+            ],
+            [
+              576.0,
+              166.0
+            ],
+            [
+              576.0,
+              181.0
+            ],
+            [
+              508.0,
+              178.0
+            ]
+          ],
+          "box": [
+            [
+              509.0,
+              164.0
+            ],
+            [
+              576.0,
+              166.0
+            ],
+            [
+              576.0,
+              181.0
+            ],
+            [
+              508.0,
+              178.0
+            ]
+          ],
+          "position": {
+            "x": 508,
+            "y": 164,
+            "width": 68,
+            "height": 17,
+            "center_x": 542.0,
+            "center_y": 172.5,
+            "region": "top-right",
+            "tag": "[y:164, x:508]"
+          }
+        },
+        {
+          "text": "CASE NUMBER",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              602.0,
+              164.0
+            ],
+            [
+              676.0,
+              166.0
+            ],
+            [
+              675.0,
+              181.0
+            ],
+            [
+              602.0,
+              178.0
+            ]
+          ],
+          "box": [
+            [
+              602.0,
+              164.0
+            ],
+            [
+              676.0,
+              166.0
+            ],
+            [
+              675.0,
+              181.0
+            ],
+            [
+              602.0,
+              178.0
+            ]
+          ],
+          "position": {
+            "x": 602,
+            "y": 164,
+            "width": 74,
+            "height": 17,
+            "center_x": 639.0,
+            "center_y": 172.5,
+            "region": "top-right",
+            "tag": "[y:164, x:602]"
+          }
+        },
+        {
+          "text": "JOB DATE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              417.0,
+              166.0
+            ],
+            [
+              466.0,
+              166.0
+            ],
+            [
+              466.0,
+              177.0
+            ],
+            [
+              417.0,
+              177.0
+            ]
+          ],
+          "box": [
+            [
+              417.0,
+              166.0
+            ],
+            [
+              466.0,
+              166.0
+            ],
+            [
+              466.0,
+              177.0
+            ],
+            [
+              417.0,
+              177.0
+            ]
+          ],
+          "position": {
+            "x": 417,
+            "y": 166,
+            "width": 49,
+            "height": 11,
+            "center_x": 441.5,
+            "center_y": 171.5,
+            "region": "top-center",
+            "tag": "[y:166, x:417]"
+          }
+        },
+        {
+          "text": "11/13/99",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              409.0,
+              183.0
+            ],
+            [
+              454.0,
+              183.0
+            ],
+            [
+              454.0,
+              199.0
+            ],
+            [
+              409.0,
+              199.0
+            ]
+          ],
+          "box": [
+            [
+              409.0,
+              183.0
+            ],
+            [
+              454.0,
+              183.0
+            ],
+            [
+              454.0,
+              199.0
+            ],
+            [
+              409.0,
+              199.0
+            ]
+          ],
+          "position": {
+            "x": 409,
+            "y": 183,
+            "width": 45,
+            "height": 16,
+            "center_x": 431.5,
+            "center_y": 191.0,
+            "region": "top-center",
+            "tag": "[y:183, x:409]"
+          }
+        },
+        {
+          "text": "BURNHO",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              512.0,
+              183.0
+            ],
+            [
+              566.0,
+              183.0
+            ],
+            [
+              566.0,
+              201.0
+            ],
+            [
+              512.0,
+              201.0
+            ]
+          ],
+          "box": [
+            [
+              512.0,
+              183.0
+            ],
+            [
+              566.0,
+              183.0
+            ],
+            [
+              566.0,
+              201.0
+            ],
+            [
+              512.0,
+              201.0
+            ]
+          ],
+          "position": {
+            "x": 512,
+            "y": 183,
+            "width": 54,
+            "height": 18,
+            "center_x": 539.0,
+            "center_y": 192.0,
+            "region": "top-right",
+            "tag": "[y:183, x:512]"
+          }
+        },
+        {
+          "text": "ARBITRATION",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              605.0,
+              185.0
+            ],
+            [
+              685.0,
+              185.0
+            ],
+            [
+              685.0,
+              200.0
+            ],
+            [
+              605.0,
+              200.0
+            ]
+          ],
+          "box": [
+            [
+              605.0,
+              185.0
+            ],
+            [
+              685.0,
+              185.0
+            ],
+            [
+              685.0,
+              200.0
+            ],
+            [
+              605.0,
+              200.0
+            ]
+          ],
+          "position": {
+            "x": 605,
+            "y": 185,
+            "width": 80,
+            "height": 15,
+            "center_x": 645.0,
+            "center_y": 192.5,
+            "region": "top-right",
+            "tag": "[y:185, x:605]"
+          }
+        },
+        {
+          "text": "r",
+          "confidence": 0.45,
+          "bounding_box": [
+            [
+              56.0,
+              203.0
+            ],
+            [
+              66.0,
+              203.0
+            ],
+            [
+              66.0,
+              212.0
+            ],
+            [
+              56.0,
+              212.0
+            ]
+          ],
+          "box": [
+            [
+              56.0,
+              203.0
+            ],
+            [
+              66.0,
+              203.0
+            ],
+            [
+              66.0,
+              212.0
+            ],
+            [
+              56.0,
+              212.0
+            ]
+          ],
+          "position": {
+            "x": 56,
+            "y": 203,
+            "width": 10,
+            "height": 9,
+            "center_x": 61.0,
+            "center_y": 207.5,
+            "region": "top-left",
+            "tag": "[y:203, x:56]"
+          }
+        },
+        {
+          "text": "7",
+          "confidence": 0.82,
+          "bounding_box": [
+            [
+              358.0,
+              204.0
+            ],
+            [
+              366.0,
+              204.0
+            ],
+            [
+              366.0,
+              213.0
+            ],
+            [
+              358.0,
+              213.0
+            ]
+          ],
+          "box": [
+            [
+              358.0,
+              204.0
+            ],
+            [
+              366.0,
+              204.0
+            ],
+            [
+              366.0,
+              213.0
+            ],
+            [
+              358.0,
+              213.0
+            ]
+          ],
+          "position": {
+            "x": 358,
+            "y": 204,
+            "width": 8,
+            "height": 9,
+            "center_x": 362.0,
+            "center_y": 208.5,
+            "region": "top-center",
+            "tag": "[y:204, x:358]"
+          }
+        },
+        {
+          "text": "Ms. Lashley P. Russ",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              73.0,
+              222.0
+            ],
+            [
+              177.0,
+              223.0
+            ],
+            [
+              177.0,
+              237.0
+            ],
+            [
+              73.0,
+              236.0
+            ]
+          ],
+          "box": [
+            [
+              73.0,
+              222.0
+            ],
+            [
+              177.0,
+              223.0
+            ],
+            [
+              177.0,
+              237.0
+            ],
+            [
+              73.0,
+              236.0
+            ]
+          ],
+          "position": {
+            "x": 73,
+            "y": 222,
+            "width": 104,
+            "height": 15,
+            "center_x": 125.0,
+            "center_y": 229.5,
+            "region": "top-left",
+            "tag": "[y:222, x:73]"
+          }
+        },
+        {
+          "text": "CASE CAPTION",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              502.0,
+              211.0
+            ],
+            [
+              574.0,
+              211.0
+            ],
+            [
+              574.0,
+              222.0
+            ],
+            [
+              502.0,
+              222.0
+            ]
+          ],
+          "box": [
+            [
+              502.0,
+              211.0
+            ],
+            [
+              574.0,
+              211.0
+            ],
+            [
+              574.0,
+              222.0
+            ],
+            [
+              502.0,
+              222.0
+            ]
+          ],
+          "position": {
+            "x": 502,
+            "y": 211,
+            "width": 72,
+            "height": 11,
+            "center_x": 538.0,
+            "center_y": 216.5,
+            "region": "top-right",
+            "tag": "[y:211, x:502]"
+          }
+        },
+        {
+          "text": "Duke University School of Law",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              74.0,
+              237.0
+            ],
+            [
+              228.0,
+              237.0
+            ],
+            [
+              228.0,
+              250.0
+            ],
+            [
+              74.0,
+              250.0
+            ]
+          ],
+          "box": [
+            [
+              74.0,
+              237.0
+            ],
+            [
+              228.0,
+              237.0
+            ],
+            [
+              228.0,
+              250.0
+            ],
+            [
+              74.0,
+              250.0
+            ]
+          ],
+          "position": {
+            "x": 74,
+            "y": 237,
+            "width": 154,
+            "height": 13,
+            "center_x": 151.0,
+            "center_y": 243.5,
+            "region": "top-left",
+            "tag": "[y:237, x:74]"
+          }
+        },
+        {
+          "text": "Duke University",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              408.0,
+              230.0
+            ],
+            [
+              487.0,
+              232.0
+            ],
+            [
+              487.0,
+              248.0
+            ],
+            [
+              407.0,
+              246.0
+            ]
+          ],
+          "box": [
+            [
+              408.0,
+              230.0
+            ],
+            [
+              487.0,
+              232.0
+            ],
+            [
+              487.0,
+              248.0
+            ],
+            [
+              407.0,
+              246.0
+            ]
+          ],
+          "position": {
+            "x": 407,
+            "y": 230,
+            "width": 80,
+            "height": 18,
+            "center_x": 447.0,
+            "center_y": 239.0,
+            "region": "top-center",
+            "tag": "[y:230, x:407]"
+          }
+        },
+        {
+          "text": "Private Adjudication Center 110 Swift Ave., Suite Two",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              75.0,
+              251.0
+            ],
+            [
+              339.0,
+              251.0
+            ],
+            [
+              339.0,
+              264.0
+            ],
+            [
+              75.0,
+              264.0
+            ]
+          ],
+          "box": [
+            [
+              75.0,
+              251.0
+            ],
+            [
+              339.0,
+              251.0
+            ],
+            [
+              339.0,
+              264.0
+            ],
+            [
+              75.0,
+              264.0
+            ]
+          ],
+          "position": {
+            "x": 75,
+            "y": 251,
+            "width": 264,
+            "height": 13,
+            "center_x": 207.0,
+            "center_y": 257.5,
+            "region": "top-left",
+            "tag": "[y:251, x:75]"
+          }
+        },
+        {
+          "text": "Durham, NC 27705",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              75.0,
+              265.0
+            ],
+            [
+              171.0,
+              265.0
+            ],
+            [
+              171.0,
+              278.0
+            ],
+            [
+              75.0,
+              278.0
+            ]
+          ],
+          "box": [
+            [
+              75.0,
+              265.0
+            ],
+            [
+              171.0,
+              265.0
+            ],
+            [
+              171.0,
+              278.0
+            ],
+            [
+              75.0,
+              278.0
+            ]
+          ],
+          "position": {
+            "x": 75,
+            "y": 265,
+            "width": 96,
+            "height": 13,
+            "center_x": 123.0,
+            "center_y": 271.5,
+            "region": "middle-left",
+            "tag": "[y:265, x:75]"
+          }
+        },
+        {
+          "text": "TERMS",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              519.0,
+              260.0
+            ],
+            [
+              558.0,
+              260.0
+            ],
+            [
+              558.0,
+              274.0
+            ],
+            [
+              519.0,
+              274.0
+            ]
+          ],
+          "box": [
+            [
+              519.0,
+              260.0
+            ],
+            [
+              558.0,
+              260.0
+            ],
+            [
+              558.0,
+              274.0
+            ],
+            [
+              519.0,
+              274.0
+            ]
+          ],
+          "position": {
+            "x": 519,
+            "y": 260,
+            "width": 39,
+            "height": 14,
+            "center_x": 538.5,
+            "center_y": 267.0,
+            "region": "top-right",
+            "tag": "[y:260, x:519]"
+          }
+        },
+        {
+          "text": "Net 30 Days",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              407.0,
+              276.0
+            ],
+            [
+              471.0,
+              278.0
+            ],
+            [
+              471.0,
+              297.0
+            ],
+            [
+              406.0,
+              294.0
+            ]
+          ],
+          "box": [
+            [
+              407.0,
+              276.0
+            ],
+            [
+              471.0,
+              278.0
+            ],
+            [
+              471.0,
+              297.0
+            ],
+            [
+              406.0,
+              294.0
+            ]
+          ],
+          "position": {
+            "x": 406,
+            "y": 276,
+            "width": 65,
+            "height": 21,
+            "center_x": 438.5,
+            "center_y": 286.5,
+            "region": "middle",
+            "tag": "[y:276, x:406]"
+          }
+        },
+        {
+          "text": "L",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              54.0,
+              296.0
+            ],
+            [
+              67.0,
+              296.0
+            ],
+            [
+              67.0,
+              309.0
+            ],
+            [
+              54.0,
+              309.0
+            ]
+          ],
+          "box": [
+            [
+              54.0,
+              296.0
+            ],
+            [
+              67.0,
+              296.0
+            ],
+            [
+              67.0,
+              309.0
+            ],
+            [
+              54.0,
+              309.0
+            ]
+          ],
+          "position": {
+            "x": 54,
+            "y": 296,
+            "width": 13,
+            "height": 13,
+            "center_x": 60.5,
+            "center_y": 302.5,
+            "region": "middle-left",
+            "tag": "[y:296, x:54]"
+          }
+        },
+        {
+          "text": "L",
+          "confidence": 0.79,
+          "bounding_box": [
+            [
+              357.0,
+              297.0
+            ],
+            [
+              366.0,
+              297.0
+            ],
+            [
+              366.0,
+              307.0
+            ],
+            [
+              357.0,
+              307.0
+            ]
+          ],
+          "box": [
+            [
+              357.0,
+              297.0
+            ],
+            [
+              366.0,
+              297.0
+            ],
+            [
+              366.0,
+              307.0
+            ],
+            [
+              357.0,
+              307.0
+            ]
+          ],
+          "position": {
+            "x": 357,
+            "y": 297,
+            "width": 9,
+            "height": 10,
+            "center_x": 361.5,
+            "center_y": 302.0,
+            "region": "middle",
+            "tag": "[y:297, x:357]"
+          }
+        },
+        {
+          "text": "1 COPY OF TRANSCRIPT OF:",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              53.0,
+              322.0
+            ],
+            [
+              223.0,
+              322.0
+            ],
+            [
+              223.0,
+              335.0
+            ],
+            [
+              53.0,
+              335.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              322.0
+            ],
+            [
+              223.0,
+              322.0
+            ],
+            [
+              223.0,
+              335.0
+            ],
+            [
+              53.0,
+              335.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 322,
+            "width": 170,
+            "height": 13,
+            "center_x": 138.0,
+            "center_y": 328.5,
+            "region": "middle-left",
+            "tag": "[y:322, x:53]"
+          }
+        },
+        {
+          "text": "Arbitration Hearing-Morning",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              77.0,
+              332.0
+            ],
+            [
+              268.0,
+              332.0
+            ],
+            [
+              268.0,
+              345.0
+            ],
+            [
+              77.0,
+              345.0
+            ]
+          ],
+          "box": [
+            [
+              77.0,
+              332.0
+            ],
+            [
+              268.0,
+              332.0
+            ],
+            [
+              268.0,
+              345.0
+            ],
+            [
+              77.0,
+              345.0
+            ]
+          ],
+          "position": {
+            "x": 77,
+            "y": 332,
+            "width": 191,
+            "height": 13,
+            "center_x": 172.5,
+            "center_y": 338.5,
+            "region": "middle-left",
+            "tag": "[y:332, x:77]"
+          }
+        },
+        {
+          "text": "880.05",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              613.0,
+              330.0
+            ],
+            [
+              663.0,
+              333.0
+            ],
+            [
+              662.0,
+              347.0
+            ],
+            [
+              612.0,
+              345.0
+            ]
+          ],
+          "box": [
+            [
+              613.0,
+              330.0
+            ],
+            [
+              663.0,
+              333.0
+            ],
+            [
+              662.0,
+              347.0
+            ],
+            [
+              612.0,
+              345.0
+            ]
+          ],
+          "position": {
+            "x": 612,
+            "y": 330,
+            "width": 51,
+            "height": 17,
+            "center_x": 637.5,
+            "center_y": 338.5,
+            "region": "middle-right",
+            "tag": "[y:330, x:612]"
+          }
+        },
+        {
+          "text": "ORIGINAL AND 1 COPY OF TRANSCRIPT OP:",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              54.0,
+              353.0
+            ],
+            [
+              311.0,
+              353.0
+            ],
+            [
+              311.0,
+              367.0
+            ],
+            [
+              54.0,
+              367.0
+            ]
+          ],
+          "box": [
+            [
+              54.0,
+              353.0
+            ],
+            [
+              311.0,
+              353.0
+            ],
+            [
+              311.0,
+              367.0
+            ],
+            [
+              54.0,
+              367.0
+            ]
+          ],
+          "position": {
+            "x": 54,
+            "y": 353,
+            "width": 257,
+            "height": 14,
+            "center_x": 182.5,
+            "center_y": 360.0,
+            "region": "middle-left",
+            "tag": "[y:353, x:54]"
+          }
+        },
+        {
+          "text": "Arbitration Hearing-Morning",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              70.0,
+              366.0
+            ],
+            [
+              267.0,
+              366.0
+            ],
+            [
+              267.0,
+              379.0
+            ],
+            [
+              70.0,
+              379.0
+            ]
+          ],
+          "box": [
+            [
+              70.0,
+              366.0
+            ],
+            [
+              267.0,
+              366.0
+            ],
+            [
+              267.0,
+              379.0
+            ],
+            [
+              70.0,
+              379.0
+            ]
+          ],
+          "position": {
+            "x": 70,
+            "y": 366,
+            "width": 197,
+            "height": 13,
+            "center_x": 168.5,
+            "center_y": 372.5,
+            "region": "middle-left",
+            "tag": "[y:366, x:70]"
+          }
+        },
+        {
+          "text": "2,686.65",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              599.0,
+              367.0
+            ],
+            [
+              658.0,
+              365.0
+            ],
+            [
+              659.0,
+              379.0
+            ],
+            [
+              599.0,
+              381.0
+            ]
+          ],
+          "box": [
+            [
+              599.0,
+              367.0
+            ],
+            [
+              658.0,
+              365.0
+            ],
+            [
+              659.0,
+              379.0
+            ],
+            [
+              599.0,
+              381.0
+            ]
+          ],
+          "position": {
+            "x": 599,
+            "y": 365,
+            "width": 60,
+            "height": 16,
+            "center_x": 629.0,
+            "center_y": 373.0,
+            "region": "middle-right",
+            "tag": "[y:365, x:599]"
+          }
+        },
+        {
+          "text": "Charge Includes Additional Copy with Condensed Transcript",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              54.0,
+              445.0
+            ],
+            [
+              452.0,
+              445.0
+            ],
+            [
+              452.0,
+              458.0
+            ],
+            [
+              54.0,
+              458.0
+            ]
+          ],
+          "box": [
+            [
+              54.0,
+              445.0
+            ],
+            [
+              452.0,
+              445.0
+            ],
+            [
+              452.0,
+              458.0
+            ],
+            [
+              54.0,
+              458.0
+            ]
+          ],
+          "position": {
+            "x": 54,
+            "y": 445,
+            "width": 398,
+            "height": 13,
+            "center_x": 253.0,
+            "center_y": 451.5,
+            "region": "middle",
+            "tag": "[y:445, x:54]"
+          }
+        },
+        {
+          "text": "& Ascir-Disk Delivered Overnight to Tom Gardner",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              53.0,
+              455.0
+            ],
+            [
+              383.0,
+              456.0
+            ],
+            [
+              383.0,
+              470.0
+            ],
+            [
+              53.0,
+              469.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              455.0
+            ],
+            [
+              383.0,
+              456.0
+            ],
+            [
+              383.0,
+              470.0
+            ],
+            [
+              53.0,
+              469.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 455,
+            "width": 330,
+            "height": 15,
+            "center_x": 218.0,
+            "center_y": 462.5,
+            "region": "middle-left",
+            "tag": "[y:455, x:53]"
+          }
+        },
+        {
+          "text": "76-0022475",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              99.0,
+              645.0
+            ],
+            [
+              160.0,
+              643.0
+            ],
+            [
+              160.0,
+              657.0
+            ],
+            [
+              99.0,
+              659.0
+            ]
+          ],
+          "box": [
+            [
+              99.0,
+              645.0
+            ],
+            [
+              160.0,
+              643.0
+            ],
+            [
+              160.0,
+              657.0
+            ],
+            [
+              99.0,
+              659.0
+            ]
+          ],
+          "position": {
+            "x": 99,
+            "y": 643,
+            "width": 61,
+            "height": 16,
+            "center_x": 129.5,
+            "center_y": 651.0,
+            "region": "middle-left",
+            "tag": "[y:643, x:99]"
+          }
+        },
+        {
+          "text": "(919) 416-3722",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              527.0,
+              643.0
+            ],
+            [
+              603.0,
+              643.0
+            ],
+            [
+              603.0,
+              657.0
+            ],
+            [
+              527.0,
+              657.0
+            ]
+          ],
+          "box": [
+            [
+              527.0,
+              643.0
+            ],
+            [
+              603.0,
+              643.0
+            ],
+            [
+              603.0,
+              657.0
+            ],
+            [
+              527.0,
+              657.0
+            ]
+          ],
+          "position": {
+            "x": 527,
+            "y": 643,
+            "width": 76,
+            "height": 14,
+            "center_x": 565.0,
+            "center_y": 650.0,
+            "region": "middle-right",
+            "tag": "[y:643, x:527]"
+          }
+        },
+        {
+          "text": "TAX ID NO.",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              32.0,
+              645.0
+            ],
+            [
+              91.0,
+              645.0
+            ],
+            [
+              91.0,
+              656.0
+            ],
+            [
+              32.0,
+              656.0
+            ]
+          ],
+          "box": [
+            [
+              32.0,
+              645.0
+            ],
+            [
+              91.0,
+              645.0
+            ],
+            [
+              91.0,
+              656.0
+            ],
+            [
+              32.0,
+              656.0
+            ]
+          ],
+          "position": {
+            "x": 32,
+            "y": 645,
+            "width": 59,
+            "height": 11,
+            "center_x": 61.5,
+            "center_y": 650.5,
+            "region": "middle-left",
+            "tag": "[y:645, x:32]"
+          }
+        },
+        {
+          "text": "Please detach and return this portion with your payment",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              165.0,
+              661.0
+            ],
+            [
+              550.0,
+              661.0
+            ],
+            [
+              550.0,
+              675.0
+            ],
+            [
+              165.0,
+              675.0
+            ]
+          ],
+          "box": [
+            [
+              165.0,
+              661.0
+            ],
+            [
+              550.0,
+              661.0
+            ],
+            [
+              550.0,
+              675.0
+            ],
+            [
+              165.0,
+              675.0
+            ]
+          ],
+          "position": {
+            "x": 165,
+            "y": 661,
+            "width": 385,
+            "height": 14,
+            "center_x": 357.5,
+            "center_y": 668.0,
+            "region": "middle",
+            "tag": "[y:661, x:165]"
+          }
+        },
+        {
+          "text": "Ms. Lashley P. Russ",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              52.0,
+              711.0
+            ],
+            [
+              188.0,
+              711.0
+            ],
+            [
+              188.0,
+              724.0
+            ],
+            [
+              52.0,
+              724.0
+            ]
+          ],
+          "box": [
+            [
+              52.0,
+              711.0
+            ],
+            [
+              188.0,
+              711.0
+            ],
+            [
+              188.0,
+              724.0
+            ],
+            [
+              52.0,
+              724.0
+            ]
+          ],
+          "position": {
+            "x": 52,
+            "y": 711,
+            "width": 136,
+            "height": 13,
+            "center_x": 120.0,
+            "center_y": 717.5,
+            "region": "bottom-left",
+            "tag": "[y:711, x:52]"
+          }
+        },
+        {
+          "text": "Duke University School of Law",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              52.0,
+              725.0
+            ],
+            [
+              258.0,
+              725.0
+            ],
+            [
+              258.0,
+              738.0
+            ],
+            [
+              52.0,
+              738.0
+            ]
+          ],
+          "box": [
+            [
+              52.0,
+              725.0
+            ],
+            [
+              258.0,
+              725.0
+            ],
+            [
+              258.0,
+              738.0
+            ],
+            [
+              52.0,
+              738.0
+            ]
+          ],
+          "position": {
+            "x": 52,
+            "y": 725,
+            "width": 206,
+            "height": 13,
+            "center_x": 155.0,
+            "center_y": 731.5,
+            "region": "bottom-left",
+            "tag": "[y:725, x:52]"
+          }
+        },
+        {
+          "text": "Private Adjudication Center",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              53.0,
+              739.0
+            ],
+            [
+              244.0,
+              739.0
+            ],
+            [
+              244.0,
+              752.0
+            ],
+            [
+              53.0,
+              752.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              739.0
+            ],
+            [
+              244.0,
+              739.0
+            ],
+            [
+              244.0,
+              752.0
+            ],
+            [
+              53.0,
+              752.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 739,
+            "width": 191,
+            "height": 13,
+            "center_x": 148.5,
+            "center_y": 745.5,
+            "region": "bottom-left",
+            "tag": "[y:739, x:53]"
+          }
+        },
+        {
+          "text": "Invoice No.: 121732",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              429.0,
+              738.0
+            ],
+            [
+              565.0,
+              738.0
+            ],
+            [
+              565.0,
+              751.0
+            ],
+            [
+              429.0,
+              751.0
+            ]
+          ],
+          "box": [
+            [
+              429.0,
+              738.0
+            ],
+            [
+              565.0,
+              738.0
+            ],
+            [
+              565.0,
+              751.0
+            ],
+            [
+              429.0,
+              751.0
+            ]
+          ],
+          "position": {
+            "x": 429,
+            "y": 738,
+            "width": 136,
+            "height": 13,
+            "center_x": 497.0,
+            "center_y": 744.5,
+            "region": "bottom-right",
+            "tag": "[y:738, x:429]"
+          }
+        },
+        {
+          "text": "110 Swift Ave., Suite Two",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              53.0,
+              753.0
+            ],
+            [
+              230.0,
+              753.0
+            ],
+            [
+              230.0,
+              766.0
+            ],
+            [
+              53.0,
+              766.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              753.0
+            ],
+            [
+              230.0,
+              753.0
+            ],
+            [
+              230.0,
+              766.0
+            ],
+            [
+              53.0,
+              766.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 753,
+            "width": 177,
+            "height": 13,
+            "center_x": 141.5,
+            "center_y": 759.5,
+            "region": "bottom-left",
+            "tag": "[y:753, x:53]"
+          }
+        },
+        {
+          "text": "Date",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              427.0,
+              752.0
+            ],
+            [
+              460.0,
+              752.0
+            ],
+            [
+              460.0,
+              767.0
+            ],
+            [
+              427.0,
+              767.0
+            ]
+          ],
+          "box": [
+            [
+              427.0,
+              752.0
+            ],
+            [
+              460.0,
+              752.0
+            ],
+            [
+              460.0,
+              767.0
+            ],
+            [
+              427.0,
+              767.0
+            ]
+          ],
+          "position": {
+            "x": 427,
+            "y": 752,
+            "width": 33,
+            "height": 15,
+            "center_x": 443.5,
+            "center_y": 759.5,
+            "region": "bottom-center",
+            "tag": "[y:752, x:427]"
+          }
+        },
+        {
+          "text": "TOTAL DUE : 3,566.70",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              427.0,
+              765.0
+            ],
+            [
+              578.0,
+              764.0
+            ],
+            [
+              578.0,
+              778.0
+            ],
+            [
+              427.0,
+              779.0
+            ]
+          ],
+          "box": [
+            [
+              427.0,
+              765.0
+            ],
+            [
+              578.0,
+              764.0
+            ],
+            [
+              578.0,
+              778.0
+            ],
+            [
+              427.0,
+              779.0
+            ]
+          ],
+          "position": {
+            "x": 427,
+            "y": 764,
+            "width": 151,
+            "height": 15,
+            "center_x": 502.5,
+            "center_y": 771.5,
+            "region": "bottom-right",
+            "tag": "[y:764, x:427]"
+          }
+        },
+        {
+          "text": ": 11/16/99",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              507.0,
+              752.0
+            ],
+            [
+              578.0,
+              752.0
+            ],
+            [
+              578.0,
+              766.0
+            ],
+            [
+              507.0,
+              766.0
+            ]
+          ],
+          "box": [
+            [
+              507.0,
+              752.0
+            ],
+            [
+              578.0,
+              752.0
+            ],
+            [
+              578.0,
+              766.0
+            ],
+            [
+              507.0,
+              766.0
+            ]
+          ],
+          "position": {
+            "x": 507,
+            "y": 752,
+            "width": 71,
+            "height": 14,
+            "center_x": 542.5,
+            "center_y": 759.0,
+            "region": "bottom-right",
+            "tag": "[y:752, x:507]"
+          }
+        },
+        {
+          "text": "Durham, NC 27705",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              53.0,
+              765.0
+            ],
+            [
+              166.0,
+              765.0
+            ],
+            [
+              166.0,
+              778.0
+            ],
+            [
+              53.0,
+              778.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              765.0
+            ],
+            [
+              166.0,
+              765.0
+            ],
+            [
+              166.0,
+              778.0
+            ],
+            [
+              53.0,
+              778.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 765,
+            "width": 113,
+            "height": 13,
+            "center_x": 109.5,
+            "center_y": 771.5,
+            "region": "bottom-left",
+            "tag": "[y:765, x:53]"
+          }
+        },
+        {
+          "text": "3,887.70 APTER 12/16/99",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              520.0,
+              793.0
+            ],
+            [
+              682.0,
+              793.0
+            ],
+            [
+              682.0,
+              807.0
+            ],
+            [
+              520.0,
+              807.0
+            ]
+          ],
+          "box": [
+            [
+              520.0,
+              793.0
+            ],
+            [
+              682.0,
+              793.0
+            ],
+            [
+              682.0,
+              807.0
+            ],
+            [
+              520.0,
+              807.0
+            ]
+          ],
+          "position": {
+            "x": 520,
+            "y": 793,
+            "width": 162,
+            "height": 14,
+            "center_x": 601.0,
+            "center_y": 800.0,
+            "region": "bottom-right",
+            "tag": "[y:793, x:520]"
+          }
+        },
+        {
+          "text": "Job No.",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              428.0,
+              823.0
+            ],
+            [
+              479.0,
+              823.0
+            ],
+            [
+              479.0,
+              837.0
+            ],
+            [
+              428.0,
+              837.0
+            ]
+          ],
+          "box": [
+            [
+              428.0,
+              823.0
+            ],
+            [
+              479.0,
+              823.0
+            ],
+            [
+              479.0,
+              837.0
+            ],
+            [
+              428.0,
+              837.0
+            ]
+          ],
+          "position": {
+            "x": 428,
+            "y": 823,
+            "width": 51,
+            "height": 14,
+            "center_x": 453.5,
+            "center_y": 830.0,
+            "region": "bottom-center",
+            "tag": "[y:823, x:428]"
+          }
+        },
+        {
+          "text": ": 01-44644",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              508.0,
+              824.0
+            ],
+            [
+              577.0,
+              824.0
+            ],
+            [
+              577.0,
+              835.0
+            ],
+            [
+              508.0,
+              835.0
+            ]
+          ],
+          "box": [
+            [
+              508.0,
+              824.0
+            ],
+            [
+              577.0,
+              824.0
+            ],
+            [
+              577.0,
+              835.0
+            ],
+            [
+              508.0,
+              835.0
+            ]
+          ],
+          "position": {
+            "x": 508,
+            "y": 824,
+            "width": 69,
+            "height": 11,
+            "center_x": 542.5,
+            "center_y": 829.5,
+            "region": "bottom-right",
+            "tag": "[y:824, x:508]"
+          }
+        },
+        {
+          "text": "835455.50",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              688.0,
+              819.0
+            ],
+            [
+              712.0,
+              821.0
+            ],
+            [
+              703.0,
+              930.0
+            ],
+            [
+              679.0,
+              928.0
+            ]
+          ],
+          "box": [
+            [
+              688.0,
+              819.0
+            ],
+            [
+              712.0,
+              821.0
+            ],
+            [
+              703.0,
+              930.0
+            ],
+            [
+              679.0,
+              928.0
+            ]
+          ],
+          "position": {
+            "x": 679,
+            "y": 819,
+            "width": 33,
+            "height": 111,
+            "center_x": 695.5,
+            "center_y": 874.5,
+            "region": "bottom-right",
+            "tag": "[y:819, x:679]"
+          }
+        },
+        {
+          "text": "Case No.",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              428.0,
+              837.0
+            ],
+            [
+              487.0,
+              837.0
+            ],
+            [
+              487.0,
+              851.0
+            ],
+            [
+              428.0,
+              851.0
+            ]
+          ],
+          "box": [
+            [
+              428.0,
+              837.0
+            ],
+            [
+              487.0,
+              837.0
+            ],
+            [
+              487.0,
+              851.0
+            ],
+            [
+              428.0,
+              851.0
+            ]
+          ],
+          "position": {
+            "x": 428,
+            "y": 837,
+            "width": 59,
+            "height": 14,
+            "center_x": 457.5,
+            "center_y": 844.0,
+            "region": "bottom-center",
+            "tag": "[y:837, x:428]"
+          }
+        },
+        {
+          "text": ": ARBITRATION",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              507.0,
+              838.0
+            ],
+            [
+              600.0,
+              838.0
+            ],
+            [
+              600.0,
+              851.0
+            ],
+            [
+              507.0,
+              851.0
+            ]
+          ],
+          "box": [
+            [
+              507.0,
+              838.0
+            ],
+            [
+              600.0,
+              838.0
+            ],
+            [
+              600.0,
+              851.0
+            ],
+            [
+              507.0,
+              851.0
+            ]
+          ],
+          "position": {
+            "x": 507,
+            "y": 838,
+            "width": 93,
+            "height": 13,
+            "center_x": 553.5,
+            "center_y": 844.5,
+            "region": "bottom-right",
+            "tag": "[y:838, x:507]"
+          }
+        },
+        {
+          "text": "Duke University",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              428.0,
+              852.0
+            ],
+            [
+              537.0,
+              852.0
+            ],
+            [
+              537.0,
+              865.0
+            ],
+            [
+              428.0,
+              865.0
+            ]
+          ],
+          "box": [
+            [
+              428.0,
+              852.0
+            ],
+            [
+              537.0,
+              852.0
+            ],
+            [
+              537.0,
+              865.0
+            ],
+            [
+              428.0,
+              865.0
+            ]
+          ],
+          "position": {
+            "x": 428,
+            "y": 852,
+            "width": 109,
+            "height": 13,
+            "center_x": 482.5,
+            "center_y": 858.5,
+            "region": "bottom-right",
+            "tag": "[y:852, x:428]"
+          }
+        },
+        {
+          "text": "Remit To: United-Womack Reporting",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              32.0,
+              873.0
+            ],
+            [
+              264.0,
+              873.0
+            ],
+            [
+              264.0,
+              886.0
+            ],
+            [
+              32.0,
+              886.0
+            ]
+          ],
+          "box": [
+            [
+              32.0,
+              873.0
+            ],
+            [
+              264.0,
+              873.0
+            ],
+            [
+              264.0,
+              886.0
+            ],
+            [
+              32.0,
+              886.0
+            ]
+          ],
+          "position": {
+            "x": 32,
+            "y": 873,
+            "width": 232,
+            "height": 13,
+            "center_x": 148.0,
+            "center_y": 879.5,
+            "region": "bottom-left",
+            "tag": "[y:873, x:32]"
+          }
+        },
+        {
+          "text": "1235 North Loop West, Suite 510",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              101.0,
+              887.0
+            ],
+            [
+              319.0,
+              887.0
+            ],
+            [
+              319.0,
+              900.0
+            ],
+            [
+              101.0,
+              900.0
+            ]
+          ],
+          "box": [
+            [
+              101.0,
+              887.0
+            ],
+            [
+              319.0,
+              887.0
+            ],
+            [
+              319.0,
+              900.0
+            ],
+            [
+              101.0,
+              900.0
+            ]
+          ],
+          "position": {
+            "x": 101,
+            "y": 887,
+            "width": 218,
+            "height": 13,
+            "center_x": 210.0,
+            "center_y": 893.5,
+            "region": "bottom-left",
+            "tag": "[y:887, x:101]"
+          }
+        },
+        {
+          "text": "Houston, TX 77008-4704",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              101.0,
+              901.0
+            ],
+            [
+              257.0,
+              901.0
+            ],
+            [
+              257.0,
+              914.0
+            ],
+            [
+              101.0,
+              914.0
+            ]
+          ],
+          "box": [
+            [
+              101.0,
+              901.0
+            ],
+            [
+              257.0,
+              901.0
+            ],
+            [
+              257.0,
+              914.0
+            ],
+            [
+              101.0,
+              914.0
+            ]
+          ],
+          "position": {
+            "x": 101,
+            "y": 901,
+            "width": 156,
+            "height": 13,
+            "center_x": 179.0,
+            "center_y": 907.5,
+            "region": "bottom-left",
+            "tag": "[y:901, x:101]"
+          }
+        },
+        {
+          "text": "0EC 7",
+          "confidence": 0.67,
+          "bounding_box": [
+            [
+              562.0,
+              911.0
+            ],
+            [
+              619.0,
+              916.0
+            ],
+            [
+              617.0,
+              938.0
+            ],
+            [
+              560.0,
+              933.0
+            ]
+          ],
+          "box": [
+            [
+              562.0,
+              911.0
+            ],
+            [
+              619.0,
+              916.0
+            ],
+            [
+              617.0,
+              938.0
+            ],
+            [
+              560.0,
+              933.0
+            ]
+          ],
+          "position": {
+            "x": 560,
+            "y": 911,
+            "width": 59,
+            "height": 27,
+            "center_x": 589.5,
+            "center_y": 924.5,
+            "region": "bottom-right",
+            "tag": "[y:911, x:560]"
+          }
+        },
+        {
+          "text": "*-",
+          "confidence": 0.3,
+          "bounding_box": [
+            [
+              85.0,
+              950.0
+            ],
+            [
+              105.0,
+              924.0
+            ],
+            [
+              112.0,
+              930.0
+            ],
+            [
+              92.0,
+              956.0
+            ]
+          ],
+          "box": [
+            [
+              85.0,
+              950.0
+            ],
+            [
+              105.0,
+              924.0
+            ],
+            [
+              112.0,
+              930.0
+            ],
+            [
+              92.0,
+              956.0
+            ]
+          ],
+          "position": {
+            "x": 85,
+            "y": 924,
+            "width": 27,
+            "height": 32,
+            "center_x": 98.5,
+            "center_y": 940.0,
+            "region": "bottom-left",
+            "tag": "[y:924, x:85]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 0.969,
+      "cached_at": "2026-09-27T16:23:07.787082+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "invoice",
+        "document_number": "121732",
+        "document_date": "1999-11-13",
+        "sender": "",
+        "receiver": "",
+        "origin": "AL AND 1 COPY OF TRANSCRIPT OP",
+        "destination": "Durham, NC 27705",
+        "reference_number": "",
+        "unit_price": 835455.5,
+        "total_amount": 835455.5,
+        "currency": "USD",
+        "other": {
+          "source_file": "232_train_imagesa_a_l_g_alg62d00_83545550.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "INVOICE NO.",
+          "field": "document_type",
+          "value": "invoice",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "121732",
+          "field": "document_number",
+          "value": "121732",
+          "confidence": 98,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "1999-11-13",
+          "field": "document_date",
+          "value": "1999-11-13",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "sender",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "receiver",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "ORIGINAL AND 1 COPY OF TRANSCRIPT OP:",
+          "field": "origin",
+          "value": "AL AND 1 COPY OF TRANSCRIPT OP",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "Durham, NC 27705",
+          "field": "destination",
+          "value": "Durham, NC 27705",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "reference_number",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "835455.50",
+          "field": "unit_price",
+          "value": "835455.5",
+          "confidence": 98,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "835455.50",
+          "field": "total_amount",
+          "value": "835455.5",
+          "confidence": 98,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "232_train_imagesa_a_l_g_alg62d00_83545550.png",
+          "field": "source_file",
+          "value": "232_train_imagesa_a_l_g_alg62d00_83545550.png",
+          "confidence": 92,
+          "status": "success",
+          "isOther": true
+        }
+      ],
+      "confidence": {
+        "overall": 86,
+        "ocr": 94,
+        "slm": 88,
+        "mapping": 73,
+        "completeness": 73
+      },
+      "review_items": [
+        {
+          "field": "sender",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "receiver",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "reference_number",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": {
+        "accuracy_pct": 73.0,
+        "inference_time_sec": 0.15,
+        "tokens_generated": 0,
+        "token_speed_tps": 0,
+        "core_fields_fill_rate_pct": 73.0,
+        "schema_valid": true,
+        "math_integrity_status": "no_subtotal",
+        "math_integrity_notes": "Sources: 835,455.50",
+        "field_accuracies": {}
+      },
+      "model": "Qwen/Qwen2.5-1.5B-Instruct (Fallback: 502: SLM returned invalid JSON: Expecting ',' delimiter: line 25 column 6 (char 674))",
+      "device": "cpu/fallback"
+    },
+    "performance": {
+      "ocr_time_sec": 0.969,
+      "slm_time_sec": 48.422,
+      "total_time_sec": 49.391
+    },
+    "prompt_integrity": {
+      "cache_schema_version": 2,
+      "prompt_hash": "e1abb4746f2a86199e65819797164ad347862007f0f20aecb2f2f57c31e4911d",
+      "variant": "zero-shot",
+      "benchmark_example_ids": [],
+      "benchmark_example_confidences": [],
+      "training_document_ids": [
+        "DOC-001",
+        "DOC-002",
+        "DOC-003",
+        "DOC-004",
+        "DOC-005",
+        "DOC-007",
+        "DOC-009",
+        "DOC-011",
+        "DOC-012",
+        "DOC-013",
+        "DOC-014",
+        "DOC-015",
+        "DOC-016",
+        "DOC-017",
+        "DOC-019",
+        "DOC-020",
+        "DOC-021",
+        "DOC-022",
+        "DOC-023",
+        "DOC-024",
+        "DOC-027",
+        "DOC-028",
+        "DOC-029",
+        "DOC-030",
+        "DOC-031",
+        "DOC-032",
+        "DOC-033",
+        "DOC-035",
+        "DOC-036",
+        "DOC-037",
+        "DOC-038",
+        "DOC-039",
+        "DOC-040",
+        "DOC-041",
+        "DOC-042",
+        "DOC-044",
+        "DOC-045",
+        "DOC-048",
+        "DOC-049",
+        "DOC-050",
+        "DOC-051",
+        "DOC-052",
+        "DOC-053",
+        "DOC-054",
+        "DOC-055",
+        "DOC-056",
+        "DOC-057",
+        "DOC-059",
+        "DOC-060",
+        "DOC-062",
+        "DOC-063",
+        "DOC-065",
+        "DOC-066",
+        "DOC-067",
+        "DOC-068",
+        "DOC-069",
+        "DOC-070",
+        "DOC-071",
+        "DOC-072",
+        "DOC-073",
+        "DOC-075",
+        "DOC-080",
+        "DOC-081",
+        "DOC-082",
+        "DOC-083",
+        "DOC-084",
+        "DOC-085",
+        "DOC-086",
+        "DOC-087",
+        "DOC-088",
+        "DOC-089",
+        "DOC-090",
+        "DOC-092",
+        "DOC-095",
+        "DOC-096",
+        "DOC-097",
+        "DOC-099",
+        "DOC-100",
+        "DOC-101",
+        "DOC-102",
+        "DOC-103",
+        "DOC-104",
+        "DOC-106",
+        "DOC-107",
+        "DOC-108",
+        "DOC-109",
+        "DOC-111",
+        "DOC-113",
+        "DOC-115",
+        "DOC-116",
+        "DOC-117",
+        "DOC-118",
+        "DOC-119",
+        "DOC-121",
+        "DOC-122",
+        "DOC-123",
+        "DOC-124",
+        "DOC-125",
+        "DOC-126",
+        "DOC-127",
+        "DOC-128",
+        "DOC-129",
+        "DOC-130",
+        "DOC-131",
+        "DOC-132",
+        "DOC-133",
+        "DOC-134",
+        "DOC-135",
+        "DOC-136",
+        "DOC-137",
+        "DOC-138",
+        "DOC-139",
+        "DOC-140",
+        "DOC-141",
+        "DOC-142",
+        "DOC-143",
+        "DOC-144",
+        "DOC-146",
+        "DOC-147",
+        "DOC-148",
+        "DOC-150",
+        "DOC-151",
+        "DOC-152",
+        "DOC-154",
+        "DOC-155",
+        "DOC-156",
+        "DOC-157",
+        "DOC-159",
+        "DOC-160",
+        "DOC-161",
+        "DOC-162",
+        "DOC-163",
+        "DOC-164",
+        "DOC-167",
+        "DOC-168",
+        "DOC-169",
+        "DOC-170",
+        "DOC-171",
+        "DOC-172",
+        "DOC-173",
+        "DOC-174",
+        "DOC-175",
+        "DOC-177",
+        "DOC-178",
+        "DOC-179",
+        "DOC-180",
+        "DOC-182",
+        "DOC-184",
+        "DOC-185",
+        "DOC-186",
+        "DOC-187",
+        "DOC-188",
+        "DOC-189",
+        "DOC-190",
+        "DOC-191",
+        "DOC-192",
+        "DOC-194",
+        "DOC-195",
+        "DOC-196",
+        "DOC-198",
+        "DOC-199",
+        "DOC-200",
+        "DOC-201",
+        "DOC-202",
+        "DOC-203",
+        "DOC-205",
+        "DOC-206",
+        "DOC-207",
+        "DOC-208",
+        "DOC-209",
+        "DOC-210",
+        "DOC-211",
+        "DOC-213",
+        "DOC-214",
+        "DOC-215",
+        "DOC-217",
+        "DOC-218",
+        "DOC-220",
+        "DOC-221",
+        "DOC-223",
+        "DOC-224",
+        "DOC-225",
+        "DOC-226",
+        "DOC-228",
+        "DOC-229",
+        "DOC-231",
+        "DOC-233",
+        "DOC-236",
+        "DOC-237",
+        "DOC-241",
+        "DOC-242",
+        "DOC-243",
+        "DOC-244",
+        "DOC-245",
+        "DOC-246",
+        "DOC-247",
+        "DOC-248",
+        "DOC-249",
+        "DOC-252",
+        "DOC-253",
+        "DOC-254",
+        "DOC-255",
+        "DOC-256",
+        "DOC-257",
+        "DOC-258",
+        "DOC-259",
+        "DOC-260",
+        "DOC-261",
+        "DOC-262",
+        "DOC-263",
+        "DOC-264",
+        "DOC-265",
+        "DOC-266",
+        "DOC-268",
+        "DOC-269",
+        "DOC-270",
+        "DOC-271",
+        "DOC-272",
+        "DOC-273",
+        "DOC-274",
+        "DOC-275",
+        "DOC-276",
+        "DOC-277",
+        "DOC-278",
+        "DOC-280",
+        "DOC-281",
+        "DOC-283",
+        "DOC-284",
+        "DOC-285",
+        "DOC-286",
+        "DOC-288",
+        "DOC-289",
+        "DOC-291",
+        "DOC-292",
+        "DOC-293",
+        "DOC-294",
+        "DOC-295",
+        "DOC-297",
+        "DOC-299",
+        "DOC-300"
+      ]
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 0.969,
+    "slm_time_sec": 48.422,
+    "total_time_sec": 49.391
+  },
+  "cached_at": "2026-09-27T16:23:56.233986+00:00"
+}

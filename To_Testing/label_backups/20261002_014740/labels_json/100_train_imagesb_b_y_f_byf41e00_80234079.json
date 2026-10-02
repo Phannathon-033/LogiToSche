@@ -1,0 +1,27 @@
+{
+  "id": "DOC-100",
+  "rank": 100,
+  "file_name": "100_train_imagesb_b_y_f_byf41e00_80234079.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "5400",
+    "document_date": "1984-08-08",
+    "sender": "LABORATORIES AMERICA, INC.",
+    "receiver": "Melanee B. Bennett",
+    "origin": "Greensboro, NC 27420",
+    "destination": "-",
+    "reference_number": "354B",
+    "unit_price": 2050.0,
+    "total_amount": 2050.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:14:47"
+}

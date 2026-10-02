@@ -1,0 +1,27 @@
+{
+  "id": "DOC-135",
+  "rank": 135,
+  "file_name": "135_train_imagesc_c_v_s_cvs78e00_2023527755.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "1988-07-11",
+    "sender": "BUSINESS EXPENSE VOUCHER",
+    "receiver": "-",
+    "origin": "DESTINATION",
+    "destination": "COMMENTS:(Note if on Company aircraft)",
+    "reference_number": "-",
+    "unit_price": 107.55,
+    "total_amount": 107.55,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:19:10"
+}

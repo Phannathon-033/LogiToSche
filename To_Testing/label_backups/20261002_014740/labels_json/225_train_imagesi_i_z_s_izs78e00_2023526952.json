@@ -1,0 +1,27 @@
+{
+  "id": "DOC-225",
+  "rank": 225,
+  "file_name": "225_train_imagesi_i_z_s_izs78e00_2023526952.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3210",
+    "document_date": "1989-08-24",
+    "sender": "2023526952",
+    "receiver": "YELLOW - REMITTANCE",
+    "origin": "LINTHICUM, MD 21090",
+    "destination": "ene",
+    "reference_number": "-",
+    "unit_price": 787.95,
+    "total_amount": 16934.23,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:30:18"
+}

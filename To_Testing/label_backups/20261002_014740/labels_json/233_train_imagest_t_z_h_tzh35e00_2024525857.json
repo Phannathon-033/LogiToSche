@@ -1,0 +1,27 @@
+{
+  "id": "DOC-233",
+  "rank": 233,
+  "file_name": "233_train_imagest_t_z_h_tzh35e00_2024525857.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "3454",
+    "document_date": "2030-05-01",
+    "sender": "CAPITAL CORP",
+    "receiver": "-",
+    "origin": "Washington, DC 20044",
+    "destination": "ACCT, OR",
+    "reference_number": "-",
+    "unit_price": 213.54,
+    "total_amount": 213.54,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:31:14"
+}

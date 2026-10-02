@@ -1,0 +1,27 @@
+{
+  "id": "DOC-220",
+  "rank": 220,
+  "file_name": "220_train_imagesk_k_i_b_kib52c00_2074104236.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "1961-09-24",
+    "sender": "ID",
+    "receiver": "-",
+    "origin": "itical Contribution-Campaign",
+    "destination": "FROM, ID",
+    "reference_number": "-",
+    "unit_price": 200.0,
+    "total_amount": 200.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:29:44"
+}

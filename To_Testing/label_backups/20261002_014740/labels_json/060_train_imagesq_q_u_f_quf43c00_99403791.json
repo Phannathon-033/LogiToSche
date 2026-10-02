@@ -1,0 +1,27 @@
+{
+  "id": "DOC-060",
+  "rank": 60,
+  "file_name": "060_train_imagesq_q_u_f_quf43c00_99403791.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "tShi6Label",
+    "document_date": "2000-12-11",
+    "sender": "Lashley Pluss (919)418-3722",
+    "receiver": "Same Recipient",
+    "origin": "DURHAM, NC",
+    "destination": "Chicago, IL",
+    "reference_number": "-",
+    "unit_price": 9.05,
+    "total_amount": 9.05,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:10:16"
+}

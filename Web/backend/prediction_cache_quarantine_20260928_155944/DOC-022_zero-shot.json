@@ -1,0 +1,4981 @@
+{
+  "document_id": "DOC-022",
+  "file_name": "022_test_imagesi_i_r_c_irc21a00_0071006676.png",
+  "variant": "zero-shot",
+  "json_schema": {
+    "document_type": "invoice",
+    "document_number": "NO.121710",
+    "document_date": "1994-11-11",
+    "sender": "MENABHA CDRPORATION",
+    "receiver": "K QLeary, MidAmerica, CT",
+    "origin": "NEENAH WI 54957-0427",
+    "destination": "PO BOX 427, MIJ OB0 BREEZEWOOD LANE",
+    "reference_number": "NOU-22-1994",
+    "unit_price": 0.0,
+    "total_amount": 0.0,
+    "currency": "USD",
+    "other": {
+      "source_file": "022_test_imagesi_i_r_c_irc21a00_0071006676.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-022",
+      "filename": "022_test_imagesi_i_r_c_irc21a00_0071006676.png",
+      "ocr_text": "11/22/1994\n09:11\nK QLeary, MidAmerica, CT\n203 5615134\nP.01\nF.801/032\nNOU-22-1994 16:31\nFROM MID AMERICA\nTO\nOLEARY\nOB0 BREEZEWOOD LANE\nMIJ\nPO B0X 427\nAME-IILA\nNEENAH WI 54957-0427\nPHONE (414) 751-1800\nV MENABHA CDRPORATION\nPAGE\n1 OF\n2\nquotation\nCHRIS.SURT\nNO.\n121710\nREVIBED\nATTN:\nAMERCANTDBACCO\nTO:\n261REBOERBLVD\nPOBOX 1038\nDATE:\n11//94\n06904-2330\nYOUR SALES REPREBENTATIVE:\nSTAMFORD\nCT\nKATY O'LEARY\n800/283-3623\nYOUR INQUIRY:\nCLEAR/DRI\n(TM)* BKLT PLUB (12 PAGE BKLT)\nPHIRCE PS M\nDEBCRPTON\nCUANTTTY\nCLI6.FRDNTLFRINT. 4COLORS\nOOB CLEAR/DRI (TM)#\n350 น\n$321. 63/M\nPLUS PATTERN\nJY\n008\nWYARNISH.BACKPRINTBLACK. BABE\n300 น\n$289. 41/M\nPLY. PERMANENT PRESSURE SOMSITIVECLEAR,\nFRONT PRINTBLACK.\n12-PNELBOORLPTLFRONTCOVER_BIZE2.SX.A\"\n6\"DIMENSIONINCLUOES1\"EXTENSIONTHATWRAPB\n750 ค\n$244. 75/M\nAROUNDANDLUETOACKCOVER\n1000 M\n$228. 53/M\nRINTEORCOLOR\nSPRINTFURCOLOR\nDIE CUT WITH_INTRNALPERFORATIONLANDSLIT\nSMNACEBLIIINTOPLYPORATEBETWEEN\nCONT INUOUS FANPOLDL\nADEL_POBITION NUMDER'4\nSHRINKWRAP\nN PAKSTO\n##PLATE CHAROE PER_PLATE\nCOLOPRODFPERCOLOR\n***ONSERT PREP\n*PATENT #4. 479, 838\n0\na\n##APPLIES TO CLEAR/DRI COUPON COPY DNLY\nADDITIONAL PRICING INFORMATION:\nWINGE AID OAOEE AOEE*R HUBUEDT TO NBCEI DP TNAL COPK OUFTOMBR TO UIMEN CMENA RBAGY ARTMH\nOR AT COEf  NBOBOARY\nCOLOY RG\nmds  octon #p\nCWTTAHIDAND MA OOLOR8\nMOG.00 POR MLUICRT\nWT IND MSTAIO COLORG\nTHIB QUOTATION I$ IN EFFECT FOR THIRTY DAYS ONLY AND/OR OONTINGENT\nTERMS: NET 30 DAYS / 1% 10 DAYS\nUPON RAW MATERIAL COTS AT JME OF SHIPMENT\nFO.B.\nSHIPPING DATE AFTER\nIY\nREOEIPTOFORDERI\nPLBA9E CONFIRM YOUR SHIPPING SCHEDULE WITH YOUR OUSTOMER\nRELATIORS REPREBENTATIVE WHEN PLACINO YOUR ORDER\nMIBCELLANEOUS INFORMATION",
+      "ocr_lines": [
+        {
+          "text": "11/22/1994",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              127.0,
+              2.0
+            ],
+            [
+              191.0,
+              2.0
+            ],
+            [
+              191.0,
+              13.0
+            ],
+            [
+              127.0,
+              13.0
+            ]
+          ],
+          "box": [
+            [
+              127.0,
+              2.0
+            ],
+            [
+              191.0,
+              2.0
+            ],
+            [
+              191.0,
+              13.0
+            ],
+            [
+              127.0,
+              13.0
+            ]
+          ],
+          "position": {
+            "x": 127,
+            "y": 2,
+            "width": 64,
+            "height": 11,
+            "center_x": 159.0,
+            "center_y": 7.5,
+            "region": "top-left",
+            "tag": "[y:2, x:127]"
+          }
+        },
+        {
+          "text": "09:11",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              207.0,
+              0.0
+            ],
+            [
+              243.0,
+              0.0
+            ],
+            [
+              243.0,
+              14.0
+            ],
+            [
+              207.0,
+              14.0
+            ]
+          ],
+          "box": [
+            [
+              207.0,
+              0.0
+            ],
+            [
+              243.0,
+              0.0
+            ],
+            [
+              243.0,
+              14.0
+            ],
+            [
+              207.0,
+              14.0
+            ]
+          ],
+          "position": {
+            "x": 207,
+            "y": 0,
+            "width": 36,
+            "height": 14,
+            "center_x": 225.0,
+            "center_y": 7.0,
+            "region": "top-left",
+            "tag": "[y:0, x:207]"
+          }
+        },
+        {
+          "text": "K QLeary, MidAmerica, CT",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              258.0,
+              1.0
+            ],
+            [
+              422.0,
+              1.0
+            ],
+            [
+              422.0,
+              14.0
+            ],
+            [
+              258.0,
+              14.0
+            ]
+          ],
+          "box": [
+            [
+              258.0,
+              1.0
+            ],
+            [
+              422.0,
+              1.0
+            ],
+            [
+              422.0,
+              14.0
+            ],
+            [
+              258.0,
+              14.0
+            ]
+          ],
+          "position": {
+            "x": 258,
+            "y": 1,
+            "width": 164,
+            "height": 13,
+            "center_x": 340.0,
+            "center_y": 7.5,
+            "region": "top-center",
+            "tag": "[y:1, x:258]"
+          }
+        },
+        {
+          "text": "203 5615134",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              436.0,
+              1.0
+            ],
+            [
+              508.0,
+              1.0
+            ],
+            [
+              508.0,
+              15.0
+            ],
+            [
+              436.0,
+              15.0
+            ]
+          ],
+          "box": [
+            [
+              436.0,
+              1.0
+            ],
+            [
+              508.0,
+              1.0
+            ],
+            [
+              508.0,
+              15.0
+            ],
+            [
+              436.0,
+              15.0
+            ]
+          ],
+          "position": {
+            "x": 436,
+            "y": 1,
+            "width": 72,
+            "height": 14,
+            "center_x": 472.0,
+            "center_y": 8.0,
+            "region": "top-right",
+            "tag": "[y:1, x:436]"
+          }
+        },
+        {
+          "text": "P.01",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              580.0,
+              1.0
+            ],
+            [
+              611.0,
+              1.0
+            ],
+            [
+              611.0,
+              15.0
+            ],
+            [
+              580.0,
+              15.0
+            ]
+          ],
+          "box": [
+            [
+              580.0,
+              1.0
+            ],
+            [
+              611.0,
+              1.0
+            ],
+            [
+              611.0,
+              15.0
+            ],
+            [
+              580.0,
+              15.0
+            ]
+          ],
+          "position": {
+            "x": 580,
+            "y": 1,
+            "width": 31,
+            "height": 14,
+            "center_x": 595.5,
+            "center_y": 8.0,
+            "region": "top-right",
+            "tag": "[y:1, x:580]"
+          }
+        },
+        {
+          "text": "F.801/032",
+          "confidence": 0.79,
+          "bounding_box": [
+            [
+              590.0,
+              29.0
+            ],
+            [
+              650.0,
+              29.0
+            ],
+            [
+              650.0,
+              40.0
+            ],
+            [
+              590.0,
+              40.0
+            ]
+          ],
+          "box": [
+            [
+              590.0,
+              29.0
+            ],
+            [
+              650.0,
+              29.0
+            ],
+            [
+              650.0,
+              40.0
+            ],
+            [
+              590.0,
+              40.0
+            ]
+          ],
+          "position": {
+            "x": 590,
+            "y": 29,
+            "width": 60,
+            "height": 11,
+            "center_x": 620.0,
+            "center_y": 34.5,
+            "region": "top-right",
+            "tag": "[y:29, x:590]"
+          }
+        },
+        {
+          "text": "NOU-22-1994 16:31",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              68.0,
+              31.0
+            ],
+            [
+              180.0,
+              31.0
+            ],
+            [
+              180.0,
+              44.0
+            ],
+            [
+              68.0,
+              44.0
+            ]
+          ],
+          "box": [
+            [
+              68.0,
+              31.0
+            ],
+            [
+              180.0,
+              31.0
+            ],
+            [
+              180.0,
+              44.0
+            ],
+            [
+              68.0,
+              44.0
+            ]
+          ],
+          "position": {
+            "x": 68,
+            "y": 31,
+            "width": 112,
+            "height": 13,
+            "center_x": 124.0,
+            "center_y": 37.5,
+            "region": "top-left",
+            "tag": "[y:31, x:68]"
+          }
+        },
+        {
+          "text": "FROM MID AMERICA",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              202.0,
+              30.0
+            ],
+            [
+              315.0,
+              30.0
+            ],
+            [
+              315.0,
+              43.0
+            ],
+            [
+              202.0,
+              43.0
+            ]
+          ],
+          "box": [
+            [
+              202.0,
+              30.0
+            ],
+            [
+              315.0,
+              30.0
+            ],
+            [
+              315.0,
+              43.0
+            ],
+            [
+              202.0,
+              43.0
+            ]
+          ],
+          "position": {
+            "x": 202,
+            "y": 30,
+            "width": 113,
+            "height": 13,
+            "center_x": 258.5,
+            "center_y": 36.5,
+            "region": "top-center",
+            "tag": "[y:30, x:202]"
+          }
+        },
+        {
+          "text": "TO",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              406.0,
+              30.0
+            ],
+            [
+              425.0,
+              30.0
+            ],
+            [
+              425.0,
+              41.0
+            ],
+            [
+              406.0,
+              41.0
+            ]
+          ],
+          "box": [
+            [
+              406.0,
+              30.0
+            ],
+            [
+              425.0,
+              30.0
+            ],
+            [
+              425.0,
+              41.0
+            ],
+            [
+              406.0,
+              41.0
+            ]
+          ],
+          "position": {
+            "x": 406,
+            "y": 30,
+            "width": 19,
+            "height": 11,
+            "center_x": 415.5,
+            "center_y": 35.5,
+            "region": "top-center",
+            "tag": "[y:30, x:406]"
+          }
+        },
+        {
+          "text": "OLEARY",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              430.0,
+              30.0
+            ],
+            [
+              471.0,
+              30.0
+            ],
+            [
+              471.0,
+              41.0
+            ],
+            [
+              430.0,
+              41.0
+            ]
+          ],
+          "box": [
+            [
+              430.0,
+              30.0
+            ],
+            [
+              471.0,
+              30.0
+            ],
+            [
+              471.0,
+              41.0
+            ],
+            [
+              430.0,
+              41.0
+            ]
+          ],
+          "position": {
+            "x": 430,
+            "y": 30,
+            "width": 41,
+            "height": 11,
+            "center_x": 450.5,
+            "center_y": 35.5,
+            "region": "top-center",
+            "tag": "[y:30, x:430]"
+          }
+        },
+        {
+          "text": "OB0 BREEZEWOOD LANE",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              534.0,
+              59.0
+            ],
+            [
+              658.0,
+              57.0
+            ],
+            [
+              658.0,
+              72.0
+            ],
+            [
+              534.0,
+              73.0
+            ]
+          ],
+          "box": [
+            [
+              534.0,
+              59.0
+            ],
+            [
+              658.0,
+              57.0
+            ],
+            [
+              658.0,
+              72.0
+            ],
+            [
+              534.0,
+              73.0
+            ]
+          ],
+          "position": {
+            "x": 534,
+            "y": 57,
+            "width": 124,
+            "height": 16,
+            "center_x": 596.0,
+            "center_y": 65.0,
+            "region": "top-right",
+            "tag": "[y:57, x:534]"
+          }
+        },
+        {
+          "text": "MIJ",
+          "confidence": 0.55,
+          "bounding_box": [
+            [
+              123.0,
+              73.0
+            ],
+            [
+              165.0,
+              73.0
+            ],
+            [
+              165.0,
+              88.0
+            ],
+            [
+              123.0,
+              88.0
+            ]
+          ],
+          "box": [
+            [
+              123.0,
+              73.0
+            ],
+            [
+              165.0,
+              73.0
+            ],
+            [
+              165.0,
+              88.0
+            ],
+            [
+              123.0,
+              88.0
+            ]
+          ],
+          "position": {
+            "x": 123,
+            "y": 73,
+            "width": 42,
+            "height": 15,
+            "center_x": 144.0,
+            "center_y": 80.5,
+            "region": "top-left",
+            "tag": "[y:73, x:123]"
+          }
+        },
+        {
+          "text": "PO B0X 427",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              534.0,
+              73.0
+            ],
+            [
+              597.0,
+              70.0
+            ],
+            [
+              597.0,
+              85.0
+            ],
+            [
+              534.0,
+              87.0
+            ]
+          ],
+          "box": [
+            [
+              534.0,
+              73.0
+            ],
+            [
+              597.0,
+              70.0
+            ],
+            [
+              597.0,
+              85.0
+            ],
+            [
+              534.0,
+              87.0
+            ]
+          ],
+          "position": {
+            "x": 534,
+            "y": 70,
+            "width": 63,
+            "height": 17,
+            "center_x": 565.5,
+            "center_y": 78.5,
+            "region": "top-right",
+            "tag": "[y:70, x:534]"
+          }
+        },
+        {
+          "text": "AME-IILA",
+          "confidence": 0.65,
+          "bounding_box": [
+            [
+              123.0,
+              85.0
+            ],
+            [
+              220.0,
+              85.0
+            ],
+            [
+              220.0,
+              99.0
+            ],
+            [
+              123.0,
+              99.0
+            ]
+          ],
+          "box": [
+            [
+              123.0,
+              85.0
+            ],
+            [
+              220.0,
+              85.0
+            ],
+            [
+              220.0,
+              99.0
+            ],
+            [
+              123.0,
+              99.0
+            ]
+          ],
+          "position": {
+            "x": 123,
+            "y": 85,
+            "width": 97,
+            "height": 14,
+            "center_x": 171.5,
+            "center_y": 92.0,
+            "region": "top-left",
+            "tag": "[y:85, x:123]"
+          }
+        },
+        {
+          "text": "NEENAH WI 54957-0427",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              534.0,
+              84.0
+            ],
+            [
+              658.0,
+              82.0
+            ],
+            [
+              658.0,
+              96.0
+            ],
+            [
+              534.0,
+              98.0
+            ]
+          ],
+          "box": [
+            [
+              534.0,
+              84.0
+            ],
+            [
+              658.0,
+              82.0
+            ],
+            [
+              658.0,
+              96.0
+            ],
+            [
+              534.0,
+              98.0
+            ]
+          ],
+          "position": {
+            "x": 534,
+            "y": 82,
+            "width": 124,
+            "height": 16,
+            "center_x": 596.0,
+            "center_y": 90.0,
+            "region": "top-right",
+            "tag": "[y:82, x:534]"
+          }
+        },
+        {
+          "text": "PHONE (414) 751-1800",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              535.0,
+              96.0
+            ],
+            [
+              650.0,
+              95.0
+            ],
+            [
+              650.0,
+              109.0
+            ],
+            [
+              535.0,
+              110.0
+            ]
+          ],
+          "box": [
+            [
+              535.0,
+              96.0
+            ],
+            [
+              650.0,
+              95.0
+            ],
+            [
+              650.0,
+              109.0
+            ],
+            [
+              535.0,
+              110.0
+            ]
+          ],
+          "position": {
+            "x": 535,
+            "y": 95,
+            "width": 115,
+            "height": 15,
+            "center_x": 592.5,
+            "center_y": 102.5,
+            "region": "top-right",
+            "tag": "[y:95, x:535]"
+          }
+        },
+        {
+          "text": "V MENABHA CDRPORATION",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              56.0,
+              118.0
+            ],
+            [
+              253.0,
+              115.0
+            ],
+            [
+              253.0,
+              128.0
+            ],
+            [
+              57.0,
+              131.0
+            ]
+          ],
+          "box": [
+            [
+              56.0,
+              118.0
+            ],
+            [
+              253.0,
+              115.0
+            ],
+            [
+              253.0,
+              128.0
+            ],
+            [
+              57.0,
+              131.0
+            ]
+          ],
+          "position": {
+            "x": 56,
+            "y": 115,
+            "width": 197,
+            "height": 16,
+            "center_x": 154.5,
+            "center_y": 123.0,
+            "region": "top-left",
+            "tag": "[y:115, x:56]"
+          }
+        },
+        {
+          "text": "PAGE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              535.0,
+              133.0
+            ],
+            [
+              570.0,
+              133.0
+            ],
+            [
+              570.0,
+              147.0
+            ],
+            [
+              535.0,
+              147.0
+            ]
+          ],
+          "box": [
+            [
+              535.0,
+              133.0
+            ],
+            [
+              570.0,
+              133.0
+            ],
+            [
+              570.0,
+              147.0
+            ],
+            [
+              535.0,
+              147.0
+            ]
+          ],
+          "position": {
+            "x": 535,
+            "y": 133,
+            "width": 35,
+            "height": 14,
+            "center_x": 552.5,
+            "center_y": 140.0,
+            "region": "top-right",
+            "tag": "[y:133, x:535]"
+          }
+        },
+        {
+          "text": "1 OF",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              590.0,
+              134.0
+            ],
+            [
+              625.0,
+              130.0
+            ],
+            [
+              627.0,
+              146.0
+            ],
+            [
+              592.0,
+              150.0
+            ]
+          ],
+          "box": [
+            [
+              590.0,
+              134.0
+            ],
+            [
+              625.0,
+              130.0
+            ],
+            [
+              627.0,
+              146.0
+            ],
+            [
+              592.0,
+              150.0
+            ]
+          ],
+          "position": {
+            "x": 590,
+            "y": 130,
+            "width": 37,
+            "height": 20,
+            "center_x": 608.5,
+            "center_y": 140.0,
+            "region": "top-right",
+            "tag": "[y:130, x:590]"
+          }
+        },
+        {
+          "text": "2",
+          "confidence": 0.56,
+          "bounding_box": [
+            [
+              648.0,
+              135.0
+            ],
+            [
+              661.0,
+              135.0
+            ],
+            [
+              661.0,
+              148.0
+            ],
+            [
+              648.0,
+              148.0
+            ]
+          ],
+          "box": [
+            [
+              648.0,
+              135.0
+            ],
+            [
+              661.0,
+              135.0
+            ],
+            [
+              661.0,
+              148.0
+            ],
+            [
+              648.0,
+              148.0
+            ]
+          ],
+          "position": {
+            "x": 648,
+            "y": 135,
+            "width": 13,
+            "height": 13,
+            "center_x": 654.5,
+            "center_y": 141.5,
+            "region": "top-right",
+            "tag": "[y:135, x:648]"
+          }
+        },
+        {
+          "text": "quotation",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              354.0,
+              178.0
+            ],
+            [
+              501.0,
+              171.0
+            ],
+            [
+              503.0,
+              206.0
+            ],
+            [
+              355.0,
+              213.0
+            ]
+          ],
+          "box": [
+            [
+              354.0,
+              178.0
+            ],
+            [
+              501.0,
+              171.0
+            ],
+            [
+              503.0,
+              206.0
+            ],
+            [
+              355.0,
+              213.0
+            ]
+          ],
+          "position": {
+            "x": 354,
+            "y": 171,
+            "width": 149,
+            "height": 42,
+            "center_x": 428.5,
+            "center_y": 192.0,
+            "region": "top-center",
+            "tag": "[y:171, x:354]"
+          }
+        },
+        {
+          "text": "CHRIS.SURT",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              82.0,
+              194.0
+            ],
+            [
+              167.0,
+              191.0
+            ],
+            [
+              168.0,
+              206.0
+            ],
+            [
+              83.0,
+              208.0
+            ]
+          ],
+          "box": [
+            [
+              82.0,
+              194.0
+            ],
+            [
+              167.0,
+              191.0
+            ],
+            [
+              168.0,
+              206.0
+            ],
+            [
+              83.0,
+              208.0
+            ]
+          ],
+          "position": {
+            "x": 82,
+            "y": 191,
+            "width": 86,
+            "height": 17,
+            "center_x": 125.0,
+            "center_y": 199.5,
+            "region": "top-left",
+            "tag": "[y:191, x:82]"
+          }
+        },
+        {
+          "text": "NO.",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              537.0,
+              183.0
+            ],
+            [
+              557.0,
+              186.0
+            ],
+            [
+              555.0,
+              198.0
+            ],
+            [
+              535.0,
+              195.0
+            ]
+          ],
+          "box": [
+            [
+              537.0,
+              183.0
+            ],
+            [
+              557.0,
+              186.0
+            ],
+            [
+              555.0,
+              198.0
+            ],
+            [
+              535.0,
+              195.0
+            ]
+          ],
+          "position": {
+            "x": 535,
+            "y": 183,
+            "width": 22,
+            "height": 15,
+            "center_x": 546.0,
+            "center_y": 190.5,
+            "region": "top-right",
+            "tag": "[y:183, x:535]"
+          }
+        },
+        {
+          "text": "121710",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              568.0,
+              184.0
+            ],
+            [
+              619.0,
+              184.0
+            ],
+            [
+              619.0,
+              199.0
+            ],
+            [
+              568.0,
+              199.0
+            ]
+          ],
+          "box": [
+            [
+              568.0,
+              184.0
+            ],
+            [
+              619.0,
+              184.0
+            ],
+            [
+              619.0,
+              199.0
+            ],
+            [
+              568.0,
+              199.0
+            ]
+          ],
+          "position": {
+            "x": 568,
+            "y": 184,
+            "width": 51,
+            "height": 15,
+            "center_x": 593.5,
+            "center_y": 191.5,
+            "region": "top-right",
+            "tag": "[y:184, x:568]"
+          }
+        },
+        {
+          "text": "REVIBED",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              632.0,
+              184.0
+            ],
+            [
+              693.0,
+              184.0
+            ],
+            [
+              693.0,
+              199.0
+            ],
+            [
+              632.0,
+              199.0
+            ]
+          ],
+          "box": [
+            [
+              632.0,
+              184.0
+            ],
+            [
+              693.0,
+              184.0
+            ],
+            [
+              693.0,
+              199.0
+            ],
+            [
+              632.0,
+              199.0
+            ]
+          ],
+          "position": {
+            "x": 632,
+            "y": 184,
+            "width": 61,
+            "height": 15,
+            "center_x": 662.5,
+            "center_y": 191.5,
+            "region": "top-right",
+            "tag": "[y:184, x:632]"
+          }
+        },
+        {
+          "text": "ATTN:",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              35.0,
+              196.0
+            ],
+            [
+              75.0,
+              196.0
+            ],
+            [
+              75.0,
+              207.0
+            ],
+            [
+              35.0,
+              207.0
+            ]
+          ],
+          "box": [
+            [
+              35.0,
+              196.0
+            ],
+            [
+              75.0,
+              196.0
+            ],
+            [
+              75.0,
+              207.0
+            ],
+            [
+              35.0,
+              207.0
+            ]
+          ],
+          "position": {
+            "x": 35,
+            "y": 196,
+            "width": 40,
+            "height": 11,
+            "center_x": 55.0,
+            "center_y": 201.5,
+            "region": "top-left",
+            "tag": "[y:196, x:35]"
+          }
+        },
+        {
+          "text": "AMERCANTDBACCO",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              82.0,
+              204.0
+            ],
+            [
+              216.0,
+              202.0
+            ],
+            [
+              216.0,
+              216.0
+            ],
+            [
+              82.0,
+              218.0
+            ]
+          ],
+          "box": [
+            [
+              82.0,
+              204.0
+            ],
+            [
+              216.0,
+              202.0
+            ],
+            [
+              216.0,
+              216.0
+            ],
+            [
+              82.0,
+              218.0
+            ]
+          ],
+          "position": {
+            "x": 82,
+            "y": 202,
+            "width": 134,
+            "height": 16,
+            "center_x": 149.0,
+            "center_y": 210.0,
+            "region": "top-left",
+            "tag": "[y:202, x:82]"
+          }
+        },
+        {
+          "text": "TO:",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              30.0,
+              210.0
+            ],
+            [
+              60.0,
+              210.0
+            ],
+            [
+              60.0,
+              225.0
+            ],
+            [
+              30.0,
+              225.0
+            ]
+          ],
+          "box": [
+            [
+              30.0,
+              210.0
+            ],
+            [
+              60.0,
+              210.0
+            ],
+            [
+              60.0,
+              225.0
+            ],
+            [
+              30.0,
+              225.0
+            ]
+          ],
+          "position": {
+            "x": 30,
+            "y": 210,
+            "width": 30,
+            "height": 15,
+            "center_x": 45.0,
+            "center_y": 217.5,
+            "region": "top-left",
+            "tag": "[y:210, x:30]"
+          }
+        },
+        {
+          "text": "261REBOERBLVD",
+          "confidence": 0.55,
+          "bounding_box": [
+            [
+              82.0,
+              214.0
+            ],
+            [
+              216.0,
+              212.0
+            ],
+            [
+              216.0,
+              226.0
+            ],
+            [
+              82.0,
+              228.0
+            ]
+          ],
+          "box": [
+            [
+              82.0,
+              214.0
+            ],
+            [
+              216.0,
+              212.0
+            ],
+            [
+              216.0,
+              226.0
+            ],
+            [
+              82.0,
+              228.0
+            ]
+          ],
+          "position": {
+            "x": 82,
+            "y": 212,
+            "width": 134,
+            "height": 16,
+            "center_x": 149.0,
+            "center_y": 220.0,
+            "region": "top-left",
+            "tag": "[y:212, x:82]"
+          }
+        },
+        {
+          "text": "POBOX 1038",
+          "confidence": 0.52,
+          "bounding_box": [
+            [
+              83.0,
+              223.0
+            ],
+            [
+              185.0,
+              223.0
+            ],
+            [
+              185.0,
+              237.0
+            ],
+            [
+              83.0,
+              237.0
+            ]
+          ],
+          "box": [
+            [
+              83.0,
+              223.0
+            ],
+            [
+              185.0,
+              223.0
+            ],
+            [
+              185.0,
+              237.0
+            ],
+            [
+              83.0,
+              237.0
+            ]
+          ],
+          "position": {
+            "x": 83,
+            "y": 223,
+            "width": 102,
+            "height": 14,
+            "center_x": 134.0,
+            "center_y": 230.0,
+            "region": "top-left",
+            "tag": "[y:223, x:83]"
+          }
+        },
+        {
+          "text": "DATE:",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              535.0,
+              214.0
+            ],
+            [
+              567.0,
+              211.0
+            ],
+            [
+              568.0,
+              226.0
+            ],
+            [
+              537.0,
+              229.0
+            ]
+          ],
+          "box": [
+            [
+              535.0,
+              214.0
+            ],
+            [
+              567.0,
+              211.0
+            ],
+            [
+              568.0,
+              226.0
+            ],
+            [
+              537.0,
+              229.0
+            ]
+          ],
+          "position": {
+            "x": 535,
+            "y": 211,
+            "width": 33,
+            "height": 18,
+            "center_x": 551.5,
+            "center_y": 220.0,
+            "region": "top-right",
+            "tag": "[y:211, x:535]"
+          }
+        },
+        {
+          "text": "11//94",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              594.0,
+              216.0
+            ],
+            [
+              662.0,
+              216.0
+            ],
+            [
+              662.0,
+              230.0
+            ],
+            [
+              594.0,
+              230.0
+            ]
+          ],
+          "box": [
+            [
+              594.0,
+              216.0
+            ],
+            [
+              662.0,
+              216.0
+            ],
+            [
+              662.0,
+              230.0
+            ],
+            [
+              594.0,
+              230.0
+            ]
+          ],
+          "position": {
+            "x": 594,
+            "y": 216,
+            "width": 68,
+            "height": 14,
+            "center_x": 628.0,
+            "center_y": 223.0,
+            "region": "top-right",
+            "tag": "[y:216, x:594]"
+          }
+        },
+        {
+          "text": "06904-2330",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              269.0,
+              240.0
+            ],
+            [
+              355.0,
+              239.0
+            ],
+            [
+              355.0,
+              253.0
+            ],
+            [
+              269.0,
+              254.0
+            ]
+          ],
+          "box": [
+            [
+              269.0,
+              240.0
+            ],
+            [
+              355.0,
+              239.0
+            ],
+            [
+              355.0,
+              253.0
+            ],
+            [
+              269.0,
+              254.0
+            ]
+          ],
+          "position": {
+            "x": 269,
+            "y": 239,
+            "width": 86,
+            "height": 15,
+            "center_x": 312.0,
+            "center_y": 246.5,
+            "region": "middle",
+            "tag": "[y:239, x:269]"
+          }
+        },
+        {
+          "text": "YOUR SALES REPREBENTATIVE:",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              357.0,
+              236.0
+            ],
+            [
+              539.0,
+              233.0
+            ],
+            [
+              539.0,
+              247.0
+            ],
+            [
+              357.0,
+              250.0
+            ]
+          ],
+          "box": [
+            [
+              357.0,
+              236.0
+            ],
+            [
+              539.0,
+              233.0
+            ],
+            [
+              539.0,
+              247.0
+            ],
+            [
+              357.0,
+              250.0
+            ]
+          ],
+          "position": {
+            "x": 357,
+            "y": 233,
+            "width": 182,
+            "height": 17,
+            "center_x": 448.0,
+            "center_y": 241.5,
+            "region": "middle",
+            "tag": "[y:233, x:357]"
+          }
+        },
+        {
+          "text": "STAMFORD",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              83.0,
+              243.0
+            ],
+            [
+              153.0,
+              243.0
+            ],
+            [
+              153.0,
+              257.0
+            ],
+            [
+              83.0,
+              257.0
+            ]
+          ],
+          "box": [
+            [
+              83.0,
+              243.0
+            ],
+            [
+              153.0,
+              243.0
+            ],
+            [
+              153.0,
+              257.0
+            ],
+            [
+              83.0,
+              257.0
+            ]
+          ],
+          "position": {
+            "x": 83,
+            "y": 243,
+            "width": 70,
+            "height": 14,
+            "center_x": 118.0,
+            "center_y": 250.0,
+            "region": "middle-left",
+            "tag": "[y:243, x:83]"
+          }
+        },
+        {
+          "text": "CT",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              239.0,
+              242.0
+            ],
+            [
+              259.0,
+              242.0
+            ],
+            [
+              259.0,
+              254.0
+            ],
+            [
+              239.0,
+              254.0
+            ]
+          ],
+          "box": [
+            [
+              239.0,
+              242.0
+            ],
+            [
+              259.0,
+              242.0
+            ],
+            [
+              259.0,
+              254.0
+            ],
+            [
+              239.0,
+              254.0
+            ]
+          ],
+          "position": {
+            "x": 239,
+            "y": 242,
+            "width": 20,
+            "height": 12,
+            "center_x": 249.0,
+            "center_y": 248.0,
+            "region": "middle",
+            "tag": "[y:242, x:239]"
+          }
+        },
+        {
+          "text": "KATY O'LEARY",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              375.0,
+              249.0
+            ],
+            [
+              475.0,
+              248.0
+            ],
+            [
+              475.0,
+              262.0
+            ],
+            [
+              375.0,
+              263.0
+            ]
+          ],
+          "box": [
+            [
+              375.0,
+              249.0
+            ],
+            [
+              475.0,
+              248.0
+            ],
+            [
+              475.0,
+              262.0
+            ],
+            [
+              375.0,
+              263.0
+            ]
+          ],
+          "position": {
+            "x": 375,
+            "y": 248,
+            "width": 100,
+            "height": 15,
+            "center_x": 425.0,
+            "center_y": 255.5,
+            "region": "middle",
+            "tag": "[y:248, x:375]"
+          }
+        },
+        {
+          "text": "800/283-3623",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              487.0,
+              247.0
+            ],
+            [
+              588.0,
+              246.0
+            ],
+            [
+              588.0,
+              260.0
+            ],
+            [
+              487.0,
+              261.0
+            ]
+          ],
+          "box": [
+            [
+              487.0,
+              247.0
+            ],
+            [
+              588.0,
+              246.0
+            ],
+            [
+              588.0,
+              260.0
+            ],
+            [
+              487.0,
+              261.0
+            ]
+          ],
+          "position": {
+            "x": 487,
+            "y": 246,
+            "width": 101,
+            "height": 15,
+            "center_x": 537.5,
+            "center_y": 253.5,
+            "region": "middle-right",
+            "tag": "[y:246, x:487]"
+          }
+        },
+        {
+          "text": "YOUR INQUIRY:",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              76.0,
+              273.0
+            ],
+            [
+              167.0,
+              273.0
+            ],
+            [
+              167.0,
+              286.0
+            ],
+            [
+              76.0,
+              286.0
+            ]
+          ],
+          "box": [
+            [
+              76.0,
+              273.0
+            ],
+            [
+              167.0,
+              273.0
+            ],
+            [
+              167.0,
+              286.0
+            ],
+            [
+              76.0,
+              286.0
+            ]
+          ],
+          "position": {
+            "x": 76,
+            "y": 273,
+            "width": 91,
+            "height": 13,
+            "center_x": 121.5,
+            "center_y": 279.5,
+            "region": "middle-left",
+            "tag": "[y:273, x:76]"
+          }
+        },
+        {
+          "text": "CLEAR/DRI",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              184.0,
+              282.0
+            ],
+            [
+              267.0,
+              282.0
+            ],
+            [
+              267.0,
+              295.0
+            ],
+            [
+              184.0,
+              295.0
+            ]
+          ],
+          "box": [
+            [
+              184.0,
+              282.0
+            ],
+            [
+              267.0,
+              282.0
+            ],
+            [
+              267.0,
+              295.0
+            ],
+            [
+              184.0,
+              295.0
+            ]
+          ],
+          "position": {
+            "x": 184,
+            "y": 282,
+            "width": 83,
+            "height": 13,
+            "center_x": 225.5,
+            "center_y": 288.5,
+            "region": "middle-left",
+            "tag": "[y:282, x:184]"
+          }
+        },
+        {
+          "text": "(TM)* BKLT PLUB (12 PAGE BKLT)",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              261.0,
+              279.0
+            ],
+            [
+              505.0,
+              275.0
+            ],
+            [
+              505.0,
+              292.0
+            ],
+            [
+              261.0,
+              296.0
+            ]
+          ],
+          "box": [
+            [
+              261.0,
+              279.0
+            ],
+            [
+              505.0,
+              275.0
+            ],
+            [
+              505.0,
+              292.0
+            ],
+            [
+              261.0,
+              296.0
+            ]
+          ],
+          "position": {
+            "x": 261,
+            "y": 275,
+            "width": 244,
+            "height": 21,
+            "center_x": 383.0,
+            "center_y": 285.5,
+            "region": "middle",
+            "tag": "[y:275, x:261]"
+          }
+        },
+        {
+          "text": "PHIRCE PS M",
+          "confidence": 0.73,
+          "bounding_box": [
+            [
+              597.0,
+              302.0
+            ],
+            [
+              652.0,
+              299.0
+            ],
+            [
+              653.0,
+              313.0
+            ],
+            [
+              598.0,
+              316.0
+            ]
+          ],
+          "box": [
+            [
+              597.0,
+              302.0
+            ],
+            [
+              652.0,
+              299.0
+            ],
+            [
+              653.0,
+              313.0
+            ],
+            [
+              598.0,
+              316.0
+            ]
+          ],
+          "position": {
+            "x": 597,
+            "y": 299,
+            "width": 56,
+            "height": 17,
+            "center_x": 625.0,
+            "center_y": 307.5,
+            "region": "middle-right",
+            "tag": "[y:299, x:597]"
+          }
+        },
+        {
+          "text": "DEBCRPTON",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              205.0,
+              308.0
+            ],
+            [
+              261.0,
+              308.0
+            ],
+            [
+              261.0,
+              319.0
+            ],
+            [
+              205.0,
+              319.0
+            ]
+          ],
+          "box": [
+            [
+              205.0,
+              308.0
+            ],
+            [
+              261.0,
+              308.0
+            ],
+            [
+              261.0,
+              319.0
+            ],
+            [
+              205.0,
+              319.0
+            ]
+          ],
+          "position": {
+            "x": 205,
+            "y": 308,
+            "width": 56,
+            "height": 11,
+            "center_x": 233.0,
+            "center_y": 313.5,
+            "region": "middle-left",
+            "tag": "[y:308, x:205]"
+          }
+        },
+        {
+          "text": "CUANTTTY",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              473.0,
+              302.0
+            ],
+            [
+              518.0,
+              302.0
+            ],
+            [
+              518.0,
+              317.0
+            ],
+            [
+              473.0,
+              317.0
+            ]
+          ],
+          "box": [
+            [
+              473.0,
+              302.0
+            ],
+            [
+              518.0,
+              302.0
+            ],
+            [
+              518.0,
+              317.0
+            ],
+            [
+              473.0,
+              317.0
+            ]
+          ],
+          "position": {
+            "x": 473,
+            "y": 302,
+            "width": 45,
+            "height": 15,
+            "center_x": 495.5,
+            "center_y": 309.5,
+            "region": "middle-right",
+            "tag": "[y:302, x:473]"
+          }
+        },
+        {
+          "text": "CLI6.FRDNTLFRINT. 4COLORS",
+          "confidence": 0.74,
+          "bounding_box": [
+            [
+              191.0,
+              342.0
+            ],
+            [
+              414.0,
+              339.0
+            ],
+            [
+              414.0,
+              353.0
+            ],
+            [
+              192.0,
+              356.0
+            ]
+          ],
+          "box": [
+            [
+              191.0,
+              342.0
+            ],
+            [
+              414.0,
+              339.0
+            ],
+            [
+              414.0,
+              353.0
+            ],
+            [
+              192.0,
+              356.0
+            ]
+          ],
+          "position": {
+            "x": 191,
+            "y": 339,
+            "width": 223,
+            "height": 17,
+            "center_x": 302.5,
+            "center_y": 347.5,
+            "region": "middle",
+            "tag": "[y:339, x:191]"
+          }
+        },
+        {
+          "text": "OOB CLEAR/DRI (TM)#",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              239.0,
+              330.0
+            ],
+            [
+              397.0,
+              330.0
+            ],
+            [
+              397.0,
+              343.0
+            ],
+            [
+              239.0,
+              343.0
+            ]
+          ],
+          "box": [
+            [
+              239.0,
+              330.0
+            ],
+            [
+              397.0,
+              330.0
+            ],
+            [
+              397.0,
+              343.0
+            ],
+            [
+              239.0,
+              343.0
+            ]
+          ],
+          "position": {
+            "x": 239,
+            "y": 330,
+            "width": 158,
+            "height": 13,
+            "center_x": 318.0,
+            "center_y": 336.5,
+            "region": "middle",
+            "tag": "[y:330, x:239]"
+          }
+        },
+        {
+          "text": "350 น",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              473.0,
+              338.0
+            ],
+            [
+              519.0,
+              338.0
+            ],
+            [
+              519.0,
+              353.0
+            ],
+            [
+              473.0,
+              353.0
+            ]
+          ],
+          "box": [
+            [
+              473.0,
+              338.0
+            ],
+            [
+              519.0,
+              338.0
+            ],
+            [
+              519.0,
+              353.0
+            ],
+            [
+              473.0,
+              353.0
+            ]
+          ],
+          "position": {
+            "x": 473,
+            "y": 338,
+            "width": 46,
+            "height": 15,
+            "center_x": 496.0,
+            "center_y": 345.5,
+            "region": "middle-right",
+            "tag": "[y:338, x:473]"
+          }
+        },
+        {
+          "text": "$321. 63/M",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              595.0,
+              336.0
+            ],
+            [
+              672.0,
+              336.0
+            ],
+            [
+              672.0,
+              350.0
+            ],
+            [
+              595.0,
+              350.0
+            ]
+          ],
+          "box": [
+            [
+              595.0,
+              336.0
+            ],
+            [
+              672.0,
+              336.0
+            ],
+            [
+              672.0,
+              350.0
+            ],
+            [
+              595.0,
+              350.0
+            ]
+          ],
+          "position": {
+            "x": 595,
+            "y": 336,
+            "width": 77,
+            "height": 14,
+            "center_x": 633.5,
+            "center_y": 343.0,
+            "region": "middle-right",
+            "tag": "[y:336, x:595]"
+          }
+        },
+        {
+          "text": "PLUS PATTERN",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              37.0,
+              354.0
+            ],
+            [
+              141.0,
+              354.0
+            ],
+            [
+              141.0,
+              367.0
+            ],
+            [
+              37.0,
+              367.0
+            ]
+          ],
+          "box": [
+            [
+              37.0,
+              354.0
+            ],
+            [
+              141.0,
+              354.0
+            ],
+            [
+              141.0,
+              367.0
+            ],
+            [
+              37.0,
+              367.0
+            ]
+          ],
+          "position": {
+            "x": 37,
+            "y": 354,
+            "width": 104,
+            "height": 13,
+            "center_x": 89.0,
+            "center_y": 360.5,
+            "region": "middle-left",
+            "tag": "[y:354, x:37]"
+          }
+        },
+        {
+          "text": "JY",
+          "confidence": 0.53,
+          "bounding_box": [
+            [
+              72.0,
+              346.0
+            ],
+            [
+              96.0,
+              346.0
+            ],
+            [
+              96.0,
+              353.0
+            ],
+            [
+              72.0,
+              353.0
+            ]
+          ],
+          "box": [
+            [
+              72.0,
+              346.0
+            ],
+            [
+              96.0,
+              346.0
+            ],
+            [
+              96.0,
+              353.0
+            ],
+            [
+              72.0,
+              353.0
+            ]
+          ],
+          "position": {
+            "x": 72,
+            "y": 346,
+            "width": 24,
+            "height": 7,
+            "center_x": 84.0,
+            "center_y": 349.5,
+            "region": "middle-left",
+            "tag": "[y:346, x:72]"
+          }
+        },
+        {
+          "text": "008",
+          "confidence": 0.43,
+          "bounding_box": [
+            [
+              108.0,
+              345.0
+            ],
+            [
+              137.0,
+              345.0
+            ],
+            [
+              137.0,
+              355.0
+            ],
+            [
+              108.0,
+              355.0
+            ]
+          ],
+          "box": [
+            [
+              108.0,
+              345.0
+            ],
+            [
+              137.0,
+              345.0
+            ],
+            [
+              137.0,
+              355.0
+            ],
+            [
+              108.0,
+              355.0
+            ]
+          ],
+          "position": {
+            "x": 108,
+            "y": 345,
+            "width": 29,
+            "height": 10,
+            "center_x": 122.5,
+            "center_y": 350.0,
+            "region": "middle-left",
+            "tag": "[y:345, x:108]"
+          }
+        },
+        {
+          "text": "WYARNISH.BACKPRINTBLACK. BABE",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              147.0,
+              352.0
+            ],
+            [
+              421.0,
+              349.0
+            ],
+            [
+              421.0,
+              363.0
+            ],
+            [
+              147.0,
+              366.0
+            ]
+          ],
+          "box": [
+            [
+              147.0,
+              352.0
+            ],
+            [
+              421.0,
+              349.0
+            ],
+            [
+              421.0,
+              363.0
+            ],
+            [
+              147.0,
+              366.0
+            ]
+          ],
+          "position": {
+            "x": 147,
+            "y": 349,
+            "width": 274,
+            "height": 17,
+            "center_x": 284.0,
+            "center_y": 357.5,
+            "region": "middle",
+            "tag": "[y:349, x:147]"
+          }
+        },
+        {
+          "text": "300 น",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              474.0,
+              358.0
+            ],
+            [
+              519.0,
+              358.0
+            ],
+            [
+              519.0,
+              372.0
+            ],
+            [
+              474.0,
+              372.0
+            ]
+          ],
+          "box": [
+            [
+              474.0,
+              358.0
+            ],
+            [
+              519.0,
+              358.0
+            ],
+            [
+              519.0,
+              372.0
+            ],
+            [
+              474.0,
+              372.0
+            ]
+          ],
+          "position": {
+            "x": 474,
+            "y": 358,
+            "width": 45,
+            "height": 14,
+            "center_x": 496.5,
+            "center_y": 365.0,
+            "region": "middle-right",
+            "tag": "[y:358, x:474]"
+          }
+        },
+        {
+          "text": "$289. 41/M",
+          "confidence": 0.82,
+          "bounding_box": [
+            [
+              595.0,
+              355.0
+            ],
+            [
+              673.0,
+              354.0
+            ],
+            [
+              673.0,
+              369.0
+            ],
+            [
+              595.0,
+              370.0
+            ]
+          ],
+          "box": [
+            [
+              595.0,
+              355.0
+            ],
+            [
+              673.0,
+              354.0
+            ],
+            [
+              673.0,
+              369.0
+            ],
+            [
+              595.0,
+              370.0
+            ]
+          ],
+          "position": {
+            "x": 595,
+            "y": 354,
+            "width": 78,
+            "height": 16,
+            "center_x": 634.0,
+            "center_y": 362.0,
+            "region": "middle-right",
+            "tag": "[y:354, x:595]"
+          }
+        },
+        {
+          "text": "PLY. PERMANENT PRESSURE SOMSITIVECLEAR,",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              37.0,
+              364.0
+            ],
+            [
+              353.0,
+              360.0
+            ],
+            [
+              353.0,
+              374.0
+            ],
+            [
+              37.0,
+              378.0
+            ]
+          ],
+          "box": [
+            [
+              37.0,
+              364.0
+            ],
+            [
+              353.0,
+              360.0
+            ],
+            [
+              353.0,
+              374.0
+            ],
+            [
+              37.0,
+              378.0
+            ]
+          ],
+          "position": {
+            "x": 37,
+            "y": 360,
+            "width": 316,
+            "height": 18,
+            "center_x": 195.0,
+            "center_y": 369.0,
+            "region": "middle-left",
+            "tag": "[y:360, x:37]"
+          }
+        },
+        {
+          "text": "FRONT PRINTBLACK.",
+          "confidence": 0.82,
+          "bounding_box": [
+            [
+              37.0,
+              374.0
+            ],
+            [
+              184.0,
+              373.0
+            ],
+            [
+              185.0,
+              387.0
+            ],
+            [
+              37.0,
+              388.0
+            ]
+          ],
+          "box": [
+            [
+              37.0,
+              374.0
+            ],
+            [
+              184.0,
+              373.0
+            ],
+            [
+              185.0,
+              387.0
+            ],
+            [
+              37.0,
+              388.0
+            ]
+          ],
+          "position": {
+            "x": 37,
+            "y": 373,
+            "width": 148,
+            "height": 15,
+            "center_x": 111.0,
+            "center_y": 380.5,
+            "region": "middle-left",
+            "tag": "[y:373, x:37]"
+          }
+        },
+        {
+          "text": "12-PNELBOORLPTLFRONTCOVER_BIZE2.SX.A\"",
+          "confidence": 0.7,
+          "bounding_box": [
+            [
+              37.0,
+              383.0
+            ],
+            [
+              398.0,
+              377.0
+            ],
+            [
+              398.0,
+              394.0
+            ],
+            [
+              37.0,
+              400.0
+            ]
+          ],
+          "box": [
+            [
+              37.0,
+              383.0
+            ],
+            [
+              398.0,
+              377.0
+            ],
+            [
+              398.0,
+              394.0
+            ],
+            [
+              37.0,
+              400.0
+            ]
+          ],
+          "position": {
+            "x": 37,
+            "y": 377,
+            "width": 361,
+            "height": 23,
+            "center_x": 217.5,
+            "center_y": 388.5,
+            "region": "middle-left",
+            "tag": "[y:377, x:37]"
+          }
+        },
+        {
+          "text": "6\"DIMENSIONINCLUOES1\"EXTENSIONTHATWRAPB",
+          "confidence": 0.77,
+          "bounding_box": [
+            [
+              38.0,
+              394.0
+            ],
+            [
+              414.0,
+              388.0
+            ],
+            [
+              414.0,
+              404.0
+            ],
+            [
+              38.0,
+              410.0
+            ]
+          ],
+          "box": [
+            [
+              38.0,
+              394.0
+            ],
+            [
+              414.0,
+              388.0
+            ],
+            [
+              414.0,
+              404.0
+            ],
+            [
+              38.0,
+              410.0
+            ]
+          ],
+          "position": {
+            "x": 38,
+            "y": 388,
+            "width": 376,
+            "height": 22,
+            "center_x": 226.0,
+            "center_y": 399.0,
+            "region": "middle-left",
+            "tag": "[y:388, x:38]"
+          }
+        },
+        {
+          "text": "750 ค",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              473.0,
+              378.0
+            ],
+            [
+              518.0,
+              376.0
+            ],
+            [
+              519.0,
+              392.0
+            ],
+            [
+              474.0,
+              394.0
+            ]
+          ],
+          "box": [
+            [
+              473.0,
+              378.0
+            ],
+            [
+              518.0,
+              376.0
+            ],
+            [
+              519.0,
+              392.0
+            ],
+            [
+              474.0,
+              394.0
+            ]
+          ],
+          "position": {
+            "x": 473,
+            "y": 376,
+            "width": 46,
+            "height": 18,
+            "center_x": 496.0,
+            "center_y": 385.0,
+            "region": "middle-right",
+            "tag": "[y:376, x:473]"
+          }
+        },
+        {
+          "text": "$244. 75/M",
+          "confidence": 0.87,
+          "bounding_box": [
+            [
+              596.0,
+              376.0
+            ],
+            [
+              673.0,
+              376.0
+            ],
+            [
+              673.0,
+              390.0
+            ],
+            [
+              596.0,
+              390.0
+            ]
+          ],
+          "box": [
+            [
+              596.0,
+              376.0
+            ],
+            [
+              673.0,
+              376.0
+            ],
+            [
+              673.0,
+              390.0
+            ],
+            [
+              596.0,
+              390.0
+            ]
+          ],
+          "position": {
+            "x": 596,
+            "y": 376,
+            "width": 77,
+            "height": 14,
+            "center_x": 634.5,
+            "center_y": 383.0,
+            "region": "middle-right",
+            "tag": "[y:376, x:596]"
+          }
+        },
+        {
+          "text": "AROUNDANDLUETOACKCOVER",
+          "confidence": 0.46,
+          "bounding_box": [
+            [
+              37.0,
+              404.0
+            ],
+            [
+              294.0,
+              400.0
+            ],
+            [
+              294.0,
+              416.0
+            ],
+            [
+              37.0,
+              420.0
+            ]
+          ],
+          "box": [
+            [
+              37.0,
+              404.0
+            ],
+            [
+              294.0,
+              400.0
+            ],
+            [
+              294.0,
+              416.0
+            ],
+            [
+              37.0,
+              420.0
+            ]
+          ],
+          "position": {
+            "x": 37,
+            "y": 400,
+            "width": 257,
+            "height": 20,
+            "center_x": 165.5,
+            "center_y": 410.0,
+            "region": "middle-left",
+            "tag": "[y:400, x:37]"
+          }
+        },
+        {
+          "text": "1000 M",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              467.0,
+              399.0
+            ],
+            [
+              519.0,
+              396.0
+            ],
+            [
+              520.0,
+              411.0
+            ],
+            [
+              468.0,
+              415.0
+            ]
+          ],
+          "box": [
+            [
+              467.0,
+              399.0
+            ],
+            [
+              519.0,
+              396.0
+            ],
+            [
+              520.0,
+              411.0
+            ],
+            [
+              468.0,
+              415.0
+            ]
+          ],
+          "position": {
+            "x": 467,
+            "y": 396,
+            "width": 53,
+            "height": 19,
+            "center_x": 493.5,
+            "center_y": 405.5,
+            "region": "middle-right",
+            "tag": "[y:396, x:467]"
+          }
+        },
+        {
+          "text": "$228. 53/M",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              597.0,
+              396.0
+            ],
+            [
+              673.0,
+              396.0
+            ],
+            [
+              673.0,
+              410.0
+            ],
+            [
+              597.0,
+              410.0
+            ]
+          ],
+          "box": [
+            [
+              597.0,
+              396.0
+            ],
+            [
+              673.0,
+              396.0
+            ],
+            [
+              673.0,
+              410.0
+            ],
+            [
+              597.0,
+              410.0
+            ]
+          ],
+          "position": {
+            "x": 597,
+            "y": 396,
+            "width": 76,
+            "height": 14,
+            "center_x": 635.0,
+            "center_y": 403.0,
+            "region": "middle-right",
+            "tag": "[y:396, x:597]"
+          }
+        },
+        {
+          "text": "RINTEORCOLOR",
+          "confidence": 0.37,
+          "bounding_box": [
+            [
+              38.0,
+              415.0
+            ],
+            [
+              173.0,
+              412.0
+            ],
+            [
+              174.0,
+              426.0
+            ],
+            [
+              38.0,
+              430.0
+            ]
+          ],
+          "box": [
+            [
+              38.0,
+              415.0
+            ],
+            [
+              173.0,
+              412.0
+            ],
+            [
+              174.0,
+              426.0
+            ],
+            [
+              38.0,
+              430.0
+            ]
+          ],
+          "position": {
+            "x": 38,
+            "y": 412,
+            "width": 136,
+            "height": 18,
+            "center_x": 106.0,
+            "center_y": 421.0,
+            "region": "middle-left",
+            "tag": "[y:412, x:38]"
+          }
+        },
+        {
+          "text": "SPRINTFURCOLOR",
+          "confidence": 0.67,
+          "bounding_box": [
+            [
+              233.0,
+              420.0
+            ],
+            [
+              409.0,
+              419.0
+            ],
+            [
+              409.0,
+              436.0
+            ],
+            [
+              233.0,
+              438.0
+            ]
+          ],
+          "box": [
+            [
+              233.0,
+              420.0
+            ],
+            [
+              409.0,
+              419.0
+            ],
+            [
+              409.0,
+              436.0
+            ],
+            [
+              233.0,
+              438.0
+            ]
+          ],
+          "position": {
+            "x": 233,
+            "y": 419,
+            "width": 176,
+            "height": 19,
+            "center_x": 321.0,
+            "center_y": 428.5,
+            "region": "middle",
+            "tag": "[y:419, x:233]"
+          }
+        },
+        {
+          "text": "DIE CUT WITH_INTRNALPERFORATIONLANDSLIT",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              38.0,
+              455.0
+            ],
+            [
+              383.0,
+              451.0
+            ],
+            [
+              383.0,
+              465.0
+            ],
+            [
+              38.0,
+              469.0
+            ]
+          ],
+          "box": [
+            [
+              38.0,
+              455.0
+            ],
+            [
+              383.0,
+              451.0
+            ],
+            [
+              383.0,
+              465.0
+            ],
+            [
+              38.0,
+              469.0
+            ]
+          ],
+          "position": {
+            "x": 38,
+            "y": 451,
+            "width": 345,
+            "height": 18,
+            "center_x": 210.5,
+            "center_y": 460.0,
+            "region": "middle-left",
+            "tag": "[y:451, x:38]"
+          }
+        },
+        {
+          "text": "SMNACEBLIIINTOPLYPORATEBETWEEN",
+          "confidence": 0.56,
+          "bounding_box": [
+            [
+              38.0,
+              465.0
+            ],
+            [
+              420.0,
+              460.0
+            ],
+            [
+              420.0,
+              477.0
+            ],
+            [
+              38.0,
+              482.0
+            ]
+          ],
+          "box": [
+            [
+              38.0,
+              465.0
+            ],
+            [
+              420.0,
+              460.0
+            ],
+            [
+              420.0,
+              477.0
+            ],
+            [
+              38.0,
+              482.0
+            ]
+          ],
+          "position": {
+            "x": 38,
+            "y": 460,
+            "width": 382,
+            "height": 22,
+            "center_x": 229.0,
+            "center_y": 471.0,
+            "region": "middle-left",
+            "tag": "[y:460, x:38]"
+          }
+        },
+        {
+          "text": "CONT INUOUS FANPOLDL",
+          "confidence": 0.82,
+          "bounding_box": [
+            [
+              39.0,
+              476.0
+            ],
+            [
+              201.0,
+              474.0
+            ],
+            [
+              201.0,
+              487.0
+            ],
+            [
+              39.0,
+              489.0
+            ]
+          ],
+          "box": [
+            [
+              39.0,
+              476.0
+            ],
+            [
+              201.0,
+              474.0
+            ],
+            [
+              201.0,
+              487.0
+            ],
+            [
+              39.0,
+              489.0
+            ]
+          ],
+          "position": {
+            "x": 39,
+            "y": 474,
+            "width": 162,
+            "height": 15,
+            "center_x": 120.0,
+            "center_y": 481.5,
+            "region": "middle-left",
+            "tag": "[y:474, x:39]"
+          }
+        },
+        {
+          "text": "ADEL_POBITION NUMDER'4",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              209.0,
+              474.0
+            ],
+            [
+              391.0,
+              471.0
+            ],
+            [
+              391.0,
+              484.0
+            ],
+            [
+              209.0,
+              487.0
+            ]
+          ],
+          "box": [
+            [
+              209.0,
+              474.0
+            ],
+            [
+              391.0,
+              471.0
+            ],
+            [
+              391.0,
+              484.0
+            ],
+            [
+              209.0,
+              487.0
+            ]
+          ],
+          "position": {
+            "x": 209,
+            "y": 471,
+            "width": 182,
+            "height": 16,
+            "center_x": 300.0,
+            "center_y": 479.0,
+            "region": "middle",
+            "tag": "[y:471, x:209]"
+          }
+        },
+        {
+          "text": "SHRINKWRAP",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              40.0,
+              486.0
+            ],
+            [
+              134.0,
+              486.0
+            ],
+            [
+              134.0,
+              499.0
+            ],
+            [
+              40.0,
+              499.0
+            ]
+          ],
+          "box": [
+            [
+              40.0,
+              486.0
+            ],
+            [
+              134.0,
+              486.0
+            ],
+            [
+              134.0,
+              499.0
+            ],
+            [
+              40.0,
+              499.0
+            ]
+          ],
+          "position": {
+            "x": 40,
+            "y": 486,
+            "width": 94,
+            "height": 13,
+            "center_x": 87.0,
+            "center_y": 492.5,
+            "region": "middle-left",
+            "tag": "[y:486, x:40]"
+          }
+        },
+        {
+          "text": "N PAKSTO",
+          "confidence": 0.31,
+          "bounding_box": [
+            [
+              127.0,
+              481.0
+            ],
+            [
+              255.0,
+              480.0
+            ],
+            [
+              255.0,
+              498.0
+            ],
+            [
+              127.0,
+              499.0
+            ]
+          ],
+          "box": [
+            [
+              127.0,
+              481.0
+            ],
+            [
+              255.0,
+              480.0
+            ],
+            [
+              255.0,
+              498.0
+            ],
+            [
+              127.0,
+              499.0
+            ]
+          ],
+          "position": {
+            "x": 127,
+            "y": 480,
+            "width": 128,
+            "height": 19,
+            "center_x": 191.0,
+            "center_y": 489.5,
+            "region": "middle-left",
+            "tag": "[y:480, x:127]"
+          }
+        },
+        {
+          "text": "##PLATE CHAROE PER_PLATE",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              80.0,
+              525.0
+            ],
+            [
+              279.0,
+              522.0
+            ],
+            [
+              279.0,
+              536.0
+            ],
+            [
+              81.0,
+              539.0
+            ]
+          ],
+          "box": [
+            [
+              80.0,
+              525.0
+            ],
+            [
+              279.0,
+              522.0
+            ],
+            [
+              279.0,
+              536.0
+            ],
+            [
+              81.0,
+              539.0
+            ]
+          ],
+          "position": {
+            "x": 80,
+            "y": 522,
+            "width": 199,
+            "height": 17,
+            "center_x": 179.5,
+            "center_y": 530.5,
+            "region": "middle-left",
+            "tag": "[y:522, x:80]"
+          }
+        },
+        {
+          "text": "COLOPRODFPERCOLOR",
+          "confidence": 0.48,
+          "bounding_box": [
+            [
+              78.0,
+              533.0
+            ],
+            [
+              273.0,
+              531.0
+            ],
+            [
+              273.0,
+              548.0
+            ],
+            [
+              79.0,
+              550.0
+            ]
+          ],
+          "box": [
+            [
+              78.0,
+              533.0
+            ],
+            [
+              273.0,
+              531.0
+            ],
+            [
+              273.0,
+              548.0
+            ],
+            [
+              79.0,
+              550.0
+            ]
+          ],
+          "position": {
+            "x": 78,
+            "y": 531,
+            "width": 195,
+            "height": 19,
+            "center_x": 175.5,
+            "center_y": 540.5,
+            "region": "middle-left",
+            "tag": "[y:531, x:78]"
+          }
+        },
+        {
+          "text": "***ONSERT PREP",
+          "confidence": 0.82,
+          "bounding_box": [
+            [
+              72.0,
+              545.0
+            ],
+            [
+              189.0,
+              545.0
+            ],
+            [
+              189.0,
+              558.0
+            ],
+            [
+              72.0,
+              558.0
+            ]
+          ],
+          "box": [
+            [
+              72.0,
+              545.0
+            ],
+            [
+              189.0,
+              545.0
+            ],
+            [
+              189.0,
+              558.0
+            ],
+            [
+              72.0,
+              558.0
+            ]
+          ],
+          "position": {
+            "x": 72,
+            "y": 545,
+            "width": 117,
+            "height": 13,
+            "center_x": 130.5,
+            "center_y": 551.5,
+            "region": "middle-left",
+            "tag": "[y:545, x:72]"
+          }
+        },
+        {
+          "text": "*PATENT #4. 479, 838",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              41.0,
+              587.0
+            ],
+            [
+              190.0,
+              585.0
+            ],
+            [
+              191.0,
+              598.0
+            ],
+            [
+              41.0,
+              600.0
+            ]
+          ],
+          "box": [
+            [
+              41.0,
+              587.0
+            ],
+            [
+              190.0,
+              585.0
+            ],
+            [
+              191.0,
+              598.0
+            ],
+            [
+              41.0,
+              600.0
+            ]
+          ],
+          "position": {
+            "x": 41,
+            "y": 585,
+            "width": 150,
+            "height": 15,
+            "center_x": 116.0,
+            "center_y": 592.5,
+            "region": "middle-left",
+            "tag": "[y:585, x:41]"
+          }
+        },
+        {
+          "text": "0",
+          "confidence": 0.25,
+          "bounding_box": [
+            [
+              357.0,
+              595.0
+            ],
+            [
+              367.0,
+              595.0
+            ],
+            [
+              367.0,
+              605.0
+            ],
+            [
+              357.0,
+              605.0
+            ]
+          ],
+          "box": [
+            [
+              357.0,
+              595.0
+            ],
+            [
+              367.0,
+              595.0
+            ],
+            [
+              367.0,
+              605.0
+            ],
+            [
+              357.0,
+              605.0
+            ]
+          ],
+          "position": {
+            "x": 357,
+            "y": 595,
+            "width": 10,
+            "height": 10,
+            "center_x": 362.0,
+            "center_y": 600.0,
+            "region": "middle",
+            "tag": "[y:595, x:357]"
+          }
+        },
+        {
+          "text": "a",
+          "confidence": 0.18,
+          "bounding_box": [
+            [
+              369.0,
+              593.0
+            ],
+            [
+              391.0,
+              593.0
+            ],
+            [
+              391.0,
+              605.0
+            ],
+            [
+              369.0,
+              605.0
+            ]
+          ],
+          "box": [
+            [
+              369.0,
+              593.0
+            ],
+            [
+              391.0,
+              593.0
+            ],
+            [
+              391.0,
+              605.0
+            ],
+            [
+              369.0,
+              605.0
+            ]
+          ],
+          "position": {
+            "x": 369,
+            "y": 593,
+            "width": 22,
+            "height": 12,
+            "center_x": 380.0,
+            "center_y": 599.0,
+            "region": "middle",
+            "tag": "[y:593, x:369]"
+          }
+        },
+        {
+          "text": "##APPLIES TO CLEAR/DRI COUPON COPY DNLY",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              42.0,
+              627.0
+            ],
+            [
+              361.0,
+              623.0
+            ],
+            [
+              361.0,
+              637.0
+            ],
+            [
+              42.0,
+              641.0
+            ]
+          ],
+          "box": [
+            [
+              42.0,
+              627.0
+            ],
+            [
+              361.0,
+              623.0
+            ],
+            [
+              361.0,
+              637.0
+            ],
+            [
+              42.0,
+              641.0
+            ]
+          ],
+          "position": {
+            "x": 42,
+            "y": 623,
+            "width": 319,
+            "height": 18,
+            "center_x": 201.5,
+            "center_y": 632.0,
+            "region": "bottom-left",
+            "tag": "[y:623, x:42]"
+          }
+        },
+        {
+          "text": "ADDITIONAL PRICING INFORMATION:",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              36.0,
+              662.0
+            ],
+            [
+              223.0,
+              658.0
+            ],
+            [
+              223.0,
+              671.0
+            ],
+            [
+              36.0,
+              676.0
+            ]
+          ],
+          "box": [
+            [
+              36.0,
+              662.0
+            ],
+            [
+              223.0,
+              658.0
+            ],
+            [
+              223.0,
+              671.0
+            ],
+            [
+              36.0,
+              676.0
+            ]
+          ],
+          "position": {
+            "x": 36,
+            "y": 658,
+            "width": 187,
+            "height": 18,
+            "center_x": 129.5,
+            "center_y": 667.0,
+            "region": "bottom-left",
+            "tag": "[y:658, x:36]"
+          }
+        },
+        {
+          "text": "WINGE AID OAOEE AOEE*R HUBUEDT TO NBCEI DP TNAL COPK OUFTOMBR TO UIMEN CMENA RBAGY ARTMH",
+          "confidence": 0.6,
+          "bounding_box": [
+            [
+              36.0,
+              674.0
+            ],
+            [
+              382.0,
+              668.0
+            ],
+            [
+              382.0,
+              678.0
+            ],
+            [
+              36.0,
+              685.0
+            ]
+          ],
+          "box": [
+            [
+              36.0,
+              674.0
+            ],
+            [
+              382.0,
+              668.0
+            ],
+            [
+              382.0,
+              678.0
+            ],
+            [
+              36.0,
+              685.0
+            ]
+          ],
+          "position": {
+            "x": 36,
+            "y": 668,
+            "width": 346,
+            "height": 17,
+            "center_x": 209.0,
+            "center_y": 676.5,
+            "region": "bottom-left",
+            "tag": "[y:668, x:36]"
+          }
+        },
+        {
+          "text": "OR AT COEf  NBOBOARY",
+          "confidence": 0.58,
+          "bounding_box": [
+            [
+              38.0,
+              681.0
+            ],
+            [
+              117.0,
+              681.0
+            ],
+            [
+              117.0,
+              689.0
+            ],
+            [
+              38.0,
+              689.0
+            ]
+          ],
+          "box": [
+            [
+              38.0,
+              681.0
+            ],
+            [
+              117.0,
+              681.0
+            ],
+            [
+              117.0,
+              689.0
+            ],
+            [
+              38.0,
+              689.0
+            ]
+          ],
+          "position": {
+            "x": 38,
+            "y": 681,
+            "width": 79,
+            "height": 8,
+            "center_x": 77.5,
+            "center_y": 685.0,
+            "region": "bottom-left",
+            "tag": "[y:681, x:38]"
+          }
+        },
+        {
+          "text": "COLOY RG",
+          "confidence": 0.44,
+          "bounding_box": [
+            [
+              37.0,
+              705.0
+            ],
+            [
+              96.0,
+              702.0
+            ],
+            [
+              96.0,
+              713.0
+            ],
+            [
+              37.0,
+              715.0
+            ]
+          ],
+          "box": [
+            [
+              37.0,
+              705.0
+            ],
+            [
+              96.0,
+              702.0
+            ],
+            [
+              96.0,
+              713.0
+            ],
+            [
+              37.0,
+              715.0
+            ]
+          ],
+          "position": {
+            "x": 37,
+            "y": 702,
+            "width": 59,
+            "height": 13,
+            "center_x": 66.5,
+            "center_y": 708.5,
+            "region": "bottom-left",
+            "tag": "[y:702, x:37]"
+          }
+        },
+        {
+          "text": "mds  octon #p",
+          "confidence": 0.38,
+          "bounding_box": [
+            [
+              109.0,
+              704.0
+            ],
+            [
+              177.0,
+              702.0
+            ],
+            [
+              177.0,
+              712.0
+            ],
+            [
+              109.0,
+              714.0
+            ]
+          ],
+          "box": [
+            [
+              109.0,
+              704.0
+            ],
+            [
+              177.0,
+              702.0
+            ],
+            [
+              177.0,
+              712.0
+            ],
+            [
+              109.0,
+              714.0
+            ]
+          ],
+          "position": {
+            "x": 109,
+            "y": 702,
+            "width": 68,
+            "height": 12,
+            "center_x": 143.0,
+            "center_y": 708.0,
+            "region": "bottom-left",
+            "tag": "[y:702, x:109]"
+          }
+        },
+        {
+          "text": "CWTTAHIDAND MA OOLOR8",
+          "confidence": 0.63,
+          "bounding_box": [
+            [
+              187.0,
+              702.0
+            ],
+            [
+              262.0,
+              702.0
+            ],
+            [
+              262.0,
+              712.0
+            ],
+            [
+              187.0,
+              712.0
+            ]
+          ],
+          "box": [
+            [
+              187.0,
+              702.0
+            ],
+            [
+              262.0,
+              702.0
+            ],
+            [
+              262.0,
+              712.0
+            ],
+            [
+              187.0,
+              712.0
+            ]
+          ],
+          "position": {
+            "x": 187,
+            "y": 702,
+            "width": 75,
+            "height": 10,
+            "center_x": 224.5,
+            "center_y": 707.0,
+            "region": "bottom-left",
+            "tag": "[y:702, x:187]"
+          }
+        },
+        {
+          "text": "MOG.00 POR MLUICRT",
+          "confidence": 0.62,
+          "bounding_box": [
+            [
+              112.0,
+              717.0
+            ],
+            [
+              170.0,
+              717.0
+            ],
+            [
+              170.0,
+              724.0
+            ],
+            [
+              112.0,
+              724.0
+            ]
+          ],
+          "box": [
+            [
+              112.0,
+              717.0
+            ],
+            [
+              170.0,
+              717.0
+            ],
+            [
+              170.0,
+              724.0
+            ],
+            [
+              112.0,
+              724.0
+            ]
+          ],
+          "position": {
+            "x": 112,
+            "y": 717,
+            "width": 58,
+            "height": 7,
+            "center_x": 141.0,
+            "center_y": 720.5,
+            "region": "bottom-left",
+            "tag": "[y:717, x:112]"
+          }
+        },
+        {
+          "text": "WT IND MSTAIO COLORG",
+          "confidence": 0.53,
+          "bounding_box": [
+            [
+              181.0,
+              714.0
+            ],
+            [
+              258.0,
+              714.0
+            ],
+            [
+              258.0,
+              724.0
+            ],
+            [
+              181.0,
+              724.0
+            ]
+          ],
+          "box": [
+            [
+              181.0,
+              714.0
+            ],
+            [
+              258.0,
+              714.0
+            ],
+            [
+              258.0,
+              724.0
+            ],
+            [
+              181.0,
+              724.0
+            ]
+          ],
+          "position": {
+            "x": 181,
+            "y": 714,
+            "width": 77,
+            "height": 10,
+            "center_x": 219.5,
+            "center_y": 719.0,
+            "region": "bottom-left",
+            "tag": "[y:714, x:181]"
+          }
+        },
+        {
+          "text": "THIB QUOTATION I$ IN EFFECT FOR THIRTY DAYS ONLY AND/OR OONTINGENT",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              355.0,
+              722.0
+            ],
+            [
+              694.0,
+              716.0
+            ],
+            [
+              695.0,
+              729.0
+            ],
+            [
+              355.0,
+              735.0
+            ]
+          ],
+          "box": [
+            [
+              355.0,
+              722.0
+            ],
+            [
+              694.0,
+              716.0
+            ],
+            [
+              695.0,
+              729.0
+            ],
+            [
+              355.0,
+              735.0
+            ]
+          ],
+          "position": {
+            "x": 355,
+            "y": 716,
+            "width": 340,
+            "height": 19,
+            "center_x": 525.0,
+            "center_y": 725.5,
+            "region": "bottom-right",
+            "tag": "[y:716, x:355]"
+          }
+        },
+        {
+          "text": "TERMS: NET 30 DAYS / 1% 10 DAYS",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              51.0,
+              731.0
+            ],
+            [
+              227.0,
+              728.0
+            ],
+            [
+              227.0,
+              741.0
+            ],
+            [
+              51.0,
+              744.0
+            ]
+          ],
+          "box": [
+            [
+              51.0,
+              731.0
+            ],
+            [
+              227.0,
+              728.0
+            ],
+            [
+              227.0,
+              741.0
+            ],
+            [
+              51.0,
+              744.0
+            ]
+          ],
+          "position": {
+            "x": 51,
+            "y": 728,
+            "width": 176,
+            "height": 16,
+            "center_x": 139.0,
+            "center_y": 736.0,
+            "region": "bottom-left",
+            "tag": "[y:728, x:51]"
+          }
+        },
+        {
+          "text": "UPON RAW MATERIAL COTS AT JME OF SHIPMENT",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              411.0,
+              732.0
+            ],
+            [
+              639.0,
+              729.0
+            ],
+            [
+              639.0,
+              740.0
+            ],
+            [
+              411.0,
+              743.0
+            ]
+          ],
+          "box": [
+            [
+              411.0,
+              732.0
+            ],
+            [
+              639.0,
+              729.0
+            ],
+            [
+              639.0,
+              740.0
+            ],
+            [
+              411.0,
+              743.0
+            ]
+          ],
+          "position": {
+            "x": 411,
+            "y": 729,
+            "width": 228,
+            "height": 14,
+            "center_x": 525.0,
+            "center_y": 736.0,
+            "region": "bottom-right",
+            "tag": "[y:729, x:411]"
+          }
+        },
+        {
+          "text": "FO.B.",
+          "confidence": 0.8,
+          "bounding_box": [
+            [
+              50.0,
+              757.0
+            ],
+            [
+              82.0,
+              755.0
+            ],
+            [
+              83.0,
+              767.0
+            ],
+            [
+              51.0,
+              769.0
+            ]
+          ],
+          "box": [
+            [
+              50.0,
+              757.0
+            ],
+            [
+              82.0,
+              755.0
+            ],
+            [
+              83.0,
+              767.0
+            ],
+            [
+              51.0,
+              769.0
+            ]
+          ],
+          "position": {
+            "x": 50,
+            "y": 755,
+            "width": 33,
+            "height": 14,
+            "center_x": 66.5,
+            "center_y": 762.0,
+            "region": "bottom-left",
+            "tag": "[y:755, x:50]"
+          }
+        },
+        {
+          "text": "SHIPPING DATE AFTER",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              51.0,
+              772.0
+            ],
+            [
+              170.0,
+              770.0
+            ],
+            [
+              170.0,
+              784.0
+            ],
+            [
+              51.0,
+              786.0
+            ]
+          ],
+          "box": [
+            [
+              51.0,
+              772.0
+            ],
+            [
+              170.0,
+              770.0
+            ],
+            [
+              170.0,
+              784.0
+            ],
+            [
+              51.0,
+              786.0
+            ]
+          ],
+          "position": {
+            "x": 51,
+            "y": 770,
+            "width": 119,
+            "height": 16,
+            "center_x": 110.5,
+            "center_y": 778.0,
+            "region": "bottom-left",
+            "tag": "[y:770, x:51]"
+          }
+        },
+        {
+          "text": "IY",
+          "confidence": 0.77,
+          "bounding_box": [
+            [
+              421.0,
+              775.0
+            ],
+            [
+              434.0,
+              775.0
+            ],
+            [
+              434.0,
+              783.0
+            ],
+            [
+              421.0,
+              783.0
+            ]
+          ],
+          "box": [
+            [
+              421.0,
+              775.0
+            ],
+            [
+              434.0,
+              775.0
+            ],
+            [
+              434.0,
+              783.0
+            ],
+            [
+              421.0,
+              783.0
+            ]
+          ],
+          "position": {
+            "x": 421,
+            "y": 775,
+            "width": 13,
+            "height": 8,
+            "center_x": 427.5,
+            "center_y": 779.0,
+            "region": "bottom-center",
+            "tag": "[y:775, x:421]"
+          }
+        },
+        {
+          "text": "REOEIPTOFORDERI",
+          "confidence": 0.85,
+          "bounding_box": [
+            [
+              52.0,
+              783.0
+            ],
+            [
+              159.0,
+              782.0
+            ],
+            [
+              159.0,
+              793.0
+            ],
+            [
+              52.0,
+              794.0
+            ]
+          ],
+          "box": [
+            [
+              52.0,
+              783.0
+            ],
+            [
+              159.0,
+              782.0
+            ],
+            [
+              159.0,
+              793.0
+            ],
+            [
+              52.0,
+              794.0
+            ]
+          ],
+          "position": {
+            "x": 52,
+            "y": 782,
+            "width": 107,
+            "height": 12,
+            "center_x": 105.5,
+            "center_y": 788.0,
+            "region": "bottom-left",
+            "tag": "[y:782, x:52]"
+          }
+        },
+        {
+          "text": "PLBA9E CONFIRM YOUR SHIPPING SCHEDULE WITH YOUR OUSTOMER",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              52.0,
+              796.0
+            ],
+            [
+              330.0,
+              792.0
+            ],
+            [
+              330.0,
+              805.0
+            ],
+            [
+              52.0,
+              810.0
+            ]
+          ],
+          "box": [
+            [
+              52.0,
+              796.0
+            ],
+            [
+              330.0,
+              792.0
+            ],
+            [
+              330.0,
+              805.0
+            ],
+            [
+              52.0,
+              810.0
+            ]
+          ],
+          "position": {
+            "x": 52,
+            "y": 792,
+            "width": 278,
+            "height": 18,
+            "center_x": 191.0,
+            "center_y": 801.0,
+            "region": "bottom-left",
+            "tag": "[y:792, x:52]"
+          }
+        },
+        {
+          "text": "RELATIORS REPREBENTATIVE WHEN PLACINO YOUR ORDER",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              52.0,
+              806.0
+            ],
+            [
+              291.0,
+              803.0
+            ],
+            [
+              291.0,
+              814.0
+            ],
+            [
+              52.0,
+              818.0
+            ]
+          ],
+          "box": [
+            [
+              52.0,
+              806.0
+            ],
+            [
+              291.0,
+              803.0
+            ],
+            [
+              291.0,
+              814.0
+            ],
+            [
+              52.0,
+              818.0
+            ]
+          ],
+          "position": {
+            "x": 52,
+            "y": 803,
+            "width": 239,
+            "height": 15,
+            "center_x": 171.5,
+            "center_y": 810.5,
+            "region": "bottom-left",
+            "tag": "[y:803, x:52]"
+          }
+        },
+        {
+          "text": "MIBCELLANEOUS INFORMATION",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              53.0,
+              829.0
+            ],
+            [
+              197.0,
+              827.0
+            ],
+            [
+              198.0,
+              838.0
+            ],
+            [
+              53.0,
+              840.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              829.0
+            ],
+            [
+              197.0,
+              827.0
+            ],
+            [
+              198.0,
+              838.0
+            ],
+            [
+              53.0,
+              840.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 827,
+            "width": 145,
+            "height": 13,
+            "center_x": 125.5,
+            "center_y": 833.5,
+            "region": "bottom-left",
+            "tag": "[y:827, x:53]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 1.126,
+      "cached_at": "2026-09-23T11:10:20.817298+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "invoice",
+        "document_number": "NO.121710",
+        "document_date": "1994-11-11",
+        "sender": "MENABHA CDRPORATION",
+        "receiver": "K QLeary, MidAmerica, CT",
+        "origin": "NEENAH WI 54957-0427",
+        "destination": "PO BOX 427, MIJ OB0 BREEZEWOOD LANE",
+        "reference_number": "NOU-22-1994",
+        "unit_price": 0.0,
+        "total_amount": 0.0,
+        "currency": "USD",
+        "other": {
+          "source_file": "022_test_imagesi_i_r_c_irc21a00_0071006676.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "invoice",
+          "field": "document_type",
+          "value": "invoice",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "121710",
+          "field": "document_number",
+          "value": "NO.121710",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "1994-11-11",
+          "field": "document_date",
+          "value": "1994-11-11",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "V MENABHA CDRPORATION",
+          "field": "sender",
+          "value": "MENABHA CDRPORATION",
+          "confidence": 94,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "K QLeary, MidAmerica, CT",
+          "field": "receiver",
+          "value": "K QLeary, MidAmerica, CT",
+          "confidence": 94,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "NEENAH WI 54957-0427",
+          "field": "origin",
+          "value": "NEENAH WI 54957-0427",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "OB0 BREEZEWOOD LANE",
+          "field": "destination",
+          "value": "PO BOX 427, MIJ OB0 BREEZEWOOD LANE",
+          "confidence": 92,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "11/22/1994",
+          "field": "reference_number",
+          "value": "NOU-22-1994",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "unit_price",
+          "value": "0.0",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "total_amount",
+          "value": "0.0",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        }
+      ],
+      "confidence": {
+        "overall": 84,
+        "ocr": 81,
+        "slm": 90,
+        "mapping": 82,
+        "completeness": 82
+      },
+      "review_items": [
+        {
+          "field": "unit_price",
+          "ocrValue": "-",
+          "slmValue": "0.0",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "total_amount",
+          "ocrValue": "-",
+          "slmValue": "0.0",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": null,
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "device": "cuda:0"
+    },
+    "performance": {
+      "ocr_time_sec": 1.126,
+      "slm_time_sec": 20.683,
+      "total_time_sec": 21.809
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 1.126,
+    "slm_time_sec": 20.683,
+    "total_time_sec": 21.809
+  },
+  "cached_at": "2026-09-23T11:10:41.519675+00:00"
+}

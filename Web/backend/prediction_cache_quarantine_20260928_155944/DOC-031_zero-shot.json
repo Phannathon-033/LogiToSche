@@ -1,0 +1,2994 @@
+{
+  "document_id": "DOC-031",
+  "file_name": "031_train_imagest_t_s_y_tsy33c00_99407073.png",
+  "cache_schema_version": 2,
+  "prompt_hash": "30b8ee70df8a8ef475381c13cb76b77a1611206f95820ede328bb76621bf9394",
+  "variant": "zero-shot",
+  "benchmark_example_ids": [],
+  "benchmark_example_confidences": [],
+  "training_document_ids": [
+    "DOC-001",
+    "DOC-002",
+    "DOC-003",
+    "DOC-004",
+    "DOC-005",
+    "DOC-006",
+    "DOC-008",
+    "DOC-009",
+    "DOC-010",
+    "DOC-012",
+    "DOC-013",
+    "DOC-014",
+    "DOC-015",
+    "DOC-018",
+    "DOC-021",
+    "DOC-022",
+    "DOC-024",
+    "DOC-025",
+    "DOC-026",
+    "DOC-027",
+    "DOC-028",
+    "DOC-029",
+    "DOC-030",
+    "DOC-033",
+    "DOC-034",
+    "DOC-035",
+    "DOC-036",
+    "DOC-037",
+    "DOC-039",
+    "DOC-040",
+    "DOC-041",
+    "DOC-042",
+    "DOC-043",
+    "DOC-044",
+    "DOC-045",
+    "DOC-046",
+    "DOC-047",
+    "DOC-048",
+    "DOC-049",
+    "DOC-050",
+    "DOC-051",
+    "DOC-052",
+    "DOC-053",
+    "DOC-054",
+    "DOC-055",
+    "DOC-056",
+    "DOC-058",
+    "DOC-059",
+    "DOC-061",
+    "DOC-062",
+    "DOC-063",
+    "DOC-064",
+    "DOC-065",
+    "DOC-066",
+    "DOC-071",
+    "DOC-072",
+    "DOC-074",
+    "DOC-075",
+    "DOC-076",
+    "DOC-077",
+    "DOC-078",
+    "DOC-079",
+    "DOC-081",
+    "DOC-082",
+    "DOC-084",
+    "DOC-086",
+    "DOC-088",
+    "DOC-089",
+    "DOC-090",
+    "DOC-091",
+    "DOC-092",
+    "DOC-093",
+    "DOC-094",
+    "DOC-095",
+    "DOC-096",
+    "DOC-098",
+    "DOC-099",
+    "DOC-100",
+    "DOC-101",
+    "DOC-103",
+    "DOC-104",
+    "DOC-105",
+    "DOC-106",
+    "DOC-107",
+    "DOC-108",
+    "DOC-110",
+    "DOC-111",
+    "DOC-112",
+    "DOC-113",
+    "DOC-114",
+    "DOC-116",
+    "DOC-118",
+    "DOC-120",
+    "DOC-121",
+    "DOC-122",
+    "DOC-123",
+    "DOC-124",
+    "DOC-126",
+    "DOC-128",
+    "DOC-129",
+    "DOC-131",
+    "DOC-132",
+    "DOC-134",
+    "DOC-135",
+    "DOC-136",
+    "DOC-137",
+    "DOC-138",
+    "DOC-139",
+    "DOC-140",
+    "DOC-142",
+    "DOC-143",
+    "DOC-144",
+    "DOC-145",
+    "DOC-146",
+    "DOC-149",
+    "DOC-150",
+    "DOC-151",
+    "DOC-152",
+    "DOC-153",
+    "DOC-154",
+    "DOC-156",
+    "DOC-157",
+    "DOC-158",
+    "DOC-159",
+    "DOC-160",
+    "DOC-161",
+    "DOC-162",
+    "DOC-163",
+    "DOC-165",
+    "DOC-166",
+    "DOC-167",
+    "DOC-168",
+    "DOC-169",
+    "DOC-170",
+    "DOC-171",
+    "DOC-172",
+    "DOC-173",
+    "DOC-175",
+    "DOC-176",
+    "DOC-177",
+    "DOC-178",
+    "DOC-179",
+    "DOC-181",
+    "DOC-183",
+    "DOC-185",
+    "DOC-188",
+    "DOC-189",
+    "DOC-190",
+    "DOC-191",
+    "DOC-192",
+    "DOC-193",
+    "DOC-196",
+    "DOC-197",
+    "DOC-199",
+    "DOC-200",
+    "DOC-201",
+    "DOC-202",
+    "DOC-203",
+    "DOC-204",
+    "DOC-205",
+    "DOC-206",
+    "DOC-208",
+    "DOC-209",
+    "DOC-210",
+    "DOC-211",
+    "DOC-212",
+    "DOC-213",
+    "DOC-214",
+    "DOC-215",
+    "DOC-216",
+    "DOC-217",
+    "DOC-218",
+    "DOC-219",
+    "DOC-220",
+    "DOC-221",
+    "DOC-222",
+    "DOC-223",
+    "DOC-224",
+    "DOC-227",
+    "DOC-228",
+    "DOC-230",
+    "DOC-232",
+    "DOC-234",
+    "DOC-235",
+    "DOC-236",
+    "DOC-237",
+    "DOC-238",
+    "DOC-239",
+    "DOC-240",
+    "DOC-241",
+    "DOC-242",
+    "DOC-243",
+    "DOC-244",
+    "DOC-245",
+    "DOC-247",
+    "DOC-248",
+    "DOC-250",
+    "DOC-251",
+    "DOC-252",
+    "DOC-253",
+    "DOC-254",
+    "DOC-255",
+    "DOC-256",
+    "DOC-258",
+    "DOC-259",
+    "DOC-260",
+    "DOC-261",
+    "DOC-262",
+    "DOC-264",
+    "DOC-265",
+    "DOC-267",
+    "DOC-268",
+    "DOC-269",
+    "DOC-270",
+    "DOC-271",
+    "DOC-272",
+    "DOC-273",
+    "DOC-274",
+    "DOC-276",
+    "DOC-277",
+    "DOC-278",
+    "DOC-279",
+    "DOC-280",
+    "DOC-281",
+    "DOC-282",
+    "DOC-284",
+    "DOC-285",
+    "DOC-286",
+    "DOC-287",
+    "DOC-288",
+    "DOC-290",
+    "DOC-291",
+    "DOC-292",
+    "DOC-294",
+    "DOC-295",
+    "DOC-296",
+    "DOC-297",
+    "DOC-298",
+    "DOC-299",
+    "DOC-300"
+  ],
+  "json_schema": {
+    "document_type": "bill_of_lading",
+    "document_number": "3722",
+    "document_date": "2000-07-06",
+    "sender": "Lashiey PUSD  (919y416-3722",
+    "receiver": "Same Recipient",
+    "origin": "OURHA, NC",
+    "destination": "Now York, NY",
+    "reference_number": "M8A",
+    "unit_price": 0.0,
+    "total_amount": 0.0,
+    "currency": "USD",
+    "other": {
+      "source_file": "031_train_imagest_t_s_y_tsy33c00_99407073.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-031",
+      "filename": "031_train_imagest_t_s_y_tsy33c00_99407073.png",
+      "ocr_text": "From: Lashiey Puss (919y416-3722\nRNATE ADUDICATON CENTER\nFedEx.\n10 SWIFT AVE\nOURHA NC, 2770S\nSUITE TO\nTo: Meyer G.Koplow, Esq. (212)403-1000\nWachtellLlpton,Rosen & Katz\nSHIP DATE: 07JULOO\n51 West 52nd Street\nWEIGHT: I LB8\nNow York, NY, 100196150\nRef: M8A\nSTANDARD OVERNIGHT\nMON\nTRK7%911 0836 2449801\nWR\nA1\nXY QNYA\nDelver by:\n10019-NY-US\n10JULDO\nShipping Label\nSchedule Courier\nFind a Dropoff Locatior\nShipping History\nShipment Complete\nCancel Shipment\n1. Use the \"Print\" feature from your browser to send this page to your laser printer.\n2.Fold the printed page along the borizontal line.\n3. Place label in air waybill pouch and affix it to your shipment so that the barcode portion of the label cm be read amd\nscanned.\n4.To print a receipt of your shipment, please click on Shipping History.\nShip a New Package\nShip to Same Recipient\nShip inside U.S.\nShip Outside U.S.\n99407073\nUhe of thie aryatets constitutes your agpreerseot to the wervie ecoeditioas in the curreot FedEx service Guide, evsiable upoa roquant\nTultx will not be respcesible for wy clains in esoess of $10o por peckages, wsetber the renult of loes, daage, delay, aco-deliveary, misdelivery, or eoinindormsuation, moles you docdae\nigher vaslue, pey an additiccal charge, documseat your actund lom and fle a timcly claimn. Limitatios found in the cuarent FodEa Service Cuide appty. Your rigbt to recover thoe Foate\nfor any lows, ineluding intrinisic value of the peckage, loes of sales, inooce intorcat, profit, atlorey's fecs, coots, and odhar foras of dauage wbether diruct, incidlental\napocial is lingited to the greater of $ 0o ar the authorimed declared vasue. Reovery cannot cxceed actual docuaented loms. Mscimuns for icas of eastrandinry yalue ia ssod,\njewerty, preciouas metals, negotiable ietruamentes end other itecas liated in cour Service Guides, Writtan claigw mouat be filed withis strict tlame limnits, see cuarrwot Pedlax Servios Cuaide\n7/6/00 2:02 PM\nof1",
+      "ocr_lines": [
+        {
+          "text": "From: Lashiey Puss (919y416-3722",
+          "confidence": 0.85,
+          "bounding_box": [
+            [
+              61.0,
+              124.0
+            ],
+            [
+              214.0,
+              122.0
+            ],
+            [
+              214.0,
+              136.0
+            ],
+            [
+              61.0,
+              138.0
+            ]
+          ],
+          "box": [
+            [
+              61.0,
+              124.0
+            ],
+            [
+              214.0,
+              122.0
+            ],
+            [
+              214.0,
+              136.0
+            ],
+            [
+              61.0,
+              138.0
+            ]
+          ],
+          "position": {
+            "x": 61,
+            "y": 122,
+            "width": 153,
+            "height": 16,
+            "center_x": 137.5,
+            "center_y": 130.0,
+            "region": "top-left",
+            "tag": "[y:122, x:61]"
+          }
+        },
+        {
+          "text": "RNATE ADUDICATON CENTER",
+          "confidence": 0.48,
+          "bounding_box": [
+            [
+              87.0,
+              132.0
+            ],
+            [
+              243.0,
+              131.0
+            ],
+            [
+              244.0,
+              145.0
+            ],
+            [
+              87.0,
+              146.0
+            ]
+          ],
+          "box": [
+            [
+              87.0,
+              132.0
+            ],
+            [
+              243.0,
+              131.0
+            ],
+            [
+              244.0,
+              145.0
+            ],
+            [
+              87.0,
+              146.0
+            ]
+          ],
+          "position": {
+            "x": 87,
+            "y": 131,
+            "width": 157,
+            "height": 15,
+            "center_x": 165.5,
+            "center_y": 138.5,
+            "region": "top-left",
+            "tag": "[y:131, x:87]"
+          }
+        },
+        {
+          "text": "FedEx.",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              483.0,
+              130.0
+            ],
+            [
+              566.0,
+              130.0
+            ],
+            [
+              566.0,
+              159.0
+            ],
+            [
+              483.0,
+              159.0
+            ]
+          ],
+          "box": [
+            [
+              483.0,
+              130.0
+            ],
+            [
+              566.0,
+              130.0
+            ],
+            [
+              566.0,
+              159.0
+            ],
+            [
+              483.0,
+              159.0
+            ]
+          ],
+          "position": {
+            "x": 483,
+            "y": 130,
+            "width": 83,
+            "height": 29,
+            "center_x": 524.5,
+            "center_y": 144.5,
+            "region": "top-right",
+            "tag": "[y:130, x:483]"
+          }
+        },
+        {
+          "text": "10 SWIFT AVE",
+          "confidence": 0.69,
+          "bounding_box": [
+            [
+              88.0,
+              143.0
+            ],
+            [
+              156.0,
+              143.0
+            ],
+            [
+              156.0,
+              154.0
+            ],
+            [
+              88.0,
+              154.0
+            ]
+          ],
+          "box": [
+            [
+              88.0,
+              143.0
+            ],
+            [
+              156.0,
+              143.0
+            ],
+            [
+              156.0,
+              154.0
+            ],
+            [
+              88.0,
+              154.0
+            ]
+          ],
+          "position": {
+            "x": 88,
+            "y": 143,
+            "width": 68,
+            "height": 11,
+            "center_x": 122.0,
+            "center_y": 148.5,
+            "region": "top-left",
+            "tag": "[y:143, x:88]"
+          }
+        },
+        {
+          "text": "OURHA NC, 2770S",
+          "confidence": 0.5,
+          "bounding_box": [
+            [
+              86.0,
+              161.0
+            ],
+            [
+              185.0,
+              159.0
+            ],
+            [
+              186.0,
+              173.0
+            ],
+            [
+              87.0,
+              176.0
+            ]
+          ],
+          "box": [
+            [
+              86.0,
+              161.0
+            ],
+            [
+              185.0,
+              159.0
+            ],
+            [
+              186.0,
+              173.0
+            ],
+            [
+              87.0,
+              176.0
+            ]
+          ],
+          "position": {
+            "x": 86,
+            "y": 159,
+            "width": 100,
+            "height": 17,
+            "center_x": 136.0,
+            "center_y": 167.5,
+            "region": "top-left",
+            "tag": "[y:159, x:86]"
+          }
+        },
+        {
+          "text": "SUITE TO",
+          "confidence": 0.69,
+          "bounding_box": [
+            [
+              88.0,
+              153.0
+            ],
+            [
+              139.0,
+              153.0
+            ],
+            [
+              139.0,
+              164.0
+            ],
+            [
+              88.0,
+              164.0
+            ]
+          ],
+          "box": [
+            [
+              88.0,
+              153.0
+            ],
+            [
+              139.0,
+              153.0
+            ],
+            [
+              139.0,
+              164.0
+            ],
+            [
+              88.0,
+              164.0
+            ]
+          ],
+          "position": {
+            "x": 88,
+            "y": 153,
+            "width": 51,
+            "height": 11,
+            "center_x": 113.5,
+            "center_y": 158.5,
+            "region": "top-left",
+            "tag": "[y:153, x:88]"
+          }
+        },
+        {
+          "text": "To: Meyer G.Koplow, Esq. (212)403-1000",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              60.0,
+              172.0
+            ],
+            [
+              340.0,
+              170.0
+            ],
+            [
+              340.0,
+              187.0
+            ],
+            [
+              60.0,
+              190.0
+            ]
+          ],
+          "box": [
+            [
+              60.0,
+              172.0
+            ],
+            [
+              340.0,
+              170.0
+            ],
+            [
+              340.0,
+              187.0
+            ],
+            [
+              60.0,
+              190.0
+            ]
+          ],
+          "position": {
+            "x": 60,
+            "y": 170,
+            "width": 280,
+            "height": 20,
+            "center_x": 200.0,
+            "center_y": 180.0,
+            "region": "top-left",
+            "tag": "[y:170, x:60]"
+          }
+        },
+        {
+          "text": "WachtellLlpton,Rosen & Katz",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              86.0,
+              187.0
+            ],
+            [
+              283.0,
+              184.0
+            ],
+            [
+              283.0,
+              202.0
+            ],
+            [
+              87.0,
+              204.0
+            ]
+          ],
+          "box": [
+            [
+              86.0,
+              187.0
+            ],
+            [
+              283.0,
+              184.0
+            ],
+            [
+              283.0,
+              202.0
+            ],
+            [
+              87.0,
+              204.0
+            ]
+          ],
+          "position": {
+            "x": 86,
+            "y": 184,
+            "width": 197,
+            "height": 20,
+            "center_x": 184.5,
+            "center_y": 194.0,
+            "region": "top-left",
+            "tag": "[y:184, x:86]"
+          }
+        },
+        {
+          "text": "SHIP DATE: 07JULOO",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              466.0,
+              184.0
+            ],
+            [
+              565.0,
+              184.0
+            ],
+            [
+              565.0,
+              198.0
+            ],
+            [
+              466.0,
+              198.0
+            ]
+          ],
+          "box": [
+            [
+              466.0,
+              184.0
+            ],
+            [
+              565.0,
+              184.0
+            ],
+            [
+              565.0,
+              198.0
+            ],
+            [
+              466.0,
+              198.0
+            ]
+          ],
+          "position": {
+            "x": 466,
+            "y": 184,
+            "width": 99,
+            "height": 14,
+            "center_x": 515.5,
+            "center_y": 191.0,
+            "region": "top-right",
+            "tag": "[y:184, x:466]"
+          }
+        },
+        {
+          "text": "51 West 52nd Street",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              86.0,
+              201.0
+            ],
+            [
+              236.0,
+              200.0
+            ],
+            [
+              236.0,
+              217.0
+            ],
+            [
+              86.0,
+              218.0
+            ]
+          ],
+          "box": [
+            [
+              86.0,
+              201.0
+            ],
+            [
+              236.0,
+              200.0
+            ],
+            [
+              236.0,
+              217.0
+            ],
+            [
+              86.0,
+              218.0
+            ]
+          ],
+          "position": {
+            "x": 86,
+            "y": 200,
+            "width": 150,
+            "height": 18,
+            "center_x": 161.0,
+            "center_y": 209.0,
+            "region": "top-left",
+            "tag": "[y:200, x:86]"
+          }
+        },
+        {
+          "text": "WEIGHT: I LB8",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              466.0,
+              195.0
+            ],
+            [
+              538.0,
+              195.0
+            ],
+            [
+              538.0,
+              206.0
+            ],
+            [
+              466.0,
+              206.0
+            ]
+          ],
+          "box": [
+            [
+              466.0,
+              195.0
+            ],
+            [
+              538.0,
+              195.0
+            ],
+            [
+              538.0,
+              206.0
+            ],
+            [
+              466.0,
+              206.0
+            ]
+          ],
+          "position": {
+            "x": 466,
+            "y": 195,
+            "width": 72,
+            "height": 11,
+            "center_x": 502.0,
+            "center_y": 200.5,
+            "region": "top-right",
+            "tag": "[y:195, x:466]"
+          }
+        },
+        {
+          "text": "Now York, NY, 100196150",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              85.0,
+              227.0
+            ],
+            [
+              268.0,
+              225.0
+            ],
+            [
+              268.0,
+              243.0
+            ],
+            [
+              86.0,
+              245.0
+            ]
+          ],
+          "box": [
+            [
+              85.0,
+              227.0
+            ],
+            [
+              268.0,
+              225.0
+            ],
+            [
+              268.0,
+              243.0
+            ],
+            [
+              86.0,
+              245.0
+            ]
+          ],
+          "position": {
+            "x": 85,
+            "y": 225,
+            "width": 183,
+            "height": 20,
+            "center_x": 176.5,
+            "center_y": 235.0,
+            "region": "top-left",
+            "tag": "[y:225, x:85]"
+          }
+        },
+        {
+          "text": "Ref: M8A",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              60.0,
+              242.0
+            ],
+            [
+              104.0,
+              240.0
+            ],
+            [
+              104.0,
+              254.0
+            ],
+            [
+              60.0,
+              256.0
+            ]
+          ],
+          "box": [
+            [
+              60.0,
+              242.0
+            ],
+            [
+              104.0,
+              240.0
+            ],
+            [
+              104.0,
+              254.0
+            ],
+            [
+              60.0,
+              256.0
+            ]
+          ],
+          "position": {
+            "x": 60,
+            "y": 240,
+            "width": 44,
+            "height": 16,
+            "center_x": 82.0,
+            "center_y": 248.0,
+            "region": "top-left",
+            "tag": "[y:240, x:60]"
+          }
+        },
+        {
+          "text": "STANDARD OVERNIGHT",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              266.0,
+              299.0
+            ],
+            [
+              434.0,
+              299.0
+            ],
+            [
+              434.0,
+              314.0
+            ],
+            [
+              266.0,
+              314.0
+            ]
+          ],
+          "box": [
+            [
+              266.0,
+              299.0
+            ],
+            [
+              434.0,
+              299.0
+            ],
+            [
+              434.0,
+              314.0
+            ],
+            [
+              266.0,
+              314.0
+            ]
+          ],
+          "position": {
+            "x": 266,
+            "y": 299,
+            "width": 168,
+            "height": 15,
+            "center_x": 350.0,
+            "center_y": 306.5,
+            "region": "middle",
+            "tag": "[y:299, x:266]"
+          }
+        },
+        {
+          "text": "MON",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              509.0,
+              295.0
+            ],
+            [
+              548.0,
+              295.0
+            ],
+            [
+              548.0,
+              314.0
+            ],
+            [
+              509.0,
+              314.0
+            ]
+          ],
+          "box": [
+            [
+              509.0,
+              295.0
+            ],
+            [
+              548.0,
+              295.0
+            ],
+            [
+              548.0,
+              314.0
+            ],
+            [
+              509.0,
+              314.0
+            ]
+          ],
+          "position": {
+            "x": 509,
+            "y": 295,
+            "width": 39,
+            "height": 19,
+            "center_x": 528.5,
+            "center_y": 304.5,
+            "region": "middle-right",
+            "tag": "[y:295, x:509]"
+          }
+        },
+        {
+          "text": "TRK7%911 0836 2449801",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              62.0,
+              300.0
+            ],
+            [
+              234.0,
+              300.0
+            ],
+            [
+              234.0,
+              318.0
+            ],
+            [
+              62.0,
+              318.0
+            ]
+          ],
+          "box": [
+            [
+              62.0,
+              300.0
+            ],
+            [
+              234.0,
+              300.0
+            ],
+            [
+              234.0,
+              318.0
+            ],
+            [
+              62.0,
+              318.0
+            ]
+          ],
+          "position": {
+            "x": 62,
+            "y": 300,
+            "width": 172,
+            "height": 18,
+            "center_x": 148.0,
+            "center_y": 309.0,
+            "region": "middle-left",
+            "tag": "[y:300, x:62]"
+          }
+        },
+        {
+          "text": "WR",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              423.0,
+              308.0
+            ],
+            [
+              464.0,
+              308.0
+            ],
+            [
+              464.0,
+              331.0
+            ],
+            [
+              423.0,
+              331.0
+            ]
+          ],
+          "box": [
+            [
+              423.0,
+              308.0
+            ],
+            [
+              464.0,
+              308.0
+            ],
+            [
+              464.0,
+              331.0
+            ],
+            [
+              423.0,
+              331.0
+            ]
+          ],
+          "position": {
+            "x": 423,
+            "y": 308,
+            "width": 41,
+            "height": 23,
+            "center_x": 443.5,
+            "center_y": 319.5,
+            "region": "middle",
+            "tag": "[y:308, x:423]"
+          }
+        },
+        {
+          "text": "A1",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              508.0,
+              310.0
+            ],
+            [
+              527.0,
+              310.0
+            ],
+            [
+              527.0,
+              327.0
+            ],
+            [
+              508.0,
+              327.0
+            ]
+          ],
+          "box": [
+            [
+              508.0,
+              310.0
+            ],
+            [
+              527.0,
+              310.0
+            ],
+            [
+              527.0,
+              327.0
+            ],
+            [
+              508.0,
+              327.0
+            ]
+          ],
+          "position": {
+            "x": 508,
+            "y": 310,
+            "width": 19,
+            "height": 17,
+            "center_x": 517.5,
+            "center_y": 318.5,
+            "region": "middle-right",
+            "tag": "[y:310, x:508]"
+          }
+        },
+        {
+          "text": "XY QNYA",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              254.0,
+              327.0
+            ],
+            [
+              469.0,
+              324.0
+            ],
+            [
+              469.0,
+              367.0
+            ],
+            [
+              255.0,
+              369.0
+            ]
+          ],
+          "box": [
+            [
+              254.0,
+              327.0
+            ],
+            [
+              469.0,
+              324.0
+            ],
+            [
+              469.0,
+              367.0
+            ],
+            [
+              255.0,
+              369.0
+            ]
+          ],
+          "position": {
+            "x": 254,
+            "y": 324,
+            "width": 215,
+            "height": 45,
+            "center_x": 361.5,
+            "center_y": 346.5,
+            "region": "middle",
+            "tag": "[y:324, x:254]"
+          }
+        },
+        {
+          "text": "Delver by:",
+          "confidence": 0.86,
+          "bounding_box": [
+            [
+              509.0,
+              328.0
+            ],
+            [
+              557.0,
+              328.0
+            ],
+            [
+              557.0,
+              342.0
+            ],
+            [
+              509.0,
+              342.0
+            ]
+          ],
+          "box": [
+            [
+              509.0,
+              328.0
+            ],
+            [
+              557.0,
+              328.0
+            ],
+            [
+              557.0,
+              342.0
+            ],
+            [
+              509.0,
+              342.0
+            ]
+          ],
+          "position": {
+            "x": 509,
+            "y": 328,
+            "width": 48,
+            "height": 14,
+            "center_x": 533.0,
+            "center_y": 335.0,
+            "region": "middle-right",
+            "tag": "[y:328, x:509]"
+          }
+        },
+        {
+          "text": "10019-NY-US",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              138.0,
+              334.0
+            ],
+            [
+              242.0,
+              334.0
+            ],
+            [
+              242.0,
+              354.0
+            ],
+            [
+              138.0,
+              354.0
+            ]
+          ],
+          "box": [
+            [
+              138.0,
+              334.0
+            ],
+            [
+              242.0,
+              334.0
+            ],
+            [
+              242.0,
+              354.0
+            ],
+            [
+              138.0,
+              354.0
+            ]
+          ],
+          "position": {
+            "x": 138,
+            "y": 334,
+            "width": 104,
+            "height": 20,
+            "center_x": 190.0,
+            "center_y": 344.0,
+            "region": "middle-left",
+            "tag": "[y:334, x:138]"
+          }
+        },
+        {
+          "text": "10JULDO",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              510.0,
+              339.0
+            ],
+            [
+              564.0,
+              339.0
+            ],
+            [
+              564.0,
+              353.0
+            ],
+            [
+              510.0,
+              353.0
+            ]
+          ],
+          "box": [
+            [
+              510.0,
+              339.0
+            ],
+            [
+              564.0,
+              339.0
+            ],
+            [
+              564.0,
+              353.0
+            ],
+            [
+              510.0,
+              353.0
+            ]
+          ],
+          "position": {
+            "x": 510,
+            "y": 339,
+            "width": 54,
+            "height": 14,
+            "center_x": 537.0,
+            "center_y": 346.0,
+            "region": "middle-right",
+            "tag": "[y:339, x:510]"
+          }
+        },
+        {
+          "text": "Shipping Label",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              53.0,
+              500.0
+            ],
+            [
+              165.0,
+              498.0
+            ],
+            [
+              165.0,
+              518.0
+            ],
+            [
+              53.0,
+              520.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              500.0
+            ],
+            [
+              165.0,
+              498.0
+            ],
+            [
+              165.0,
+              518.0
+            ],
+            [
+              53.0,
+              520.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 498,
+            "width": 112,
+            "height": 22,
+            "center_x": 109.0,
+            "center_y": 509.0,
+            "region": "middle-left",
+            "tag": "[y:498, x:53]"
+          }
+        },
+        {
+          "text": "Schedule Courier",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              77.0,
+              534.0
+            ],
+            [
+              172.0,
+              534.0
+            ],
+            [
+              172.0,
+              548.0
+            ],
+            [
+              77.0,
+              548.0
+            ]
+          ],
+          "box": [
+            [
+              77.0,
+              534.0
+            ],
+            [
+              172.0,
+              534.0
+            ],
+            [
+              172.0,
+              548.0
+            ],
+            [
+              77.0,
+              548.0
+            ]
+          ],
+          "position": {
+            "x": 77,
+            "y": 534,
+            "width": 95,
+            "height": 14,
+            "center_x": 124.5,
+            "center_y": 541.0,
+            "region": "middle-left",
+            "tag": "[y:534, x:77]"
+          }
+        },
+        {
+          "text": "Find a Dropoff Locatior",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              237.0,
+              533.0
+            ],
+            [
+              366.0,
+              533.0
+            ],
+            [
+              366.0,
+              547.0
+            ],
+            [
+              237.0,
+              547.0
+            ]
+          ],
+          "box": [
+            [
+              237.0,
+              533.0
+            ],
+            [
+              366.0,
+              533.0
+            ],
+            [
+              366.0,
+              547.0
+            ],
+            [
+              237.0,
+              547.0
+            ]
+          ],
+          "position": {
+            "x": 237,
+            "y": 533,
+            "width": 129,
+            "height": 14,
+            "center_x": 301.5,
+            "center_y": 540.0,
+            "region": "middle",
+            "tag": "[y:533, x:237]"
+          }
+        },
+        {
+          "text": "Shipping History",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              424.0,
+              531.0
+            ],
+            [
+              515.0,
+              531.0
+            ],
+            [
+              515.0,
+              548.0
+            ],
+            [
+              424.0,
+              548.0
+            ]
+          ],
+          "box": [
+            [
+              424.0,
+              531.0
+            ],
+            [
+              515.0,
+              531.0
+            ],
+            [
+              515.0,
+              548.0
+            ],
+            [
+              424.0,
+              548.0
+            ]
+          ],
+          "position": {
+            "x": 424,
+            "y": 531,
+            "width": 91,
+            "height": 17,
+            "center_x": 469.5,
+            "center_y": 539.5,
+            "region": "middle-right",
+            "tag": "[y:531, x:424]"
+          }
+        },
+        {
+          "text": "Shipment Complete",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              79.0,
+              569.0
+            ],
+            [
+              188.0,
+              569.0
+            ],
+            [
+              188.0,
+              583.0
+            ],
+            [
+              79.0,
+              583.0
+            ]
+          ],
+          "box": [
+            [
+              79.0,
+              569.0
+            ],
+            [
+              188.0,
+              569.0
+            ],
+            [
+              188.0,
+              583.0
+            ],
+            [
+              79.0,
+              583.0
+            ]
+          ],
+          "position": {
+            "x": 79,
+            "y": 569,
+            "width": 109,
+            "height": 14,
+            "center_x": 133.5,
+            "center_y": 576.0,
+            "region": "middle-left",
+            "tag": "[y:569, x:79]"
+          }
+        },
+        {
+          "text": "Cancel Shipment",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              247.0,
+              568.0
+            ],
+            [
+              342.0,
+              568.0
+            ],
+            [
+              342.0,
+              582.0
+            ],
+            [
+              247.0,
+              582.0
+            ]
+          ],
+          "box": [
+            [
+              247.0,
+              568.0
+            ],
+            [
+              342.0,
+              568.0
+            ],
+            [
+              342.0,
+              582.0
+            ],
+            [
+              247.0,
+              582.0
+            ]
+          ],
+          "position": {
+            "x": 247,
+            "y": 568,
+            "width": 95,
+            "height": 14,
+            "center_x": 294.5,
+            "center_y": 575.0,
+            "region": "middle",
+            "tag": "[y:568, x:247]"
+          }
+        },
+        {
+          "text": "1. Use the \"Print\" feature from your browser to send this page to your laser printer.",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              72.0,
+              596.0
+            ],
+            [
+              455.0,
+              594.0
+            ],
+            [
+              455.0,
+              610.0
+            ],
+            [
+              72.0,
+              612.0
+            ]
+          ],
+          "box": [
+            [
+              72.0,
+              596.0
+            ],
+            [
+              455.0,
+              594.0
+            ],
+            [
+              455.0,
+              610.0
+            ],
+            [
+              72.0,
+              612.0
+            ]
+          ],
+          "position": {
+            "x": 72,
+            "y": 594,
+            "width": 383,
+            "height": 18,
+            "center_x": 263.5,
+            "center_y": 603.0,
+            "region": "middle",
+            "tag": "[y:594, x:72]"
+          }
+        },
+        {
+          "text": "2.Fold the printed page along the borizontal line.",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              71.0,
+              610.0
+            ],
+            [
+              304.0,
+              608.0
+            ],
+            [
+              304.0,
+              622.0
+            ],
+            [
+              71.0,
+              624.0
+            ]
+          ],
+          "box": [
+            [
+              71.0,
+              610.0
+            ],
+            [
+              304.0,
+              608.0
+            ],
+            [
+              304.0,
+              622.0
+            ],
+            [
+              71.0,
+              624.0
+            ]
+          ],
+          "position": {
+            "x": 71,
+            "y": 608,
+            "width": 233,
+            "height": 16,
+            "center_x": 187.5,
+            "center_y": 616.0,
+            "region": "middle-left",
+            "tag": "[y:608, x:71]"
+          }
+        },
+        {
+          "text": "3. Place label in air waybill pouch and affix it to your shipment so that the barcode portion of the label cm be read amd",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              71.0,
+              622.0
+            ],
+            [
+              617.0,
+              617.0
+            ],
+            [
+              618.0,
+              633.0
+            ],
+            [
+              71.0,
+              638.0
+            ]
+          ],
+          "box": [
+            [
+              71.0,
+              622.0
+            ],
+            [
+              617.0,
+              617.0
+            ],
+            [
+              618.0,
+              633.0
+            ],
+            [
+              71.0,
+              638.0
+            ]
+          ],
+          "position": {
+            "x": 71,
+            "y": 617,
+            "width": 547,
+            "height": 21,
+            "center_x": 344.5,
+            "center_y": 627.5,
+            "region": "middle",
+            "tag": "[y:617, x:71]"
+          }
+        },
+        {
+          "text": "scanned.",
+          "confidence": 0.85,
+          "bounding_box": [
+            [
+              84.0,
+              636.0
+            ],
+            [
+              128.0,
+              634.0
+            ],
+            [
+              129.0,
+              648.0
+            ],
+            [
+              85.0,
+              650.0
+            ]
+          ],
+          "box": [
+            [
+              84.0,
+              636.0
+            ],
+            [
+              128.0,
+              634.0
+            ],
+            [
+              129.0,
+              648.0
+            ],
+            [
+              85.0,
+              650.0
+            ]
+          ],
+          "position": {
+            "x": 84,
+            "y": 634,
+            "width": 45,
+            "height": 16,
+            "center_x": 106.5,
+            "center_y": 642.0,
+            "region": "middle-left",
+            "tag": "[y:634, x:84]"
+          }
+        },
+        {
+          "text": "4.To print a receipt of your shipment, please click on Shipping History.",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              70.0,
+              649.0
+            ],
+            [
+              412.0,
+              646.0
+            ],
+            [
+              412.0,
+              660.0
+            ],
+            [
+              70.0,
+              663.0
+            ]
+          ],
+          "box": [
+            [
+              70.0,
+              649.0
+            ],
+            [
+              412.0,
+              646.0
+            ],
+            [
+              412.0,
+              660.0
+            ],
+            [
+              70.0,
+              663.0
+            ]
+          ],
+          "position": {
+            "x": 70,
+            "y": 646,
+            "width": 342,
+            "height": 17,
+            "center_x": 241.0,
+            "center_y": 654.5,
+            "region": "middle",
+            "tag": "[y:646, x:70]"
+          }
+        },
+        {
+          "text": "Ship a New Package",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              53.0,
+              676.0
+            ],
+            [
+              173.0,
+              676.0
+            ],
+            [
+              173.0,
+              691.0
+            ],
+            [
+              53.0,
+              691.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              676.0
+            ],
+            [
+              173.0,
+              676.0
+            ],
+            [
+              173.0,
+              691.0
+            ],
+            [
+              53.0,
+              691.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 676,
+            "width": 120,
+            "height": 15,
+            "center_x": 113.0,
+            "center_y": 683.5,
+            "region": "bottom-left",
+            "tag": "[y:676, x:53]"
+          }
+        },
+        {
+          "text": "Ship to Same Recipient",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              382.0,
+              706.0
+            ],
+            [
+              509.0,
+              704.0
+            ],
+            [
+              510.0,
+              719.0
+            ],
+            [
+              382.0,
+              721.0
+            ]
+          ],
+          "box": [
+            [
+              382.0,
+              706.0
+            ],
+            [
+              509.0,
+              704.0
+            ],
+            [
+              510.0,
+              719.0
+            ],
+            [
+              382.0,
+              721.0
+            ]
+          ],
+          "position": {
+            "x": 382,
+            "y": 704,
+            "width": 128,
+            "height": 17,
+            "center_x": 446.0,
+            "center_y": 712.5,
+            "region": "bottom-right",
+            "tag": "[y:704, x:382]"
+          }
+        },
+        {
+          "text": "Ship inside U.S.",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              72.0,
+              709.0
+            ],
+            [
+              159.0,
+              709.0
+            ],
+            [
+              159.0,
+              723.0
+            ],
+            [
+              72.0,
+              723.0
+            ]
+          ],
+          "box": [
+            [
+              72.0,
+              709.0
+            ],
+            [
+              159.0,
+              709.0
+            ],
+            [
+              159.0,
+              723.0
+            ],
+            [
+              72.0,
+              723.0
+            ]
+          ],
+          "position": {
+            "x": 72,
+            "y": 709,
+            "width": 87,
+            "height": 14,
+            "center_x": 115.5,
+            "center_y": 716.0,
+            "region": "bottom-left",
+            "tag": "[y:709, x:72]"
+          }
+        },
+        {
+          "text": "Ship Outside U.S.",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              216.0,
+              707.0
+            ],
+            [
+              312.0,
+              706.0
+            ],
+            [
+              312.0,
+              721.0
+            ],
+            [
+              216.0,
+              722.0
+            ]
+          ],
+          "box": [
+            [
+              216.0,
+              707.0
+            ],
+            [
+              312.0,
+              706.0
+            ],
+            [
+              312.0,
+              721.0
+            ],
+            [
+              216.0,
+              722.0
+            ]
+          ],
+          "position": {
+            "x": 216,
+            "y": 706,
+            "width": 96,
+            "height": 16,
+            "center_x": 264.0,
+            "center_y": 714.0,
+            "region": "bottom-center",
+            "tag": "[y:706, x:216]"
+          }
+        },
+        {
+          "text": "99407073",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              649.0,
+              726.0
+            ],
+            [
+              673.0,
+              726.0
+            ],
+            [
+              670.0,
+              831.0
+            ],
+            [
+              647.0,
+              830.0
+            ]
+          ],
+          "box": [
+            [
+              649.0,
+              726.0
+            ],
+            [
+              673.0,
+              726.0
+            ],
+            [
+              670.0,
+              831.0
+            ],
+            [
+              647.0,
+              830.0
+            ]
+          ],
+          "position": {
+            "x": 647,
+            "y": 726,
+            "width": 26,
+            "height": 105,
+            "center_x": 660.0,
+            "center_y": 778.5,
+            "region": "bottom-right",
+            "tag": "[y:726, x:647]"
+          }
+        },
+        {
+          "text": "Uhe of thie aryatets constitutes your agpreerseot to the wervie ecoeditioas in the curreot FedEx service Guide, evsiable upoa roquant",
+          "confidence": 0.81,
+          "bounding_box": [
+            [
+              49.0,
+              738.0
+            ],
+            [
+              468.0,
+              735.0
+            ],
+            [
+              468.0,
+              749.0
+            ],
+            [
+              49.0,
+              752.0
+            ]
+          ],
+          "box": [
+            [
+              49.0,
+              738.0
+            ],
+            [
+              468.0,
+              735.0
+            ],
+            [
+              468.0,
+              749.0
+            ],
+            [
+              49.0,
+              752.0
+            ]
+          ],
+          "position": {
+            "x": 49,
+            "y": 735,
+            "width": 419,
+            "height": 17,
+            "center_x": 258.5,
+            "center_y": 743.5,
+            "region": "bottom-center",
+            "tag": "[y:735, x:49]"
+          }
+        },
+        {
+          "text": "Tultx will not be respcesible for wy clains in esoess of $10o por peckages, wsetber the renult of loes, daage, delay, aco-deliveary, misdelivery, or eoinindormsuation, moles you docdae",
+          "confidence": 0.76,
+          "bounding_box": [
+            [
+              48.0,
+              756.0
+            ],
+            [
+              635.0,
+              751.0
+            ],
+            [
+              635.0,
+              765.0
+            ],
+            [
+              48.0,
+              770.0
+            ]
+          ],
+          "box": [
+            [
+              48.0,
+              756.0
+            ],
+            [
+              635.0,
+              751.0
+            ],
+            [
+              635.0,
+              765.0
+            ],
+            [
+              48.0,
+              770.0
+            ]
+          ],
+          "position": {
+            "x": 48,
+            "y": 751,
+            "width": 587,
+            "height": 19,
+            "center_x": 341.5,
+            "center_y": 760.5,
+            "region": "bottom-center",
+            "tag": "[y:751, x:48]"
+          }
+        },
+        {
+          "text": "igher vaslue, pey an additiccal charge, documseat your actund lom and fle a timcly claimn. Limitatios found in the cuarent FodEa Service Cuide appty. Your rigbt to recover thoe Foate",
+          "confidence": 0.62,
+          "bounding_box": [
+            [
+              48.0,
+              764.0
+            ],
+            [
+              638.0,
+              760.0
+            ],
+            [
+              638.0,
+              774.0
+            ],
+            [
+              48.0,
+              778.0
+            ]
+          ],
+          "box": [
+            [
+              48.0,
+              764.0
+            ],
+            [
+              638.0,
+              760.0
+            ],
+            [
+              638.0,
+              774.0
+            ],
+            [
+              48.0,
+              778.0
+            ]
+          ],
+          "position": {
+            "x": 48,
+            "y": 760,
+            "width": 590,
+            "height": 18,
+            "center_x": 343.0,
+            "center_y": 769.0,
+            "region": "bottom-center",
+            "tag": "[y:760, x:48]"
+          }
+        },
+        {
+          "text": "for any lows, ineluding intrinisic value of the peckage, loes of sales, inooce intorcat, profit, atlorey's fecs, coots, and odhar foras of dauage wbether diruct, incidlental",
+          "confidence": 0.72,
+          "bounding_box": [
+            [
+              48.0,
+              774.0
+            ],
+            [
+              581.0,
+              770.0
+            ],
+            [
+              581.0,
+              783.0
+            ],
+            [
+              48.0,
+              787.0
+            ]
+          ],
+          "box": [
+            [
+              48.0,
+              774.0
+            ],
+            [
+              581.0,
+              770.0
+            ],
+            [
+              581.0,
+              783.0
+            ],
+            [
+              48.0,
+              787.0
+            ]
+          ],
+          "position": {
+            "x": 48,
+            "y": 770,
+            "width": 533,
+            "height": 17,
+            "center_x": 314.5,
+            "center_y": 778.5,
+            "region": "bottom-center",
+            "tag": "[y:770, x:48]"
+          }
+        },
+        {
+          "text": "apocial is lingited to the greater of $ 0o ar the authorimed declared vasue. Reovery cannot cxceed actual docuaented loms. Mscimuns for icas of eastrandinry yalue ia ssod,",
+          "confidence": 0.66,
+          "bounding_box": [
+            [
+              49.0,
+              783.0
+            ],
+            [
+              619.0,
+              778.0
+            ],
+            [
+              620.0,
+              792.0
+            ],
+            [
+              49.0,
+              797.0
+            ]
+          ],
+          "box": [
+            [
+              49.0,
+              783.0
+            ],
+            [
+              619.0,
+              778.0
+            ],
+            [
+              620.0,
+              792.0
+            ],
+            [
+              49.0,
+              797.0
+            ]
+          ],
+          "position": {
+            "x": 49,
+            "y": 778,
+            "width": 571,
+            "height": 19,
+            "center_x": 334.5,
+            "center_y": 787.5,
+            "region": "bottom-center",
+            "tag": "[y:778, x:49]"
+          }
+        },
+        {
+          "text": "jewerty, preciouas metals, negotiable ietruamentes end other itecas liated in cour Service Guides, Writtan claigw mouat be filed withis strict tlame limnits, see cuarrwot Pedlax Servios Cuaide",
+          "confidence": 0.76,
+          "bounding_box": [
+            [
+              48.0,
+              793.0
+            ],
+            [
+              625.0,
+              788.0
+            ],
+            [
+              625.0,
+              801.0
+            ],
+            [
+              48.0,
+              806.0
+            ]
+          ],
+          "box": [
+            [
+              48.0,
+              793.0
+            ],
+            [
+              625.0,
+              788.0
+            ],
+            [
+              625.0,
+              801.0
+            ],
+            [
+              48.0,
+              806.0
+            ]
+          ],
+          "position": {
+            "x": 48,
+            "y": 788,
+            "width": 577,
+            "height": 18,
+            "center_x": 336.5,
+            "center_y": 797.0,
+            "region": "bottom-center",
+            "tag": "[y:788, x:48]"
+          }
+        },
+        {
+          "text": "7/6/00 2:02 PM",
+          "confidence": 0.85,
+          "bounding_box": [
+            [
+              618.0,
+              927.0
+            ],
+            [
+              686.0,
+              923.0
+            ],
+            [
+              686.0,
+              937.0
+            ],
+            [
+              619.0,
+              941.0
+            ]
+          ],
+          "box": [
+            [
+              618.0,
+              927.0
+            ],
+            [
+              686.0,
+              923.0
+            ],
+            [
+              686.0,
+              937.0
+            ],
+            [
+              619.0,
+              941.0
+            ]
+          ],
+          "position": {
+            "x": 618,
+            "y": 923,
+            "width": 68,
+            "height": 18,
+            "center_x": 652.0,
+            "center_y": 932.0,
+            "region": "bottom-right",
+            "tag": "[y:923, x:618]"
+          }
+        },
+        {
+          "text": "of1",
+          "confidence": 0.8,
+          "bounding_box": [
+            [
+              7.0,
+              931.0
+            ],
+            [
+              33.0,
+              931.0
+            ],
+            [
+              33.0,
+              947.0
+            ],
+            [
+              7.0,
+              947.0
+            ]
+          ],
+          "box": [
+            [
+              7.0,
+              931.0
+            ],
+            [
+              33.0,
+              931.0
+            ],
+            [
+              33.0,
+              947.0
+            ],
+            [
+              7.0,
+              947.0
+            ]
+          ],
+          "position": {
+            "x": 7,
+            "y": 931,
+            "width": 26,
+            "height": 16,
+            "center_x": 20.0,
+            "center_y": 939.0,
+            "region": "bottom-left",
+            "tag": "[y:931, x:7]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 1.407,
+      "cached_at": "2026-09-27T16:46:30.623594+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "bill_of_lading",
+        "document_number": "3722",
+        "document_date": "2000-07-06",
+        "sender": "Lashiey PUSD  (919y416-3722",
+        "receiver": "Same Recipient",
+        "origin": "OURHA, NC",
+        "destination": "Now York, NY",
+        "reference_number": "M8A",
+        "unit_price": 0.0,
+        "total_amount": 0.0,
+        "currency": "USD",
+        "other": {
+          "source_file": "031_train_imagest_t_s_y_tsy33c00_99407073.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "bill_of_lading",
+          "field": "document_type",
+          "value": "bill_of_lading",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "From: Lashiey Puss (919y416-3722",
+          "field": "document_number",
+          "value": "3722",
+          "confidence": 92,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "2000-07-06",
+          "field": "document_date",
+          "value": "2000-07-06",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "From: Lashiey Puss (919y416-3722",
+          "field": "sender",
+          "value": "Lashiey PUSD  (919y416-3722",
+          "confidence": 92,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "Ship to Same Recipient",
+          "field": "receiver",
+          "value": "Same Recipient",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "OURHA, NC",
+          "field": "origin",
+          "value": "OURHA, NC",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "Now York, NY, 100196150",
+          "field": "destination",
+          "value": "Now York, NY",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "Ref: M8A",
+          "field": "reference_number",
+          "value": "M8A",
+          "confidence": 93,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "unit_price",
+          "value": "0.0",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "total_amount",
+          "value": "0.0",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "031_train_imagest_t_s_y_tsy33c00_99407073.png",
+          "field": "source_file",
+          "value": "031_train_imagest_t_s_y_tsy33c00_99407073.png",
+          "confidence": 92,
+          "status": "success",
+          "isOther": true
+        }
+      ],
+      "confidence": {
+        "overall": 86,
+        "ocr": 88,
+        "slm": 88,
+        "mapping": 82,
+        "completeness": 82
+      },
+      "review_items": [
+        {
+          "field": "unit_price",
+          "ocrValue": "-",
+          "slmValue": "0.0",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "total_amount",
+          "ocrValue": "-",
+          "slmValue": "0.0",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": {
+        "accuracy_pct": 82.0,
+        "inference_time_sec": 0.15,
+        "tokens_generated": 0,
+        "token_speed_tps": 0,
+        "core_fields_fill_rate_pct": 82.0,
+        "schema_valid": true,
+        "math_integrity_status": "no_subtotal",
+        "math_integrity_notes": "Sources:",
+        "field_accuracies": {}
+      },
+      "model": "Qwen/Qwen2.5-1.5B-Instruct (Fallback: 502: SLM returned invalid JSON: Expecting ',' delimiter: line 17 column 4 (char 497))",
+      "device": "cpu/fallback"
+    },
+    "performance": {
+      "ocr_time_sec": 1.407,
+      "slm_time_sec": 57.49,
+      "total_time_sec": 58.897
+    },
+    "prompt_integrity": {
+      "cache_schema_version": 2,
+      "prompt_hash": "30b8ee70df8a8ef475381c13cb76b77a1611206f95820ede328bb76621bf9394",
+      "variant": "zero-shot",
+      "benchmark_example_ids": [],
+      "benchmark_example_confidences": [],
+      "training_document_ids": [
+        "DOC-001",
+        "DOC-002",
+        "DOC-003",
+        "DOC-004",
+        "DOC-005",
+        "DOC-006",
+        "DOC-008",
+        "DOC-009",
+        "DOC-010",
+        "DOC-012",
+        "DOC-013",
+        "DOC-014",
+        "DOC-015",
+        "DOC-018",
+        "DOC-021",
+        "DOC-022",
+        "DOC-024",
+        "DOC-025",
+        "DOC-026",
+        "DOC-027",
+        "DOC-028",
+        "DOC-029",
+        "DOC-030",
+        "DOC-033",
+        "DOC-034",
+        "DOC-035",
+        "DOC-036",
+        "DOC-037",
+        "DOC-039",
+        "DOC-040",
+        "DOC-041",
+        "DOC-042",
+        "DOC-043",
+        "DOC-044",
+        "DOC-045",
+        "DOC-046",
+        "DOC-047",
+        "DOC-048",
+        "DOC-049",
+        "DOC-050",
+        "DOC-051",
+        "DOC-052",
+        "DOC-053",
+        "DOC-054",
+        "DOC-055",
+        "DOC-056",
+        "DOC-058",
+        "DOC-059",
+        "DOC-061",
+        "DOC-062",
+        "DOC-063",
+        "DOC-064",
+        "DOC-065",
+        "DOC-066",
+        "DOC-071",
+        "DOC-072",
+        "DOC-074",
+        "DOC-075",
+        "DOC-076",
+        "DOC-077",
+        "DOC-078",
+        "DOC-079",
+        "DOC-081",
+        "DOC-082",
+        "DOC-084",
+        "DOC-086",
+        "DOC-088",
+        "DOC-089",
+        "DOC-090",
+        "DOC-091",
+        "DOC-092",
+        "DOC-093",
+        "DOC-094",
+        "DOC-095",
+        "DOC-096",
+        "DOC-098",
+        "DOC-099",
+        "DOC-100",
+        "DOC-101",
+        "DOC-103",
+        "DOC-104",
+        "DOC-105",
+        "DOC-106",
+        "DOC-107",
+        "DOC-108",
+        "DOC-110",
+        "DOC-111",
+        "DOC-112",
+        "DOC-113",
+        "DOC-114",
+        "DOC-116",
+        "DOC-118",
+        "DOC-120",
+        "DOC-121",
+        "DOC-122",
+        "DOC-123",
+        "DOC-124",
+        "DOC-126",
+        "DOC-128",
+        "DOC-129",
+        "DOC-131",
+        "DOC-132",
+        "DOC-134",
+        "DOC-135",
+        "DOC-136",
+        "DOC-137",
+        "DOC-138",
+        "DOC-139",
+        "DOC-140",
+        "DOC-142",
+        "DOC-143",
+        "DOC-144",
+        "DOC-145",
+        "DOC-146",
+        "DOC-149",
+        "DOC-150",
+        "DOC-151",
+        "DOC-152",
+        "DOC-153",
+        "DOC-154",
+        "DOC-156",
+        "DOC-157",
+        "DOC-158",
+        "DOC-159",
+        "DOC-160",
+        "DOC-161",
+        "DOC-162",
+        "DOC-163",
+        "DOC-165",
+        "DOC-166",
+        "DOC-167",
+        "DOC-168",
+        "DOC-169",
+        "DOC-170",
+        "DOC-171",
+        "DOC-172",
+        "DOC-173",
+        "DOC-175",
+        "DOC-176",
+        "DOC-177",
+        "DOC-178",
+        "DOC-179",
+        "DOC-181",
+        "DOC-183",
+        "DOC-185",
+        "DOC-188",
+        "DOC-189",
+        "DOC-190",
+        "DOC-191",
+        "DOC-192",
+        "DOC-193",
+        "DOC-196",
+        "DOC-197",
+        "DOC-199",
+        "DOC-200",
+        "DOC-201",
+        "DOC-202",
+        "DOC-203",
+        "DOC-204",
+        "DOC-205",
+        "DOC-206",
+        "DOC-208",
+        "DOC-209",
+        "DOC-210",
+        "DOC-211",
+        "DOC-212",
+        "DOC-213",
+        "DOC-214",
+        "DOC-215",
+        "DOC-216",
+        "DOC-217",
+        "DOC-218",
+        "DOC-219",
+        "DOC-220",
+        "DOC-221",
+        "DOC-222",
+        "DOC-223",
+        "DOC-224",
+        "DOC-227",
+        "DOC-228",
+        "DOC-230",
+        "DOC-232",
+        "DOC-234",
+        "DOC-235",
+        "DOC-236",
+        "DOC-237",
+        "DOC-238",
+        "DOC-239",
+        "DOC-240",
+        "DOC-241",
+        "DOC-242",
+        "DOC-243",
+        "DOC-244",
+        "DOC-245",
+        "DOC-247",
+        "DOC-248",
+        "DOC-250",
+        "DOC-251",
+        "DOC-252",
+        "DOC-253",
+        "DOC-254",
+        "DOC-255",
+        "DOC-256",
+        "DOC-258",
+        "DOC-259",
+        "DOC-260",
+        "DOC-261",
+        "DOC-262",
+        "DOC-264",
+        "DOC-265",
+        "DOC-267",
+        "DOC-268",
+        "DOC-269",
+        "DOC-270",
+        "DOC-271",
+        "DOC-272",
+        "DOC-273",
+        "DOC-274",
+        "DOC-276",
+        "DOC-277",
+        "DOC-278",
+        "DOC-279",
+        "DOC-280",
+        "DOC-281",
+        "DOC-282",
+        "DOC-284",
+        "DOC-285",
+        "DOC-286",
+        "DOC-287",
+        "DOC-288",
+        "DOC-290",
+        "DOC-291",
+        "DOC-292",
+        "DOC-294",
+        "DOC-295",
+        "DOC-296",
+        "DOC-297",
+        "DOC-298",
+        "DOC-299",
+        "DOC-300"
+      ]
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 1.407,
+    "slm_time_sec": 57.49,
+    "total_time_sec": 58.897
+  },
+  "cached_at": "2026-09-27T16:47:28.136692+00:00"
+}

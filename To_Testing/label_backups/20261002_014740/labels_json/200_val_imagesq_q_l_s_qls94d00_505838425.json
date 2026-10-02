@@ -1,0 +1,27 @@
+{
+  "id": "DOC-200",
+  "rank": 200,
+  "file_name": "200_val_imagesq_q_l_s_qls94d00_505838425.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "0487064",
+    "document_date": "1987-04-15",
+    "sender": "Pacific Northwest Laboratories",
+    "receiver": "Order No",
+    "origin": "COPY, IN",
+    "destination": "REYNOLDS TOBACCO, CO",
+    "reference_number": "BOX",
+    "unit_price": 14173.93,
+    "total_amount": 96673.83,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:27:37"
+}

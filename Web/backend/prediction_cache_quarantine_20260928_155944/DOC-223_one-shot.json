@@ -1,0 +1,8494 @@
+{
+  "document_id": "DOC-223",
+  "file_name": "223_train_imagesb_b_d_z_bdz74c00_91659978.png",
+  "cache_schema_version": 2,
+  "prompt_hash": "3afe309de18e090cdea10f5981dbebbe06615422047b55829885be7ad744eeef",
+  "variant": "one-shot",
+  "benchmark_example_ids": [
+    "DOC-009"
+  ],
+  "benchmark_example_confidences": [
+    98.13
+  ],
+  "training_document_ids": [
+    "DOC-001",
+    "DOC-002",
+    "DOC-003",
+    "DOC-004",
+    "DOC-007",
+    "DOC-009",
+    "DOC-010",
+    "DOC-012",
+    "DOC-013",
+    "DOC-014",
+    "DOC-015",
+    "DOC-016",
+    "DOC-017",
+    "DOC-018",
+    "DOC-019",
+    "DOC-020",
+    "DOC-021",
+    "DOC-023",
+    "DOC-025",
+    "DOC-026",
+    "DOC-027",
+    "DOC-028",
+    "DOC-030",
+    "DOC-031",
+    "DOC-032",
+    "DOC-033",
+    "DOC-036",
+    "DOC-039",
+    "DOC-040",
+    "DOC-041",
+    "DOC-042",
+    "DOC-043",
+    "DOC-044",
+    "DOC-045",
+    "DOC-046",
+    "DOC-047",
+    "DOC-048",
+    "DOC-049",
+    "DOC-050",
+    "DOC-051",
+    "DOC-052",
+    "DOC-053",
+    "DOC-055",
+    "DOC-057",
+    "DOC-058",
+    "DOC-059",
+    "DOC-060",
+    "DOC-061",
+    "DOC-063",
+    "DOC-064",
+    "DOC-065",
+    "DOC-066",
+    "DOC-068",
+    "DOC-069",
+    "DOC-071",
+    "DOC-072",
+    "DOC-073",
+    "DOC-074",
+    "DOC-075",
+    "DOC-076",
+    "DOC-077",
+    "DOC-078",
+    "DOC-079",
+    "DOC-081",
+    "DOC-082",
+    "DOC-083",
+    "DOC-084",
+    "DOC-085",
+    "DOC-086",
+    "DOC-087",
+    "DOC-088",
+    "DOC-089",
+    "DOC-090",
+    "DOC-093",
+    "DOC-094",
+    "DOC-095",
+    "DOC-096",
+    "DOC-097",
+    "DOC-098",
+    "DOC-099",
+    "DOC-100",
+    "DOC-102",
+    "DOC-104",
+    "DOC-105",
+    "DOC-107",
+    "DOC-109",
+    "DOC-110",
+    "DOC-111",
+    "DOC-112",
+    "DOC-114",
+    "DOC-115",
+    "DOC-117",
+    "DOC-118",
+    "DOC-119",
+    "DOC-120",
+    "DOC-122",
+    "DOC-123",
+    "DOC-124",
+    "DOC-125",
+    "DOC-127",
+    "DOC-128",
+    "DOC-130",
+    "DOC-131",
+    "DOC-132",
+    "DOC-134",
+    "DOC-135",
+    "DOC-136",
+    "DOC-138",
+    "DOC-139",
+    "DOC-140",
+    "DOC-141",
+    "DOC-142",
+    "DOC-145",
+    "DOC-146",
+    "DOC-147",
+    "DOC-148",
+    "DOC-149",
+    "DOC-150",
+    "DOC-151",
+    "DOC-152",
+    "DOC-154",
+    "DOC-155",
+    "DOC-157",
+    "DOC-158",
+    "DOC-159",
+    "DOC-160",
+    "DOC-164",
+    "DOC-165",
+    "DOC-166",
+    "DOC-167",
+    "DOC-168",
+    "DOC-169",
+    "DOC-170",
+    "DOC-171",
+    "DOC-172",
+    "DOC-173",
+    "DOC-176",
+    "DOC-177",
+    "DOC-178",
+    "DOC-179",
+    "DOC-180",
+    "DOC-181",
+    "DOC-183",
+    "DOC-184",
+    "DOC-185",
+    "DOC-186",
+    "DOC-187",
+    "DOC-188",
+    "DOC-189",
+    "DOC-190",
+    "DOC-191",
+    "DOC-192",
+    "DOC-193",
+    "DOC-194",
+    "DOC-195",
+    "DOC-199",
+    "DOC-200",
+    "DOC-201",
+    "DOC-202",
+    "DOC-203",
+    "DOC-204",
+    "DOC-205",
+    "DOC-206",
+    "DOC-207",
+    "DOC-209",
+    "DOC-210",
+    "DOC-212",
+    "DOC-213",
+    "DOC-214",
+    "DOC-215",
+    "DOC-216",
+    "DOC-218",
+    "DOC-219",
+    "DOC-220",
+    "DOC-221",
+    "DOC-224",
+    "DOC-225",
+    "DOC-226",
+    "DOC-227",
+    "DOC-228",
+    "DOC-229",
+    "DOC-230",
+    "DOC-231",
+    "DOC-232",
+    "DOC-233",
+    "DOC-234",
+    "DOC-235",
+    "DOC-236",
+    "DOC-237",
+    "DOC-238",
+    "DOC-240",
+    "DOC-241",
+    "DOC-243",
+    "DOC-244",
+    "DOC-245",
+    "DOC-246",
+    "DOC-248",
+    "DOC-250",
+    "DOC-251",
+    "DOC-252",
+    "DOC-253",
+    "DOC-254",
+    "DOC-255",
+    "DOC-256",
+    "DOC-257",
+    "DOC-258",
+    "DOC-262",
+    "DOC-263",
+    "DOC-265",
+    "DOC-266",
+    "DOC-267",
+    "DOC-269",
+    "DOC-270",
+    "DOC-271",
+    "DOC-272",
+    "DOC-273",
+    "DOC-274",
+    "DOC-275",
+    "DOC-276",
+    "DOC-277",
+    "DOC-279",
+    "DOC-280",
+    "DOC-281",
+    "DOC-282",
+    "DOC-283",
+    "DOC-285",
+    "DOC-286",
+    "DOC-287",
+    "DOC-288",
+    "DOC-289",
+    "DOC-290",
+    "DOC-291",
+    "DOC-292",
+    "DOC-294",
+    "DOC-295",
+    "DOC-296",
+    "DOC-297",
+    "DOC-298",
+    "DOC-299",
+    "DOC-300"
+  ],
+  "json_schema": {
+    "document_type": "invoice",
+    "document_number": "4305002590",
+    "document_date": "1984-10-31",
+    "sender": "THE CON-RACT RATE SHOWN",
+    "receiver": "LORILLARD MEDIA SERVICES",
+    "origin": "LOS ANGELES, CA",
+    "destination": "NEW YORK, NY 10163",
+    "reference_number": "",
+    "unit_price": 13811.42,
+    "total_amount": 13811.42,
+    "currency": "USD",
+    "other": {
+      "source_file": "223_train_imagesb_b_d_z_bdz74c00_91659978.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-223",
+      "filename": "223_train_imagesb_b_d_z_bdz74c00_91659978.png",
+      "ocr_text": "DISPLAY ADVERTISING\nINVOICE\nPAGE\n1\nLos Angeles Times\nLEDGER:\n10-111-100\nTIMES MIRROR SQUARE/LOS ANGELES, CA, 9O0U3 (213) 972-5000\nCUSTOMER NUMBER:\n57029-80-3\nINVOICE NO:\n4305002590 4\nSOLD TO\nLORILLARD MEDIA SERVICES\nDATE:\n10/31/84\n666 FIFTH AVENUE\nNEW YORK\nNY 10163\nADV. CODE:\nKEY ACCOUNT\nTRUE\n- LORILLARD\nTELE NO:\n212-841-1000\nDATE\nAD\nDESCRIPTION\nPARTPAGE\nSIZE\nINCHES\nRATE\nGROSS AMOUNT\nNET AMOUNT\nMO D4Y\nSERIAL NO.\n27,116.05\n0930\n1007\nBALANCEFORWARD\nHOM14\nU2\n60.00\n15.475.00\n13,153.75\n1007\n918132TRUE 10OS TASTE\n918132COLOR CHARGE\nHOM14\n4,820.00\n4,097.00\n1023\nCASH\n30,555.38R\n1s\n1s\nTOTAL\n4305002590\nAGAZIE\n2ATH\n20,295.00\n17,250.75\nMAGAZIE\nLATH\nRU\nTRU\nCRAND\nDRAMD\nIASUE\n107\nISSUE\n10-7\nSSTION\n198\nSETON\n100\nESTIAATE\n10Tue\nESTILATE\n10-7-true\nVNO\n1/9/84\nINO\nIHV DATE\n10-3\n0\nPATE\n10-31\nAj\n4097.00\nA\n11180169\n_P\nP0\nDAE\n11-9\np\nD.\nF9S0 DAYS AND QV\n6O OAYS AND DVER\nba\n0290\n30 DAYS AND OVER\nTOTAL NET\nDUE AMOUNT\nAGING OF PAST\nCHECKotda\n-000\nAMOUNT DUE\n$13,811.42\n๑\nOFTHISINVOICE\nTERMS: NET UPON PRESENTATION\nWHERE AN ADVERTISING CCNTRACT S N FORCE, AMOUNTS BILED ON\nTHE AMOUNT OF THE SHCRT RATE OR REBATE, F ANT, CANNOT BE\nTAIS INVDICE ARE SUBIECT TO SHORT RATE OR REBATS AT CXPIRATION\nOF THE CONTRACT, F, BASED ON SPACE PERFQRMANCE. THE ACTUAL\nASCERTAINED UNTIL TKE END CF THE TWELVE-WONTH CONTRACT TERM\nSET FORTH BELOW S THE SPACE CONTRACTED FOR, THE EXPIRATION\nEARNED RATE DFFERS FROM THE CON-RACT RATE SHOWN.\nDATE OF THE CONTRACT AND THE SPACE USED TO DATE.\nIF YOU HAVE QUESTIONS REGARDING THIS INFORMATION, PLEASE\nCONTACT YOUR LOS ANGELES TIMES ACCOUNT REPRESENTATIVE: 21061\nFULL RUN\nSUBURBAN\nCONTRACT EXPIRATION DATE\nCONTRACT REQUIREMENT\nINCHES USED, THIS INVOICE\n60.00\nTOTAL INCHES USED TO DATE\nDETACH HERE\n*\nRETURN THIS PORTION\nWITH YOUR CHECK IN THE ENCLOSED ENVELOPE\nAMOUNT DUE\n$13,811.42\nMAKE CHECK PAYABLE TO LOS ANGELES TIMES\nDATE 10/31/84\nPLEASE CHECK BOX IF A NAME GR\nCUSTOMER NO\n57029-80-3\nADDRESS CHANGE HAS BEEN NDICATED\nOR A COMVENT WRITTEN ON BACK OF STUB\nINVOICE NO\n4305002590\nLORILLARD MEDIA SERVICES\n666 FIFTH AVENUE\nLIos Angcles Times\nNEW YORK\nNY 10103\n91659978\nP.0. B0X 9125\nTRUE - LORILLARD\nDEPT. 081\nSTAMFORD, CT. O6925\n3605702980343050025900138114244100036057029803430500259001381142441000",
+      "ocr_lines": [
+        {
+          "text": "DISPLAY ADVERTISING",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              315.0,
+              76.0
+            ],
+            [
+              446.0,
+              76.0
+            ],
+            [
+              446.0,
+              89.0
+            ],
+            [
+              315.0,
+              89.0
+            ]
+          ],
+          "box": [
+            [
+              315.0,
+              76.0
+            ],
+            [
+              446.0,
+              76.0
+            ],
+            [
+              446.0,
+              89.0
+            ],
+            [
+              315.0,
+              89.0
+            ]
+          ],
+          "position": {
+            "x": 315,
+            "y": 76,
+            "width": 131,
+            "height": 13,
+            "center_x": 380.5,
+            "center_y": 82.5,
+            "region": "top-center",
+            "tag": "[y:76, x:315]"
+          }
+        },
+        {
+          "text": "INVOICE",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              356.0,
+              88.0
+            ],
+            [
+              406.0,
+              91.0
+            ],
+            [
+              405.0,
+              106.0
+            ],
+            [
+              355.0,
+              104.0
+            ]
+          ],
+          "box": [
+            [
+              356.0,
+              88.0
+            ],
+            [
+              406.0,
+              91.0
+            ],
+            [
+              405.0,
+              106.0
+            ],
+            [
+              355.0,
+              104.0
+            ]
+          ],
+          "position": {
+            "x": 355,
+            "y": 88,
+            "width": 51,
+            "height": 18,
+            "center_x": 380.5,
+            "center_y": 97.0,
+            "region": "top-center",
+            "tag": "[y:88, x:355]"
+          }
+        },
+        {
+          "text": "PAGE",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              542.0,
+              78.0
+            ],
+            [
+              574.0,
+              78.0
+            ],
+            [
+              574.0,
+              92.0
+            ],
+            [
+              542.0,
+              92.0
+            ]
+          ],
+          "box": [
+            [
+              542.0,
+              78.0
+            ],
+            [
+              574.0,
+              78.0
+            ],
+            [
+              574.0,
+              92.0
+            ],
+            [
+              542.0,
+              92.0
+            ]
+          ],
+          "position": {
+            "x": 542,
+            "y": 78,
+            "width": 32,
+            "height": 14,
+            "center_x": 558.0,
+            "center_y": 85.0,
+            "region": "top-right",
+            "tag": "[y:78, x:542]"
+          }
+        },
+        {
+          "text": "1",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              599.0,
+              77.0
+            ],
+            [
+              612.0,
+              77.0
+            ],
+            [
+              612.0,
+              92.0
+            ],
+            [
+              599.0,
+              92.0
+            ]
+          ],
+          "box": [
+            [
+              599.0,
+              77.0
+            ],
+            [
+              612.0,
+              77.0
+            ],
+            [
+              612.0,
+              92.0
+            ],
+            [
+              599.0,
+              92.0
+            ]
+          ],
+          "position": {
+            "x": 599,
+            "y": 77,
+            "width": 13,
+            "height": 15,
+            "center_x": 605.5,
+            "center_y": 84.5,
+            "region": "top-right",
+            "tag": "[y:77, x:599]"
+          }
+        },
+        {
+          "text": "Los Angeles Times",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              71.0,
+              99.0
+            ],
+            [
+              285.0,
+              99.0
+            ],
+            [
+              285.0,
+              127.0
+            ],
+            [
+              71.0,
+              127.0
+            ]
+          ],
+          "box": [
+            [
+              71.0,
+              99.0
+            ],
+            [
+              285.0,
+              99.0
+            ],
+            [
+              285.0,
+              127.0
+            ],
+            [
+              71.0,
+              127.0
+            ]
+          ],
+          "position": {
+            "x": 71,
+            "y": 99,
+            "width": 214,
+            "height": 28,
+            "center_x": 178.0,
+            "center_y": 113.0,
+            "region": "top-left",
+            "tag": "[y:99, x:71]"
+          }
+        },
+        {
+          "text": "LEDGER:",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              533.0,
+              108.0
+            ],
+            [
+              573.0,
+              106.0
+            ],
+            [
+              574.0,
+              118.0
+            ],
+            [
+              534.0,
+              120.0
+            ]
+          ],
+          "box": [
+            [
+              533.0,
+              108.0
+            ],
+            [
+              573.0,
+              106.0
+            ],
+            [
+              574.0,
+              118.0
+            ],
+            [
+              534.0,
+              120.0
+            ]
+          ],
+          "position": {
+            "x": 533,
+            "y": 106,
+            "width": 41,
+            "height": 14,
+            "center_x": 553.5,
+            "center_y": 113.0,
+            "region": "top-right",
+            "tag": "[y:106, x:533]"
+          }
+        },
+        {
+          "text": "10-111-100",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              584.0,
+              106.0
+            ],
+            [
+              668.0,
+              106.0
+            ],
+            [
+              668.0,
+              119.0
+            ],
+            [
+              584.0,
+              119.0
+            ]
+          ],
+          "box": [
+            [
+              584.0,
+              106.0
+            ],
+            [
+              668.0,
+              106.0
+            ],
+            [
+              668.0,
+              119.0
+            ],
+            [
+              584.0,
+              119.0
+            ]
+          ],
+          "position": {
+            "x": 584,
+            "y": 106,
+            "width": 84,
+            "height": 13,
+            "center_x": 626.0,
+            "center_y": 112.5,
+            "region": "top-right",
+            "tag": "[y:106, x:584]"
+          }
+        },
+        {
+          "text": "TIMES MIRROR SQUARE/LOS ANGELES, CA, 9O0U3 (213) 972-5000",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              80.0,
+              131.0
+            ],
+            [
+              416.0,
+              132.0
+            ],
+            [
+              416.0,
+              146.0
+            ],
+            [
+              80.0,
+              145.0
+            ]
+          ],
+          "box": [
+            [
+              80.0,
+              131.0
+            ],
+            [
+              416.0,
+              132.0
+            ],
+            [
+              416.0,
+              146.0
+            ],
+            [
+              80.0,
+              145.0
+            ]
+          ],
+          "position": {
+            "x": 80,
+            "y": 131,
+            "width": 336,
+            "height": 15,
+            "center_x": 248.0,
+            "center_y": 138.5,
+            "region": "top-left",
+            "tag": "[y:131, x:80]"
+          }
+        },
+        {
+          "text": "CUSTOMER NUMBER:",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              475.0,
+              134.0
+            ],
+            [
+              574.0,
+              134.0
+            ],
+            [
+              574.0,
+              147.0
+            ],
+            [
+              475.0,
+              147.0
+            ]
+          ],
+          "box": [
+            [
+              475.0,
+              134.0
+            ],
+            [
+              574.0,
+              134.0
+            ],
+            [
+              574.0,
+              147.0
+            ],
+            [
+              475.0,
+              147.0
+            ]
+          ],
+          "position": {
+            "x": 475,
+            "y": 134,
+            "width": 99,
+            "height": 13,
+            "center_x": 524.5,
+            "center_y": 140.5,
+            "region": "top-right",
+            "tag": "[y:134, x:475]"
+          }
+        },
+        {
+          "text": "57029-80-3",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              585.0,
+              134.0
+            ],
+            [
+              668.0,
+              134.0
+            ],
+            [
+              668.0,
+              147.0
+            ],
+            [
+              585.0,
+              147.0
+            ]
+          ],
+          "box": [
+            [
+              585.0,
+              134.0
+            ],
+            [
+              668.0,
+              134.0
+            ],
+            [
+              668.0,
+              147.0
+            ],
+            [
+              585.0,
+              147.0
+            ]
+          ],
+          "position": {
+            "x": 585,
+            "y": 134,
+            "width": 83,
+            "height": 13,
+            "center_x": 626.5,
+            "center_y": 140.5,
+            "region": "top-right",
+            "tag": "[y:134, x:585]"
+          }
+        },
+        {
+          "text": "INVOICE NO:",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              512.0,
+              162.0
+            ],
+            [
+              574.0,
+              160.0
+            ],
+            [
+              575.0,
+              174.0
+            ],
+            [
+              513.0,
+              177.0
+            ]
+          ],
+          "box": [
+            [
+              512.0,
+              162.0
+            ],
+            [
+              574.0,
+              160.0
+            ],
+            [
+              575.0,
+              174.0
+            ],
+            [
+              513.0,
+              177.0
+            ]
+          ],
+          "position": {
+            "x": 512,
+            "y": 160,
+            "width": 63,
+            "height": 17,
+            "center_x": 543.5,
+            "center_y": 168.5,
+            "region": "top-right",
+            "tag": "[y:160, x:512]"
+          }
+        },
+        {
+          "text": "4305002590 4",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              585.0,
+              161.0
+            ],
+            [
+              684.0,
+              161.0
+            ],
+            [
+              684.0,
+              174.0
+            ],
+            [
+              585.0,
+              174.0
+            ]
+          ],
+          "box": [
+            [
+              585.0,
+              161.0
+            ],
+            [
+              684.0,
+              161.0
+            ],
+            [
+              684.0,
+              174.0
+            ],
+            [
+              585.0,
+              174.0
+            ]
+          ],
+          "position": {
+            "x": 585,
+            "y": 161,
+            "width": 99,
+            "height": 13,
+            "center_x": 634.5,
+            "center_y": 167.5,
+            "region": "top-right",
+            "tag": "[y:161, x:585]"
+          }
+        },
+        {
+          "text": "SOLD TO",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              73.0,
+              174.0
+            ],
+            [
+              119.0,
+              174.0
+            ],
+            [
+              119.0,
+              189.0
+            ],
+            [
+              73.0,
+              189.0
+            ]
+          ],
+          "box": [
+            [
+              73.0,
+              174.0
+            ],
+            [
+              119.0,
+              174.0
+            ],
+            [
+              119.0,
+              189.0
+            ],
+            [
+              73.0,
+              189.0
+            ]
+          ],
+          "position": {
+            "x": 73,
+            "y": 174,
+            "width": 46,
+            "height": 15,
+            "center_x": 96.0,
+            "center_y": 181.5,
+            "region": "top-left",
+            "tag": "[y:174, x:73]"
+          }
+        },
+        {
+          "text": "LORILLARD MEDIA SERVICES",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              171.0,
+              175.0
+            ],
+            [
+              367.0,
+              175.0
+            ],
+            [
+              367.0,
+              189.0
+            ],
+            [
+              171.0,
+              189.0
+            ]
+          ],
+          "box": [
+            [
+              171.0,
+              175.0
+            ],
+            [
+              367.0,
+              175.0
+            ],
+            [
+              367.0,
+              189.0
+            ],
+            [
+              171.0,
+              189.0
+            ]
+          ],
+          "position": {
+            "x": 171,
+            "y": 175,
+            "width": 196,
+            "height": 14,
+            "center_x": 269.0,
+            "center_y": 182.0,
+            "region": "top-center",
+            "tag": "[y:175, x:171]"
+          }
+        },
+        {
+          "text": "DATE:",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              544.0,
+              190.0
+            ],
+            [
+              575.0,
+              190.0
+            ],
+            [
+              575.0,
+              204.0
+            ],
+            [
+              544.0,
+              204.0
+            ]
+          ],
+          "box": [
+            [
+              544.0,
+              190.0
+            ],
+            [
+              575.0,
+              190.0
+            ],
+            [
+              575.0,
+              204.0
+            ],
+            [
+              544.0,
+              204.0
+            ]
+          ],
+          "position": {
+            "x": 544,
+            "y": 190,
+            "width": 31,
+            "height": 14,
+            "center_x": 559.5,
+            "center_y": 197.0,
+            "region": "top-right",
+            "tag": "[y:190, x:544]"
+          }
+        },
+        {
+          "text": "10/31/84",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              584.0,
+              189.0
+            ],
+            [
+              652.0,
+              189.0
+            ],
+            [
+              652.0,
+              203.0
+            ],
+            [
+              584.0,
+              203.0
+            ]
+          ],
+          "box": [
+            [
+              584.0,
+              189.0
+            ],
+            [
+              652.0,
+              189.0
+            ],
+            [
+              652.0,
+              203.0
+            ],
+            [
+              584.0,
+              203.0
+            ]
+          ],
+          "position": {
+            "x": 584,
+            "y": 189,
+            "width": 68,
+            "height": 14,
+            "center_x": 618.0,
+            "center_y": 196.0,
+            "region": "top-right",
+            "tag": "[y:189, x:584]"
+          }
+        },
+        {
+          "text": "666 FIFTH AVENUE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              171.0,
+              204.0
+            ],
+            [
+              302.0,
+              204.0
+            ],
+            [
+              302.0,
+              217.0
+            ],
+            [
+              171.0,
+              217.0
+            ]
+          ],
+          "box": [
+            [
+              171.0,
+              204.0
+            ],
+            [
+              302.0,
+              204.0
+            ],
+            [
+              302.0,
+              217.0
+            ],
+            [
+              171.0,
+              217.0
+            ]
+          ],
+          "position": {
+            "x": 171,
+            "y": 204,
+            "width": 131,
+            "height": 13,
+            "center_x": 236.5,
+            "center_y": 210.5,
+            "region": "top-left",
+            "tag": "[y:204, x:171]"
+          }
+        },
+        {
+          "text": "NEW YORK",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              170.0,
+              217.0
+            ],
+            [
+              239.0,
+              217.0
+            ],
+            [
+              239.0,
+              231.0
+            ],
+            [
+              170.0,
+              231.0
+            ]
+          ],
+          "box": [
+            [
+              170.0,
+              217.0
+            ],
+            [
+              239.0,
+              217.0
+            ],
+            [
+              239.0,
+              231.0
+            ],
+            [
+              170.0,
+              231.0
+            ]
+          ],
+          "position": {
+            "x": 170,
+            "y": 217,
+            "width": 69,
+            "height": 14,
+            "center_x": 204.5,
+            "center_y": 224.0,
+            "region": "top-left",
+            "tag": "[y:217, x:170]"
+          }
+        },
+        {
+          "text": "NY 10163",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              357.0,
+              217.0
+            ],
+            [
+              425.0,
+              217.0
+            ],
+            [
+              425.0,
+              231.0
+            ],
+            [
+              357.0,
+              231.0
+            ]
+          ],
+          "box": [
+            [
+              357.0,
+              217.0
+            ],
+            [
+              425.0,
+              217.0
+            ],
+            [
+              425.0,
+              231.0
+            ],
+            [
+              357.0,
+              231.0
+            ]
+          ],
+          "position": {
+            "x": 357,
+            "y": 217,
+            "width": 68,
+            "height": 14,
+            "center_x": 391.0,
+            "center_y": 224.0,
+            "region": "top-center",
+            "tag": "[y:217, x:357]"
+          }
+        },
+        {
+          "text": "ADV. CODE:",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              515.0,
+              216.0
+            ],
+            [
+              575.0,
+              218.0
+            ],
+            [
+              574.0,
+              232.0
+            ],
+            [
+              514.0,
+              230.0
+            ]
+          ],
+          "box": [
+            [
+              515.0,
+              216.0
+            ],
+            [
+              575.0,
+              218.0
+            ],
+            [
+              574.0,
+              232.0
+            ],
+            [
+              514.0,
+              230.0
+            ]
+          ],
+          "position": {
+            "x": 514,
+            "y": 216,
+            "width": 61,
+            "height": 16,
+            "center_x": 544.5,
+            "center_y": 224.0,
+            "region": "top-right",
+            "tag": "[y:216, x:514]"
+          }
+        },
+        {
+          "text": "KEY ACCOUNT",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              88.0,
+              245.0
+            ],
+            [
+              158.0,
+              245.0
+            ],
+            [
+              158.0,
+              256.0
+            ],
+            [
+              88.0,
+              256.0
+            ]
+          ],
+          "box": [
+            [
+              88.0,
+              245.0
+            ],
+            [
+              158.0,
+              245.0
+            ],
+            [
+              158.0,
+              256.0
+            ],
+            [
+              88.0,
+              256.0
+            ]
+          ],
+          "position": {
+            "x": 88,
+            "y": 245,
+            "width": 70,
+            "height": 11,
+            "center_x": 123.0,
+            "center_y": 250.5,
+            "region": "top-left",
+            "tag": "[y:245, x:88]"
+          }
+        },
+        {
+          "text": "TRUE",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              170.0,
+              244.0
+            ],
+            [
+              207.0,
+              244.0
+            ],
+            [
+              207.0,
+              258.0
+            ],
+            [
+              170.0,
+              258.0
+            ]
+          ],
+          "box": [
+            [
+              170.0,
+              244.0
+            ],
+            [
+              207.0,
+              244.0
+            ],
+            [
+              207.0,
+              258.0
+            ],
+            [
+              170.0,
+              258.0
+            ]
+          ],
+          "position": {
+            "x": 170,
+            "y": 244,
+            "width": 37,
+            "height": 14,
+            "center_x": 188.5,
+            "center_y": 251.0,
+            "region": "top-left",
+            "tag": "[y:244, x:170]"
+          }
+        },
+        {
+          "text": "- LORILLARD",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              209.0,
+              244.0
+            ],
+            [
+              302.0,
+              244.0
+            ],
+            [
+              302.0,
+              258.0
+            ],
+            [
+              209.0,
+              258.0
+            ]
+          ],
+          "box": [
+            [
+              209.0,
+              244.0
+            ],
+            [
+              302.0,
+              244.0
+            ],
+            [
+              302.0,
+              258.0
+            ],
+            [
+              209.0,
+              258.0
+            ]
+          ],
+          "position": {
+            "x": 209,
+            "y": 244,
+            "width": 93,
+            "height": 14,
+            "center_x": 255.5,
+            "center_y": 251.0,
+            "region": "top-center",
+            "tag": "[y:244, x:209]"
+          }
+        },
+        {
+          "text": "TELE NO:",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              527.0,
+              244.0
+            ],
+            [
+              574.0,
+              244.0
+            ],
+            [
+              574.0,
+              258.0
+            ],
+            [
+              527.0,
+              258.0
+            ]
+          ],
+          "box": [
+            [
+              527.0,
+              244.0
+            ],
+            [
+              574.0,
+              244.0
+            ],
+            [
+              574.0,
+              258.0
+            ],
+            [
+              527.0,
+              258.0
+            ]
+          ],
+          "position": {
+            "x": 527,
+            "y": 244,
+            "width": 47,
+            "height": 14,
+            "center_x": 550.5,
+            "center_y": 251.0,
+            "region": "top-right",
+            "tag": "[y:244, x:527]"
+          }
+        },
+        {
+          "text": "212-841-1000",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              585.0,
+              244.0
+            ],
+            [
+              683.0,
+              244.0
+            ],
+            [
+              683.0,
+              258.0
+            ],
+            [
+              585.0,
+              258.0
+            ]
+          ],
+          "box": [
+            [
+              585.0,
+              244.0
+            ],
+            [
+              683.0,
+              244.0
+            ],
+            [
+              683.0,
+              258.0
+            ],
+            [
+              585.0,
+              258.0
+            ]
+          ],
+          "position": {
+            "x": 585,
+            "y": 244,
+            "width": 98,
+            "height": 14,
+            "center_x": 634.0,
+            "center_y": 251.0,
+            "region": "top-right",
+            "tag": "[y:244, x:585]"
+          }
+        },
+        {
+          "text": "DATE",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              36.0,
+              260.0
+            ],
+            [
+              62.0,
+              260.0
+            ],
+            [
+              62.0,
+              272.0
+            ],
+            [
+              36.0,
+              272.0
+            ]
+          ],
+          "box": [
+            [
+              36.0,
+              260.0
+            ],
+            [
+              62.0,
+              260.0
+            ],
+            [
+              62.0,
+              272.0
+            ],
+            [
+              36.0,
+              272.0
+            ]
+          ],
+          "position": {
+            "x": 36,
+            "y": 260,
+            "width": 26,
+            "height": 12,
+            "center_x": 49.0,
+            "center_y": 266.0,
+            "region": "middle-left",
+            "tag": "[y:260, x:36]"
+          }
+        },
+        {
+          "text": "AD",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              85.0,
+              263.0
+            ],
+            [
+              102.0,
+              263.0
+            ],
+            [
+              102.0,
+              274.0
+            ],
+            [
+              85.0,
+              274.0
+            ]
+          ],
+          "box": [
+            [
+              85.0,
+              263.0
+            ],
+            [
+              102.0,
+              263.0
+            ],
+            [
+              102.0,
+              274.0
+            ],
+            [
+              85.0,
+              274.0
+            ]
+          ],
+          "position": {
+            "x": 85,
+            "y": 263,
+            "width": 17,
+            "height": 11,
+            "center_x": 93.5,
+            "center_y": 268.5,
+            "region": "middle-left",
+            "tag": "[y:263, x:85]"
+          }
+        },
+        {
+          "text": "DESCRIPTION",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              159.0,
+              267.0
+            ],
+            [
+              216.0,
+              267.0
+            ],
+            [
+              216.0,
+              278.0
+            ],
+            [
+              159.0,
+              278.0
+            ]
+          ],
+          "box": [
+            [
+              159.0,
+              267.0
+            ],
+            [
+              216.0,
+              267.0
+            ],
+            [
+              216.0,
+              278.0
+            ],
+            [
+              159.0,
+              278.0
+            ]
+          ],
+          "position": {
+            "x": 159,
+            "y": 267,
+            "width": 57,
+            "height": 11,
+            "center_x": 187.5,
+            "center_y": 272.5,
+            "region": "middle-left",
+            "tag": "[y:267, x:159]"
+          }
+        },
+        {
+          "text": "PARTPAGE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              252.0,
+              267.0
+            ],
+            [
+              301.0,
+              267.0
+            ],
+            [
+              301.0,
+              278.0
+            ],
+            [
+              252.0,
+              278.0
+            ]
+          ],
+          "box": [
+            [
+              252.0,
+              267.0
+            ],
+            [
+              301.0,
+              267.0
+            ],
+            [
+              301.0,
+              278.0
+            ],
+            [
+              252.0,
+              278.0
+            ]
+          ],
+          "position": {
+            "x": 252,
+            "y": 267,
+            "width": 49,
+            "height": 11,
+            "center_x": 276.5,
+            "center_y": 272.5,
+            "region": "middle",
+            "tag": "[y:267, x:252]"
+          }
+        },
+        {
+          "text": "SIZE",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              331.0,
+              266.0
+            ],
+            [
+              353.0,
+              266.0
+            ],
+            [
+              353.0,
+              278.0
+            ],
+            [
+              331.0,
+              278.0
+            ]
+          ],
+          "box": [
+            [
+              331.0,
+              266.0
+            ],
+            [
+              353.0,
+              266.0
+            ],
+            [
+              353.0,
+              278.0
+            ],
+            [
+              331.0,
+              278.0
+            ]
+          ],
+          "position": {
+            "x": 331,
+            "y": 266,
+            "width": 22,
+            "height": 12,
+            "center_x": 342.0,
+            "center_y": 272.0,
+            "region": "middle",
+            "tag": "[y:266, x:331]"
+          }
+        },
+        {
+          "text": "INCHES",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              396.0,
+              267.0
+            ],
+            [
+              428.0,
+              267.0
+            ],
+            [
+              428.0,
+              278.0
+            ],
+            [
+              396.0,
+              278.0
+            ]
+          ],
+          "box": [
+            [
+              396.0,
+              267.0
+            ],
+            [
+              428.0,
+              267.0
+            ],
+            [
+              428.0,
+              278.0
+            ],
+            [
+              396.0,
+              278.0
+            ]
+          ],
+          "position": {
+            "x": 396,
+            "y": 267,
+            "width": 32,
+            "height": 11,
+            "center_x": 412.0,
+            "center_y": 272.5,
+            "region": "middle",
+            "tag": "[y:267, x:396]"
+          }
+        },
+        {
+          "text": "RATE",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              453.0,
+              267.0
+            ],
+            [
+              477.0,
+              267.0
+            ],
+            [
+              477.0,
+              278.0
+            ],
+            [
+              453.0,
+              278.0
+            ]
+          ],
+          "box": [
+            [
+              453.0,
+              267.0
+            ],
+            [
+              477.0,
+              267.0
+            ],
+            [
+              477.0,
+              278.0
+            ],
+            [
+              453.0,
+              278.0
+            ]
+          ],
+          "position": {
+            "x": 453,
+            "y": 267,
+            "width": 24,
+            "height": 11,
+            "center_x": 465.0,
+            "center_y": 272.5,
+            "region": "middle",
+            "tag": "[y:267, x:453]"
+          }
+        },
+        {
+          "text": "GROSS AMOUNT",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              511.0,
+              267.0
+            ],
+            [
+              579.0,
+              267.0
+            ],
+            [
+              579.0,
+              277.0
+            ],
+            [
+              511.0,
+              277.0
+            ]
+          ],
+          "box": [
+            [
+              511.0,
+              267.0
+            ],
+            [
+              579.0,
+              267.0
+            ],
+            [
+              579.0,
+              277.0
+            ],
+            [
+              511.0,
+              277.0
+            ]
+          ],
+          "position": {
+            "x": 511,
+            "y": 267,
+            "width": 68,
+            "height": 10,
+            "center_x": 545.0,
+            "center_y": 272.0,
+            "region": "middle-right",
+            "tag": "[y:267, x:511]"
+          }
+        },
+        {
+          "text": "NET AMOUNT",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              637.0,
+              268.0
+            ],
+            [
+              694.0,
+              268.0
+            ],
+            [
+              694.0,
+              279.0
+            ],
+            [
+              637.0,
+              279.0
+            ]
+          ],
+          "box": [
+            [
+              637.0,
+              268.0
+            ],
+            [
+              694.0,
+              268.0
+            ],
+            [
+              694.0,
+              279.0
+            ],
+            [
+              637.0,
+              279.0
+            ]
+          ],
+          "position": {
+            "x": 637,
+            "y": 268,
+            "width": 57,
+            "height": 11,
+            "center_x": 665.5,
+            "center_y": 273.5,
+            "region": "middle-right",
+            "tag": "[y:268, x:637]"
+          }
+        },
+        {
+          "text": "MO D4Y",
+          "confidence": 0.68,
+          "bounding_box": [
+            [
+              32.0,
+              274.0
+            ],
+            [
+              64.0,
+              272.0
+            ],
+            [
+              65.0,
+              284.0
+            ],
+            [
+              33.0,
+              287.0
+            ]
+          ],
+          "box": [
+            [
+              32.0,
+              274.0
+            ],
+            [
+              64.0,
+              272.0
+            ],
+            [
+              65.0,
+              284.0
+            ],
+            [
+              33.0,
+              287.0
+            ]
+          ],
+          "position": {
+            "x": 32,
+            "y": 272,
+            "width": 33,
+            "height": 15,
+            "center_x": 48.5,
+            "center_y": 279.5,
+            "region": "middle-left",
+            "tag": "[y:272, x:32]"
+          }
+        },
+        {
+          "text": "SERIAL NO.",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              69.0,
+              271.0
+            ],
+            [
+              118.0,
+              271.0
+            ],
+            [
+              118.0,
+              282.0
+            ],
+            [
+              69.0,
+              282.0
+            ]
+          ],
+          "box": [
+            [
+              69.0,
+              271.0
+            ],
+            [
+              118.0,
+              271.0
+            ],
+            [
+              118.0,
+              282.0
+            ],
+            [
+              69.0,
+              282.0
+            ]
+          ],
+          "position": {
+            "x": 69,
+            "y": 271,
+            "width": 49,
+            "height": 11,
+            "center_x": 93.5,
+            "center_y": 276.5,
+            "region": "middle-left",
+            "tag": "[y:271, x:69]"
+          }
+        },
+        {
+          "text": "27,116.05",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              624.0,
+              285.0
+            ],
+            [
+              700.0,
+              284.0
+            ],
+            [
+              700.0,
+              299.0
+            ],
+            [
+              625.0,
+              300.0
+            ]
+          ],
+          "box": [
+            [
+              624.0,
+              285.0
+            ],
+            [
+              700.0,
+              284.0
+            ],
+            [
+              700.0,
+              299.0
+            ],
+            [
+              625.0,
+              300.0
+            ]
+          ],
+          "position": {
+            "x": 624,
+            "y": 284,
+            "width": 76,
+            "height": 16,
+            "center_x": 662.0,
+            "center_y": 292.0,
+            "region": "middle-right",
+            "tag": "[y:284, x:624]"
+          }
+        },
+        {
+          "text": "0930",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              30.0,
+              285.0
+            ],
+            [
+              67.0,
+              285.0
+            ],
+            [
+              67.0,
+              300.0
+            ],
+            [
+              30.0,
+              300.0
+            ]
+          ],
+          "box": [
+            [
+              30.0,
+              285.0
+            ],
+            [
+              67.0,
+              285.0
+            ],
+            [
+              67.0,
+              300.0
+            ],
+            [
+              30.0,
+              300.0
+            ]
+          ],
+          "position": {
+            "x": 30,
+            "y": 285,
+            "width": 37,
+            "height": 15,
+            "center_x": 48.5,
+            "center_y": 292.5,
+            "region": "middle-left",
+            "tag": "[y:285, x:30]"
+          }
+        },
+        {
+          "text": "1007",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              30.0,
+              299.0
+            ],
+            [
+              68.0,
+              299.0
+            ],
+            [
+              68.0,
+              315.0
+            ],
+            [
+              30.0,
+              315.0
+            ]
+          ],
+          "box": [
+            [
+              30.0,
+              299.0
+            ],
+            [
+              68.0,
+              299.0
+            ],
+            [
+              68.0,
+              315.0
+            ],
+            [
+              30.0,
+              315.0
+            ]
+          ],
+          "position": {
+            "x": 30,
+            "y": 299,
+            "width": 38,
+            "height": 16,
+            "center_x": 49.0,
+            "center_y": 307.0,
+            "region": "middle-left",
+            "tag": "[y:299, x:30]"
+          }
+        },
+        {
+          "text": "BALANCEFORWARD",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              120.0,
+              286.0
+            ],
+            [
+              245.0,
+              285.0
+            ],
+            [
+              245.0,
+              299.0
+            ],
+            [
+              120.0,
+              300.0
+            ]
+          ],
+          "box": [
+            [
+              120.0,
+              286.0
+            ],
+            [
+              245.0,
+              285.0
+            ],
+            [
+              245.0,
+              299.0
+            ],
+            [
+              120.0,
+              300.0
+            ]
+          ],
+          "position": {
+            "x": 120,
+            "y": 285,
+            "width": 125,
+            "height": 15,
+            "center_x": 182.5,
+            "center_y": 292.5,
+            "region": "middle-left",
+            "tag": "[y:285, x:120]"
+          }
+        },
+        {
+          "text": "HOM14",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              250.0,
+              299.0
+            ],
+            [
+              296.0,
+              299.0
+            ],
+            [
+              296.0,
+              314.0
+            ],
+            [
+              250.0,
+              314.0
+            ]
+          ],
+          "box": [
+            [
+              250.0,
+              299.0
+            ],
+            [
+              296.0,
+              299.0
+            ],
+            [
+              296.0,
+              314.0
+            ],
+            [
+              250.0,
+              314.0
+            ]
+          ],
+          "position": {
+            "x": 250,
+            "y": 299,
+            "width": 46,
+            "height": 15,
+            "center_x": 273.0,
+            "center_y": 306.5,
+            "region": "middle",
+            "tag": "[y:299, x:250]"
+          }
+        },
+        {
+          "text": "U2",
+          "confidence": 0.86,
+          "bounding_box": [
+            [
+              299.0,
+              298.0
+            ],
+            [
+              319.0,
+              298.0
+            ],
+            [
+              319.0,
+              315.0
+            ],
+            [
+              299.0,
+              315.0
+            ]
+          ],
+          "box": [
+            [
+              299.0,
+              298.0
+            ],
+            [
+              319.0,
+              298.0
+            ],
+            [
+              319.0,
+              315.0
+            ],
+            [
+              299.0,
+              315.0
+            ]
+          ],
+          "position": {
+            "x": 299,
+            "y": 298,
+            "width": 20,
+            "height": 17,
+            "center_x": 309.0,
+            "center_y": 306.5,
+            "region": "middle",
+            "tag": "[y:298, x:299]"
+          }
+        },
+        {
+          "text": "60.00",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              398.0,
+              299.0
+            ],
+            [
+              442.0,
+              299.0
+            ],
+            [
+              442.0,
+              315.0
+            ],
+            [
+              398.0,
+              315.0
+            ]
+          ],
+          "box": [
+            [
+              398.0,
+              299.0
+            ],
+            [
+              442.0,
+              299.0
+            ],
+            [
+              442.0,
+              315.0
+            ],
+            [
+              398.0,
+              315.0
+            ]
+          ],
+          "position": {
+            "x": 398,
+            "y": 299,
+            "width": 44,
+            "height": 16,
+            "center_x": 420.0,
+            "center_y": 307.0,
+            "region": "middle",
+            "tag": "[y:299, x:398]"
+          }
+        },
+        {
+          "text": "15.475.00",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              511.0,
+              298.0
+            ],
+            [
+              585.0,
+              298.0
+            ],
+            [
+              585.0,
+              312.0
+            ],
+            [
+              511.0,
+              312.0
+            ]
+          ],
+          "box": [
+            [
+              511.0,
+              298.0
+            ],
+            [
+              585.0,
+              298.0
+            ],
+            [
+              585.0,
+              312.0
+            ],
+            [
+              511.0,
+              312.0
+            ]
+          ],
+          "position": {
+            "x": 511,
+            "y": 298,
+            "width": 74,
+            "height": 14,
+            "center_x": 548.0,
+            "center_y": 305.0,
+            "region": "middle-right",
+            "tag": "[y:298, x:511]"
+          }
+        },
+        {
+          "text": "13,153.75",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              624.0,
+              299.0
+            ],
+            [
+              700.0,
+              299.0
+            ],
+            [
+              700.0,
+              314.0
+            ],
+            [
+              624.0,
+              314.0
+            ]
+          ],
+          "box": [
+            [
+              624.0,
+              299.0
+            ],
+            [
+              700.0,
+              299.0
+            ],
+            [
+              700.0,
+              314.0
+            ],
+            [
+              624.0,
+              314.0
+            ]
+          ],
+          "position": {
+            "x": 624,
+            "y": 299,
+            "width": 76,
+            "height": 15,
+            "center_x": 662.0,
+            "center_y": 306.5,
+            "region": "middle-right",
+            "tag": "[y:299, x:624]"
+          }
+        },
+        {
+          "text": "1007",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              30.0,
+              312.0
+            ],
+            [
+              68.0,
+              312.0
+            ],
+            [
+              68.0,
+              328.0
+            ],
+            [
+              30.0,
+              328.0
+            ]
+          ],
+          "box": [
+            [
+              30.0,
+              312.0
+            ],
+            [
+              68.0,
+              312.0
+            ],
+            [
+              68.0,
+              328.0
+            ],
+            [
+              30.0,
+              328.0
+            ]
+          ],
+          "position": {
+            "x": 30,
+            "y": 312,
+            "width": 38,
+            "height": 16,
+            "center_x": 49.0,
+            "center_y": 320.0,
+            "region": "middle-left",
+            "tag": "[y:312, x:30]"
+          }
+        },
+        {
+          "text": "918132TRUE 10OS TASTE",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              72.0,
+              300.0
+            ],
+            [
+              246.0,
+              300.0
+            ],
+            [
+              246.0,
+              314.0
+            ],
+            [
+              72.0,
+              314.0
+            ]
+          ],
+          "box": [
+            [
+              72.0,
+              300.0
+            ],
+            [
+              246.0,
+              300.0
+            ],
+            [
+              246.0,
+              314.0
+            ],
+            [
+              72.0,
+              314.0
+            ]
+          ],
+          "position": {
+            "x": 72,
+            "y": 300,
+            "width": 174,
+            "height": 14,
+            "center_x": 159.0,
+            "center_y": 307.0,
+            "region": "middle-left",
+            "tag": "[y:300, x:72]"
+          }
+        },
+        {
+          "text": "918132COLOR CHARGE",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              72.0,
+              314.0
+            ],
+            [
+              221.0,
+              314.0
+            ],
+            [
+              221.0,
+              328.0
+            ],
+            [
+              72.0,
+              328.0
+            ]
+          ],
+          "box": [
+            [
+              72.0,
+              314.0
+            ],
+            [
+              221.0,
+              314.0
+            ],
+            [
+              221.0,
+              328.0
+            ],
+            [
+              72.0,
+              328.0
+            ]
+          ],
+          "position": {
+            "x": 72,
+            "y": 314,
+            "width": 149,
+            "height": 14,
+            "center_x": 146.5,
+            "center_y": 321.0,
+            "region": "middle-left",
+            "tag": "[y:314, x:72]"
+          }
+        },
+        {
+          "text": "HOM14",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              250.0,
+              312.0
+            ],
+            [
+              295.0,
+              312.0
+            ],
+            [
+              295.0,
+              328.0
+            ],
+            [
+              250.0,
+              328.0
+            ]
+          ],
+          "box": [
+            [
+              250.0,
+              312.0
+            ],
+            [
+              295.0,
+              312.0
+            ],
+            [
+              295.0,
+              328.0
+            ],
+            [
+              250.0,
+              328.0
+            ]
+          ],
+          "position": {
+            "x": 250,
+            "y": 312,
+            "width": 45,
+            "height": 16,
+            "center_x": 272.5,
+            "center_y": 320.0,
+            "region": "middle",
+            "tag": "[y:312, x:250]"
+          }
+        },
+        {
+          "text": "4,820.00",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              519.0,
+              314.0
+            ],
+            [
+              586.0,
+              314.0
+            ],
+            [
+              586.0,
+              328.0
+            ],
+            [
+              519.0,
+              328.0
+            ]
+          ],
+          "box": [
+            [
+              519.0,
+              314.0
+            ],
+            [
+              586.0,
+              314.0
+            ],
+            [
+              586.0,
+              328.0
+            ],
+            [
+              519.0,
+              328.0
+            ]
+          ],
+          "position": {
+            "x": 519,
+            "y": 314,
+            "width": 67,
+            "height": 14,
+            "center_x": 552.5,
+            "center_y": 321.0,
+            "region": "middle-right",
+            "tag": "[y:314, x:519]"
+          }
+        },
+        {
+          "text": "4,097.00",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              631.0,
+              312.0
+            ],
+            [
+              699.0,
+              312.0
+            ],
+            [
+              699.0,
+              327.0
+            ],
+            [
+              631.0,
+              327.0
+            ]
+          ],
+          "box": [
+            [
+              631.0,
+              312.0
+            ],
+            [
+              699.0,
+              312.0
+            ],
+            [
+              699.0,
+              327.0
+            ],
+            [
+              631.0,
+              327.0
+            ]
+          ],
+          "position": {
+            "x": 631,
+            "y": 312,
+            "width": 68,
+            "height": 15,
+            "center_x": 665.0,
+            "center_y": 319.5,
+            "region": "middle-right",
+            "tag": "[y:312, x:631]"
+          }
+        },
+        {
+          "text": "1023",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              28.0,
+              326.0
+            ],
+            [
+              68.0,
+              326.0
+            ],
+            [
+              68.0,
+              344.0
+            ],
+            [
+              28.0,
+              344.0
+            ]
+          ],
+          "box": [
+            [
+              28.0,
+              326.0
+            ],
+            [
+              68.0,
+              326.0
+            ],
+            [
+              68.0,
+              344.0
+            ],
+            [
+              28.0,
+              344.0
+            ]
+          ],
+          "position": {
+            "x": 28,
+            "y": 326,
+            "width": 40,
+            "height": 18,
+            "center_x": 48.0,
+            "center_y": 335.0,
+            "region": "middle-left",
+            "tag": "[y:326, x:28]"
+          }
+        },
+        {
+          "text": "CASH",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              120.0,
+              327.0
+            ],
+            [
+              157.0,
+              327.0
+            ],
+            [
+              157.0,
+              342.0
+            ],
+            [
+              120.0,
+              342.0
+            ]
+          ],
+          "box": [
+            [
+              120.0,
+              327.0
+            ],
+            [
+              157.0,
+              327.0
+            ],
+            [
+              157.0,
+              342.0
+            ],
+            [
+              120.0,
+              342.0
+            ]
+          ],
+          "position": {
+            "x": 120,
+            "y": 327,
+            "width": 37,
+            "height": 15,
+            "center_x": 138.5,
+            "center_y": 334.5,
+            "region": "middle-left",
+            "tag": "[y:327, x:120]"
+          }
+        },
+        {
+          "text": "30,555.38R",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              624.0,
+              326.0
+            ],
+            [
+              717.0,
+              326.0
+            ],
+            [
+              717.0,
+              343.0
+            ],
+            [
+              624.0,
+              343.0
+            ]
+          ],
+          "box": [
+            [
+              624.0,
+              326.0
+            ],
+            [
+              717.0,
+              326.0
+            ],
+            [
+              717.0,
+              343.0
+            ],
+            [
+              624.0,
+              343.0
+            ]
+          ],
+          "position": {
+            "x": 624,
+            "y": 326,
+            "width": 93,
+            "height": 17,
+            "center_x": 670.5,
+            "center_y": 334.5,
+            "region": "middle-right",
+            "tag": "[y:326, x:624]"
+          }
+        },
+        {
+          "text": "1s",
+          "confidence": 0.69,
+          "bounding_box": [
+            [
+              177.0,
+              334.0
+            ],
+            [
+              196.0,
+              334.0
+            ],
+            [
+              196.0,
+              352.0
+            ],
+            [
+              177.0,
+              352.0
+            ]
+          ],
+          "box": [
+            [
+              177.0,
+              334.0
+            ],
+            [
+              196.0,
+              334.0
+            ],
+            [
+              196.0,
+              352.0
+            ],
+            [
+              177.0,
+              352.0
+            ]
+          ],
+          "position": {
+            "x": 177,
+            "y": 334,
+            "width": 19,
+            "height": 18,
+            "center_x": 186.5,
+            "center_y": 343.0,
+            "region": "middle-left",
+            "tag": "[y:334, x:177]"
+          }
+        },
+        {
+          "text": "1s",
+          "confidence": 0.75,
+          "bounding_box": [
+            [
+              335.0,
+              331.0
+            ],
+            [
+              365.0,
+              331.0
+            ],
+            [
+              365.0,
+              356.0
+            ],
+            [
+              335.0,
+              356.0
+            ]
+          ],
+          "box": [
+            [
+              335.0,
+              331.0
+            ],
+            [
+              365.0,
+              331.0
+            ],
+            [
+              365.0,
+              356.0
+            ],
+            [
+              335.0,
+              356.0
+            ]
+          ],
+          "position": {
+            "x": 335,
+            "y": 331,
+            "width": 30,
+            "height": 25,
+            "center_x": 350.0,
+            "center_y": 343.5,
+            "region": "middle",
+            "tag": "[y:331, x:335]"
+          }
+        },
+        {
+          "text": "TOTAL",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              121.0,
+              355.0
+            ],
+            [
+              160.0,
+              355.0
+            ],
+            [
+              160.0,
+              369.0
+            ],
+            [
+              121.0,
+              369.0
+            ]
+          ],
+          "box": [
+            [
+              121.0,
+              355.0
+            ],
+            [
+              160.0,
+              355.0
+            ],
+            [
+              160.0,
+              369.0
+            ],
+            [
+              121.0,
+              369.0
+            ]
+          ],
+          "position": {
+            "x": 121,
+            "y": 355,
+            "width": 39,
+            "height": 14,
+            "center_x": 140.5,
+            "center_y": 362.0,
+            "region": "middle-left",
+            "tag": "[y:355, x:121]"
+          }
+        },
+        {
+          "text": "4305002590",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              166.0,
+              353.0
+            ],
+            [
+              254.0,
+              354.0
+            ],
+            [
+              254.0,
+              368.0
+            ],
+            [
+              166.0,
+              367.0
+            ]
+          ],
+          "box": [
+            [
+              166.0,
+              353.0
+            ],
+            [
+              254.0,
+              354.0
+            ],
+            [
+              254.0,
+              368.0
+            ],
+            [
+              166.0,
+              367.0
+            ]
+          ],
+          "position": {
+            "x": 166,
+            "y": 353,
+            "width": 88,
+            "height": 15,
+            "center_x": 210.0,
+            "center_y": 360.5,
+            "region": "middle-left",
+            "tag": "[y:353, x:166]"
+          }
+        },
+        {
+          "text": "AGAZIE",
+          "confidence": 0.59,
+          "bounding_box": [
+            [
+              305.0,
+              364.0
+            ],
+            [
+              361.0,
+              358.0
+            ],
+            [
+              363.0,
+              378.0
+            ],
+            [
+              307.0,
+              383.0
+            ]
+          ],
+          "box": [
+            [
+              305.0,
+              364.0
+            ],
+            [
+              361.0,
+              358.0
+            ],
+            [
+              363.0,
+              378.0
+            ],
+            [
+              307.0,
+              383.0
+            ]
+          ],
+          "position": {
+            "x": 305,
+            "y": 358,
+            "width": 58,
+            "height": 25,
+            "center_x": 334.0,
+            "center_y": 370.5,
+            "region": "middle",
+            "tag": "[y:358, x:305]"
+          }
+        },
+        {
+          "text": "2ATH",
+          "confidence": 0.72,
+          "bounding_box": [
+            [
+              376.0,
+              353.0
+            ],
+            [
+              445.0,
+              348.0
+            ],
+            [
+              447.0,
+              373.0
+            ],
+            [
+              378.0,
+              379.0
+            ]
+          ],
+          "box": [
+            [
+              376.0,
+              353.0
+            ],
+            [
+              445.0,
+              348.0
+            ],
+            [
+              447.0,
+              373.0
+            ],
+            [
+              378.0,
+              379.0
+            ]
+          ],
+          "position": {
+            "x": 376,
+            "y": 348,
+            "width": 71,
+            "height": 31,
+            "center_x": 411.5,
+            "center_y": 363.5,
+            "region": "middle",
+            "tag": "[y:348, x:376]"
+          }
+        },
+        {
+          "text": "20,295.00",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              512.0,
+              355.0
+            ],
+            [
+              586.0,
+              355.0
+            ],
+            [
+              586.0,
+              369.0
+            ],
+            [
+              512.0,
+              369.0
+            ]
+          ],
+          "box": [
+            [
+              512.0,
+              355.0
+            ],
+            [
+              586.0,
+              355.0
+            ],
+            [
+              586.0,
+              369.0
+            ],
+            [
+              512.0,
+              369.0
+            ]
+          ],
+          "position": {
+            "x": 512,
+            "y": 355,
+            "width": 74,
+            "height": 14,
+            "center_x": 549.0,
+            "center_y": 362.0,
+            "region": "middle-right",
+            "tag": "[y:355, x:512]"
+          }
+        },
+        {
+          "text": "17,250.75",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              624.0,
+              355.0
+            ],
+            [
+              699.0,
+              355.0
+            ],
+            [
+              699.0,
+              369.0
+            ],
+            [
+              624.0,
+              369.0
+            ]
+          ],
+          "box": [
+            [
+              624.0,
+              355.0
+            ],
+            [
+              699.0,
+              355.0
+            ],
+            [
+              699.0,
+              369.0
+            ],
+            [
+              624.0,
+              369.0
+            ]
+          ],
+          "position": {
+            "x": 624,
+            "y": 355,
+            "width": 75,
+            "height": 14,
+            "center_x": 661.5,
+            "center_y": 362.0,
+            "region": "middle-right",
+            "tag": "[y:355, x:624]"
+          }
+        },
+        {
+          "text": "MAGAZIE",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              88.0,
+              375.0
+            ],
+            [
+              146.0,
+              372.0
+            ],
+            [
+              147.0,
+              389.0
+            ],
+            [
+              89.0,
+              392.0
+            ]
+          ],
+          "box": [
+            [
+              88.0,
+              375.0
+            ],
+            [
+              146.0,
+              372.0
+            ],
+            [
+              147.0,
+              389.0
+            ],
+            [
+              89.0,
+              392.0
+            ]
+          ],
+          "position": {
+            "x": 88,
+            "y": 372,
+            "width": 59,
+            "height": 20,
+            "center_x": 117.5,
+            "center_y": 382.0,
+            "region": "middle-left",
+            "tag": "[y:372, x:88]"
+          }
+        },
+        {
+          "text": "LATH",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              162.0,
+              369.0
+            ],
+            [
+              227.0,
+              369.0
+            ],
+            [
+              227.0,
+              390.0
+            ],
+            [
+              162.0,
+              390.0
+            ]
+          ],
+          "box": [
+            [
+              162.0,
+              369.0
+            ],
+            [
+              227.0,
+              369.0
+            ],
+            [
+              227.0,
+              390.0
+            ],
+            [
+              162.0,
+              390.0
+            ]
+          ],
+          "position": {
+            "x": 162,
+            "y": 369,
+            "width": 65,
+            "height": 21,
+            "center_x": 194.5,
+            "center_y": 379.5,
+            "region": "middle-left",
+            "tag": "[y:369, x:162]"
+          }
+        },
+        {
+          "text": "RU",
+          "confidence": 0.55,
+          "bounding_box": [
+            [
+              389.0,
+              373.0
+            ],
+            [
+              448.0,
+              370.0
+            ],
+            [
+              449.0,
+              395.0
+            ],
+            [
+              391.0,
+              399.0
+            ]
+          ],
+          "box": [
+            [
+              389.0,
+              373.0
+            ],
+            [
+              448.0,
+              370.0
+            ],
+            [
+              449.0,
+              395.0
+            ],
+            [
+              391.0,
+              399.0
+            ]
+          ],
+          "position": {
+            "x": 389,
+            "y": 370,
+            "width": 60,
+            "height": 29,
+            "center_x": 419.0,
+            "center_y": 384.5,
+            "region": "middle",
+            "tag": "[y:370, x:389]"
+          }
+        },
+        {
+          "text": "TRU",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              165.0,
+              387.0
+            ],
+            [
+              219.0,
+              387.0
+            ],
+            [
+              219.0,
+              409.0
+            ],
+            [
+              165.0,
+              409.0
+            ]
+          ],
+          "box": [
+            [
+              165.0,
+              387.0
+            ],
+            [
+              219.0,
+              387.0
+            ],
+            [
+              219.0,
+              409.0
+            ],
+            [
+              165.0,
+              409.0
+            ]
+          ],
+          "position": {
+            "x": 165,
+            "y": 387,
+            "width": 54,
+            "height": 22,
+            "center_x": 192.0,
+            "center_y": 398.0,
+            "region": "middle-left",
+            "tag": "[y:387, x:165]"
+          }
+        },
+        {
+          "text": "CRAND",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              305.0,
+              383.0
+            ],
+            [
+              343.0,
+              379.0
+            ],
+            [
+              345.0,
+              399.0
+            ],
+            [
+              307.0,
+              403.0
+            ]
+          ],
+          "box": [
+            [
+              305.0,
+              383.0
+            ],
+            [
+              343.0,
+              379.0
+            ],
+            [
+              345.0,
+              399.0
+            ],
+            [
+              307.0,
+              403.0
+            ]
+          ],
+          "position": {
+            "x": 305,
+            "y": 379,
+            "width": 40,
+            "height": 24,
+            "center_x": 325.0,
+            "center_y": 391.0,
+            "region": "middle",
+            "tag": "[y:379, x:305]"
+          }
+        },
+        {
+          "text": "DRAMD",
+          "confidence": 0.53,
+          "bounding_box": [
+            [
+              88.0,
+              392.0
+            ],
+            [
+              130.0,
+              392.0
+            ],
+            [
+              130.0,
+              414.0
+            ],
+            [
+              88.0,
+              414.0
+            ]
+          ],
+          "box": [
+            [
+              88.0,
+              392.0
+            ],
+            [
+              130.0,
+              392.0
+            ],
+            [
+              130.0,
+              414.0
+            ],
+            [
+              88.0,
+              414.0
+            ]
+          ],
+          "position": {
+            "x": 88,
+            "y": 392,
+            "width": 42,
+            "height": 22,
+            "center_x": 109.0,
+            "center_y": 403.0,
+            "region": "middle-left",
+            "tag": "[y:392, x:88]"
+          }
+        },
+        {
+          "text": "IASUE",
+          "confidence": 0.62,
+          "bounding_box": [
+            [
+              306.0,
+              403.0
+            ],
+            [
+              340.0,
+              399.0
+            ],
+            [
+              342.0,
+              420.0
+            ],
+            [
+              308.0,
+              423.0
+            ]
+          ],
+          "box": [
+            [
+              306.0,
+              403.0
+            ],
+            [
+              340.0,
+              399.0
+            ],
+            [
+              342.0,
+              420.0
+            ],
+            [
+              308.0,
+              423.0
+            ]
+          ],
+          "position": {
+            "x": 306,
+            "y": 399,
+            "width": 36,
+            "height": 24,
+            "center_x": 324.0,
+            "center_y": 411.0,
+            "region": "middle",
+            "tag": "[y:399, x:306]"
+          }
+        },
+        {
+          "text": "107",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              390.0,
+              396.0
+            ],
+            [
+              442.0,
+              396.0
+            ],
+            [
+              442.0,
+              418.0
+            ],
+            [
+              390.0,
+              418.0
+            ]
+          ],
+          "box": [
+            [
+              390.0,
+              396.0
+            ],
+            [
+              442.0,
+              396.0
+            ],
+            [
+              442.0,
+              418.0
+            ],
+            [
+              390.0,
+              418.0
+            ]
+          ],
+          "position": {
+            "x": 390,
+            "y": 396,
+            "width": 52,
+            "height": 22,
+            "center_x": 416.0,
+            "center_y": 407.0,
+            "region": "middle",
+            "tag": "[y:396, x:390]"
+          }
+        },
+        {
+          "text": "ISSUE",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              88.0,
+              415.0
+            ],
+            [
+              123.0,
+              412.0
+            ],
+            [
+              124.0,
+              431.0
+            ],
+            [
+              89.0,
+              434.0
+            ]
+          ],
+          "box": [
+            [
+              88.0,
+              415.0
+            ],
+            [
+              123.0,
+              412.0
+            ],
+            [
+              124.0,
+              431.0
+            ],
+            [
+              89.0,
+              434.0
+            ]
+          ],
+          "position": {
+            "x": 88,
+            "y": 412,
+            "width": 36,
+            "height": 22,
+            "center_x": 106.0,
+            "center_y": 423.0,
+            "region": "middle-left",
+            "tag": "[y:412, x:88]"
+          }
+        },
+        {
+          "text": "10-7",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              173.0,
+              406.0
+            ],
+            [
+              220.0,
+              406.0
+            ],
+            [
+              220.0,
+              428.0
+            ],
+            [
+              173.0,
+              428.0
+            ]
+          ],
+          "box": [
+            [
+              173.0,
+              406.0
+            ],
+            [
+              220.0,
+              406.0
+            ],
+            [
+              220.0,
+              428.0
+            ],
+            [
+              173.0,
+              428.0
+            ]
+          ],
+          "position": {
+            "x": 173,
+            "y": 406,
+            "width": 47,
+            "height": 22,
+            "center_x": 196.5,
+            "center_y": 417.0,
+            "region": "middle-left",
+            "tag": "[y:406, x:173]"
+          }
+        },
+        {
+          "text": "SSTION",
+          "confidence": 0.71,
+          "bounding_box": [
+            [
+              308.0,
+              423.0
+            ],
+            [
+              364.0,
+              419.0
+            ],
+            [
+              366.0,
+              438.0
+            ],
+            [
+              309.0,
+              442.0
+            ]
+          ],
+          "box": [
+            [
+              308.0,
+              423.0
+            ],
+            [
+              364.0,
+              419.0
+            ],
+            [
+              366.0,
+              438.0
+            ],
+            [
+              309.0,
+              442.0
+            ]
+          ],
+          "position": {
+            "x": 308,
+            "y": 419,
+            "width": 58,
+            "height": 23,
+            "center_x": 337.0,
+            "center_y": 430.5,
+            "region": "middle",
+            "tag": "[y:419, x:308]"
+          }
+        },
+        {
+          "text": "198",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              394.0,
+              416.0
+            ],
+            [
+              430.0,
+              416.0
+            ],
+            [
+              430.0,
+              440.0
+            ],
+            [
+              394.0,
+              440.0
+            ]
+          ],
+          "box": [
+            [
+              394.0,
+              416.0
+            ],
+            [
+              430.0,
+              416.0
+            ],
+            [
+              430.0,
+              440.0
+            ],
+            [
+              394.0,
+              440.0
+            ]
+          ],
+          "position": {
+            "x": 394,
+            "y": 416,
+            "width": 36,
+            "height": 24,
+            "center_x": 412.0,
+            "center_y": 428.0,
+            "region": "middle",
+            "tag": "[y:416, x:394]"
+          }
+        },
+        {
+          "text": "SETON",
+          "confidence": 0.6,
+          "bounding_box": [
+            [
+              90.0,
+              435.0
+            ],
+            [
+              148.0,
+              431.0
+            ],
+            [
+              150.0,
+              449.0
+            ],
+            [
+              91.0,
+              453.0
+            ]
+          ],
+          "box": [
+            [
+              90.0,
+              435.0
+            ],
+            [
+              148.0,
+              431.0
+            ],
+            [
+              150.0,
+              449.0
+            ],
+            [
+              91.0,
+              453.0
+            ]
+          ],
+          "position": {
+            "x": 90,
+            "y": 431,
+            "width": 60,
+            "height": 22,
+            "center_x": 120.0,
+            "center_y": 442.0,
+            "region": "middle-left",
+            "tag": "[y:431, x:90]"
+          }
+        },
+        {
+          "text": "100",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              174.0,
+              431.0
+            ],
+            [
+              219.0,
+              428.0
+            ],
+            [
+              220.0,
+              450.0
+            ],
+            [
+              176.0,
+              453.0
+            ]
+          ],
+          "box": [
+            [
+              174.0,
+              431.0
+            ],
+            [
+              219.0,
+              428.0
+            ],
+            [
+              220.0,
+              450.0
+            ],
+            [
+              176.0,
+              453.0
+            ]
+          ],
+          "position": {
+            "x": 174,
+            "y": 428,
+            "width": 46,
+            "height": 25,
+            "center_x": 197.0,
+            "center_y": 440.5,
+            "region": "middle-left",
+            "tag": "[y:428, x:174]"
+          }
+        },
+        {
+          "text": "ESTIAATE",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              308.0,
+              443.0
+            ],
+            [
+              360.0,
+              439.0
+            ],
+            [
+              362.0,
+              457.0
+            ],
+            [
+              309.0,
+              461.0
+            ]
+          ],
+          "box": [
+            [
+              308.0,
+              443.0
+            ],
+            [
+              360.0,
+              439.0
+            ],
+            [
+              362.0,
+              457.0
+            ],
+            [
+              309.0,
+              461.0
+            ]
+          ],
+          "position": {
+            "x": 308,
+            "y": 439,
+            "width": 54,
+            "height": 22,
+            "center_x": 335.0,
+            "center_y": 450.0,
+            "region": "middle",
+            "tag": "[y:439, x:308]"
+          }
+        },
+        {
+          "text": "10Tue",
+          "confidence": 0.48,
+          "bounding_box": [
+            [
+              379.0,
+              453.0
+            ],
+            [
+              479.0,
+              447.0
+            ],
+            [
+              481.0,
+              471.0
+            ],
+            [
+              380.0,
+              477.0
+            ]
+          ],
+          "box": [
+            [
+              379.0,
+              453.0
+            ],
+            [
+              479.0,
+              447.0
+            ],
+            [
+              481.0,
+              471.0
+            ],
+            [
+              380.0,
+              477.0
+            ]
+          ],
+          "position": {
+            "x": 379,
+            "y": 447,
+            "width": 102,
+            "height": 30,
+            "center_x": 430.0,
+            "center_y": 462.0,
+            "region": "middle",
+            "tag": "[y:447, x:379]"
+          }
+        },
+        {
+          "text": "ESTILATE",
+          "confidence": 0.74,
+          "bounding_box": [
+            [
+              90.0,
+              455.0
+            ],
+            [
+              144.0,
+              451.0
+            ],
+            [
+              145.0,
+              470.0
+            ],
+            [
+              91.0,
+              473.0
+            ]
+          ],
+          "box": [
+            [
+              90.0,
+              455.0
+            ],
+            [
+              144.0,
+              451.0
+            ],
+            [
+              145.0,
+              470.0
+            ],
+            [
+              91.0,
+              473.0
+            ]
+          ],
+          "position": {
+            "x": 90,
+            "y": 451,
+            "width": 55,
+            "height": 22,
+            "center_x": 117.5,
+            "center_y": 462.0,
+            "region": "middle-left",
+            "tag": "[y:451, x:90]"
+          }
+        },
+        {
+          "text": "10-7-true",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              152.0,
+              464.0
+            ],
+            [
+              246.0,
+              458.0
+            ],
+            [
+              248.0,
+              483.0
+            ],
+            [
+              153.0,
+              489.0
+            ]
+          ],
+          "box": [
+            [
+              152.0,
+              464.0
+            ],
+            [
+              246.0,
+              458.0
+            ],
+            [
+              248.0,
+              483.0
+            ],
+            [
+              153.0,
+              489.0
+            ]
+          ],
+          "position": {
+            "x": 152,
+            "y": 458,
+            "width": 96,
+            "height": 31,
+            "center_x": 200.0,
+            "center_y": 473.5,
+            "region": "middle-left",
+            "tag": "[y:458, x:152]"
+          }
+        },
+        {
+          "text": "VNO",
+          "confidence": 0.76,
+          "bounding_box": [
+            [
+              309.0,
+              462.0
+            ],
+            [
+              351.0,
+              458.0
+            ],
+            [
+              353.0,
+              478.0
+            ],
+            [
+              310.0,
+              481.0
+            ]
+          ],
+          "box": [
+            [
+              309.0,
+              462.0
+            ],
+            [
+              351.0,
+              458.0
+            ],
+            [
+              353.0,
+              478.0
+            ],
+            [
+              310.0,
+              481.0
+            ]
+          ],
+          "position": {
+            "x": 309,
+            "y": 458,
+            "width": 44,
+            "height": 23,
+            "center_x": 331.0,
+            "center_y": 469.5,
+            "region": "middle",
+            "tag": "[y:458, x:309]"
+          }
+        },
+        {
+          "text": "1/9/84",
+          "confidence": 0.73,
+          "bounding_box": [
+            [
+              497.0,
+              467.0
+            ],
+            [
+              545.0,
+              454.0
+            ],
+            [
+              555.0,
+              490.0
+            ],
+            [
+              506.0,
+              503.0
+            ]
+          ],
+          "box": [
+            [
+              497.0,
+              467.0
+            ],
+            [
+              545.0,
+              454.0
+            ],
+            [
+              555.0,
+              490.0
+            ],
+            [
+              506.0,
+              503.0
+            ]
+          ],
+          "position": {
+            "x": 497,
+            "y": 454,
+            "width": 58,
+            "height": 49,
+            "center_x": 526.0,
+            "center_y": 478.5,
+            "region": "middle-right",
+            "tag": "[y:454, x:497]"
+          }
+        },
+        {
+          "text": "INO",
+          "confidence": 0.39,
+          "bounding_box": [
+            [
+              90.0,
+              473.0
+            ],
+            [
+              136.0,
+              469.0
+            ],
+            [
+              138.0,
+              489.0
+            ],
+            [
+              91.0,
+              492.0
+            ]
+          ],
+          "box": [
+            [
+              90.0,
+              473.0
+            ],
+            [
+              136.0,
+              469.0
+            ],
+            [
+              138.0,
+              489.0
+            ],
+            [
+              91.0,
+              492.0
+            ]
+          ],
+          "position": {
+            "x": 90,
+            "y": 469,
+            "width": 48,
+            "height": 23,
+            "center_x": 114.0,
+            "center_y": 480.5,
+            "region": "middle-left",
+            "tag": "[y:469, x:90]"
+          }
+        },
+        {
+          "text": "IHV DATE",
+          "confidence": 0.87,
+          "bounding_box": [
+            [
+              310.0,
+              482.0
+            ],
+            [
+              363.0,
+              478.0
+            ],
+            [
+              365.0,
+              496.0
+            ],
+            [
+              311.0,
+              499.0
+            ]
+          ],
+          "box": [
+            [
+              310.0,
+              482.0
+            ],
+            [
+              363.0,
+              478.0
+            ],
+            [
+              365.0,
+              496.0
+            ],
+            [
+              311.0,
+              499.0
+            ]
+          ],
+          "position": {
+            "x": 310,
+            "y": 478,
+            "width": 55,
+            "height": 21,
+            "center_x": 337.5,
+            "center_y": 488.5,
+            "region": "middle",
+            "tag": "[y:478, x:310]"
+          }
+        },
+        {
+          "text": "10-3",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              396.0,
+              474.0
+            ],
+            [
+              453.0,
+              470.0
+            ],
+            [
+              454.0,
+              494.0
+            ],
+            [
+              398.0,
+              497.0
+            ]
+          ],
+          "box": [
+            [
+              396.0,
+              474.0
+            ],
+            [
+              453.0,
+              470.0
+            ],
+            [
+              454.0,
+              494.0
+            ],
+            [
+              398.0,
+              497.0
+            ]
+          ],
+          "position": {
+            "x": 396,
+            "y": 470,
+            "width": 58,
+            "height": 27,
+            "center_x": 425.0,
+            "center_y": 483.5,
+            "region": "middle",
+            "tag": "[y:470, x:396]"
+          }
+        },
+        {
+          "text": "0",
+          "confidence": 0.19,
+          "bounding_box": [
+            [
+              92.0,
+              494.0
+            ],
+            [
+              121.0,
+              494.0
+            ],
+            [
+              121.0,
+              513.0
+            ],
+            [
+              92.0,
+              513.0
+            ]
+          ],
+          "box": [
+            [
+              92.0,
+              494.0
+            ],
+            [
+              121.0,
+              494.0
+            ],
+            [
+              121.0,
+              513.0
+            ],
+            [
+              92.0,
+              513.0
+            ]
+          ],
+          "position": {
+            "x": 92,
+            "y": 494,
+            "width": 29,
+            "height": 19,
+            "center_x": 106.5,
+            "center_y": 503.5,
+            "region": "middle-left",
+            "tag": "[y:494, x:92]"
+          }
+        },
+        {
+          "text": "PATE",
+          "confidence": 0.38,
+          "bounding_box": [
+            [
+              112.0,
+              493.0
+            ],
+            [
+              146.0,
+              491.0
+            ],
+            [
+              148.0,
+              509.0
+            ],
+            [
+              114.0,
+              512.0
+            ]
+          ],
+          "box": [
+            [
+              112.0,
+              493.0
+            ],
+            [
+              146.0,
+              491.0
+            ],
+            [
+              148.0,
+              509.0
+            ],
+            [
+              114.0,
+              512.0
+            ]
+          ],
+          "position": {
+            "x": 112,
+            "y": 491,
+            "width": 36,
+            "height": 21,
+            "center_x": 130.0,
+            "center_y": 501.5,
+            "region": "middle-left",
+            "tag": "[y:491, x:112]"
+          }
+        },
+        {
+          "text": "10-31",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              182.0,
+              487.0
+            ],
+            [
+              240.0,
+              485.0
+            ],
+            [
+              241.0,
+              506.0
+            ],
+            [
+              183.0,
+              508.0
+            ]
+          ],
+          "box": [
+            [
+              182.0,
+              487.0
+            ],
+            [
+              240.0,
+              485.0
+            ],
+            [
+              241.0,
+              506.0
+            ],
+            [
+              183.0,
+              508.0
+            ]
+          ],
+          "position": {
+            "x": 182,
+            "y": 485,
+            "width": 59,
+            "height": 23,
+            "center_x": 211.5,
+            "center_y": 496.5,
+            "region": "middle-left",
+            "tag": "[y:485, x:182]"
+          }
+        },
+        {
+          "text": "Aj",
+          "confidence": 0.24,
+          "bounding_box": [
+            [
+              318.0,
+              497.0
+            ],
+            [
+              353.0,
+              494.0
+            ],
+            [
+              355.0,
+              509.0
+            ],
+            [
+              319.0,
+              513.0
+            ]
+          ],
+          "box": [
+            [
+              318.0,
+              497.0
+            ],
+            [
+              353.0,
+              494.0
+            ],
+            [
+              355.0,
+              509.0
+            ],
+            [
+              319.0,
+              513.0
+            ]
+          ],
+          "position": {
+            "x": 318,
+            "y": 494,
+            "width": 37,
+            "height": 19,
+            "center_x": 336.5,
+            "center_y": 503.5,
+            "region": "middle",
+            "tag": "[y:494, x:318]"
+          }
+        },
+        {
+          "text": "4097.00",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              380.0,
+              492.0
+            ],
+            [
+              467.0,
+              490.0
+            ],
+            [
+              468.0,
+              515.0
+            ],
+            [
+              380.0,
+              517.0
+            ]
+          ],
+          "box": [
+            [
+              380.0,
+              492.0
+            ],
+            [
+              467.0,
+              490.0
+            ],
+            [
+              468.0,
+              515.0
+            ],
+            [
+              380.0,
+              517.0
+            ]
+          ],
+          "position": {
+            "x": 380,
+            "y": 490,
+            "width": 88,
+            "height": 27,
+            "center_x": 424.0,
+            "center_y": 503.5,
+            "region": "middle",
+            "tag": "[y:490, x:380]"
+          }
+        },
+        {
+          "text": "A",
+          "confidence": 0.2,
+          "bounding_box": [
+            [
+              98.0,
+              505.0
+            ],
+            [
+              136.0,
+              501.0
+            ],
+            [
+              138.0,
+              521.0
+            ],
+            [
+              100.0,
+              525.0
+            ]
+          ],
+          "box": [
+            [
+              98.0,
+              505.0
+            ],
+            [
+              136.0,
+              501.0
+            ],
+            [
+              138.0,
+              521.0
+            ],
+            [
+              100.0,
+              525.0
+            ]
+          ],
+          "position": {
+            "x": 98,
+            "y": 501,
+            "width": 40,
+            "height": 24,
+            "center_x": 118.0,
+            "center_y": 513.0,
+            "region": "middle-left",
+            "tag": "[y:501, x:98]"
+          }
+        },
+        {
+          "text": "11180169",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              153.0,
+              505.0
+            ],
+            [
+              245.0,
+              502.0
+            ],
+            [
+              246.0,
+              528.0
+            ],
+            [
+              154.0,
+              532.0
+            ]
+          ],
+          "box": [
+            [
+              153.0,
+              505.0
+            ],
+            [
+              245.0,
+              502.0
+            ],
+            [
+              246.0,
+              528.0
+            ],
+            [
+              154.0,
+              532.0
+            ]
+          ],
+          "position": {
+            "x": 153,
+            "y": 502,
+            "width": 93,
+            "height": 30,
+            "center_x": 199.5,
+            "center_y": 517.0,
+            "region": "middle-left",
+            "tag": "[y:502, x:153]"
+          }
+        },
+        {
+          "text": "_P",
+          "confidence": 0.68,
+          "bounding_box": [
+            [
+              323.0,
+              506.0
+            ],
+            [
+              347.0,
+              503.0
+            ],
+            [
+              349.0,
+              518.0
+            ],
+            [
+              325.0,
+              521.0
+            ]
+          ],
+          "box": [
+            [
+              323.0,
+              506.0
+            ],
+            [
+              347.0,
+              503.0
+            ],
+            [
+              349.0,
+              518.0
+            ],
+            [
+              325.0,
+              521.0
+            ]
+          ],
+          "position": {
+            "x": 323,
+            "y": 503,
+            "width": 26,
+            "height": 18,
+            "center_x": 336.0,
+            "center_y": 512.0,
+            "region": "middle",
+            "tag": "[y:503, x:323]"
+          }
+        },
+        {
+          "text": "P0",
+          "confidence": 0.31,
+          "bounding_box": [
+            [
+              107.0,
+              518.0
+            ],
+            [
+              129.0,
+              518.0
+            ],
+            [
+              129.0,
+              530.0
+            ],
+            [
+              107.0,
+              530.0
+            ]
+          ],
+          "box": [
+            [
+              107.0,
+              518.0
+            ],
+            [
+              129.0,
+              518.0
+            ],
+            [
+              129.0,
+              530.0
+            ],
+            [
+              107.0,
+              530.0
+            ]
+          ],
+          "position": {
+            "x": 107,
+            "y": 518,
+            "width": 22,
+            "height": 12,
+            "center_x": 118.0,
+            "center_y": 524.0,
+            "region": "middle-left",
+            "tag": "[y:518, x:107]"
+          }
+        },
+        {
+          "text": "DAE",
+          "confidence": 0.58,
+          "bounding_box": [
+            [
+              326.0,
+              516.0
+            ],
+            [
+              350.0,
+              516.0
+            ],
+            [
+              350.0,
+              531.0
+            ],
+            [
+              326.0,
+              531.0
+            ]
+          ],
+          "box": [
+            [
+              326.0,
+              516.0
+            ],
+            [
+              350.0,
+              516.0
+            ],
+            [
+              350.0,
+              531.0
+            ],
+            [
+              326.0,
+              531.0
+            ]
+          ],
+          "position": {
+            "x": 326,
+            "y": 516,
+            "width": 24,
+            "height": 15,
+            "center_x": 338.0,
+            "center_y": 523.5,
+            "region": "middle",
+            "tag": "[y:516, x:326]"
+          }
+        },
+        {
+          "text": "11-9",
+          "confidence": 0.67,
+          "bounding_box": [
+            [
+              389.0,
+              513.0
+            ],
+            [
+              427.0,
+              513.0
+            ],
+            [
+              427.0,
+              531.0
+            ],
+            [
+              389.0,
+              531.0
+            ]
+          ],
+          "box": [
+            [
+              389.0,
+              513.0
+            ],
+            [
+              427.0,
+              513.0
+            ],
+            [
+              427.0,
+              531.0
+            ],
+            [
+              389.0,
+              531.0
+            ]
+          ],
+          "position": {
+            "x": 389,
+            "y": 513,
+            "width": 38,
+            "height": 18,
+            "center_x": 408.0,
+            "center_y": 522.0,
+            "region": "middle",
+            "tag": "[y:513, x:389]"
+          }
+        },
+        {
+          "text": "p",
+          "confidence": 0.38,
+          "bounding_box": [
+            [
+              107.0,
+              539.0
+            ],
+            [
+              130.0,
+              536.0
+            ],
+            [
+              131.0,
+              547.0
+            ],
+            [
+              108.0,
+              550.0
+            ]
+          ],
+          "box": [
+            [
+              107.0,
+              539.0
+            ],
+            [
+              130.0,
+              536.0
+            ],
+            [
+              131.0,
+              547.0
+            ],
+            [
+              108.0,
+              550.0
+            ]
+          ],
+          "position": {
+            "x": 107,
+            "y": 536,
+            "width": 24,
+            "height": 14,
+            "center_x": 119.0,
+            "center_y": 543.0,
+            "region": "middle-left",
+            "tag": "[y:536, x:107]"
+          }
+        },
+        {
+          "text": "D.",
+          "confidence": 0.24,
+          "bounding_box": [
+            [
+              108.0,
+              530.0
+            ],
+            [
+              126.0,
+              530.0
+            ],
+            [
+              126.0,
+              541.0
+            ],
+            [
+              108.0,
+              541.0
+            ]
+          ],
+          "box": [
+            [
+              108.0,
+              530.0
+            ],
+            [
+              126.0,
+              530.0
+            ],
+            [
+              126.0,
+              541.0
+            ],
+            [
+              108.0,
+              541.0
+            ]
+          ],
+          "position": {
+            "x": 108,
+            "y": 530,
+            "width": 18,
+            "height": 11,
+            "center_x": 117.0,
+            "center_y": 535.5,
+            "region": "middle-left",
+            "tag": "[y:530, x:108]"
+          }
+        },
+        {
+          "text": "F9S0 DAYS AND QV",
+          "confidence": 0.79,
+          "bounding_box": [
+            [
+              141.0,
+              533.0
+            ],
+            [
+              262.0,
+              533.0
+            ],
+            [
+              262.0,
+              547.0
+            ],
+            [
+              141.0,
+              547.0
+            ]
+          ],
+          "box": [
+            [
+              141.0,
+              533.0
+            ],
+            [
+              262.0,
+              533.0
+            ],
+            [
+              262.0,
+              547.0
+            ],
+            [
+              141.0,
+              547.0
+            ]
+          ],
+          "position": {
+            "x": 141,
+            "y": 533,
+            "width": 121,
+            "height": 14,
+            "center_x": 201.5,
+            "center_y": 540.0,
+            "region": "middle-left",
+            "tag": "[y:533, x:141]"
+          }
+        },
+        {
+          "text": "6O OAYS AND DVER",
+          "confidence": 0.64,
+          "bounding_box": [
+            [
+              288.0,
+              533.0
+            ],
+            [
+              375.0,
+              533.0
+            ],
+            [
+              375.0,
+              546.0
+            ],
+            [
+              288.0,
+              546.0
+            ]
+          ],
+          "box": [
+            [
+              288.0,
+              533.0
+            ],
+            [
+              375.0,
+              533.0
+            ],
+            [
+              375.0,
+              546.0
+            ],
+            [
+              288.0,
+              546.0
+            ]
+          ],
+          "position": {
+            "x": 288,
+            "y": 533,
+            "width": 87,
+            "height": 13,
+            "center_x": 331.5,
+            "center_y": 539.5,
+            "region": "middle",
+            "tag": "[y:533, x:288]"
+          }
+        },
+        {
+          "text": "ba",
+          "confidence": 0.32,
+          "bounding_box": [
+            [
+              330.0,
+              527.0
+            ],
+            [
+              347.0,
+              527.0
+            ],
+            [
+              347.0,
+              534.0
+            ],
+            [
+              330.0,
+              534.0
+            ]
+          ],
+          "box": [
+            [
+              330.0,
+              527.0
+            ],
+            [
+              347.0,
+              527.0
+            ],
+            [
+              347.0,
+              534.0
+            ],
+            [
+              330.0,
+              534.0
+            ]
+          ],
+          "position": {
+            "x": 330,
+            "y": 527,
+            "width": 17,
+            "height": 7,
+            "center_x": 338.5,
+            "center_y": 530.5,
+            "region": "middle",
+            "tag": "[y:527, x:330]"
+          }
+        },
+        {
+          "text": "0290",
+          "confidence": 0.57,
+          "bounding_box": [
+            [
+              390.0,
+              539.0
+            ],
+            [
+              440.0,
+              542.0
+            ],
+            [
+              439.0,
+              557.0
+            ],
+            [
+              390.0,
+              554.0
+            ]
+          ],
+          "box": [
+            [
+              390.0,
+              539.0
+            ],
+            [
+              440.0,
+              542.0
+            ],
+            [
+              439.0,
+              557.0
+            ],
+            [
+              390.0,
+              554.0
+            ]
+          ],
+          "position": {
+            "x": 390,
+            "y": 539,
+            "width": 50,
+            "height": 18,
+            "center_x": 415.0,
+            "center_y": 548.0,
+            "region": "middle",
+            "tag": "[y:539, x:390]"
+          }
+        },
+        {
+          "text": "30 DAYS AND OVER",
+          "confidence": 0.87,
+          "bounding_box": [
+            [
+              403.0,
+              533.0
+            ],
+            [
+              490.0,
+              533.0
+            ],
+            [
+              490.0,
+              546.0
+            ],
+            [
+              403.0,
+              546.0
+            ]
+          ],
+          "box": [
+            [
+              403.0,
+              533.0
+            ],
+            [
+              490.0,
+              533.0
+            ],
+            [
+              490.0,
+              546.0
+            ],
+            [
+              403.0,
+              546.0
+            ]
+          ],
+          "position": {
+            "x": 403,
+            "y": 533,
+            "width": 87,
+            "height": 13,
+            "center_x": 446.5,
+            "center_y": 539.5,
+            "region": "middle",
+            "tag": "[y:533, x:403]"
+          }
+        },
+        {
+          "text": "TOTAL NET",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              503.0,
+              536.0
+            ],
+            [
+              555.0,
+              538.0
+            ],
+            [
+              554.0,
+              553.0
+            ],
+            [
+              502.0,
+              550.0
+            ]
+          ],
+          "box": [
+            [
+              503.0,
+              536.0
+            ],
+            [
+              555.0,
+              538.0
+            ],
+            [
+              554.0,
+              553.0
+            ],
+            [
+              502.0,
+              550.0
+            ]
+          ],
+          "position": {
+            "x": 502,
+            "y": 536,
+            "width": 53,
+            "height": 17,
+            "center_x": 528.5,
+            "center_y": 544.5,
+            "region": "middle-right",
+            "tag": "[y:536, x:502]"
+          }
+        },
+        {
+          "text": "DUE AMOUNT",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              32.0,
+              548.0
+            ],
+            [
+              94.0,
+              548.0
+            ],
+            [
+              94.0,
+              559.0
+            ],
+            [
+              32.0,
+              559.0
+            ]
+          ],
+          "box": [
+            [
+              32.0,
+              548.0
+            ],
+            [
+              94.0,
+              548.0
+            ],
+            [
+              94.0,
+              559.0
+            ],
+            [
+              32.0,
+              559.0
+            ]
+          ],
+          "position": {
+            "x": 32,
+            "y": 548,
+            "width": 62,
+            "height": 11,
+            "center_x": 63.0,
+            "center_y": 553.5,
+            "region": "middle-left",
+            "tag": "[y:548, x:32]"
+          }
+        },
+        {
+          "text": "AGING OF PAST",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              33.0,
+              540.0
+            ],
+            [
+              103.0,
+              540.0
+            ],
+            [
+              103.0,
+              551.0
+            ],
+            [
+              33.0,
+              551.0
+            ]
+          ],
+          "box": [
+            [
+              33.0,
+              540.0
+            ],
+            [
+              103.0,
+              540.0
+            ],
+            [
+              103.0,
+              551.0
+            ],
+            [
+              33.0,
+              551.0
+            ]
+          ],
+          "position": {
+            "x": 33,
+            "y": 540,
+            "width": 70,
+            "height": 11,
+            "center_x": 68.0,
+            "center_y": 545.5,
+            "region": "middle-left",
+            "tag": "[y:540, x:33]"
+          }
+        },
+        {
+          "text": "CHECKotda",
+          "confidence": 0.7,
+          "bounding_box": [
+            [
+              312.0,
+              542.0
+            ],
+            [
+              384.0,
+              542.0
+            ],
+            [
+              384.0,
+              559.0
+            ],
+            [
+              312.0,
+              559.0
+            ]
+          ],
+          "box": [
+            [
+              312.0,
+              542.0
+            ],
+            [
+              384.0,
+              542.0
+            ],
+            [
+              384.0,
+              559.0
+            ],
+            [
+              312.0,
+              559.0
+            ]
+          ],
+          "position": {
+            "x": 312,
+            "y": 542,
+            "width": 72,
+            "height": 17,
+            "center_x": 348.0,
+            "center_y": 550.5,
+            "region": "middle",
+            "tag": "[y:542, x:312]"
+          }
+        },
+        {
+          "text": "-000",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              447.0,
+              545.0
+            ],
+            [
+              496.0,
+              545.0
+            ],
+            [
+              496.0,
+              559.0
+            ],
+            [
+              447.0,
+              559.0
+            ]
+          ],
+          "box": [
+            [
+              447.0,
+              545.0
+            ],
+            [
+              496.0,
+              545.0
+            ],
+            [
+              496.0,
+              559.0
+            ],
+            [
+              447.0,
+              559.0
+            ]
+          ],
+          "position": {
+            "x": 447,
+            "y": 545,
+            "width": 49,
+            "height": 14,
+            "center_x": 471.5,
+            "center_y": 552.0,
+            "region": "middle-right",
+            "tag": "[y:545, x:447]"
+          }
+        },
+        {
+          "text": "AMOUNT DUE",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              505.0,
+              547.0
+            ],
+            [
+              563.0,
+              547.0
+            ],
+            [
+              563.0,
+              558.0
+            ],
+            [
+              505.0,
+              558.0
+            ]
+          ],
+          "box": [
+            [
+              505.0,
+              547.0
+            ],
+            [
+              563.0,
+              547.0
+            ],
+            [
+              563.0,
+              558.0
+            ],
+            [
+              505.0,
+              558.0
+            ]
+          ],
+          "position": {
+            "x": 505,
+            "y": 547,
+            "width": 58,
+            "height": 11,
+            "center_x": 534.0,
+            "center_y": 552.5,
+            "region": "middle-right",
+            "tag": "[y:547, x:505]"
+          }
+        },
+        {
+          "text": "$13,811.42",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              592.0,
+              546.0
+            ],
+            [
+              674.0,
+              546.0
+            ],
+            [
+              674.0,
+              559.0
+            ],
+            [
+              592.0,
+              559.0
+            ]
+          ],
+          "box": [
+            [
+              592.0,
+              546.0
+            ],
+            [
+              674.0,
+              546.0
+            ],
+            [
+              674.0,
+              559.0
+            ],
+            [
+              592.0,
+              559.0
+            ]
+          ],
+          "position": {
+            "x": 592,
+            "y": 546,
+            "width": 82,
+            "height": 13,
+            "center_x": 633.0,
+            "center_y": 552.5,
+            "region": "middle-right",
+            "tag": "[y:546, x:592]"
+          }
+        },
+        {
+          "text": "๑",
+          "confidence": 0.12,
+          "bounding_box": [
+            [
+              688.0,
+              545.0
+            ],
+            [
+              699.0,
+              545.0
+            ],
+            [
+              699.0,
+              555.0
+            ],
+            [
+              688.0,
+              555.0
+            ]
+          ],
+          "box": [
+            [
+              688.0,
+              545.0
+            ],
+            [
+              699.0,
+              545.0
+            ],
+            [
+              699.0,
+              555.0
+            ],
+            [
+              688.0,
+              555.0
+            ]
+          ],
+          "position": {
+            "x": 688,
+            "y": 545,
+            "width": 11,
+            "height": 10,
+            "center_x": 693.5,
+            "center_y": 550.0,
+            "region": "middle-right",
+            "tag": "[y:545, x:688]"
+          }
+        },
+        {
+          "text": "OFTHISINVOICE",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              381.0,
+              558.0
+            ],
+            [
+              465.0,
+              558.0
+            ],
+            [
+              465.0,
+              573.0
+            ],
+            [
+              381.0,
+              573.0
+            ]
+          ],
+          "box": [
+            [
+              381.0,
+              558.0
+            ],
+            [
+              465.0,
+              558.0
+            ],
+            [
+              465.0,
+              573.0
+            ],
+            [
+              381.0,
+              573.0
+            ]
+          ],
+          "position": {
+            "x": 381,
+            "y": 558,
+            "width": 84,
+            "height": 15,
+            "center_x": 423.0,
+            "center_y": 565.5,
+            "region": "middle",
+            "tag": "[y:558, x:381]"
+          }
+        },
+        {
+          "text": "TERMS: NET UPON PRESENTATION",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              504.0,
+              558.0
+            ],
+            [
+              666.0,
+              558.0
+            ],
+            [
+              666.0,
+              572.0
+            ],
+            [
+              504.0,
+              572.0
+            ]
+          ],
+          "box": [
+            [
+              504.0,
+              558.0
+            ],
+            [
+              666.0,
+              558.0
+            ],
+            [
+              666.0,
+              572.0
+            ],
+            [
+              504.0,
+              572.0
+            ]
+          ],
+          "position": {
+            "x": 504,
+            "y": 558,
+            "width": 162,
+            "height": 14,
+            "center_x": 585.0,
+            "center_y": 565.0,
+            "region": "middle-right",
+            "tag": "[y:558, x:504]"
+          }
+        },
+        {
+          "text": "WHERE AN ADVERTISING CCNTRACT S N FORCE, AMOUNTS BILED ON",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              84.0,
+              579.0
+            ],
+            [
+              330.0,
+              579.0
+            ],
+            [
+              330.0,
+              589.0
+            ],
+            [
+              84.0,
+              589.0
+            ]
+          ],
+          "box": [
+            [
+              84.0,
+              579.0
+            ],
+            [
+              330.0,
+              579.0
+            ],
+            [
+              330.0,
+              589.0
+            ],
+            [
+              84.0,
+              589.0
+            ]
+          ],
+          "position": {
+            "x": 84,
+            "y": 579,
+            "width": 246,
+            "height": 10,
+            "center_x": 207.0,
+            "center_y": 584.0,
+            "region": "middle-left",
+            "tag": "[y:579, x:84]"
+          }
+        },
+        {
+          "text": "THE AMOUNT OF THE SHCRT RATE OR REBATE, F ANT, CANNOT BE",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              397.0,
+              580.0
+            ],
+            [
+              631.0,
+              580.0
+            ],
+            [
+              631.0,
+              590.0
+            ],
+            [
+              397.0,
+              590.0
+            ]
+          ],
+          "box": [
+            [
+              397.0,
+              580.0
+            ],
+            [
+              631.0,
+              580.0
+            ],
+            [
+              631.0,
+              590.0
+            ],
+            [
+              397.0,
+              590.0
+            ]
+          ],
+          "position": {
+            "x": 397,
+            "y": 580,
+            "width": 234,
+            "height": 10,
+            "center_x": 514.0,
+            "center_y": 585.0,
+            "region": "middle-right",
+            "tag": "[y:580, x:397]"
+          }
+        },
+        {
+          "text": "TAIS INVDICE ARE SUBIECT TO SHORT RATE OR REBATS AT CXPIRATION",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              85.0,
+              588.0
+            ],
+            [
+              339.0,
+              588.0
+            ],
+            [
+              339.0,
+              598.0
+            ],
+            [
+              85.0,
+              598.0
+            ]
+          ],
+          "box": [
+            [
+              85.0,
+              588.0
+            ],
+            [
+              339.0,
+              588.0
+            ],
+            [
+              339.0,
+              598.0
+            ],
+            [
+              85.0,
+              598.0
+            ]
+          ],
+          "position": {
+            "x": 85,
+            "y": 588,
+            "width": 254,
+            "height": 10,
+            "center_x": 212.0,
+            "center_y": 593.0,
+            "region": "middle-left",
+            "tag": "[y:588, x:85]"
+          }
+        },
+        {
+          "text": "OF THE CONTRACT, F, BASED ON SPACE PERFQRMANCE. THE ACTUAL",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              85.0,
+              596.0
+            ],
+            [
+              328.0,
+              596.0
+            ],
+            [
+              328.0,
+              606.0
+            ],
+            [
+              85.0,
+              606.0
+            ]
+          ],
+          "box": [
+            [
+              85.0,
+              596.0
+            ],
+            [
+              328.0,
+              596.0
+            ],
+            [
+              328.0,
+              606.0
+            ],
+            [
+              85.0,
+              606.0
+            ]
+          ],
+          "position": {
+            "x": 85,
+            "y": 596,
+            "width": 243,
+            "height": 10,
+            "center_x": 206.5,
+            "center_y": 601.0,
+            "region": "middle-left",
+            "tag": "[y:596, x:85]"
+          }
+        },
+        {
+          "text": "ASCERTAINED UNTIL TKE END CF THE TWELVE-WONTH CONTRACT TERM",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              397.0,
+              588.0
+            ],
+            [
+              642.0,
+              588.0
+            ],
+            [
+              642.0,
+              598.0
+            ],
+            [
+              397.0,
+              598.0
+            ]
+          ],
+          "box": [
+            [
+              397.0,
+              588.0
+            ],
+            [
+              642.0,
+              588.0
+            ],
+            [
+              642.0,
+              598.0
+            ],
+            [
+              397.0,
+              598.0
+            ]
+          ],
+          "position": {
+            "x": 397,
+            "y": 588,
+            "width": 245,
+            "height": 10,
+            "center_x": 519.5,
+            "center_y": 593.0,
+            "region": "middle-right",
+            "tag": "[y:588, x:397]"
+          }
+        },
+        {
+          "text": "SET FORTH BELOW S THE SPACE CONTRACTED FOR, THE EXPIRATION",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              397.0,
+              596.0
+            ],
+            [
+              639.0,
+              596.0
+            ],
+            [
+              639.0,
+              606.0
+            ],
+            [
+              397.0,
+              606.0
+            ]
+          ],
+          "box": [
+            [
+              397.0,
+              596.0
+            ],
+            [
+              639.0,
+              596.0
+            ],
+            [
+              639.0,
+              606.0
+            ],
+            [
+              397.0,
+              606.0
+            ]
+          ],
+          "position": {
+            "x": 397,
+            "y": 596,
+            "width": 242,
+            "height": 10,
+            "center_x": 518.0,
+            "center_y": 601.0,
+            "region": "middle-right",
+            "tag": "[y:596, x:397]"
+          }
+        },
+        {
+          "text": "EARNED RATE DFFERS FROM THE CON-RACT RATE SHOWN.",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              85.0,
+              604.0
+            ],
+            [
+              294.0,
+              604.0
+            ],
+            [
+              294.0,
+              614.0
+            ],
+            [
+              85.0,
+              614.0
+            ]
+          ],
+          "box": [
+            [
+              85.0,
+              604.0
+            ],
+            [
+              294.0,
+              604.0
+            ],
+            [
+              294.0,
+              614.0
+            ],
+            [
+              85.0,
+              614.0
+            ]
+          ],
+          "position": {
+            "x": 85,
+            "y": 604,
+            "width": 209,
+            "height": 10,
+            "center_x": 189.5,
+            "center_y": 609.0,
+            "region": "middle-left",
+            "tag": "[y:604, x:85]"
+          }
+        },
+        {
+          "text": "DATE OF THE CONTRACT AND THE SPACE USED TO DATE.",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              397.0,
+              604.0
+            ],
+            [
+              599.0,
+              604.0
+            ],
+            [
+              599.0,
+              614.0
+            ],
+            [
+              397.0,
+              614.0
+            ]
+          ],
+          "box": [
+            [
+              397.0,
+              604.0
+            ],
+            [
+              599.0,
+              604.0
+            ],
+            [
+              599.0,
+              614.0
+            ],
+            [
+              397.0,
+              614.0
+            ]
+          ],
+          "position": {
+            "x": 397,
+            "y": 604,
+            "width": 202,
+            "height": 10,
+            "center_x": 498.0,
+            "center_y": 609.0,
+            "region": "middle-right",
+            "tag": "[y:604, x:397]"
+          }
+        },
+        {
+          "text": "IF YOU HAVE QUESTIONS REGARDING THIS INFORMATION, PLEASE",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              84.0,
+              618.0
+            ],
+            [
+              405.0,
+              618.0
+            ],
+            [
+              405.0,
+              631.0
+            ],
+            [
+              84.0,
+              631.0
+            ]
+          ],
+          "box": [
+            [
+              84.0,
+              618.0
+            ],
+            [
+              405.0,
+              618.0
+            ],
+            [
+              405.0,
+              631.0
+            ],
+            [
+              84.0,
+              631.0
+            ]
+          ],
+          "position": {
+            "x": 84,
+            "y": 618,
+            "width": 321,
+            "height": 13,
+            "center_x": 244.5,
+            "center_y": 624.5,
+            "region": "middle-left",
+            "tag": "[y:618, x:84]"
+          }
+        },
+        {
+          "text": "CONTACT YOUR LOS ANGELES TIMES ACCOUNT REPRESENTATIVE: 21061",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              84.0,
+              628.0
+            ],
+            [
+              456.0,
+              628.0
+            ],
+            [
+              456.0,
+              642.0
+            ],
+            [
+              84.0,
+              642.0
+            ]
+          ],
+          "box": [
+            [
+              84.0,
+              628.0
+            ],
+            [
+              456.0,
+              628.0
+            ],
+            [
+              456.0,
+              642.0
+            ],
+            [
+              84.0,
+              642.0
+            ]
+          ],
+          "position": {
+            "x": 84,
+            "y": 628,
+            "width": 372,
+            "height": 14,
+            "center_x": 270.0,
+            "center_y": 635.0,
+            "region": "middle",
+            "tag": "[y:628, x:84]"
+          }
+        },
+        {
+          "text": "FULL RUN",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              379.0,
+              641.0
+            ],
+            [
+              421.0,
+              641.0
+            ],
+            [
+              421.0,
+              651.0
+            ],
+            [
+              379.0,
+              651.0
+            ]
+          ],
+          "box": [
+            [
+              379.0,
+              641.0
+            ],
+            [
+              421.0,
+              641.0
+            ],
+            [
+              421.0,
+              651.0
+            ],
+            [
+              379.0,
+              651.0
+            ]
+          ],
+          "position": {
+            "x": 379,
+            "y": 641,
+            "width": 42,
+            "height": 10,
+            "center_x": 400.0,
+            "center_y": 646.0,
+            "region": "middle",
+            "tag": "[y:641, x:379]"
+          }
+        },
+        {
+          "text": "SUBURBAN",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              529.0,
+              641.0
+            ],
+            [
+              575.0,
+              641.0
+            ],
+            [
+              575.0,
+              651.0
+            ],
+            [
+              529.0,
+              651.0
+            ]
+          ],
+          "box": [
+            [
+              529.0,
+              641.0
+            ],
+            [
+              575.0,
+              641.0
+            ],
+            [
+              575.0,
+              651.0
+            ],
+            [
+              529.0,
+              651.0
+            ]
+          ],
+          "position": {
+            "x": 529,
+            "y": 641,
+            "width": 46,
+            "height": 10,
+            "center_x": 552.0,
+            "center_y": 646.0,
+            "region": "middle-right",
+            "tag": "[y:641, x:529]"
+          }
+        },
+        {
+          "text": "CONTRACT EXPIRATION DATE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              52.0,
+              668.0
+            ],
+            [
+              179.0,
+              668.0
+            ],
+            [
+              179.0,
+              678.0
+            ],
+            [
+              52.0,
+              678.0
+            ]
+          ],
+          "box": [
+            [
+              52.0,
+              668.0
+            ],
+            [
+              179.0,
+              668.0
+            ],
+            [
+              179.0,
+              678.0
+            ],
+            [
+              52.0,
+              678.0
+            ]
+          ],
+          "position": {
+            "x": 52,
+            "y": 668,
+            "width": 127,
+            "height": 10,
+            "center_x": 115.5,
+            "center_y": 673.0,
+            "region": "middle-left",
+            "tag": "[y:668, x:52]"
+          }
+        },
+        {
+          "text": "CONTRACT REQUIREMENT",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              52.0,
+              682.0
+            ],
+            [
+              160.0,
+              682.0
+            ],
+            [
+              160.0,
+              693.0
+            ],
+            [
+              52.0,
+              693.0
+            ]
+          ],
+          "box": [
+            [
+              52.0,
+              682.0
+            ],
+            [
+              160.0,
+              682.0
+            ],
+            [
+              160.0,
+              693.0
+            ],
+            [
+              52.0,
+              693.0
+            ]
+          ],
+          "position": {
+            "x": 52,
+            "y": 682,
+            "width": 108,
+            "height": 11,
+            "center_x": 106.0,
+            "center_y": 687.5,
+            "region": "bottom-left",
+            "tag": "[y:682, x:52]"
+          }
+        },
+        {
+          "text": "INCHES USED, THIS INVOICE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              53.0,
+              697.0
+            ],
+            [
+              173.0,
+              697.0
+            ],
+            [
+              173.0,
+              707.0
+            ],
+            [
+              53.0,
+              707.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              697.0
+            ],
+            [
+              173.0,
+              697.0
+            ],
+            [
+              173.0,
+              707.0
+            ],
+            [
+              53.0,
+              707.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 697,
+            "width": 120,
+            "height": 10,
+            "center_x": 113.0,
+            "center_y": 702.0,
+            "region": "bottom-left",
+            "tag": "[y:697, x:53]"
+          }
+        },
+        {
+          "text": "60.00",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              388.0,
+              697.0
+            ],
+            [
+              430.0,
+              697.0
+            ],
+            [
+              430.0,
+              711.0
+            ],
+            [
+              388.0,
+              711.0
+            ]
+          ],
+          "box": [
+            [
+              388.0,
+              697.0
+            ],
+            [
+              430.0,
+              697.0
+            ],
+            [
+              430.0,
+              711.0
+            ],
+            [
+              388.0,
+              711.0
+            ]
+          ],
+          "position": {
+            "x": 388,
+            "y": 697,
+            "width": 42,
+            "height": 14,
+            "center_x": 409.0,
+            "center_y": 704.0,
+            "region": "bottom-center",
+            "tag": "[y:697, x:388]"
+          }
+        },
+        {
+          "text": "TOTAL INCHES USED TO DATE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              52.0,
+              710.0
+            ],
+            [
+              182.0,
+              710.0
+            ],
+            [
+              182.0,
+              720.0
+            ],
+            [
+              52.0,
+              720.0
+            ]
+          ],
+          "box": [
+            [
+              52.0,
+              710.0
+            ],
+            [
+              182.0,
+              710.0
+            ],
+            [
+              182.0,
+              720.0
+            ],
+            [
+              52.0,
+              720.0
+            ]
+          ],
+          "position": {
+            "x": 52,
+            "y": 710,
+            "width": 130,
+            "height": 10,
+            "center_x": 117.0,
+            "center_y": 715.0,
+            "region": "bottom-left",
+            "tag": "[y:710, x:52]"
+          }
+        },
+        {
+          "text": "DETACH HERE",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              338.0,
+              729.0
+            ],
+            [
+              404.0,
+              729.0
+            ],
+            [
+              404.0,
+              740.0
+            ],
+            [
+              338.0,
+              740.0
+            ]
+          ],
+          "box": [
+            [
+              338.0,
+              729.0
+            ],
+            [
+              404.0,
+              729.0
+            ],
+            [
+              404.0,
+              740.0
+            ],
+            [
+              338.0,
+              740.0
+            ]
+          ],
+          "position": {
+            "x": 338,
+            "y": 729,
+            "width": 66,
+            "height": 11,
+            "center_x": 371.0,
+            "center_y": 734.5,
+            "region": "bottom-center",
+            "tag": "[y:729, x:338]"
+          }
+        },
+        {
+          "text": "*",
+          "confidence": 0.3,
+          "bounding_box": [
+            [
+              686.0,
+              734.0
+            ],
+            [
+              699.0,
+              734.0
+            ],
+            [
+              699.0,
+              747.0
+            ],
+            [
+              686.0,
+              747.0
+            ]
+          ],
+          "box": [
+            [
+              686.0,
+              734.0
+            ],
+            [
+              699.0,
+              734.0
+            ],
+            [
+              699.0,
+              747.0
+            ],
+            [
+              686.0,
+              747.0
+            ]
+          ],
+          "position": {
+            "x": 686,
+            "y": 734,
+            "width": 13,
+            "height": 13,
+            "center_x": 692.5,
+            "center_y": 740.5,
+            "region": "bottom-right",
+            "tag": "[y:734, x:686]"
+          }
+        },
+        {
+          "text": "RETURN THIS PORTION",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              52.0,
+              736.0
+            ],
+            [
+              183.0,
+              736.0
+            ],
+            [
+              183.0,
+              749.0
+            ],
+            [
+              52.0,
+              749.0
+            ]
+          ],
+          "box": [
+            [
+              52.0,
+              736.0
+            ],
+            [
+              183.0,
+              736.0
+            ],
+            [
+              183.0,
+              749.0
+            ],
+            [
+              52.0,
+              749.0
+            ]
+          ],
+          "position": {
+            "x": 52,
+            "y": 736,
+            "width": 131,
+            "height": 13,
+            "center_x": 117.5,
+            "center_y": 742.5,
+            "region": "bottom-left",
+            "tag": "[y:736, x:52]"
+          }
+        },
+        {
+          "text": "WITH YOUR CHECK IN THE ENCLOSED ENVELOPE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              68.0,
+              750.0
+            ],
+            [
+              305.0,
+              749.0
+            ],
+            [
+              305.0,
+              762.0
+            ],
+            [
+              68.0,
+              763.0
+            ]
+          ],
+          "box": [
+            [
+              68.0,
+              750.0
+            ],
+            [
+              305.0,
+              749.0
+            ],
+            [
+              305.0,
+              762.0
+            ],
+            [
+              68.0,
+              763.0
+            ]
+          ],
+          "position": {
+            "x": 68,
+            "y": 749,
+            "width": 237,
+            "height": 14,
+            "center_x": 186.5,
+            "center_y": 756.0,
+            "region": "bottom-left",
+            "tag": "[y:749, x:68]"
+          }
+        },
+        {
+          "text": "AMOUNT DUE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              493.0,
+              743.0
+            ],
+            [
+              559.0,
+              743.0
+            ],
+            [
+              559.0,
+              754.0
+            ],
+            [
+              493.0,
+              754.0
+            ]
+          ],
+          "box": [
+            [
+              493.0,
+              743.0
+            ],
+            [
+              559.0,
+              743.0
+            ],
+            [
+              559.0,
+              754.0
+            ],
+            [
+              493.0,
+              754.0
+            ]
+          ],
+          "position": {
+            "x": 493,
+            "y": 743,
+            "width": 66,
+            "height": 11,
+            "center_x": 526.0,
+            "center_y": 748.5,
+            "region": "bottom-right",
+            "tag": "[y:743, x:493]"
+          }
+        },
+        {
+          "text": "$13,811.42",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              591.0,
+              736.0
+            ],
+            [
+              673.0,
+              736.0
+            ],
+            [
+              673.0,
+              750.0
+            ],
+            [
+              591.0,
+              750.0
+            ]
+          ],
+          "box": [
+            [
+              591.0,
+              736.0
+            ],
+            [
+              673.0,
+              736.0
+            ],
+            [
+              673.0,
+              750.0
+            ],
+            [
+              591.0,
+              750.0
+            ]
+          ],
+          "position": {
+            "x": 591,
+            "y": 736,
+            "width": 82,
+            "height": 14,
+            "center_x": 632.0,
+            "center_y": 743.0,
+            "region": "bottom-right",
+            "tag": "[y:736, x:591]"
+          }
+        },
+        {
+          "text": "MAKE CHECK PAYABLE TO LOS ANGELES TIMES",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              395.0,
+              763.0
+            ],
+            [
+              661.0,
+              763.0
+            ],
+            [
+              661.0,
+              776.0
+            ],
+            [
+              395.0,
+              776.0
+            ]
+          ],
+          "box": [
+            [
+              395.0,
+              763.0
+            ],
+            [
+              661.0,
+              763.0
+            ],
+            [
+              661.0,
+              776.0
+            ],
+            [
+              395.0,
+              776.0
+            ]
+          ],
+          "position": {
+            "x": 395,
+            "y": 763,
+            "width": 266,
+            "height": 13,
+            "center_x": 528.0,
+            "center_y": 769.5,
+            "region": "bottom-right",
+            "tag": "[y:763, x:395]"
+          }
+        },
+        {
+          "text": "DATE 10/31/84",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              49.0,
+              774.0
+            ],
+            [
+              145.0,
+              777.0
+            ],
+            [
+              144.0,
+              795.0
+            ],
+            [
+              49.0,
+              791.0
+            ]
+          ],
+          "box": [
+            [
+              49.0,
+              774.0
+            ],
+            [
+              145.0,
+              777.0
+            ],
+            [
+              144.0,
+              795.0
+            ],
+            [
+              49.0,
+              791.0
+            ]
+          ],
+          "position": {
+            "x": 49,
+            "y": 774,
+            "width": 96,
+            "height": 21,
+            "center_x": 97.0,
+            "center_y": 784.5,
+            "region": "bottom-left",
+            "tag": "[y:774, x:49]"
+          }
+        },
+        {
+          "text": "PLEASE CHECK BOX IF A NAME GR",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              214.0,
+              777.0
+            ],
+            [
+              341.0,
+              777.0
+            ],
+            [
+              341.0,
+              787.0
+            ],
+            [
+              214.0,
+              787.0
+            ]
+          ],
+          "box": [
+            [
+              214.0,
+              777.0
+            ],
+            [
+              341.0,
+              777.0
+            ],
+            [
+              341.0,
+              787.0
+            ],
+            [
+              214.0,
+              787.0
+            ]
+          ],
+          "position": {
+            "x": 214,
+            "y": 777,
+            "width": 127,
+            "height": 10,
+            "center_x": 277.5,
+            "center_y": 782.0,
+            "region": "bottom-center",
+            "tag": "[y:777, x:214]"
+          }
+        },
+        {
+          "text": "CUSTOMER NO",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              416.0,
+              776.0
+            ],
+            [
+              479.0,
+              776.0
+            ],
+            [
+              479.0,
+              787.0
+            ],
+            [
+              416.0,
+              787.0
+            ]
+          ],
+          "box": [
+            [
+              416.0,
+              776.0
+            ],
+            [
+              479.0,
+              776.0
+            ],
+            [
+              479.0,
+              787.0
+            ],
+            [
+              416.0,
+              787.0
+            ]
+          ],
+          "position": {
+            "x": 416,
+            "y": 776,
+            "width": 63,
+            "height": 11,
+            "center_x": 447.5,
+            "center_y": 781.5,
+            "region": "bottom-center",
+            "tag": "[y:776, x:416]"
+          }
+        },
+        {
+          "text": "57029-80-3",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              510.0,
+              776.0
+            ],
+            [
+              592.0,
+              776.0
+            ],
+            [
+              592.0,
+              790.0
+            ],
+            [
+              510.0,
+              790.0
+            ]
+          ],
+          "box": [
+            [
+              510.0,
+              776.0
+            ],
+            [
+              592.0,
+              776.0
+            ],
+            [
+              592.0,
+              790.0
+            ],
+            [
+              510.0,
+              790.0
+            ]
+          ],
+          "position": {
+            "x": 510,
+            "y": 776,
+            "width": 82,
+            "height": 14,
+            "center_x": 551.0,
+            "center_y": 783.0,
+            "region": "bottom-right",
+            "tag": "[y:776, x:510]"
+          }
+        },
+        {
+          "text": "ADDRESS CHANGE HAS BEEN NDICATED",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              215.0,
+              785.0
+            ],
+            [
+              355.0,
+              785.0
+            ],
+            [
+              355.0,
+              795.0
+            ],
+            [
+              215.0,
+              795.0
+            ]
+          ],
+          "box": [
+            [
+              215.0,
+              785.0
+            ],
+            [
+              355.0,
+              785.0
+            ],
+            [
+              355.0,
+              795.0
+            ],
+            [
+              215.0,
+              795.0
+            ]
+          ],
+          "position": {
+            "x": 215,
+            "y": 785,
+            "width": 140,
+            "height": 10,
+            "center_x": 285.0,
+            "center_y": 790.0,
+            "region": "bottom-center",
+            "tag": "[y:785, x:215]"
+          }
+        },
+        {
+          "text": "OR A COMVENT WRITTEN ON BACK OF STUB",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              216.0,
+              793.0
+            ],
+            [
+              371.0,
+              793.0
+            ],
+            [
+              371.0,
+              803.0
+            ],
+            [
+              216.0,
+              803.0
+            ]
+          ],
+          "box": [
+            [
+              216.0,
+              793.0
+            ],
+            [
+              371.0,
+              793.0
+            ],
+            [
+              371.0,
+              803.0
+            ],
+            [
+              216.0,
+              803.0
+            ]
+          ],
+          "position": {
+            "x": 216,
+            "y": 793,
+            "width": 155,
+            "height": 10,
+            "center_x": 293.5,
+            "center_y": 798.0,
+            "region": "bottom-center",
+            "tag": "[y:793, x:216]"
+          }
+        },
+        {
+          "text": "INVOICE NO",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              415.0,
+              790.0
+            ],
+            [
+              468.0,
+              790.0
+            ],
+            [
+              468.0,
+              800.0
+            ],
+            [
+              415.0,
+              800.0
+            ]
+          ],
+          "box": [
+            [
+              415.0,
+              790.0
+            ],
+            [
+              468.0,
+              790.0
+            ],
+            [
+              468.0,
+              800.0
+            ],
+            [
+              415.0,
+              800.0
+            ]
+          ],
+          "position": {
+            "x": 415,
+            "y": 790,
+            "width": 53,
+            "height": 10,
+            "center_x": 441.5,
+            "center_y": 795.0,
+            "region": "bottom-center",
+            "tag": "[y:790, x:415]"
+          }
+        },
+        {
+          "text": "4305002590",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              509.0,
+              790.0
+            ],
+            [
+              592.0,
+              790.0
+            ],
+            [
+              592.0,
+              804.0
+            ],
+            [
+              509.0,
+              804.0
+            ]
+          ],
+          "box": [
+            [
+              509.0,
+              790.0
+            ],
+            [
+              592.0,
+              790.0
+            ],
+            [
+              592.0,
+              804.0
+            ],
+            [
+              509.0,
+              804.0
+            ]
+          ],
+          "position": {
+            "x": 509,
+            "y": 790,
+            "width": 83,
+            "height": 14,
+            "center_x": 550.5,
+            "center_y": 797.0,
+            "region": "bottom-right",
+            "tag": "[y:790, x:509]"
+          }
+        },
+        {
+          "text": "LORILLARD MEDIA SERVICES",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              100.0,
+              820.0
+            ],
+            [
+              299.0,
+              820.0
+            ],
+            [
+              299.0,
+              833.0
+            ],
+            [
+              100.0,
+              833.0
+            ]
+          ],
+          "box": [
+            [
+              100.0,
+              820.0
+            ],
+            [
+              299.0,
+              820.0
+            ],
+            [
+              299.0,
+              833.0
+            ],
+            [
+              100.0,
+              833.0
+            ]
+          ],
+          "position": {
+            "x": 100,
+            "y": 820,
+            "width": 199,
+            "height": 13,
+            "center_x": 199.5,
+            "center_y": 826.5,
+            "region": "bottom-left",
+            "tag": "[y:820, x:100]"
+          }
+        },
+        {
+          "text": "666 FIFTH AVENUE",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              100.0,
+              834.0
+            ],
+            [
+              234.0,
+              834.0
+            ],
+            [
+              234.0,
+              847.0
+            ],
+            [
+              100.0,
+              847.0
+            ]
+          ],
+          "box": [
+            [
+              100.0,
+              834.0
+            ],
+            [
+              234.0,
+              834.0
+            ],
+            [
+              234.0,
+              847.0
+            ],
+            [
+              100.0,
+              847.0
+            ]
+          ],
+          "position": {
+            "x": 100,
+            "y": 834,
+            "width": 134,
+            "height": 13,
+            "center_x": 167.0,
+            "center_y": 840.5,
+            "region": "bottom-left",
+            "tag": "[y:834, x:100]"
+          }
+        },
+        {
+          "text": "LIos Angcles Times",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              442.0,
+              828.0
+            ],
+            [
+              655.0,
+              828.0
+            ],
+            [
+              655.0,
+              856.0
+            ],
+            [
+              442.0,
+              856.0
+            ]
+          ],
+          "box": [
+            [
+              442.0,
+              828.0
+            ],
+            [
+              655.0,
+              828.0
+            ],
+            [
+              655.0,
+              856.0
+            ],
+            [
+              442.0,
+              856.0
+            ]
+          ],
+          "position": {
+            "x": 442,
+            "y": 828,
+            "width": 213,
+            "height": 28,
+            "center_x": 548.5,
+            "center_y": 842.0,
+            "region": "bottom-right",
+            "tag": "[y:828, x:442]"
+          }
+        },
+        {
+          "text": "NEW YORK",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              100.0,
+              847.0
+            ],
+            [
+              169.0,
+              847.0
+            ],
+            [
+              169.0,
+              861.0
+            ],
+            [
+              100.0,
+              861.0
+            ]
+          ],
+          "box": [
+            [
+              100.0,
+              847.0
+            ],
+            [
+              169.0,
+              847.0
+            ],
+            [
+              169.0,
+              861.0
+            ],
+            [
+              100.0,
+              861.0
+            ]
+          ],
+          "position": {
+            "x": 100,
+            "y": 847,
+            "width": 69,
+            "height": 14,
+            "center_x": 134.5,
+            "center_y": 854.0,
+            "region": "bottom-left",
+            "tag": "[y:847, x:100]"
+          }
+        },
+        {
+          "text": "NY 10103",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              291.0,
+              848.0
+            ],
+            [
+              355.0,
+              848.0
+            ],
+            [
+              355.0,
+              859.0
+            ],
+            [
+              291.0,
+              859.0
+            ]
+          ],
+          "box": [
+            [
+              291.0,
+              848.0
+            ],
+            [
+              355.0,
+              848.0
+            ],
+            [
+              355.0,
+              859.0
+            ],
+            [
+              291.0,
+              859.0
+            ]
+          ],
+          "position": {
+            "x": 291,
+            "y": 848,
+            "width": 64,
+            "height": 11,
+            "center_x": 323.0,
+            "center_y": 853.5,
+            "region": "bottom-center",
+            "tag": "[y:848, x:291]"
+          }
+        },
+        {
+          "text": "91659978",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              668.0,
+              851.0
+            ],
+            [
+              684.0,
+              851.0
+            ],
+            [
+              684.0,
+              920.0
+            ],
+            [
+              668.0,
+              920.0
+            ]
+          ],
+          "box": [
+            [
+              668.0,
+              851.0
+            ],
+            [
+              684.0,
+              851.0
+            ],
+            [
+              684.0,
+              920.0
+            ],
+            [
+              668.0,
+              920.0
+            ]
+          ],
+          "position": {
+            "x": 668,
+            "y": 851,
+            "width": 16,
+            "height": 69,
+            "center_x": 676.0,
+            "center_y": 885.5,
+            "region": "bottom-right",
+            "tag": "[y:851, x:668]"
+          }
+        },
+        {
+          "text": "P.0. B0X 9125",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              444.0,
+              859.0
+            ],
+            [
+              552.0,
+              859.0
+            ],
+            [
+              552.0,
+              873.0
+            ],
+            [
+              444.0,
+              873.0
+            ]
+          ],
+          "box": [
+            [
+              444.0,
+              859.0
+            ],
+            [
+              552.0,
+              859.0
+            ],
+            [
+              552.0,
+              873.0
+            ],
+            [
+              444.0,
+              873.0
+            ]
+          ],
+          "position": {
+            "x": 444,
+            "y": 859,
+            "width": 108,
+            "height": 14,
+            "center_x": 498.0,
+            "center_y": 866.0,
+            "region": "bottom-right",
+            "tag": "[y:859, x:444]"
+          }
+        },
+        {
+          "text": "TRUE - LORILLARD",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              100.0,
+              874.0
+            ],
+            [
+              234.0,
+              873.0
+            ],
+            [
+              234.0,
+              887.0
+            ],
+            [
+              100.0,
+              888.0
+            ]
+          ],
+          "box": [
+            [
+              100.0,
+              874.0
+            ],
+            [
+              234.0,
+              873.0
+            ],
+            [
+              234.0,
+              887.0
+            ],
+            [
+              100.0,
+              888.0
+            ]
+          ],
+          "position": {
+            "x": 100,
+            "y": 873,
+            "width": 134,
+            "height": 15,
+            "center_x": 167.0,
+            "center_y": 880.5,
+            "region": "bottom-left",
+            "tag": "[y:873, x:100]"
+          }
+        },
+        {
+          "text": "DEPT. 081",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              444.0,
+              873.0
+            ],
+            [
+              519.0,
+              873.0
+            ],
+            [
+              519.0,
+              887.0
+            ],
+            [
+              444.0,
+              887.0
+            ]
+          ],
+          "box": [
+            [
+              444.0,
+              873.0
+            ],
+            [
+              519.0,
+              873.0
+            ],
+            [
+              519.0,
+              887.0
+            ],
+            [
+              444.0,
+              887.0
+            ]
+          ],
+          "position": {
+            "x": 444,
+            "y": 873,
+            "width": 75,
+            "height": 14,
+            "center_x": 481.5,
+            "center_y": 880.0,
+            "region": "bottom-right",
+            "tag": "[y:873, x:444]"
+          }
+        },
+        {
+          "text": "STAMFORD, CT. O6925",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              444.0,
+              887.0
+            ],
+            [
+              600.0,
+              887.0
+            ],
+            [
+              600.0,
+              901.0
+            ],
+            [
+              444.0,
+              901.0
+            ]
+          ],
+          "box": [
+            [
+              444.0,
+              887.0
+            ],
+            [
+              600.0,
+              887.0
+            ],
+            [
+              600.0,
+              901.0
+            ],
+            [
+              444.0,
+              901.0
+            ]
+          ],
+          "position": {
+            "x": 444,
+            "y": 887,
+            "width": 156,
+            "height": 14,
+            "center_x": 522.0,
+            "center_y": 894.0,
+            "region": "bottom-right",
+            "tag": "[y:887, x:444]"
+          }
+        },
+        {
+          "text": "3605702980343050025900138114244100036057029803430500259001381142441000",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              84.0,
+              928.0
+            ],
+            [
+              657.0,
+              926.0
+            ],
+            [
+              657.0,
+              941.0
+            ],
+            [
+              84.0,
+              943.0
+            ]
+          ],
+          "box": [
+            [
+              84.0,
+              928.0
+            ],
+            [
+              657.0,
+              926.0
+            ],
+            [
+              657.0,
+              941.0
+            ],
+            [
+              84.0,
+              943.0
+            ]
+          ],
+          "position": {
+            "x": 84,
+            "y": 926,
+            "width": 573,
+            "height": 17,
+            "center_x": 370.5,
+            "center_y": 934.5,
+            "region": "bottom-center",
+            "tag": "[y:926, x:84]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 1.243,
+      "cached_at": "2026-09-28T08:40:37.729407+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "invoice",
+        "document_number": "4305002590",
+        "document_date": "1984-10-31",
+        "sender": "THE CON-RACT RATE SHOWN",
+        "receiver": "LORILLARD MEDIA SERVICES",
+        "origin": "LOS ANGELES, CA",
+        "destination": "NEW YORK, NY 10163",
+        "reference_number": "",
+        "unit_price": 13811.42,
+        "total_amount": 13811.42,
+        "currency": "USD",
+        "other": {
+          "source_file": "223_train_imagesb_b_d_z_bdz74c00_91659978.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "INVOICE",
+          "field": "document_type",
+          "value": "invoice",
+          "confidence": 98,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "4305002590",
+          "field": "document_number",
+          "value": "4305002590",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "10-31",
+          "field": "document_date",
+          "value": "1984-10-31",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "EARNED RATE DFFERS FROM THE CON-RACT RATE SHOWN.",
+          "field": "sender",
+          "value": "THE CON-RACT RATE SHOWN",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "LORILLARD MEDIA SERVICES",
+          "field": "receiver",
+          "value": "LORILLARD MEDIA SERVICES",
+          "confidence": 98,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "TIMES MIRROR SQUARE/LOS ANGELES, CA, 9O0U3 (213) 972-5000",
+          "field": "origin",
+          "value": "LOS ANGELES, CA",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "NY 10163",
+          "field": "destination",
+          "value": "NEW YORK, NY 10163",
+          "confidence": 94,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "reference_number",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "$13,811.42",
+          "field": "unit_price",
+          "value": "13811.42",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "$13,811.42",
+          "field": "total_amount",
+          "value": "13811.42",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "223_train_imagesb_b_d_z_bdz74c00_91659978.png",
+          "field": "source_file",
+          "value": "223_train_imagesb_b_d_z_bdz74c00_91659978.png",
+          "confidence": 92,
+          "status": "success",
+          "isOther": true
+        }
+      ],
+      "confidence": {
+        "overall": 89,
+        "ocr": 87,
+        "slm": 88,
+        "mapping": 91,
+        "completeness": 91
+      },
+      "review_items": [
+        {
+          "field": "reference_number",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": {
+        "accuracy_pct": 91.0,
+        "inference_time_sec": 0.15,
+        "tokens_generated": 0,
+        "token_speed_tps": 0,
+        "core_fields_fill_rate_pct": 91.0,
+        "schema_valid": true,
+        "math_integrity_status": "no_subtotal",
+        "math_integrity_notes": "Sources: AMOUNT DUE\n$13,811.42",
+        "field_accuracies": {}
+      },
+      "model": "Qwen/Qwen2.5-1.5B-Instruct (Fallback: CUDA error: out of memory\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n)",
+      "device": "cpu/fallback"
+    },
+    "performance": {
+      "ocr_time_sec": 1.243,
+      "slm_time_sec": 0.195,
+      "total_time_sec": 1.438
+    },
+    "prompt_integrity": {
+      "cache_schema_version": 2,
+      "prompt_hash": "3afe309de18e090cdea10f5981dbebbe06615422047b55829885be7ad744eeef",
+      "variant": "one-shot",
+      "benchmark_example_ids": [
+        "DOC-009"
+      ],
+      "benchmark_example_confidences": [
+        98.13
+      ],
+      "training_document_ids": [
+        "DOC-001",
+        "DOC-002",
+        "DOC-003",
+        "DOC-004",
+        "DOC-007",
+        "DOC-009",
+        "DOC-010",
+        "DOC-012",
+        "DOC-013",
+        "DOC-014",
+        "DOC-015",
+        "DOC-016",
+        "DOC-017",
+        "DOC-018",
+        "DOC-019",
+        "DOC-020",
+        "DOC-021",
+        "DOC-023",
+        "DOC-025",
+        "DOC-026",
+        "DOC-027",
+        "DOC-028",
+        "DOC-030",
+        "DOC-031",
+        "DOC-032",
+        "DOC-033",
+        "DOC-036",
+        "DOC-039",
+        "DOC-040",
+        "DOC-041",
+        "DOC-042",
+        "DOC-043",
+        "DOC-044",
+        "DOC-045",
+        "DOC-046",
+        "DOC-047",
+        "DOC-048",
+        "DOC-049",
+        "DOC-050",
+        "DOC-051",
+        "DOC-052",
+        "DOC-053",
+        "DOC-055",
+        "DOC-057",
+        "DOC-058",
+        "DOC-059",
+        "DOC-060",
+        "DOC-061",
+        "DOC-063",
+        "DOC-064",
+        "DOC-065",
+        "DOC-066",
+        "DOC-068",
+        "DOC-069",
+        "DOC-071",
+        "DOC-072",
+        "DOC-073",
+        "DOC-074",
+        "DOC-075",
+        "DOC-076",
+        "DOC-077",
+        "DOC-078",
+        "DOC-079",
+        "DOC-081",
+        "DOC-082",
+        "DOC-083",
+        "DOC-084",
+        "DOC-085",
+        "DOC-086",
+        "DOC-087",
+        "DOC-088",
+        "DOC-089",
+        "DOC-090",
+        "DOC-093",
+        "DOC-094",
+        "DOC-095",
+        "DOC-096",
+        "DOC-097",
+        "DOC-098",
+        "DOC-099",
+        "DOC-100",
+        "DOC-102",
+        "DOC-104",
+        "DOC-105",
+        "DOC-107",
+        "DOC-109",
+        "DOC-110",
+        "DOC-111",
+        "DOC-112",
+        "DOC-114",
+        "DOC-115",
+        "DOC-117",
+        "DOC-118",
+        "DOC-119",
+        "DOC-120",
+        "DOC-122",
+        "DOC-123",
+        "DOC-124",
+        "DOC-125",
+        "DOC-127",
+        "DOC-128",
+        "DOC-130",
+        "DOC-131",
+        "DOC-132",
+        "DOC-134",
+        "DOC-135",
+        "DOC-136",
+        "DOC-138",
+        "DOC-139",
+        "DOC-140",
+        "DOC-141",
+        "DOC-142",
+        "DOC-145",
+        "DOC-146",
+        "DOC-147",
+        "DOC-148",
+        "DOC-149",
+        "DOC-150",
+        "DOC-151",
+        "DOC-152",
+        "DOC-154",
+        "DOC-155",
+        "DOC-157",
+        "DOC-158",
+        "DOC-159",
+        "DOC-160",
+        "DOC-164",
+        "DOC-165",
+        "DOC-166",
+        "DOC-167",
+        "DOC-168",
+        "DOC-169",
+        "DOC-170",
+        "DOC-171",
+        "DOC-172",
+        "DOC-173",
+        "DOC-176",
+        "DOC-177",
+        "DOC-178",
+        "DOC-179",
+        "DOC-180",
+        "DOC-181",
+        "DOC-183",
+        "DOC-184",
+        "DOC-185",
+        "DOC-186",
+        "DOC-187",
+        "DOC-188",
+        "DOC-189",
+        "DOC-190",
+        "DOC-191",
+        "DOC-192",
+        "DOC-193",
+        "DOC-194",
+        "DOC-195",
+        "DOC-199",
+        "DOC-200",
+        "DOC-201",
+        "DOC-202",
+        "DOC-203",
+        "DOC-204",
+        "DOC-205",
+        "DOC-206",
+        "DOC-207",
+        "DOC-209",
+        "DOC-210",
+        "DOC-212",
+        "DOC-213",
+        "DOC-214",
+        "DOC-215",
+        "DOC-216",
+        "DOC-218",
+        "DOC-219",
+        "DOC-220",
+        "DOC-221",
+        "DOC-224",
+        "DOC-225",
+        "DOC-226",
+        "DOC-227",
+        "DOC-228",
+        "DOC-229",
+        "DOC-230",
+        "DOC-231",
+        "DOC-232",
+        "DOC-233",
+        "DOC-234",
+        "DOC-235",
+        "DOC-236",
+        "DOC-237",
+        "DOC-238",
+        "DOC-240",
+        "DOC-241",
+        "DOC-243",
+        "DOC-244",
+        "DOC-245",
+        "DOC-246",
+        "DOC-248",
+        "DOC-250",
+        "DOC-251",
+        "DOC-252",
+        "DOC-253",
+        "DOC-254",
+        "DOC-255",
+        "DOC-256",
+        "DOC-257",
+        "DOC-258",
+        "DOC-262",
+        "DOC-263",
+        "DOC-265",
+        "DOC-266",
+        "DOC-267",
+        "DOC-269",
+        "DOC-270",
+        "DOC-271",
+        "DOC-272",
+        "DOC-273",
+        "DOC-274",
+        "DOC-275",
+        "DOC-276",
+        "DOC-277",
+        "DOC-279",
+        "DOC-280",
+        "DOC-281",
+        "DOC-282",
+        "DOC-283",
+        "DOC-285",
+        "DOC-286",
+        "DOC-287",
+        "DOC-288",
+        "DOC-289",
+        "DOC-290",
+        "DOC-291",
+        "DOC-292",
+        "DOC-294",
+        "DOC-295",
+        "DOC-296",
+        "DOC-297",
+        "DOC-298",
+        "DOC-299",
+        "DOC-300"
+      ]
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 1.243,
+    "slm_time_sec": 0.195,
+    "total_time_sec": 1.438
+  },
+  "cached_at": "2026-09-28T08:40:37.977262+00:00"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-180",
+  "rank": 180,
+  "file_name": "180_train_imagesa_a_a_h_aah55a00_506593712+-3712.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "M7MSB091T4CR1",
+    "document_date": "1941-08-12",
+    "sender": "Long, Haymes & Carr Inc. 40 Charlois Bivd., Box 5627 Winston-Salem NC 271l3 (919)765-3630",
+    "receiver": "R.J. Reynolds Tobacco Co. Page 1 of",
+    "origin": "ally estimated as straight warning revision",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 635.0,
+    "total_amount": 635.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:25:25"
+}

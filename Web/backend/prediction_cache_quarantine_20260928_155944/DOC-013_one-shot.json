@@ -1,0 +1,6526 @@
+{
+  "document_id": "DOC-013",
+  "file_name": "013_train_imageso_o_k_z_okz00e00_94415089.png",
+  "cache_schema_version": 2,
+  "prompt_hash": "3ca284b8622243d20d4e83a8d47c699209f6964d86c42ca7bb01d1e607336efc",
+  "variant": "one-shot",
+  "benchmark_example_ids": [
+    "DOC-009"
+  ],
+  "benchmark_example_confidences": [
+    98.13
+  ],
+  "training_document_ids": [
+    "DOC-001",
+    "DOC-002",
+    "DOC-004",
+    "DOC-005",
+    "DOC-006",
+    "DOC-007",
+    "DOC-008",
+    "DOC-009",
+    "DOC-010",
+    "DOC-011",
+    "DOC-012",
+    "DOC-014",
+    "DOC-015",
+    "DOC-016",
+    "DOC-017",
+    "DOC-018",
+    "DOC-019",
+    "DOC-020",
+    "DOC-021",
+    "DOC-022",
+    "DOC-023",
+    "DOC-024",
+    "DOC-025",
+    "DOC-026",
+    "DOC-028",
+    "DOC-031",
+    "DOC-032",
+    "DOC-033",
+    "DOC-034",
+    "DOC-035",
+    "DOC-037",
+    "DOC-038",
+    "DOC-040",
+    "DOC-041",
+    "DOC-043",
+    "DOC-044",
+    "DOC-045",
+    "DOC-046",
+    "DOC-047",
+    "DOC-048",
+    "DOC-049",
+    "DOC-050",
+    "DOC-051",
+    "DOC-053",
+    "DOC-054",
+    "DOC-055",
+    "DOC-057",
+    "DOC-058",
+    "DOC-059",
+    "DOC-060",
+    "DOC-061",
+    "DOC-062",
+    "DOC-063",
+    "DOC-064",
+    "DOC-065",
+    "DOC-067",
+    "DOC-068",
+    "DOC-069",
+    "DOC-070",
+    "DOC-071",
+    "DOC-072",
+    "DOC-073",
+    "DOC-074",
+    "DOC-076",
+    "DOC-077",
+    "DOC-078",
+    "DOC-079",
+    "DOC-080",
+    "DOC-081",
+    "DOC-082",
+    "DOC-083",
+    "DOC-085",
+    "DOC-087",
+    "DOC-088",
+    "DOC-089",
+    "DOC-091",
+    "DOC-092",
+    "DOC-093",
+    "DOC-094",
+    "DOC-095",
+    "DOC-097",
+    "DOC-098",
+    "DOC-099",
+    "DOC-100",
+    "DOC-101",
+    "DOC-102",
+    "DOC-103",
+    "DOC-104",
+    "DOC-105",
+    "DOC-106",
+    "DOC-107",
+    "DOC-109",
+    "DOC-110",
+    "DOC-111",
+    "DOC-112",
+    "DOC-114",
+    "DOC-115",
+    "DOC-117",
+    "DOC-119",
+    "DOC-120",
+    "DOC-122",
+    "DOC-123",
+    "DOC-124",
+    "DOC-125",
+    "DOC-127",
+    "DOC-129",
+    "DOC-130",
+    "DOC-131",
+    "DOC-132",
+    "DOC-133",
+    "DOC-134",
+    "DOC-135",
+    "DOC-136",
+    "DOC-139",
+    "DOC-141",
+    "DOC-145",
+    "DOC-146",
+    "DOC-147",
+    "DOC-148",
+    "DOC-149",
+    "DOC-150",
+    "DOC-151",
+    "DOC-152",
+    "DOC-153",
+    "DOC-154",
+    "DOC-155",
+    "DOC-157",
+    "DOC-158",
+    "DOC-161",
+    "DOC-162",
+    "DOC-163",
+    "DOC-164",
+    "DOC-165",
+    "DOC-166",
+    "DOC-167",
+    "DOC-170",
+    "DOC-172",
+    "DOC-174",
+    "DOC-175",
+    "DOC-176",
+    "DOC-180",
+    "DOC-181",
+    "DOC-182",
+    "DOC-183",
+    "DOC-184",
+    "DOC-186",
+    "DOC-187",
+    "DOC-188",
+    "DOC-189",
+    "DOC-190",
+    "DOC-191",
+    "DOC-192",
+    "DOC-193",
+    "DOC-194",
+    "DOC-195",
+    "DOC-197",
+    "DOC-198",
+    "DOC-200",
+    "DOC-201",
+    "DOC-202",
+    "DOC-203",
+    "DOC-204",
+    "DOC-205",
+    "DOC-206",
+    "DOC-207",
+    "DOC-208",
+    "DOC-210",
+    "DOC-212",
+    "DOC-213",
+    "DOC-215",
+    "DOC-216",
+    "DOC-217",
+    "DOC-218",
+    "DOC-219",
+    "DOC-220",
+    "DOC-221",
+    "DOC-222",
+    "DOC-225",
+    "DOC-226",
+    "DOC-227",
+    "DOC-228",
+    "DOC-229",
+    "DOC-230",
+    "DOC-231",
+    "DOC-232",
+    "DOC-233",
+    "DOC-234",
+    "DOC-235",
+    "DOC-236",
+    "DOC-237",
+    "DOC-238",
+    "DOC-239",
+    "DOC-240",
+    "DOC-241",
+    "DOC-242",
+    "DOC-243",
+    "DOC-244",
+    "DOC-246",
+    "DOC-249",
+    "DOC-250",
+    "DOC-251",
+    "DOC-252",
+    "DOC-253",
+    "DOC-256",
+    "DOC-257",
+    "DOC-258",
+    "DOC-259",
+    "DOC-260",
+    "DOC-262",
+    "DOC-263",
+    "DOC-264",
+    "DOC-265",
+    "DOC-266",
+    "DOC-267",
+    "DOC-268",
+    "DOC-269",
+    "DOC-271",
+    "DOC-273",
+    "DOC-274",
+    "DOC-275",
+    "DOC-276",
+    "DOC-277",
+    "DOC-279",
+    "DOC-280",
+    "DOC-282",
+    "DOC-283",
+    "DOC-286",
+    "DOC-287",
+    "DOC-288",
+    "DOC-289",
+    "DOC-290",
+    "DOC-291",
+    "DOC-292",
+    "DOC-293",
+    "DOC-295",
+    "DOC-296",
+    "DOC-297",
+    "DOC-298",
+    "DOC-299",
+    "DOC-300"
+  ],
+  "json_schema": {
+    "document_type": "invoice",
+    "document_number": "1300",
+    "document_date": "",
+    "sender": "",
+    "receiver": "",
+    "origin": "New York, NY 10016",
+    "destination": "",
+    "reference_number": "",
+    "unit_price": 4446.0,
+    "total_amount": 4446.0,
+    "currency": "USD",
+    "other": {
+      "source_file": "013_train_imageso_o_k_z_okz00e00_94415089.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-013",
+      "filename": "013_train_imageso_o_k_z_okz00e00_94415089.png",
+      "ocr_text": "M.Y\nENTNO.\nINVOICE NO.\nFINNEYOUTDOORADVERTISING\n1300\n5\nFALL RIVER, MASS 02722-3279\n57 WALNUT ST., P. Q BOX 3279\n5448\nTEL (508) 672-2000997-7817\nFAX (508) 872-2070\nTHE OUTDOOR EYE IS ON YOU\n05/01791\nSOLD\nInvolce Dat\nTO\nLorillard\nOne Park Ave: Ms. B. Epperson\nNew York\nNY 10016\nNet_30_ Days\nUAFASERADVERTISERTAECSM\nFRGBRANCHESSGEBRAND NAME\nLorilard\nNewport\nACCOUNT NO.\nSHOWING\nTO\n;.\nSIX_FEET-_BOX-\n934\n75\n05/01/91\n06/01/:\nNew Bedford Market\n4\nGROSS\n4446.00\n0\nAgency Commission\n741.15\n-5-\nNET\n3704.85\nCURRENT CHARGES:\n$3704.85\nAPREVIOUS-BALANCE4\nDe\nPLEASE PAY THIS AMOUNT\n$3704.85\n*LOCATIONLIST\nN. Bedford Market, . Mattapoisett\n102\nWE\nRt.6 Cape Rd. &'Countyy\nIND\n75\nN. Bedford Market - Fairhaven\nIll.\n107\nNE\nMain & Bridge St.\nIND\n75\nN. Bedford Market.- New Bedford\nI11.\n:19\nNE\n.488 Belleville Av\nIND\n75\n125\n23\nEF\nWamsutta St. E/O\nuishnet Ave.\n2\n75\n94415089\n39\nNF\n1598 Acushnet Ave\n& bavis st.\nIND\n75\nX\n46\nNF\nAcushnet Ave. S/O Takiln Hi11\n2\n75\nX\n50\nNE\nCOEEASEBETURN WITH REMTANOE\n950 Ashley Blvd.\n2\n75\nx\n66\nEF\nNF\n600\n81\nNF\nPurchase St. opp. Van Buren St InD\n85\nNF\n75\n87\nSF\nPurchase st. opp CountremrtanceInD\nDeane & Quansett sts.\nIND\n75\n75",
+      "ocr_lines": [
+        {
+          "text": "M.Y",
+          "confidence": 0.22,
+          "bounding_box": [
+            [
+              489.0,
+              52.0
+            ],
+            [
+              523.0,
+              52.0
+            ],
+            [
+              523.0,
+              72.0
+            ],
+            [
+              489.0,
+              72.0
+            ]
+          ],
+          "box": [
+            [
+              489.0,
+              52.0
+            ],
+            [
+              523.0,
+              52.0
+            ],
+            [
+              523.0,
+              72.0
+            ],
+            [
+              489.0,
+              72.0
+            ]
+          ],
+          "position": {
+            "x": 489,
+            "y": 52,
+            "width": 34,
+            "height": 20,
+            "center_x": 506.0,
+            "center_y": 62.0,
+            "region": "top-right",
+            "tag": "[y:52, x:489]"
+          }
+        },
+        {
+          "text": "ENTNO.",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              56.0,
+              88.0
+            ],
+            [
+              98.0,
+              88.0
+            ],
+            [
+              98.0,
+              99.0
+            ],
+            [
+              56.0,
+              99.0
+            ]
+          ],
+          "box": [
+            [
+              56.0,
+              88.0
+            ],
+            [
+              98.0,
+              88.0
+            ],
+            [
+              98.0,
+              99.0
+            ],
+            [
+              56.0,
+              99.0
+            ]
+          ],
+          "position": {
+            "x": 56,
+            "y": 88,
+            "width": 42,
+            "height": 11,
+            "center_x": 77.0,
+            "center_y": 93.5,
+            "region": "top-left",
+            "tag": "[y:88, x:56]"
+          }
+        },
+        {
+          "text": "INVOICE NO.",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              643.0,
+              87.0
+            ],
+            [
+              721.0,
+              89.0
+            ],
+            [
+              720.0,
+              107.0
+            ],
+            [
+              642.0,
+              105.0
+            ]
+          ],
+          "box": [
+            [
+              643.0,
+              87.0
+            ],
+            [
+              721.0,
+              89.0
+            ],
+            [
+              720.0,
+              107.0
+            ],
+            [
+              642.0,
+              105.0
+            ]
+          ],
+          "position": {
+            "x": 642,
+            "y": 87,
+            "width": 79,
+            "height": 20,
+            "center_x": 681.5,
+            "center_y": 97.0,
+            "region": "top-right",
+            "tag": "[y:87, x:642]"
+          }
+        },
+        {
+          "text": "FINNEYOUTDOORADVERTISING",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              247.0,
+              90.0
+            ],
+            [
+              570.0,
+              93.0
+            ],
+            [
+              570.0,
+              110.0
+            ],
+            [
+              247.0,
+              107.0
+            ]
+          ],
+          "box": [
+            [
+              247.0,
+              90.0
+            ],
+            [
+              570.0,
+              93.0
+            ],
+            [
+              570.0,
+              110.0
+            ],
+            [
+              247.0,
+              107.0
+            ]
+          ],
+          "position": {
+            "x": 247,
+            "y": 90,
+            "width": 323,
+            "height": 20,
+            "center_x": 408.5,
+            "center_y": 100.0,
+            "region": "top-center",
+            "tag": "[y:90, x:247]"
+          }
+        },
+        {
+          "text": "1300",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              22.0,
+              114.0
+            ],
+            [
+              58.0,
+              112.0
+            ],
+            [
+              60.0,
+              128.0
+            ],
+            [
+              23.0,
+              130.0
+            ]
+          ],
+          "box": [
+            [
+              22.0,
+              114.0
+            ],
+            [
+              58.0,
+              112.0
+            ],
+            [
+              60.0,
+              128.0
+            ],
+            [
+              23.0,
+              130.0
+            ]
+          ],
+          "position": {
+            "x": 22,
+            "y": 112,
+            "width": 38,
+            "height": 18,
+            "center_x": 41.0,
+            "center_y": 121.0,
+            "region": "top-left",
+            "tag": "[y:112, x:22]"
+          }
+        },
+        {
+          "text": "5",
+          "confidence": 0.21,
+          "bounding_box": [
+            [
+              112.0,
+              115.0
+            ],
+            [
+              119.0,
+              115.0
+            ],
+            [
+              119.0,
+              133.0
+            ],
+            [
+              112.0,
+              133.0
+            ]
+          ],
+          "box": [
+            [
+              112.0,
+              115.0
+            ],
+            [
+              119.0,
+              115.0
+            ],
+            [
+              119.0,
+              133.0
+            ],
+            [
+              112.0,
+              133.0
+            ]
+          ],
+          "position": {
+            "x": 112,
+            "y": 115,
+            "width": 7,
+            "height": 18,
+            "center_x": 115.5,
+            "center_y": 124.0,
+            "region": "top-left",
+            "tag": "[y:115, x:112]"
+          }
+        },
+        {
+          "text": "FALL RIVER, MASS 02722-3279",
+          "confidence": 0.81,
+          "bounding_box": [
+            [
+              304.0,
+              118.0
+            ],
+            [
+              445.0,
+              120.0
+            ],
+            [
+              445.0,
+              133.0
+            ],
+            [
+              303.0,
+              131.0
+            ]
+          ],
+          "box": [
+            [
+              304.0,
+              118.0
+            ],
+            [
+              445.0,
+              120.0
+            ],
+            [
+              445.0,
+              133.0
+            ],
+            [
+              303.0,
+              131.0
+            ]
+          ],
+          "position": {
+            "x": 303,
+            "y": 118,
+            "width": 142,
+            "height": 15,
+            "center_x": 374.0,
+            "center_y": 125.5,
+            "region": "top-center",
+            "tag": "[y:118, x:303]"
+          }
+        },
+        {
+          "text": "57 WALNUT ST., P. Q BOX 3279",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              305.0,
+              109.0
+            ],
+            [
+              442.0,
+              109.0
+            ],
+            [
+              442.0,
+              122.0
+            ],
+            [
+              305.0,
+              122.0
+            ]
+          ],
+          "box": [
+            [
+              305.0,
+              109.0
+            ],
+            [
+              442.0,
+              109.0
+            ],
+            [
+              442.0,
+              122.0
+            ],
+            [
+              305.0,
+              122.0
+            ]
+          ],
+          "position": {
+            "x": 305,
+            "y": 109,
+            "width": 137,
+            "height": 13,
+            "center_x": 373.5,
+            "center_y": 115.5,
+            "region": "top-center",
+            "tag": "[y:109, x:305]"
+          }
+        },
+        {
+          "text": "5448",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              657.0,
+              117.0
+            ],
+            [
+              698.0,
+              117.0
+            ],
+            [
+              698.0,
+              132.0
+            ],
+            [
+              657.0,
+              132.0
+            ]
+          ],
+          "box": [
+            [
+              657.0,
+              117.0
+            ],
+            [
+              698.0,
+              117.0
+            ],
+            [
+              698.0,
+              132.0
+            ],
+            [
+              657.0,
+              132.0
+            ]
+          ],
+          "position": {
+            "x": 657,
+            "y": 117,
+            "width": 41,
+            "height": 15,
+            "center_x": 677.5,
+            "center_y": 124.5,
+            "region": "top-right",
+            "tag": "[y:117, x:657]"
+          }
+        },
+        {
+          "text": "TEL (508) 672-2000997-7817",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              311.0,
+              129.0
+            ],
+            [
+              440.0,
+              129.0
+            ],
+            [
+              440.0,
+              142.0
+            ],
+            [
+              311.0,
+              142.0
+            ]
+          ],
+          "box": [
+            [
+              311.0,
+              129.0
+            ],
+            [
+              440.0,
+              129.0
+            ],
+            [
+              440.0,
+              142.0
+            ],
+            [
+              311.0,
+              142.0
+            ]
+          ],
+          "position": {
+            "x": 311,
+            "y": 129,
+            "width": 129,
+            "height": 13,
+            "center_x": 375.5,
+            "center_y": 135.5,
+            "region": "top-center",
+            "tag": "[y:129, x:311]"
+          }
+        },
+        {
+          "text": "FAX (508) 872-2070",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              333.0,
+              139.0
+            ],
+            [
+              417.0,
+              139.0
+            ],
+            [
+              417.0,
+              152.0
+            ],
+            [
+              333.0,
+              152.0
+            ]
+          ],
+          "box": [
+            [
+              333.0,
+              139.0
+            ],
+            [
+              417.0,
+              139.0
+            ],
+            [
+              417.0,
+              152.0
+            ],
+            [
+              333.0,
+              152.0
+            ]
+          ],
+          "position": {
+            "x": 333,
+            "y": 139,
+            "width": 84,
+            "height": 13,
+            "center_x": 375.0,
+            "center_y": 145.5,
+            "region": "top-center",
+            "tag": "[y:139, x:333]"
+          }
+        },
+        {
+          "text": "THE OUTDOOR EYE IS ON YOU",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              286.0,
+              151.0
+            ],
+            [
+              463.0,
+              152.0
+            ],
+            [
+              463.0,
+              170.0
+            ],
+            [
+              285.0,
+              169.0
+            ]
+          ],
+          "box": [
+            [
+              286.0,
+              151.0
+            ],
+            [
+              463.0,
+              152.0
+            ],
+            [
+              463.0,
+              170.0
+            ],
+            [
+              285.0,
+              169.0
+            ]
+          ],
+          "position": {
+            "x": 285,
+            "y": 151,
+            "width": 178,
+            "height": 19,
+            "center_x": 374.0,
+            "center_y": 160.5,
+            "region": "top-center",
+            "tag": "[y:151, x:285]"
+          }
+        },
+        {
+          "text": "05/01791",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              592.0,
+              161.0
+            ],
+            [
+              658.0,
+              161.0
+            ],
+            [
+              658.0,
+              175.0
+            ],
+            [
+              592.0,
+              175.0
+            ]
+          ],
+          "box": [
+            [
+              592.0,
+              161.0
+            ],
+            [
+              658.0,
+              161.0
+            ],
+            [
+              658.0,
+              175.0
+            ],
+            [
+              592.0,
+              175.0
+            ]
+          ],
+          "position": {
+            "x": 592,
+            "y": 161,
+            "width": 66,
+            "height": 14,
+            "center_x": 625.0,
+            "center_y": 168.0,
+            "region": "top-right",
+            "tag": "[y:161, x:592]"
+          }
+        },
+        {
+          "text": "SOLD",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              53.0,
+              169.0
+            ],
+            [
+              86.0,
+              169.0
+            ],
+            [
+              86.0,
+              184.0
+            ],
+            [
+              53.0,
+              184.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              169.0
+            ],
+            [
+              86.0,
+              169.0
+            ],
+            [
+              86.0,
+              184.0
+            ],
+            [
+              53.0,
+              184.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 169,
+            "width": 33,
+            "height": 15,
+            "center_x": 69.5,
+            "center_y": 176.5,
+            "region": "top-left",
+            "tag": "[y:169, x:53]"
+          }
+        },
+        {
+          "text": "Involce Dat",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              492.0,
+              174.0
+            ],
+            [
+              555.0,
+              177.0
+            ],
+            [
+              554.0,
+              192.0
+            ],
+            [
+              491.0,
+              189.0
+            ]
+          ],
+          "box": [
+            [
+              492.0,
+              174.0
+            ],
+            [
+              555.0,
+              177.0
+            ],
+            [
+              554.0,
+              192.0
+            ],
+            [
+              491.0,
+              189.0
+            ]
+          ],
+          "position": {
+            "x": 491,
+            "y": 174,
+            "width": 64,
+            "height": 18,
+            "center_x": 523.0,
+            "center_y": 183.0,
+            "region": "top-right",
+            "tag": "[y:174, x:491]"
+          }
+        },
+        {
+          "text": "TO",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              58.0,
+              181.0
+            ],
+            [
+              79.0,
+              181.0
+            ],
+            [
+              79.0,
+              198.0
+            ],
+            [
+              58.0,
+              198.0
+            ]
+          ],
+          "box": [
+            [
+              58.0,
+              181.0
+            ],
+            [
+              79.0,
+              181.0
+            ],
+            [
+              79.0,
+              198.0
+            ],
+            [
+              58.0,
+              198.0
+            ]
+          ],
+          "position": {
+            "x": 58,
+            "y": 181,
+            "width": 21,
+            "height": 17,
+            "center_x": 68.5,
+            "center_y": 189.5,
+            "region": "top-left",
+            "tag": "[y:181, x:58]"
+          }
+        },
+        {
+          "text": "Lorillard",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              99.0,
+              246.0
+            ],
+            [
+              182.0,
+              246.0
+            ],
+            [
+              182.0,
+              260.0
+            ],
+            [
+              99.0,
+              260.0
+            ]
+          ],
+          "box": [
+            [
+              99.0,
+              246.0
+            ],
+            [
+              182.0,
+              246.0
+            ],
+            [
+              182.0,
+              260.0
+            ],
+            [
+              99.0,
+              260.0
+            ]
+          ],
+          "position": {
+            "x": 99,
+            "y": 246,
+            "width": 83,
+            "height": 14,
+            "center_x": 140.5,
+            "center_y": 253.0,
+            "region": "top-left",
+            "tag": "[y:246, x:99]"
+          }
+        },
+        {
+          "text": "One Park Ave: Ms. B. Epperson",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              98.0,
+              259.0
+            ],
+            [
+              361.0,
+              261.0
+            ],
+            [
+              361.0,
+              277.0
+            ],
+            [
+              97.0,
+              275.0
+            ]
+          ],
+          "box": [
+            [
+              98.0,
+              259.0
+            ],
+            [
+              361.0,
+              261.0
+            ],
+            [
+              361.0,
+              277.0
+            ],
+            [
+              97.0,
+              275.0
+            ]
+          ],
+          "position": {
+            "x": 97,
+            "y": 259,
+            "width": 264,
+            "height": 18,
+            "center_x": 229.0,
+            "center_y": 268.0,
+            "region": "top-left",
+            "tag": "[y:259, x:97]"
+          }
+        },
+        {
+          "text": "New York",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              99.0,
+              276.0
+            ],
+            [
+              173.0,
+              276.0
+            ],
+            [
+              173.0,
+              290.0
+            ],
+            [
+              99.0,
+              290.0
+            ]
+          ],
+          "box": [
+            [
+              99.0,
+              276.0
+            ],
+            [
+              173.0,
+              276.0
+            ],
+            [
+              173.0,
+              290.0
+            ],
+            [
+              99.0,
+              290.0
+            ]
+          ],
+          "position": {
+            "x": 99,
+            "y": 276,
+            "width": 74,
+            "height": 14,
+            "center_x": 136.0,
+            "center_y": 283.0,
+            "region": "middle-left",
+            "tag": "[y:276, x:99]"
+          }
+        },
+        {
+          "text": "NY 10016",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              285.0,
+              275.0
+            ],
+            [
+              362.0,
+              277.0
+            ],
+            [
+              362.0,
+              292.0
+            ],
+            [
+              284.0,
+              290.0
+            ]
+          ],
+          "box": [
+            [
+              285.0,
+              275.0
+            ],
+            [
+              362.0,
+              277.0
+            ],
+            [
+              362.0,
+              292.0
+            ],
+            [
+              284.0,
+              290.0
+            ]
+          ],
+          "position": {
+            "x": 284,
+            "y": 275,
+            "width": 78,
+            "height": 17,
+            "center_x": 323.0,
+            "center_y": 283.5,
+            "region": "middle",
+            "tag": "[y:275, x:284]"
+          }
+        },
+        {
+          "text": "Net_30_ Days",
+          "confidence": 0.86,
+          "bounding_box": [
+            [
+              454.0,
+              305.0
+            ],
+            [
+              554.0,
+              305.0
+            ],
+            [
+              554.0,
+              320.0
+            ],
+            [
+              454.0,
+              320.0
+            ]
+          ],
+          "box": [
+            [
+              454.0,
+              305.0
+            ],
+            [
+              554.0,
+              305.0
+            ],
+            [
+              554.0,
+              320.0
+            ],
+            [
+              454.0,
+              320.0
+            ]
+          ],
+          "position": {
+            "x": 454,
+            "y": 305,
+            "width": 100,
+            "height": 15,
+            "center_x": 504.0,
+            "center_y": 312.5,
+            "region": "middle-right",
+            "tag": "[y:305, x:454]"
+          }
+        },
+        {
+          "text": "UAFASERADVERTISERTAECSM",
+          "confidence": 0.61,
+          "bounding_box": [
+            [
+              31.0,
+              316.0
+            ],
+            [
+              320.0,
+              317.0
+            ],
+            [
+              320.0,
+              331.0
+            ],
+            [
+              31.0,
+              330.0
+            ]
+          ],
+          "box": [
+            [
+              31.0,
+              316.0
+            ],
+            [
+              320.0,
+              317.0
+            ],
+            [
+              320.0,
+              331.0
+            ],
+            [
+              31.0,
+              330.0
+            ]
+          ],
+          "position": {
+            "x": 31,
+            "y": 316,
+            "width": 289,
+            "height": 15,
+            "center_x": 175.5,
+            "center_y": 323.5,
+            "region": "middle-left",
+            "tag": "[y:316, x:31]"
+          }
+        },
+        {
+          "text": "FRGBRANCHESSGEBRAND NAME",
+          "confidence": 0.73,
+          "bounding_box": [
+            [
+              314.0,
+              318.0
+            ],
+            [
+              696.0,
+              320.0
+            ],
+            [
+              696.0,
+              334.0
+            ],
+            [
+              314.0,
+              332.0
+            ]
+          ],
+          "box": [
+            [
+              314.0,
+              318.0
+            ],
+            [
+              696.0,
+              320.0
+            ],
+            [
+              696.0,
+              334.0
+            ],
+            [
+              314.0,
+              332.0
+            ]
+          ],
+          "position": {
+            "x": 314,
+            "y": 318,
+            "width": 382,
+            "height": 16,
+            "center_x": 505.0,
+            "center_y": 326.0,
+            "region": "middle-right",
+            "tag": "[y:318, x:314]"
+          }
+        },
+        {
+          "text": "Lorilard",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              22.0,
+              347.0
+            ],
+            [
+              102.0,
+              347.0
+            ],
+            [
+              102.0,
+              361.0
+            ],
+            [
+              22.0,
+              361.0
+            ]
+          ],
+          "box": [
+            [
+              22.0,
+              347.0
+            ],
+            [
+              102.0,
+              347.0
+            ],
+            [
+              102.0,
+              361.0
+            ],
+            [
+              22.0,
+              361.0
+            ]
+          ],
+          "position": {
+            "x": 22,
+            "y": 347,
+            "width": 80,
+            "height": 14,
+            "center_x": 62.0,
+            "center_y": 354.0,
+            "region": "middle-left",
+            "tag": "[y:347, x:22]"
+          }
+        },
+        {
+          "text": "Newport",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              567.0,
+              350.0
+            ],
+            [
+              633.0,
+              352.0
+            ],
+            [
+              633.0,
+              366.0
+            ],
+            [
+              567.0,
+              364.0
+            ]
+          ],
+          "box": [
+            [
+              567.0,
+              350.0
+            ],
+            [
+              633.0,
+              352.0
+            ],
+            [
+              633.0,
+              366.0
+            ],
+            [
+              567.0,
+              364.0
+            ]
+          ],
+          "position": {
+            "x": 567,
+            "y": 350,
+            "width": 66,
+            "height": 16,
+            "center_x": 600.0,
+            "center_y": 358.0,
+            "region": "middle-right",
+            "tag": "[y:350, x:567]"
+          }
+        },
+        {
+          "text": "ACCOUNT NO.",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              369.0,
+              363.0
+            ],
+            [
+              495.0,
+              363.0
+            ],
+            [
+              495.0,
+              376.0
+            ],
+            [
+              369.0,
+              376.0
+            ]
+          ],
+          "box": [
+            [
+              369.0,
+              363.0
+            ],
+            [
+              495.0,
+              363.0
+            ],
+            [
+              495.0,
+              376.0
+            ],
+            [
+              369.0,
+              376.0
+            ]
+          ],
+          "position": {
+            "x": 369,
+            "y": 363,
+            "width": 126,
+            "height": 13,
+            "center_x": 432.0,
+            "center_y": 369.5,
+            "region": "middle",
+            "tag": "[y:363, x:369]"
+          }
+        },
+        {
+          "text": "SHOWING",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              504.0,
+              363.0
+            ],
+            [
+              552.0,
+              363.0
+            ],
+            [
+              552.0,
+              377.0
+            ],
+            [
+              504.0,
+              377.0
+            ]
+          ],
+          "box": [
+            [
+              504.0,
+              363.0
+            ],
+            [
+              552.0,
+              363.0
+            ],
+            [
+              552.0,
+              377.0
+            ],
+            [
+              504.0,
+              377.0
+            ]
+          ],
+          "position": {
+            "x": 504,
+            "y": 363,
+            "width": 48,
+            "height": 14,
+            "center_x": 528.0,
+            "center_y": 370.0,
+            "region": "middle-right",
+            "tag": "[y:363, x:504]"
+          }
+        },
+        {
+          "text": "TO",
+          "confidence": 0.86,
+          "bounding_box": [
+            [
+              688.0,
+              368.0
+            ],
+            [
+              704.0,
+              368.0
+            ],
+            [
+              704.0,
+              380.0
+            ],
+            [
+              688.0,
+              380.0
+            ]
+          ],
+          "box": [
+            [
+              688.0,
+              368.0
+            ],
+            [
+              704.0,
+              368.0
+            ],
+            [
+              704.0,
+              380.0
+            ],
+            [
+              688.0,
+              380.0
+            ]
+          ],
+          "position": {
+            "x": 688,
+            "y": 368,
+            "width": 16,
+            "height": 12,
+            "center_x": 696.0,
+            "center_y": 374.0,
+            "region": "middle-right",
+            "tag": "[y:368, x:688]"
+          }
+        },
+        {
+          "text": ";.",
+          "confidence": 0.63,
+          "bounding_box": [
+            [
+              115.0,
+              380.0
+            ],
+            [
+              129.0,
+              380.0
+            ],
+            [
+              129.0,
+              387.0
+            ],
+            [
+              115.0,
+              387.0
+            ]
+          ],
+          "box": [
+            [
+              115.0,
+              380.0
+            ],
+            [
+              129.0,
+              380.0
+            ],
+            [
+              129.0,
+              387.0
+            ],
+            [
+              115.0,
+              387.0
+            ]
+          ],
+          "position": {
+            "x": 115,
+            "y": 380,
+            "width": 14,
+            "height": 7,
+            "center_x": 122.0,
+            "center_y": 383.5,
+            "region": "middle-left",
+            "tag": "[y:380, x:115]"
+          }
+        },
+        {
+          "text": "SIX_FEET-_BOX-",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              22.0,
+              391.0
+            ],
+            [
+              153.0,
+              391.0
+            ],
+            [
+              153.0,
+              405.0
+            ],
+            [
+              22.0,
+              405.0
+            ]
+          ],
+          "box": [
+            [
+              22.0,
+              391.0
+            ],
+            [
+              153.0,
+              391.0
+            ],
+            [
+              153.0,
+              405.0
+            ],
+            [
+              22.0,
+              405.0
+            ]
+          ],
+          "position": {
+            "x": 22,
+            "y": 391,
+            "width": 131,
+            "height": 14,
+            "center_x": 87.5,
+            "center_y": 398.0,
+            "region": "middle-left",
+            "tag": "[y:391, x:22]"
+          }
+        },
+        {
+          "text": "934",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              373.0,
+              391.0
+            ],
+            [
+              404.0,
+              391.0
+            ],
+            [
+              404.0,
+              407.0
+            ],
+            [
+              373.0,
+              407.0
+            ]
+          ],
+          "box": [
+            [
+              373.0,
+              391.0
+            ],
+            [
+              404.0,
+              391.0
+            ],
+            [
+              404.0,
+              407.0
+            ],
+            [
+              373.0,
+              407.0
+            ]
+          ],
+          "position": {
+            "x": 373,
+            "y": 391,
+            "width": 31,
+            "height": 16,
+            "center_x": 388.5,
+            "center_y": 399.0,
+            "region": "middle",
+            "tag": "[y:391, x:373]"
+          }
+        },
+        {
+          "text": "75",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              506.0,
+              391.0
+            ],
+            [
+              529.0,
+              391.0
+            ],
+            [
+              529.0,
+              408.0
+            ],
+            [
+              506.0,
+              408.0
+            ]
+          ],
+          "box": [
+            [
+              506.0,
+              391.0
+            ],
+            [
+              529.0,
+              391.0
+            ],
+            [
+              529.0,
+              408.0
+            ],
+            [
+              506.0,
+              408.0
+            ]
+          ],
+          "position": {
+            "x": 506,
+            "y": 391,
+            "width": 23,
+            "height": 17,
+            "center_x": 517.5,
+            "center_y": 399.5,
+            "region": "middle-right",
+            "tag": "[y:391, x:506]"
+          }
+        },
+        {
+          "text": "05/01/91",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              559.0,
+              391.0
+            ],
+            [
+              631.0,
+              393.0
+            ],
+            [
+              631.0,
+              410.0
+            ],
+            [
+              559.0,
+              408.0
+            ]
+          ],
+          "box": [
+            [
+              559.0,
+              391.0
+            ],
+            [
+              631.0,
+              393.0
+            ],
+            [
+              631.0,
+              410.0
+            ],
+            [
+              559.0,
+              408.0
+            ]
+          ],
+          "position": {
+            "x": 559,
+            "y": 391,
+            "width": 72,
+            "height": 19,
+            "center_x": 595.0,
+            "center_y": 400.5,
+            "region": "middle-right",
+            "tag": "[y:391, x:559]"
+          }
+        },
+        {
+          "text": "06/01/:",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              655.0,
+              393.0
+            ],
+            [
+              721.0,
+              395.0
+            ],
+            [
+              720.0,
+              410.0
+            ],
+            [
+              654.0,
+              408.0
+            ]
+          ],
+          "box": [
+            [
+              655.0,
+              393.0
+            ],
+            [
+              721.0,
+              395.0
+            ],
+            [
+              720.0,
+              410.0
+            ],
+            [
+              654.0,
+              408.0
+            ]
+          ],
+          "position": {
+            "x": 654,
+            "y": 393,
+            "width": 67,
+            "height": 17,
+            "center_x": 687.5,
+            "center_y": 401.5,
+            "region": "middle-right",
+            "tag": "[y:393, x:654]"
+          }
+        },
+        {
+          "text": "New Bedford Market",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              54.0,
+              435.0
+            ],
+            [
+              214.0,
+              435.0
+            ],
+            [
+              214.0,
+              450.0
+            ],
+            [
+              54.0,
+              450.0
+            ]
+          ],
+          "box": [
+            [
+              54.0,
+              435.0
+            ],
+            [
+              214.0,
+              435.0
+            ],
+            [
+              214.0,
+              450.0
+            ],
+            [
+              54.0,
+              450.0
+            ]
+          ],
+          "position": {
+            "x": 54,
+            "y": 435,
+            "width": 160,
+            "height": 15,
+            "center_x": 134.0,
+            "center_y": 442.5,
+            "region": "middle-left",
+            "tag": "[y:435, x:54]"
+          }
+        },
+        {
+          "text": "4",
+          "confidence": 0.4,
+          "bounding_box": [
+            [
+              41.0,
+              500.0
+            ],
+            [
+              51.0,
+              500.0
+            ],
+            [
+              51.0,
+              509.0
+            ],
+            [
+              41.0,
+              509.0
+            ]
+          ],
+          "box": [
+            [
+              41.0,
+              500.0
+            ],
+            [
+              51.0,
+              500.0
+            ],
+            [
+              51.0,
+              509.0
+            ],
+            [
+              41.0,
+              509.0
+            ]
+          ],
+          "position": {
+            "x": 41,
+            "y": 500,
+            "width": 10,
+            "height": 9,
+            "center_x": 46.0,
+            "center_y": 504.5,
+            "region": "middle-left",
+            "tag": "[y:500, x:41]"
+          }
+        },
+        {
+          "text": "GROSS",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              293.0,
+              508.0
+            ],
+            [
+              341.0,
+              508.0
+            ],
+            [
+              341.0,
+              523.0
+            ],
+            [
+              293.0,
+              523.0
+            ]
+          ],
+          "box": [
+            [
+              293.0,
+              508.0
+            ],
+            [
+              341.0,
+              508.0
+            ],
+            [
+              341.0,
+              523.0
+            ],
+            [
+              293.0,
+              523.0
+            ]
+          ],
+          "position": {
+            "x": 293,
+            "y": 508,
+            "width": 48,
+            "height": 15,
+            "center_x": 317.0,
+            "center_y": 515.5,
+            "region": "middle",
+            "tag": "[y:508, x:293]"
+          }
+        },
+        {
+          "text": "4446.00",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              383.0,
+              509.0
+            ],
+            [
+              447.0,
+              509.0
+            ],
+            [
+              447.0,
+              523.0
+            ],
+            [
+              383.0,
+              523.0
+            ]
+          ],
+          "box": [
+            [
+              383.0,
+              509.0
+            ],
+            [
+              447.0,
+              509.0
+            ],
+            [
+              447.0,
+              523.0
+            ],
+            [
+              383.0,
+              523.0
+            ]
+          ],
+          "position": {
+            "x": 383,
+            "y": 509,
+            "width": 64,
+            "height": 14,
+            "center_x": 415.0,
+            "center_y": 516.0,
+            "region": "middle",
+            "tag": "[y:509, x:383]"
+          }
+        },
+        {
+          "text": "0",
+          "confidence": 0.11,
+          "bounding_box": [
+            [
+              434.0,
+              519.0
+            ],
+            [
+              462.0,
+              519.0
+            ],
+            [
+              462.0,
+              540.0
+            ],
+            [
+              434.0,
+              540.0
+            ]
+          ],
+          "box": [
+            [
+              434.0,
+              519.0
+            ],
+            [
+              462.0,
+              519.0
+            ],
+            [
+              462.0,
+              540.0
+            ],
+            [
+              434.0,
+              540.0
+            ]
+          ],
+          "position": {
+            "x": 434,
+            "y": 519,
+            "width": 28,
+            "height": 21,
+            "center_x": 448.0,
+            "center_y": 529.5,
+            "region": "middle",
+            "tag": "[y:519, x:434]"
+          }
+        },
+        {
+          "text": "Agency Commission",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              170.0,
+              538.0
+            ],
+            [
+              322.0,
+              538.0
+            ],
+            [
+              322.0,
+              552.0
+            ],
+            [
+              170.0,
+              552.0
+            ]
+          ],
+          "box": [
+            [
+              170.0,
+              538.0
+            ],
+            [
+              322.0,
+              538.0
+            ],
+            [
+              322.0,
+              552.0
+            ],
+            [
+              170.0,
+              552.0
+            ]
+          ],
+          "position": {
+            "x": 170,
+            "y": 538,
+            "width": 152,
+            "height": 14,
+            "center_x": 246.0,
+            "center_y": 545.0,
+            "region": "middle-left",
+            "tag": "[y:538, x:170]"
+          }
+        },
+        {
+          "text": "741.15",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              390.0,
+              537.0
+            ],
+            [
+              448.0,
+              537.0
+            ],
+            [
+              448.0,
+              554.0
+            ],
+            [
+              390.0,
+              554.0
+            ]
+          ],
+          "box": [
+            [
+              390.0,
+              537.0
+            ],
+            [
+              448.0,
+              537.0
+            ],
+            [
+              448.0,
+              554.0
+            ],
+            [
+              390.0,
+              554.0
+            ]
+          ],
+          "position": {
+            "x": 390,
+            "y": 537,
+            "width": 58,
+            "height": 17,
+            "center_x": 419.0,
+            "center_y": 545.5,
+            "region": "middle",
+            "tag": "[y:537, x:390]"
+          }
+        },
+        {
+          "text": "-5-",
+          "confidence": 0.74,
+          "bounding_box": [
+            [
+              540.0,
+              546.0
+            ],
+            [
+              593.0,
+              543.0
+            ],
+            [
+              594.0,
+              568.0
+            ],
+            [
+              542.0,
+              571.0
+            ]
+          ],
+          "box": [
+            [
+              540.0,
+              546.0
+            ],
+            [
+              593.0,
+              543.0
+            ],
+            [
+              594.0,
+              568.0
+            ],
+            [
+              542.0,
+              571.0
+            ]
+          ],
+          "position": {
+            "x": 540,
+            "y": 543,
+            "width": 54,
+            "height": 28,
+            "center_x": 567.0,
+            "center_y": 557.0,
+            "region": "middle-right",
+            "tag": "[y:543, x:540]"
+          }
+        },
+        {
+          "text": "NET",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              407.0,
+              568.0
+            ],
+            [
+              438.0,
+              568.0
+            ],
+            [
+              438.0,
+              583.0
+            ],
+            [
+              407.0,
+              583.0
+            ]
+          ],
+          "box": [
+            [
+              407.0,
+              568.0
+            ],
+            [
+              438.0,
+              568.0
+            ],
+            [
+              438.0,
+              583.0
+            ],
+            [
+              407.0,
+              583.0
+            ]
+          ],
+          "position": {
+            "x": 407,
+            "y": 568,
+            "width": 31,
+            "height": 15,
+            "center_x": 422.5,
+            "center_y": 575.5,
+            "region": "middle",
+            "tag": "[y:568, x:407]"
+          }
+        },
+        {
+          "text": "3704.85",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              515.0,
+              566.0
+            ],
+            [
+              579.0,
+              569.0
+            ],
+            [
+              579.0,
+              584.0
+            ],
+            [
+              514.0,
+              582.0
+            ]
+          ],
+          "box": [
+            [
+              515.0,
+              566.0
+            ],
+            [
+              579.0,
+              569.0
+            ],
+            [
+              579.0,
+              584.0
+            ],
+            [
+              514.0,
+              582.0
+            ]
+          ],
+          "position": {
+            "x": 514,
+            "y": 566,
+            "width": 65,
+            "height": 18,
+            "center_x": 546.5,
+            "center_y": 575.0,
+            "region": "middle-right",
+            "tag": "[y:566, x:514]"
+          }
+        },
+        {
+          "text": "CURRENT CHARGES:",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              459.0,
+              653.0
+            ],
+            [
+              618.0,
+              654.0
+            ],
+            [
+              618.0,
+              671.0
+            ],
+            [
+              459.0,
+              670.0
+            ]
+          ],
+          "box": [
+            [
+              459.0,
+              653.0
+            ],
+            [
+              618.0,
+              654.0
+            ],
+            [
+              618.0,
+              671.0
+            ],
+            [
+              459.0,
+              670.0
+            ]
+          ],
+          "position": {
+            "x": 459,
+            "y": 653,
+            "width": 159,
+            "height": 18,
+            "center_x": 538.5,
+            "center_y": 662.0,
+            "region": "middle-right",
+            "tag": "[y:653, x:459]"
+          }
+        },
+        {
+          "text": "$3704.85",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              636.0,
+              657.0
+            ],
+            [
+              712.0,
+              657.0
+            ],
+            [
+              712.0,
+              671.0
+            ],
+            [
+              636.0,
+              671.0
+            ]
+          ],
+          "box": [
+            [
+              636.0,
+              657.0
+            ],
+            [
+              712.0,
+              657.0
+            ],
+            [
+              712.0,
+              671.0
+            ],
+            [
+              636.0,
+              671.0
+            ]
+          ],
+          "position": {
+            "x": 636,
+            "y": 657,
+            "width": 76,
+            "height": 14,
+            "center_x": 674.0,
+            "center_y": 664.0,
+            "region": "middle-right",
+            "tag": "[y:657, x:636]"
+          }
+        },
+        {
+          "text": "APREVIOUS-BALANCE4",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              442.0,
+              669.0
+            ],
+            [
+              606.0,
+              671.0
+            ],
+            [
+              606.0,
+              686.0
+            ],
+            [
+              442.0,
+              683.0
+            ]
+          ],
+          "box": [
+            [
+              442.0,
+              669.0
+            ],
+            [
+              606.0,
+              671.0
+            ],
+            [
+              606.0,
+              686.0
+            ],
+            [
+              442.0,
+              683.0
+            ]
+          ],
+          "position": {
+            "x": 442,
+            "y": 669,
+            "width": 164,
+            "height": 17,
+            "center_x": 524.0,
+            "center_y": 677.5,
+            "region": "middle-right",
+            "tag": "[y:669, x:442]"
+          }
+        },
+        {
+          "text": "De",
+          "confidence": 0.25,
+          "bounding_box": [
+            [
+              689.0,
+              672.0
+            ],
+            [
+              712.0,
+              672.0
+            ],
+            [
+              712.0,
+              684.0
+            ],
+            [
+              689.0,
+              684.0
+            ]
+          ],
+          "box": [
+            [
+              689.0,
+              672.0
+            ],
+            [
+              712.0,
+              672.0
+            ],
+            [
+              712.0,
+              684.0
+            ],
+            [
+              689.0,
+              684.0
+            ]
+          ],
+          "position": {
+            "x": 689,
+            "y": 672,
+            "width": 23,
+            "height": 12,
+            "center_x": 700.5,
+            "center_y": 678.0,
+            "region": "middle-right",
+            "tag": "[y:672, x:689]"
+          }
+        },
+        {
+          "text": "PLEASE PAY THIS AMOUNT",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              346.0,
+              683.0
+            ],
+            [
+              544.0,
+              684.0
+            ],
+            [
+              544.0,
+              699.0
+            ],
+            [
+              346.0,
+              698.0
+            ]
+          ],
+          "box": [
+            [
+              346.0,
+              683.0
+            ],
+            [
+              544.0,
+              684.0
+            ],
+            [
+              544.0,
+              699.0
+            ],
+            [
+              346.0,
+              698.0
+            ]
+          ],
+          "position": {
+            "x": 346,
+            "y": 683,
+            "width": 198,
+            "height": 16,
+            "center_x": 445.0,
+            "center_y": 691.0,
+            "region": "middle",
+            "tag": "[y:683, x:346]"
+          }
+        },
+        {
+          "text": "$3704.85",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              637.0,
+              684.0
+            ],
+            [
+              712.0,
+              687.0
+            ],
+            [
+              711.0,
+              701.0
+            ],
+            [
+              636.0,
+              698.0
+            ]
+          ],
+          "box": [
+            [
+              637.0,
+              684.0
+            ],
+            [
+              712.0,
+              687.0
+            ],
+            [
+              711.0,
+              701.0
+            ],
+            [
+              636.0,
+              698.0
+            ]
+          ],
+          "position": {
+            "x": 636,
+            "y": 684,
+            "width": 76,
+            "height": 17,
+            "center_x": 674.0,
+            "center_y": 692.5,
+            "region": "middle-right",
+            "tag": "[y:684, x:636]"
+          }
+        },
+        {
+          "text": "*LOCATIONLIST",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              258.0,
+              713.0
+            ],
+            [
+              385.0,
+              713.0
+            ],
+            [
+              385.0,
+              727.0
+            ],
+            [
+              258.0,
+              727.0
+            ]
+          ],
+          "box": [
+            [
+              258.0,
+              713.0
+            ],
+            [
+              385.0,
+              713.0
+            ],
+            [
+              385.0,
+              727.0
+            ],
+            [
+              258.0,
+              727.0
+            ]
+          ],
+          "position": {
+            "x": 258,
+            "y": 713,
+            "width": 127,
+            "height": 14,
+            "center_x": 321.5,
+            "center_y": 720.0,
+            "region": "bottom-center",
+            "tag": "[y:713, x:258]"
+          }
+        },
+        {
+          "text": "N. Bedford Market, . Mattapoisett",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              59.0,
+              739.0
+            ],
+            [
+              349.0,
+              742.0
+            ],
+            [
+              349.0,
+              759.0
+            ],
+            [
+              59.0,
+              756.0
+            ]
+          ],
+          "box": [
+            [
+              59.0,
+              739.0
+            ],
+            [
+              349.0,
+              742.0
+            ],
+            [
+              349.0,
+              759.0
+            ],
+            [
+              59.0,
+              756.0
+            ]
+          ],
+          "position": {
+            "x": 59,
+            "y": 739,
+            "width": 290,
+            "height": 20,
+            "center_x": 204.0,
+            "center_y": 749.0,
+            "region": "bottom-left",
+            "tag": "[y:739, x:59]"
+          }
+        },
+        {
+          "text": "102",
+          "confidence": 0.75,
+          "bounding_box": [
+            [
+              19.0,
+              753.0
+            ],
+            [
+              49.0,
+              755.0
+            ],
+            [
+              47.0,
+              771.0
+            ],
+            [
+              18.0,
+              768.0
+            ]
+          ],
+          "box": [
+            [
+              19.0,
+              753.0
+            ],
+            [
+              49.0,
+              755.0
+            ],
+            [
+              47.0,
+              771.0
+            ],
+            [
+              18.0,
+              768.0
+            ]
+          ],
+          "position": {
+            "x": 18,
+            "y": 753,
+            "width": 31,
+            "height": 18,
+            "center_x": 33.5,
+            "center_y": 762.0,
+            "region": "bottom-left",
+            "tag": "[y:753, x:18]"
+          }
+        },
+        {
+          "text": "WE",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              77.0,
+              753.0
+            ],
+            [
+              100.0,
+              757.0
+            ],
+            [
+              98.0,
+              773.0
+            ],
+            [
+              75.0,
+              770.0
+            ]
+          ],
+          "box": [
+            [
+              77.0,
+              753.0
+            ],
+            [
+              100.0,
+              757.0
+            ],
+            [
+              98.0,
+              773.0
+            ],
+            [
+              75.0,
+              770.0
+            ]
+          ],
+          "position": {
+            "x": 75,
+            "y": 753,
+            "width": 25,
+            "height": 20,
+            "center_x": 87.5,
+            "center_y": 763.0,
+            "region": "bottom-left",
+            "tag": "[y:753, x:75]"
+          }
+        },
+        {
+          "text": "Rt.6 Cape Rd. &'Countyy",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              140.0,
+              755.0
+            ],
+            [
+              346.0,
+              757.0
+            ],
+            [
+              346.0,
+              774.0
+            ],
+            [
+              140.0,
+              772.0
+            ]
+          ],
+          "box": [
+            [
+              140.0,
+              755.0
+            ],
+            [
+              346.0,
+              757.0
+            ],
+            [
+              346.0,
+              774.0
+            ],
+            [
+              140.0,
+              772.0
+            ]
+          ],
+          "position": {
+            "x": 140,
+            "y": 755,
+            "width": 206,
+            "height": 19,
+            "center_x": 243.0,
+            "center_y": 764.5,
+            "region": "bottom-left",
+            "tag": "[y:755, x:140]"
+          }
+        },
+        {
+          "text": "IND",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              417.0,
+              757.0
+            ],
+            [
+              447.0,
+              757.0
+            ],
+            [
+              447.0,
+              771.0
+            ],
+            [
+              417.0,
+              771.0
+            ]
+          ],
+          "box": [
+            [
+              417.0,
+              757.0
+            ],
+            [
+              447.0,
+              757.0
+            ],
+            [
+              447.0,
+              771.0
+            ],
+            [
+              417.0,
+              771.0
+            ]
+          ],
+          "position": {
+            "x": 417,
+            "y": 757,
+            "width": 30,
+            "height": 14,
+            "center_x": 432.0,
+            "center_y": 764.0,
+            "region": "bottom-center",
+            "tag": "[y:757, x:417]"
+          }
+        },
+        {
+          "text": "75",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              459.0,
+              757.0
+            ],
+            [
+              485.0,
+              757.0
+            ],
+            [
+              485.0,
+              772.0
+            ],
+            [
+              459.0,
+              772.0
+            ]
+          ],
+          "box": [
+            [
+              459.0,
+              757.0
+            ],
+            [
+              485.0,
+              757.0
+            ],
+            [
+              485.0,
+              772.0
+            ],
+            [
+              459.0,
+              772.0
+            ]
+          ],
+          "position": {
+            "x": 459,
+            "y": 757,
+            "width": 26,
+            "height": 15,
+            "center_x": 472.0,
+            "center_y": 764.5,
+            "region": "bottom-center",
+            "tag": "[y:757, x:459]"
+          }
+        },
+        {
+          "text": "N. Bedford Market - Fairhaven",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              60.0,
+              784.0
+            ],
+            [
+              321.0,
+              785.0
+            ],
+            [
+              321.0,
+              799.0
+            ],
+            [
+              60.0,
+              798.0
+            ]
+          ],
+          "box": [
+            [
+              60.0,
+              784.0
+            ],
+            [
+              321.0,
+              785.0
+            ],
+            [
+              321.0,
+              799.0
+            ],
+            [
+              60.0,
+              798.0
+            ]
+          ],
+          "position": {
+            "x": 60,
+            "y": 784,
+            "width": 261,
+            "height": 15,
+            "center_x": 190.5,
+            "center_y": 791.5,
+            "region": "bottom-left",
+            "tag": "[y:784, x:60]"
+          }
+        },
+        {
+          "text": "Ill.",
+          "confidence": 0.77,
+          "bounding_box": [
+            [
+              477.0,
+              786.0
+            ],
+            [
+              514.0,
+              786.0
+            ],
+            [
+              514.0,
+              801.0
+            ],
+            [
+              477.0,
+              801.0
+            ]
+          ],
+          "box": [
+            [
+              477.0,
+              786.0
+            ],
+            [
+              514.0,
+              786.0
+            ],
+            [
+              514.0,
+              801.0
+            ],
+            [
+              477.0,
+              801.0
+            ]
+          ],
+          "position": {
+            "x": 477,
+            "y": 786,
+            "width": 37,
+            "height": 15,
+            "center_x": 495.5,
+            "center_y": 793.5,
+            "region": "bottom-center",
+            "tag": "[y:786, x:477]"
+          }
+        },
+        {
+          "text": "107",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              20.0,
+              798.0
+            ],
+            [
+              47.0,
+              798.0
+            ],
+            [
+              47.0,
+              814.0
+            ],
+            [
+              20.0,
+              814.0
+            ]
+          ],
+          "box": [
+            [
+              20.0,
+              798.0
+            ],
+            [
+              47.0,
+              798.0
+            ],
+            [
+              47.0,
+              814.0
+            ],
+            [
+              20.0,
+              814.0
+            ]
+          ],
+          "position": {
+            "x": 20,
+            "y": 798,
+            "width": 27,
+            "height": 16,
+            "center_x": 33.5,
+            "center_y": 806.0,
+            "region": "bottom-left",
+            "tag": "[y:798, x:20]"
+          }
+        },
+        {
+          "text": "NE",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              76.0,
+              799.0
+            ],
+            [
+              100.0,
+              799.0
+            ],
+            [
+              100.0,
+              815.0
+            ],
+            [
+              76.0,
+              815.0
+            ]
+          ],
+          "box": [
+            [
+              76.0,
+              799.0
+            ],
+            [
+              100.0,
+              799.0
+            ],
+            [
+              100.0,
+              815.0
+            ],
+            [
+              76.0,
+              815.0
+            ]
+          ],
+          "position": {
+            "x": 76,
+            "y": 799,
+            "width": 24,
+            "height": 16,
+            "center_x": 88.0,
+            "center_y": 807.0,
+            "region": "bottom-left",
+            "tag": "[y:799, x:76]"
+          }
+        },
+        {
+          "text": "Main & Bridge St.",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              139.0,
+              800.0
+            ],
+            [
+              291.0,
+              800.0
+            ],
+            [
+              291.0,
+              815.0
+            ],
+            [
+              139.0,
+              815.0
+            ]
+          ],
+          "box": [
+            [
+              139.0,
+              800.0
+            ],
+            [
+              291.0,
+              800.0
+            ],
+            [
+              291.0,
+              815.0
+            ],
+            [
+              139.0,
+              815.0
+            ]
+          ],
+          "position": {
+            "x": 139,
+            "y": 800,
+            "width": 152,
+            "height": 15,
+            "center_x": 215.0,
+            "center_y": 807.5,
+            "region": "bottom-left",
+            "tag": "[y:800, x:139]"
+          }
+        },
+        {
+          "text": "IND",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              417.0,
+              800.0
+            ],
+            [
+              446.0,
+              800.0
+            ],
+            [
+              446.0,
+              816.0
+            ],
+            [
+              417.0,
+              816.0
+            ]
+          ],
+          "box": [
+            [
+              417.0,
+              800.0
+            ],
+            [
+              446.0,
+              800.0
+            ],
+            [
+              446.0,
+              816.0
+            ],
+            [
+              417.0,
+              816.0
+            ]
+          ],
+          "position": {
+            "x": 417,
+            "y": 800,
+            "width": 29,
+            "height": 16,
+            "center_x": 431.5,
+            "center_y": 808.0,
+            "region": "bottom-center",
+            "tag": "[y:800, x:417]"
+          }
+        },
+        {
+          "text": "75",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              458.0,
+              800.0
+            ],
+            [
+              481.0,
+              800.0
+            ],
+            [
+              481.0,
+              816.0
+            ],
+            [
+              458.0,
+              816.0
+            ]
+          ],
+          "box": [
+            [
+              458.0,
+              800.0
+            ],
+            [
+              481.0,
+              800.0
+            ],
+            [
+              481.0,
+              816.0
+            ],
+            [
+              458.0,
+              816.0
+            ]
+          ],
+          "position": {
+            "x": 458,
+            "y": 800,
+            "width": 23,
+            "height": 16,
+            "center_x": 469.5,
+            "center_y": 808.0,
+            "region": "bottom-center",
+            "tag": "[y:800, x:458]"
+          }
+        },
+        {
+          "text": "N. Bedford Market.- New Bedford",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              60.0,
+              829.0
+            ],
+            [
+              340.0,
+              829.0
+            ],
+            [
+              340.0,
+              843.0
+            ],
+            [
+              60.0,
+              843.0
+            ]
+          ],
+          "box": [
+            [
+              60.0,
+              829.0
+            ],
+            [
+              340.0,
+              829.0
+            ],
+            [
+              340.0,
+              843.0
+            ],
+            [
+              60.0,
+              843.0
+            ]
+          ],
+          "position": {
+            "x": 60,
+            "y": 829,
+            "width": 280,
+            "height": 14,
+            "center_x": 200.0,
+            "center_y": 836.0,
+            "region": "bottom-left",
+            "tag": "[y:829, x:60]"
+          }
+        },
+        {
+          "text": "I11.",
+          "confidence": 0.78,
+          "bounding_box": [
+            [
+              477.0,
+              827.0
+            ],
+            [
+              515.0,
+              830.0
+            ],
+            [
+              514.0,
+              846.0
+            ],
+            [
+              476.0,
+              843.0
+            ]
+          ],
+          "box": [
+            [
+              477.0,
+              827.0
+            ],
+            [
+              515.0,
+              830.0
+            ],
+            [
+              514.0,
+              846.0
+            ],
+            [
+              476.0,
+              843.0
+            ]
+          ],
+          "position": {
+            "x": 476,
+            "y": 827,
+            "width": 39,
+            "height": 19,
+            "center_x": 495.5,
+            "center_y": 836.5,
+            "region": "bottom-center",
+            "tag": "[y:827, x:476]"
+          }
+        },
+        {
+          "text": ":19",
+          "confidence": 0.8,
+          "bounding_box": [
+            [
+              21.0,
+              843.0
+            ],
+            [
+              45.0,
+              843.0
+            ],
+            [
+              45.0,
+              855.0
+            ],
+            [
+              21.0,
+              855.0
+            ]
+          ],
+          "box": [
+            [
+              21.0,
+              843.0
+            ],
+            [
+              45.0,
+              843.0
+            ],
+            [
+              45.0,
+              855.0
+            ],
+            [
+              21.0,
+              855.0
+            ]
+          ],
+          "position": {
+            "x": 21,
+            "y": 843,
+            "width": 24,
+            "height": 12,
+            "center_x": 33.0,
+            "center_y": 849.0,
+            "region": "bottom-left",
+            "tag": "[y:843, x:21]"
+          }
+        },
+        {
+          "text": "NE",
+          "confidence": 0.69,
+          "bounding_box": [
+            [
+              76.0,
+              842.0
+            ],
+            [
+              99.0,
+              842.0
+            ],
+            [
+              99.0,
+              858.0
+            ],
+            [
+              76.0,
+              858.0
+            ]
+          ],
+          "box": [
+            [
+              76.0,
+              842.0
+            ],
+            [
+              99.0,
+              842.0
+            ],
+            [
+              99.0,
+              858.0
+            ],
+            [
+              76.0,
+              858.0
+            ]
+          ],
+          "position": {
+            "x": 76,
+            "y": 842,
+            "width": 23,
+            "height": 16,
+            "center_x": 87.5,
+            "center_y": 850.0,
+            "region": "bottom-left",
+            "tag": "[y:842, x:76]"
+          }
+        },
+        {
+          "text": ".488 Belleville Av",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              138.0,
+              843.0
+            ],
+            [
+              304.0,
+              844.0
+            ],
+            [
+              304.0,
+              858.0
+            ],
+            [
+              138.0,
+              857.0
+            ]
+          ],
+          "box": [
+            [
+              138.0,
+              843.0
+            ],
+            [
+              304.0,
+              844.0
+            ],
+            [
+              304.0,
+              858.0
+            ],
+            [
+              138.0,
+              857.0
+            ]
+          ],
+          "position": {
+            "x": 138,
+            "y": 843,
+            "width": 166,
+            "height": 15,
+            "center_x": 221.0,
+            "center_y": 850.5,
+            "region": "bottom-left",
+            "tag": "[y:843, x:138]"
+          }
+        },
+        {
+          "text": "IND",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              416.0,
+              844.0
+            ],
+            [
+              445.0,
+              844.0
+            ],
+            [
+              445.0,
+              859.0
+            ],
+            [
+              416.0,
+              859.0
+            ]
+          ],
+          "box": [
+            [
+              416.0,
+              844.0
+            ],
+            [
+              445.0,
+              844.0
+            ],
+            [
+              445.0,
+              859.0
+            ],
+            [
+              416.0,
+              859.0
+            ]
+          ],
+          "position": {
+            "x": 416,
+            "y": 844,
+            "width": 29,
+            "height": 15,
+            "center_x": 430.5,
+            "center_y": 851.5,
+            "region": "bottom-center",
+            "tag": "[y:844, x:416]"
+          }
+        },
+        {
+          "text": "75",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              458.0,
+              844.0
+            ],
+            [
+              481.0,
+              844.0
+            ],
+            [
+              481.0,
+              859.0
+            ],
+            [
+              458.0,
+              859.0
+            ]
+          ],
+          "box": [
+            [
+              458.0,
+              844.0
+            ],
+            [
+              481.0,
+              844.0
+            ],
+            [
+              481.0,
+              859.0
+            ],
+            [
+              458.0,
+              859.0
+            ]
+          ],
+          "position": {
+            "x": 458,
+            "y": 844,
+            "width": 23,
+            "height": 15,
+            "center_x": 469.5,
+            "center_y": 851.5,
+            "region": "bottom-center",
+            "tag": "[y:844, x:458]"
+          }
+        },
+        {
+          "text": "125",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              20.0,
+              868.0
+            ],
+            [
+              48.0,
+              870.0
+            ],
+            [
+              46.0,
+              885.0
+            ],
+            [
+              19.0,
+              883.0
+            ]
+          ],
+          "box": [
+            [
+              20.0,
+              868.0
+            ],
+            [
+              48.0,
+              870.0
+            ],
+            [
+              46.0,
+              885.0
+            ],
+            [
+              19.0,
+              883.0
+            ]
+          ],
+          "position": {
+            "x": 19,
+            "y": 868,
+            "width": 29,
+            "height": 17,
+            "center_x": 33.5,
+            "center_y": 876.5,
+            "region": "bottom-left",
+            "tag": "[y:868, x:19]"
+          }
+        },
+        {
+          "text": "23",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              21.0,
+              855.0
+            ],
+            [
+              47.0,
+              855.0
+            ],
+            [
+              47.0,
+              870.0
+            ],
+            [
+              21.0,
+              870.0
+            ]
+          ],
+          "box": [
+            [
+              21.0,
+              855.0
+            ],
+            [
+              47.0,
+              855.0
+            ],
+            [
+              47.0,
+              870.0
+            ],
+            [
+              21.0,
+              870.0
+            ]
+          ],
+          "position": {
+            "x": 21,
+            "y": 855,
+            "width": 26,
+            "height": 15,
+            "center_x": 34.0,
+            "center_y": 862.5,
+            "region": "bottom-left",
+            "tag": "[y:855, x:21]"
+          }
+        },
+        {
+          "text": "EF",
+          "confidence": 0.78,
+          "bounding_box": [
+            [
+              76.0,
+              856.0
+            ],
+            [
+              100.0,
+              856.0
+            ],
+            [
+              100.0,
+              872.0
+            ],
+            [
+              76.0,
+              872.0
+            ]
+          ],
+          "box": [
+            [
+              76.0,
+              856.0
+            ],
+            [
+              100.0,
+              856.0
+            ],
+            [
+              100.0,
+              872.0
+            ],
+            [
+              76.0,
+              872.0
+            ]
+          ],
+          "position": {
+            "x": 76,
+            "y": 856,
+            "width": 24,
+            "height": 16,
+            "center_x": 88.0,
+            "center_y": 864.0,
+            "region": "bottom-left",
+            "tag": "[y:856, x:76]"
+          }
+        },
+        {
+          "text": "Wamsutta St. E/O",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              141.0,
+              858.0
+            ],
+            [
+              288.0,
+              858.0
+            ],
+            [
+              288.0,
+              871.0
+            ],
+            [
+              141.0,
+              871.0
+            ]
+          ],
+          "box": [
+            [
+              141.0,
+              858.0
+            ],
+            [
+              288.0,
+              858.0
+            ],
+            [
+              288.0,
+              871.0
+            ],
+            [
+              141.0,
+              871.0
+            ]
+          ],
+          "position": {
+            "x": 141,
+            "y": 858,
+            "width": 147,
+            "height": 13,
+            "center_x": 214.5,
+            "center_y": 864.5,
+            "region": "bottom-left",
+            "tag": "[y:858, x:141]"
+          }
+        },
+        {
+          "text": "uishnet Ave.",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              305.0,
+              859.0
+            ],
+            [
+              409.0,
+              859.0
+            ],
+            [
+              409.0,
+              872.0
+            ],
+            [
+              305.0,
+              872.0
+            ]
+          ],
+          "box": [
+            [
+              305.0,
+              859.0
+            ],
+            [
+              409.0,
+              859.0
+            ],
+            [
+              409.0,
+              872.0
+            ],
+            [
+              305.0,
+              872.0
+            ]
+          ],
+          "position": {
+            "x": 305,
+            "y": 859,
+            "width": 104,
+            "height": 13,
+            "center_x": 357.0,
+            "center_y": 865.5,
+            "region": "bottom-center",
+            "tag": "[y:859, x:305]"
+          }
+        },
+        {
+          "text": "2",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              416.0,
+              860.0
+            ],
+            [
+              426.0,
+              860.0
+            ],
+            [
+              426.0,
+              871.0
+            ],
+            [
+              416.0,
+              871.0
+            ]
+          ],
+          "box": [
+            [
+              416.0,
+              860.0
+            ],
+            [
+              426.0,
+              860.0
+            ],
+            [
+              426.0,
+              871.0
+            ],
+            [
+              416.0,
+              871.0
+            ]
+          ],
+          "position": {
+            "x": 416,
+            "y": 860,
+            "width": 10,
+            "height": 11,
+            "center_x": 421.0,
+            "center_y": 865.5,
+            "region": "bottom-center",
+            "tag": "[y:860, x:416]"
+          }
+        },
+        {
+          "text": "75",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              457.0,
+              858.0
+            ],
+            [
+              482.0,
+              858.0
+            ],
+            [
+              482.0,
+              874.0
+            ],
+            [
+              457.0,
+              874.0
+            ]
+          ],
+          "box": [
+            [
+              457.0,
+              858.0
+            ],
+            [
+              482.0,
+              858.0
+            ],
+            [
+              482.0,
+              874.0
+            ],
+            [
+              457.0,
+              874.0
+            ]
+          ],
+          "position": {
+            "x": 457,
+            "y": 858,
+            "width": 25,
+            "height": 16,
+            "center_x": 469.5,
+            "center_y": 866.0,
+            "region": "bottom-center",
+            "tag": "[y:858, x:457]"
+          }
+        },
+        {
+          "text": "94415089",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              741.0,
+              862.0
+            ],
+            [
+              765.0,
+              862.0
+            ],
+            [
+              763.0,
+              956.0
+            ],
+            [
+              739.0,
+              955.0
+            ]
+          ],
+          "box": [
+            [
+              741.0,
+              862.0
+            ],
+            [
+              765.0,
+              862.0
+            ],
+            [
+              763.0,
+              956.0
+            ],
+            [
+              739.0,
+              955.0
+            ]
+          ],
+          "position": {
+            "x": 739,
+            "y": 862,
+            "width": 26,
+            "height": 94,
+            "center_x": 752.0,
+            "center_y": 909.0,
+            "region": "bottom-right",
+            "tag": "[y:862, x:739]"
+          }
+        },
+        {
+          "text": "39",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              21.0,
+              884.0
+            ],
+            [
+              46.0,
+              884.0
+            ],
+            [
+              46.0,
+              899.0
+            ],
+            [
+              21.0,
+              899.0
+            ]
+          ],
+          "box": [
+            [
+              21.0,
+              884.0
+            ],
+            [
+              46.0,
+              884.0
+            ],
+            [
+              46.0,
+              899.0
+            ],
+            [
+              21.0,
+              899.0
+            ]
+          ],
+          "position": {
+            "x": 21,
+            "y": 884,
+            "width": 25,
+            "height": 15,
+            "center_x": 33.5,
+            "center_y": 891.5,
+            "region": "bottom-left",
+            "tag": "[y:884, x:21]"
+          }
+        },
+        {
+          "text": "NF",
+          "confidence": 0.79,
+          "bounding_box": [
+            [
+              77.0,
+              872.0
+            ],
+            [
+              99.0,
+              872.0
+            ],
+            [
+              99.0,
+              886.0
+            ],
+            [
+              77.0,
+              886.0
+            ]
+          ],
+          "box": [
+            [
+              77.0,
+              872.0
+            ],
+            [
+              99.0,
+              872.0
+            ],
+            [
+              99.0,
+              886.0
+            ],
+            [
+              77.0,
+              886.0
+            ]
+          ],
+          "position": {
+            "x": 77,
+            "y": 872,
+            "width": 22,
+            "height": 14,
+            "center_x": 88.0,
+            "center_y": 879.0,
+            "region": "bottom-left",
+            "tag": "[y:872, x:77]"
+          }
+        },
+        {
+          "text": "1598 Acushnet Ave",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              141.0,
+              871.0
+            ],
+            [
+              296.0,
+              872.0
+            ],
+            [
+              295.0,
+              886.0
+            ],
+            [
+              141.0,
+              885.0
+            ]
+          ],
+          "box": [
+            [
+              141.0,
+              871.0
+            ],
+            [
+              296.0,
+              872.0
+            ],
+            [
+              295.0,
+              886.0
+            ],
+            [
+              141.0,
+              885.0
+            ]
+          ],
+          "position": {
+            "x": 141,
+            "y": 871,
+            "width": 155,
+            "height": 15,
+            "center_x": 218.5,
+            "center_y": 878.5,
+            "region": "bottom-left",
+            "tag": "[y:871, x:141]"
+          }
+        },
+        {
+          "text": "& bavis st.",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              308.0,
+              871.0
+            ],
+            [
+              408.0,
+              873.0
+            ],
+            [
+              408.0,
+              887.0
+            ],
+            [
+              307.0,
+              885.0
+            ]
+          ],
+          "box": [
+            [
+              308.0,
+              871.0
+            ],
+            [
+              408.0,
+              873.0
+            ],
+            [
+              408.0,
+              887.0
+            ],
+            [
+              307.0,
+              885.0
+            ]
+          ],
+          "position": {
+            "x": 307,
+            "y": 871,
+            "width": 101,
+            "height": 16,
+            "center_x": 357.5,
+            "center_y": 879.0,
+            "region": "bottom-center",
+            "tag": "[y:871, x:307]"
+          }
+        },
+        {
+          "text": "IND",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              415.0,
+              873.0
+            ],
+            [
+              445.0,
+              873.0
+            ],
+            [
+              445.0,
+              887.0
+            ],
+            [
+              415.0,
+              887.0
+            ]
+          ],
+          "box": [
+            [
+              415.0,
+              873.0
+            ],
+            [
+              445.0,
+              873.0
+            ],
+            [
+              445.0,
+              887.0
+            ],
+            [
+              415.0,
+              887.0
+            ]
+          ],
+          "position": {
+            "x": 415,
+            "y": 873,
+            "width": 30,
+            "height": 14,
+            "center_x": 430.0,
+            "center_y": 880.0,
+            "region": "bottom-center",
+            "tag": "[y:873, x:415]"
+          }
+        },
+        {
+          "text": "75",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              458.0,
+              872.0
+            ],
+            [
+              482.0,
+              872.0
+            ],
+            [
+              482.0,
+              887.0
+            ],
+            [
+              458.0,
+              887.0
+            ]
+          ],
+          "box": [
+            [
+              458.0,
+              872.0
+            ],
+            [
+              482.0,
+              872.0
+            ],
+            [
+              482.0,
+              887.0
+            ],
+            [
+              458.0,
+              887.0
+            ]
+          ],
+          "position": {
+            "x": 458,
+            "y": 872,
+            "width": 24,
+            "height": 15,
+            "center_x": 470.0,
+            "center_y": 879.5,
+            "region": "bottom-center",
+            "tag": "[y:872, x:458]"
+          }
+        },
+        {
+          "text": "X",
+          "confidence": 0.48,
+          "bounding_box": [
+            [
+              496.0,
+              874.0
+            ],
+            [
+              509.0,
+              874.0
+            ],
+            [
+              509.0,
+              890.0
+            ],
+            [
+              496.0,
+              890.0
+            ]
+          ],
+          "box": [
+            [
+              496.0,
+              874.0
+            ],
+            [
+              509.0,
+              874.0
+            ],
+            [
+              509.0,
+              890.0
+            ],
+            [
+              496.0,
+              890.0
+            ]
+          ],
+          "position": {
+            "x": 496,
+            "y": 874,
+            "width": 13,
+            "height": 16,
+            "center_x": 502.5,
+            "center_y": 882.0,
+            "region": "bottom-right",
+            "tag": "[y:874, x:496]"
+          }
+        },
+        {
+          "text": "46",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              23.0,
+              899.0
+            ],
+            [
+              46.0,
+              899.0
+            ],
+            [
+              46.0,
+              914.0
+            ],
+            [
+              23.0,
+              914.0
+            ]
+          ],
+          "box": [
+            [
+              23.0,
+              899.0
+            ],
+            [
+              46.0,
+              899.0
+            ],
+            [
+              46.0,
+              914.0
+            ],
+            [
+              23.0,
+              914.0
+            ]
+          ],
+          "position": {
+            "x": 23,
+            "y": 899,
+            "width": 23,
+            "height": 15,
+            "center_x": 34.5,
+            "center_y": 906.5,
+            "region": "bottom-left",
+            "tag": "[y:899, x:23]"
+          }
+        },
+        {
+          "text": "NF",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              77.0,
+              886.0
+            ],
+            [
+              99.0,
+              886.0
+            ],
+            [
+              99.0,
+              900.0
+            ],
+            [
+              77.0,
+              900.0
+            ]
+          ],
+          "box": [
+            [
+              77.0,
+              886.0
+            ],
+            [
+              99.0,
+              886.0
+            ],
+            [
+              99.0,
+              900.0
+            ],
+            [
+              77.0,
+              900.0
+            ]
+          ],
+          "position": {
+            "x": 77,
+            "y": 886,
+            "width": 22,
+            "height": 14,
+            "center_x": 88.0,
+            "center_y": 893.0,
+            "region": "bottom-left",
+            "tag": "[y:886, x:77]"
+          }
+        },
+        {
+          "text": "Acushnet Ave. S/O Takiln Hi11",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              141.0,
+              887.0
+            ],
+            [
+              409.0,
+              887.0
+            ],
+            [
+              409.0,
+              901.0
+            ],
+            [
+              141.0,
+              901.0
+            ]
+          ],
+          "box": [
+            [
+              141.0,
+              887.0
+            ],
+            [
+              409.0,
+              887.0
+            ],
+            [
+              409.0,
+              901.0
+            ],
+            [
+              141.0,
+              901.0
+            ]
+          ],
+          "position": {
+            "x": 141,
+            "y": 887,
+            "width": 268,
+            "height": 14,
+            "center_x": 275.0,
+            "center_y": 894.0,
+            "region": "bottom-center",
+            "tag": "[y:887, x:141]"
+          }
+        },
+        {
+          "text": "2",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              417.0,
+              889.0
+            ],
+            [
+              427.0,
+              889.0
+            ],
+            [
+              427.0,
+              900.0
+            ],
+            [
+              417.0,
+              900.0
+            ]
+          ],
+          "box": [
+            [
+              417.0,
+              889.0
+            ],
+            [
+              427.0,
+              889.0
+            ],
+            [
+              427.0,
+              900.0
+            ],
+            [
+              417.0,
+              900.0
+            ]
+          ],
+          "position": {
+            "x": 417,
+            "y": 889,
+            "width": 10,
+            "height": 11,
+            "center_x": 422.0,
+            "center_y": 894.5,
+            "region": "bottom-center",
+            "tag": "[y:889, x:417]"
+          }
+        },
+        {
+          "text": "75",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              460.0,
+              888.0
+            ],
+            [
+              481.0,
+              888.0
+            ],
+            [
+              481.0,
+              902.0
+            ],
+            [
+              460.0,
+              902.0
+            ]
+          ],
+          "box": [
+            [
+              460.0,
+              888.0
+            ],
+            [
+              481.0,
+              888.0
+            ],
+            [
+              481.0,
+              902.0
+            ],
+            [
+              460.0,
+              902.0
+            ]
+          ],
+          "position": {
+            "x": 460,
+            "y": 888,
+            "width": 21,
+            "height": 14,
+            "center_x": 470.5,
+            "center_y": 895.0,
+            "region": "bottom-center",
+            "tag": "[y:888, x:460]"
+          }
+        },
+        {
+          "text": "X",
+          "confidence": 0.42,
+          "bounding_box": [
+            [
+              496.0,
+              886.0
+            ],
+            [
+              508.0,
+              886.0
+            ],
+            [
+              508.0,
+              905.0
+            ],
+            [
+              496.0,
+              905.0
+            ]
+          ],
+          "box": [
+            [
+              496.0,
+              886.0
+            ],
+            [
+              508.0,
+              886.0
+            ],
+            [
+              508.0,
+              905.0
+            ],
+            [
+              496.0,
+              905.0
+            ]
+          ],
+          "position": {
+            "x": 496,
+            "y": 886,
+            "width": 12,
+            "height": 19,
+            "center_x": 502.0,
+            "center_y": 895.5,
+            "region": "bottom-right",
+            "tag": "[y:886, x:496]"
+          }
+        },
+        {
+          "text": "50",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              26.0,
+              914.0
+            ],
+            [
+              45.0,
+              914.0
+            ],
+            [
+              45.0,
+              927.0
+            ],
+            [
+              26.0,
+              927.0
+            ]
+          ],
+          "box": [
+            [
+              26.0,
+              914.0
+            ],
+            [
+              45.0,
+              914.0
+            ],
+            [
+              45.0,
+              927.0
+            ],
+            [
+              26.0,
+              927.0
+            ]
+          ],
+          "position": {
+            "x": 26,
+            "y": 914,
+            "width": 19,
+            "height": 13,
+            "center_x": 35.5,
+            "center_y": 920.5,
+            "region": "bottom-left",
+            "tag": "[y:914, x:26]"
+          }
+        },
+        {
+          "text": "NE",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              77.0,
+              901.0
+            ],
+            [
+              99.0,
+              901.0
+            ],
+            [
+              99.0,
+              915.0
+            ],
+            [
+              77.0,
+              915.0
+            ]
+          ],
+          "box": [
+            [
+              77.0,
+              901.0
+            ],
+            [
+              99.0,
+              901.0
+            ],
+            [
+              99.0,
+              915.0
+            ],
+            [
+              77.0,
+              915.0
+            ]
+          ],
+          "position": {
+            "x": 77,
+            "y": 901,
+            "width": 22,
+            "height": 14,
+            "center_x": 88.0,
+            "center_y": 908.0,
+            "region": "bottom-left",
+            "tag": "[y:901, x:77]"
+          }
+        },
+        {
+          "text": "COEEASEBETURN WITH REMTANOE",
+          "confidence": 0.63,
+          "bounding_box": [
+            [
+              135.0,
+              914.0
+            ],
+            [
+              563.0,
+              911.0
+            ],
+            [
+              563.0,
+              946.0
+            ],
+            [
+              135.0,
+              949.0
+            ]
+          ],
+          "box": [
+            [
+              135.0,
+              914.0
+            ],
+            [
+              563.0,
+              911.0
+            ],
+            [
+              563.0,
+              946.0
+            ],
+            [
+              135.0,
+              949.0
+            ]
+          ],
+          "position": {
+            "x": 135,
+            "y": 911,
+            "width": 428,
+            "height": 38,
+            "center_x": 349.0,
+            "center_y": 930.0,
+            "region": "bottom-center",
+            "tag": "[y:911, x:135]"
+          }
+        },
+        {
+          "text": "950 Ashley Blvd.",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              140.0,
+              900.0
+            ],
+            [
+              285.0,
+              901.0
+            ],
+            [
+              284.0,
+              915.0
+            ],
+            [
+              140.0,
+              914.0
+            ]
+          ],
+          "box": [
+            [
+              140.0,
+              900.0
+            ],
+            [
+              285.0,
+              901.0
+            ],
+            [
+              284.0,
+              915.0
+            ],
+            [
+              140.0,
+              914.0
+            ]
+          ],
+          "position": {
+            "x": 140,
+            "y": 900,
+            "width": 145,
+            "height": 15,
+            "center_x": 212.5,
+            "center_y": 907.5,
+            "region": "bottom-left",
+            "tag": "[y:900, x:140]"
+          }
+        },
+        {
+          "text": "2",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              416.0,
+              902.0
+            ],
+            [
+              428.0,
+              902.0
+            ],
+            [
+              428.0,
+              916.0
+            ],
+            [
+              416.0,
+              916.0
+            ]
+          ],
+          "box": [
+            [
+              416.0,
+              902.0
+            ],
+            [
+              428.0,
+              902.0
+            ],
+            [
+              428.0,
+              916.0
+            ],
+            [
+              416.0,
+              916.0
+            ]
+          ],
+          "position": {
+            "x": 416,
+            "y": 902,
+            "width": 12,
+            "height": 14,
+            "center_x": 422.0,
+            "center_y": 909.0,
+            "region": "bottom-center",
+            "tag": "[y:902, x:416]"
+          }
+        },
+        {
+          "text": "75",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              459.0,
+              902.0
+            ],
+            [
+              482.0,
+              902.0
+            ],
+            [
+              482.0,
+              917.0
+            ],
+            [
+              459.0,
+              917.0
+            ]
+          ],
+          "box": [
+            [
+              459.0,
+              902.0
+            ],
+            [
+              482.0,
+              902.0
+            ],
+            [
+              482.0,
+              917.0
+            ],
+            [
+              459.0,
+              917.0
+            ]
+          ],
+          "position": {
+            "x": 459,
+            "y": 902,
+            "width": 23,
+            "height": 15,
+            "center_x": 470.5,
+            "center_y": 909.5,
+            "region": "bottom-center",
+            "tag": "[y:902, x:459]"
+          }
+        },
+        {
+          "text": "x",
+          "confidence": 0.55,
+          "bounding_box": [
+            [
+              495.0,
+              901.0
+            ],
+            [
+              508.0,
+              901.0
+            ],
+            [
+              508.0,
+              916.0
+            ],
+            [
+              495.0,
+              916.0
+            ]
+          ],
+          "box": [
+            [
+              495.0,
+              901.0
+            ],
+            [
+              508.0,
+              901.0
+            ],
+            [
+              508.0,
+              916.0
+            ],
+            [
+              495.0,
+              916.0
+            ]
+          ],
+          "position": {
+            "x": 495,
+            "y": 901,
+            "width": 13,
+            "height": 15,
+            "center_x": 501.5,
+            "center_y": 908.5,
+            "region": "bottom-right",
+            "tag": "[y:901, x:495]"
+          }
+        },
+        {
+          "text": "66",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              26.0,
+              928.0
+            ],
+            [
+              45.0,
+              928.0
+            ],
+            [
+              45.0,
+              942.0
+            ],
+            [
+              26.0,
+              942.0
+            ]
+          ],
+          "box": [
+            [
+              26.0,
+              928.0
+            ],
+            [
+              45.0,
+              928.0
+            ],
+            [
+              45.0,
+              942.0
+            ],
+            [
+              26.0,
+              942.0
+            ]
+          ],
+          "position": {
+            "x": 26,
+            "y": 928,
+            "width": 19,
+            "height": 14,
+            "center_x": 35.5,
+            "center_y": 935.0,
+            "region": "bottom-left",
+            "tag": "[y:928, x:26]"
+          }
+        },
+        {
+          "text": "EF",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              77.0,
+              915.0
+            ],
+            [
+              99.0,
+              915.0
+            ],
+            [
+              99.0,
+              929.0
+            ],
+            [
+              77.0,
+              929.0
+            ]
+          ],
+          "box": [
+            [
+              77.0,
+              915.0
+            ],
+            [
+              99.0,
+              915.0
+            ],
+            [
+              99.0,
+              929.0
+            ],
+            [
+              77.0,
+              929.0
+            ]
+          ],
+          "position": {
+            "x": 77,
+            "y": 915,
+            "width": 22,
+            "height": 14,
+            "center_x": 88.0,
+            "center_y": 922.0,
+            "region": "bottom-left",
+            "tag": "[y:915, x:77]"
+          }
+        },
+        {
+          "text": "NF",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              77.0,
+              929.0
+            ],
+            [
+              99.0,
+              929.0
+            ],
+            [
+              99.0,
+              944.0
+            ],
+            [
+              77.0,
+              944.0
+            ]
+          ],
+          "box": [
+            [
+              77.0,
+              929.0
+            ],
+            [
+              99.0,
+              929.0
+            ],
+            [
+              99.0,
+              944.0
+            ],
+            [
+              77.0,
+              944.0
+            ]
+          ],
+          "position": {
+            "x": 77,
+            "y": 929,
+            "width": 22,
+            "height": 15,
+            "center_x": 88.0,
+            "center_y": 936.5,
+            "region": "bottom-left",
+            "tag": "[y:929, x:77]"
+          }
+        },
+        {
+          "text": "600",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              142.0,
+              916.0
+            ],
+            [
+              172.0,
+              916.0
+            ],
+            [
+              172.0,
+              930.0
+            ],
+            [
+              142.0,
+              930.0
+            ]
+          ],
+          "box": [
+            [
+              142.0,
+              916.0
+            ],
+            [
+              172.0,
+              916.0
+            ],
+            [
+              172.0,
+              930.0
+            ],
+            [
+              142.0,
+              930.0
+            ]
+          ],
+          "position": {
+            "x": 142,
+            "y": 916,
+            "width": 30,
+            "height": 14,
+            "center_x": 157.0,
+            "center_y": 923.0,
+            "region": "bottom-left",
+            "tag": "[y:916, x:142]"
+          }
+        },
+        {
+          "text": "81",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              26.0,
+              943.0
+            ],
+            [
+              45.0,
+              943.0
+            ],
+            [
+              45.0,
+              956.0
+            ],
+            [
+              26.0,
+              956.0
+            ]
+          ],
+          "box": [
+            [
+              26.0,
+              943.0
+            ],
+            [
+              45.0,
+              943.0
+            ],
+            [
+              45.0,
+              956.0
+            ],
+            [
+              26.0,
+              956.0
+            ]
+          ],
+          "position": {
+            "x": 26,
+            "y": 943,
+            "width": 19,
+            "height": 13,
+            "center_x": 35.5,
+            "center_y": 949.5,
+            "region": "bottom-left",
+            "tag": "[y:943, x:26]"
+          }
+        },
+        {
+          "text": "NF",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              75.0,
+              943.0
+            ],
+            [
+              99.0,
+              943.0
+            ],
+            [
+              99.0,
+              958.0
+            ],
+            [
+              75.0,
+              958.0
+            ]
+          ],
+          "box": [
+            [
+              75.0,
+              943.0
+            ],
+            [
+              99.0,
+              943.0
+            ],
+            [
+              99.0,
+              958.0
+            ],
+            [
+              75.0,
+              958.0
+            ]
+          ],
+          "position": {
+            "x": 75,
+            "y": 943,
+            "width": 24,
+            "height": 15,
+            "center_x": 87.0,
+            "center_y": 950.5,
+            "region": "bottom-left",
+            "tag": "[y:943, x:75]"
+          }
+        },
+        {
+          "text": "Purchase St. opp. Van Buren St InD",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              140.0,
+              943.0
+            ],
+            [
+              445.0,
+              943.0
+            ],
+            [
+              445.0,
+              960.0
+            ],
+            [
+              140.0,
+              960.0
+            ]
+          ],
+          "box": [
+            [
+              140.0,
+              943.0
+            ],
+            [
+              445.0,
+              943.0
+            ],
+            [
+              445.0,
+              960.0
+            ],
+            [
+              140.0,
+              960.0
+            ]
+          ],
+          "position": {
+            "x": 140,
+            "y": 943,
+            "width": 305,
+            "height": 17,
+            "center_x": 292.5,
+            "center_y": 951.5,
+            "region": "bottom-center",
+            "tag": "[y:943, x:140]"
+          }
+        },
+        {
+          "text": "85",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              25.0,
+              956.0
+            ],
+            [
+              46.0,
+              956.0
+            ],
+            [
+              46.0,
+              972.0
+            ],
+            [
+              25.0,
+              972.0
+            ]
+          ],
+          "box": [
+            [
+              25.0,
+              956.0
+            ],
+            [
+              46.0,
+              956.0
+            ],
+            [
+              46.0,
+              972.0
+            ],
+            [
+              25.0,
+              972.0
+            ]
+          ],
+          "position": {
+            "x": 25,
+            "y": 956,
+            "width": 21,
+            "height": 16,
+            "center_x": 35.5,
+            "center_y": 964.0,
+            "region": "bottom-left",
+            "tag": "[y:956, x:25]"
+          }
+        },
+        {
+          "text": "NF",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              77.0,
+              959.0
+            ],
+            [
+              99.0,
+              959.0
+            ],
+            [
+              99.0,
+              973.0
+            ],
+            [
+              77.0,
+              973.0
+            ]
+          ],
+          "box": [
+            [
+              77.0,
+              959.0
+            ],
+            [
+              99.0,
+              959.0
+            ],
+            [
+              99.0,
+              973.0
+            ],
+            [
+              77.0,
+              973.0
+            ]
+          ],
+          "position": {
+            "x": 77,
+            "y": 959,
+            "width": 22,
+            "height": 14,
+            "center_x": 88.0,
+            "center_y": 966.0,
+            "region": "bottom-left",
+            "tag": "[y:959, x:77]"
+          }
+        },
+        {
+          "text": "75",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              458.0,
+              945.0
+            ],
+            [
+              481.0,
+              945.0
+            ],
+            [
+              481.0,
+              960.0
+            ],
+            [
+              458.0,
+              960.0
+            ]
+          ],
+          "box": [
+            [
+              458.0,
+              945.0
+            ],
+            [
+              481.0,
+              945.0
+            ],
+            [
+              481.0,
+              960.0
+            ],
+            [
+              458.0,
+              960.0
+            ]
+          ],
+          "position": {
+            "x": 458,
+            "y": 945,
+            "width": 23,
+            "height": 15,
+            "center_x": 469.5,
+            "center_y": 952.5,
+            "region": "bottom-center",
+            "tag": "[y:945, x:458]"
+          }
+        },
+        {
+          "text": "87",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              25.0,
+              972.0
+            ],
+            [
+              46.0,
+              972.0
+            ],
+            [
+              46.0,
+              986.0
+            ],
+            [
+              25.0,
+              986.0
+            ]
+          ],
+          "box": [
+            [
+              25.0,
+              972.0
+            ],
+            [
+              46.0,
+              972.0
+            ],
+            [
+              46.0,
+              986.0
+            ],
+            [
+              25.0,
+              986.0
+            ]
+          ],
+          "position": {
+            "x": 25,
+            "y": 972,
+            "width": 21,
+            "height": 14,
+            "center_x": 35.5,
+            "center_y": 979.0,
+            "region": "bottom-left",
+            "tag": "[y:972, x:25]"
+          }
+        },
+        {
+          "text": "SF",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              76.0,
+              972.0
+            ],
+            [
+              99.0,
+              972.0
+            ],
+            [
+              99.0,
+              988.0
+            ],
+            [
+              76.0,
+              988.0
+            ]
+          ],
+          "box": [
+            [
+              76.0,
+              972.0
+            ],
+            [
+              99.0,
+              972.0
+            ],
+            [
+              99.0,
+              988.0
+            ],
+            [
+              76.0,
+              988.0
+            ]
+          ],
+          "position": {
+            "x": 76,
+            "y": 972,
+            "width": 23,
+            "height": 16,
+            "center_x": 87.5,
+            "center_y": 980.0,
+            "region": "bottom-left",
+            "tag": "[y:972, x:76]"
+          }
+        },
+        {
+          "text": "Purchase st. opp CountremrtanceInD",
+          "confidence": 0.82,
+          "bounding_box": [
+            [
+              139.0,
+              972.0
+            ],
+            [
+              444.0,
+              973.0
+            ],
+            [
+              444.0,
+              991.0
+            ],
+            [
+              139.0,
+              990.0
+            ]
+          ],
+          "box": [
+            [
+              139.0,
+              972.0
+            ],
+            [
+              444.0,
+              973.0
+            ],
+            [
+              444.0,
+              991.0
+            ],
+            [
+              139.0,
+              990.0
+            ]
+          ],
+          "position": {
+            "x": 139,
+            "y": 972,
+            "width": 305,
+            "height": 19,
+            "center_x": 291.5,
+            "center_y": 981.5,
+            "region": "bottom-center",
+            "tag": "[y:972, x:139]"
+          }
+        },
+        {
+          "text": "Deane & Quansett sts.",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              141.0,
+              960.0
+            ],
+            [
+              327.0,
+              960.0
+            ],
+            [
+              327.0,
+              974.0
+            ],
+            [
+              141.0,
+              974.0
+            ]
+          ],
+          "box": [
+            [
+              141.0,
+              960.0
+            ],
+            [
+              327.0,
+              960.0
+            ],
+            [
+              327.0,
+              974.0
+            ],
+            [
+              141.0,
+              974.0
+            ]
+          ],
+          "position": {
+            "x": 141,
+            "y": 960,
+            "width": 186,
+            "height": 14,
+            "center_x": 234.0,
+            "center_y": 967.0,
+            "region": "bottom-left",
+            "tag": "[y:960, x:141]"
+          }
+        },
+        {
+          "text": "IND",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              415.0,
+              960.0
+            ],
+            [
+              445.0,
+              960.0
+            ],
+            [
+              445.0,
+              975.0
+            ],
+            [
+              415.0,
+              975.0
+            ]
+          ],
+          "box": [
+            [
+              415.0,
+              960.0
+            ],
+            [
+              445.0,
+              960.0
+            ],
+            [
+              445.0,
+              975.0
+            ],
+            [
+              415.0,
+              975.0
+            ]
+          ],
+          "position": {
+            "x": 415,
+            "y": 960,
+            "width": 30,
+            "height": 15,
+            "center_x": 430.0,
+            "center_y": 967.5,
+            "region": "bottom-center",
+            "tag": "[y:960, x:415]"
+          }
+        },
+        {
+          "text": "75",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              458.0,
+              960.0
+            ],
+            [
+              481.0,
+              960.0
+            ],
+            [
+              481.0,
+              975.0
+            ],
+            [
+              458.0,
+              975.0
+            ]
+          ],
+          "box": [
+            [
+              458.0,
+              960.0
+            ],
+            [
+              481.0,
+              960.0
+            ],
+            [
+              481.0,
+              975.0
+            ],
+            [
+              458.0,
+              975.0
+            ]
+          ],
+          "position": {
+            "x": 458,
+            "y": 960,
+            "width": 23,
+            "height": 15,
+            "center_x": 469.5,
+            "center_y": 967.5,
+            "region": "bottom-center",
+            "tag": "[y:960, x:458]"
+          }
+        },
+        {
+          "text": "75",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              458.0,
+              974.0
+            ],
+            [
+              481.0,
+              974.0
+            ],
+            [
+              481.0,
+              990.0
+            ],
+            [
+              458.0,
+              990.0
+            ]
+          ],
+          "box": [
+            [
+              458.0,
+              974.0
+            ],
+            [
+              481.0,
+              974.0
+            ],
+            [
+              481.0,
+              990.0
+            ],
+            [
+              458.0,
+              990.0
+            ]
+          ],
+          "position": {
+            "x": 458,
+            "y": 974,
+            "width": 23,
+            "height": 16,
+            "center_x": 469.5,
+            "center_y": 982.0,
+            "region": "bottom-center",
+            "tag": "[y:974, x:458]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 1.855,
+      "cached_at": "2026-09-28T08:48:22.652853+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "invoice",
+        "document_number": "1300",
+        "document_date": "",
+        "sender": "",
+        "receiver": "",
+        "origin": "New York, NY 10016",
+        "destination": "",
+        "reference_number": "",
+        "unit_price": 4446.0,
+        "total_amount": 4446.0,
+        "currency": "USD",
+        "other": {
+          "source_file": "013_train_imageso_o_k_z_okz00e00_94415089.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "INVOICE NO.",
+          "field": "document_type",
+          "value": "invoice",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "1300",
+          "field": "document_number",
+          "value": "1300",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "document_date",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "sender",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "receiver",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "NY 10016",
+          "field": "origin",
+          "value": "New York, NY 10016",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "destination",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "reference_number",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "4446.00",
+          "field": "unit_price",
+          "value": "4446.0",
+          "confidence": 98,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "4446.00",
+          "field": "total_amount",
+          "value": "4446.0",
+          "confidence": 98,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "013_train_imageso_o_k_z_okz00e00_94415089.png",
+          "field": "source_file",
+          "value": "013_train_imageso_o_k_z_okz00e00_94415089.png",
+          "confidence": 92,
+          "status": "success",
+          "isOther": true
+        }
+      ],
+      "confidence": {
+        "overall": 78,
+        "ocr": 89,
+        "slm": 88,
+        "mapping": 55,
+        "completeness": 55
+      },
+      "review_items": [
+        {
+          "field": "document_date",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "sender",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "receiver",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "destination",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "reference_number",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": {
+        "accuracy_pct": 55.0,
+        "inference_time_sec": 0.15,
+        "tokens_generated": 0,
+        "token_speed_tps": 0,
+        "core_fields_fill_rate_pct": 55.0,
+        "schema_valid": true,
+        "math_integrity_status": "no_subtotal",
+        "math_integrity_notes": "Sources: 4,446.00",
+        "field_accuracies": {}
+      },
+      "model": "Qwen/Qwen2.5-1.5B-Instruct (Fallback: CUDA error: out of memory\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n)",
+      "device": "cpu/fallback"
+    },
+    "performance": {
+      "ocr_time_sec": 1.855,
+      "slm_time_sec": 0.118,
+      "total_time_sec": 1.973
+    },
+    "prompt_integrity": {
+      "cache_schema_version": 2,
+      "prompt_hash": "3ca284b8622243d20d4e83a8d47c699209f6964d86c42ca7bb01d1e607336efc",
+      "variant": "one-shot",
+      "benchmark_example_ids": [
+        "DOC-009"
+      ],
+      "benchmark_example_confidences": [
+        98.13
+      ],
+      "training_document_ids": [
+        "DOC-001",
+        "DOC-002",
+        "DOC-004",
+        "DOC-005",
+        "DOC-006",
+        "DOC-007",
+        "DOC-008",
+        "DOC-009",
+        "DOC-010",
+        "DOC-011",
+        "DOC-012",
+        "DOC-014",
+        "DOC-015",
+        "DOC-016",
+        "DOC-017",
+        "DOC-018",
+        "DOC-019",
+        "DOC-020",
+        "DOC-021",
+        "DOC-022",
+        "DOC-023",
+        "DOC-024",
+        "DOC-025",
+        "DOC-026",
+        "DOC-028",
+        "DOC-031",
+        "DOC-032",
+        "DOC-033",
+        "DOC-034",
+        "DOC-035",
+        "DOC-037",
+        "DOC-038",
+        "DOC-040",
+        "DOC-041",
+        "DOC-043",
+        "DOC-044",
+        "DOC-045",
+        "DOC-046",
+        "DOC-047",
+        "DOC-048",
+        "DOC-049",
+        "DOC-050",
+        "DOC-051",
+        "DOC-053",
+        "DOC-054",
+        "DOC-055",
+        "DOC-057",
+        "DOC-058",
+        "DOC-059",
+        "DOC-060",
+        "DOC-061",
+        "DOC-062",
+        "DOC-063",
+        "DOC-064",
+        "DOC-065",
+        "DOC-067",
+        "DOC-068",
+        "DOC-069",
+        "DOC-070",
+        "DOC-071",
+        "DOC-072",
+        "DOC-073",
+        "DOC-074",
+        "DOC-076",
+        "DOC-077",
+        "DOC-078",
+        "DOC-079",
+        "DOC-080",
+        "DOC-081",
+        "DOC-082",
+        "DOC-083",
+        "DOC-085",
+        "DOC-087",
+        "DOC-088",
+        "DOC-089",
+        "DOC-091",
+        "DOC-092",
+        "DOC-093",
+        "DOC-094",
+        "DOC-095",
+        "DOC-097",
+        "DOC-098",
+        "DOC-099",
+        "DOC-100",
+        "DOC-101",
+        "DOC-102",
+        "DOC-103",
+        "DOC-104",
+        "DOC-105",
+        "DOC-106",
+        "DOC-107",
+        "DOC-109",
+        "DOC-110",
+        "DOC-111",
+        "DOC-112",
+        "DOC-114",
+        "DOC-115",
+        "DOC-117",
+        "DOC-119",
+        "DOC-120",
+        "DOC-122",
+        "DOC-123",
+        "DOC-124",
+        "DOC-125",
+        "DOC-127",
+        "DOC-129",
+        "DOC-130",
+        "DOC-131",
+        "DOC-132",
+        "DOC-133",
+        "DOC-134",
+        "DOC-135",
+        "DOC-136",
+        "DOC-139",
+        "DOC-141",
+        "DOC-145",
+        "DOC-146",
+        "DOC-147",
+        "DOC-148",
+        "DOC-149",
+        "DOC-150",
+        "DOC-151",
+        "DOC-152",
+        "DOC-153",
+        "DOC-154",
+        "DOC-155",
+        "DOC-157",
+        "DOC-158",
+        "DOC-161",
+        "DOC-162",
+        "DOC-163",
+        "DOC-164",
+        "DOC-165",
+        "DOC-166",
+        "DOC-167",
+        "DOC-170",
+        "DOC-172",
+        "DOC-174",
+        "DOC-175",
+        "DOC-176",
+        "DOC-180",
+        "DOC-181",
+        "DOC-182",
+        "DOC-183",
+        "DOC-184",
+        "DOC-186",
+        "DOC-187",
+        "DOC-188",
+        "DOC-189",
+        "DOC-190",
+        "DOC-191",
+        "DOC-192",
+        "DOC-193",
+        "DOC-194",
+        "DOC-195",
+        "DOC-197",
+        "DOC-198",
+        "DOC-200",
+        "DOC-201",
+        "DOC-202",
+        "DOC-203",
+        "DOC-204",
+        "DOC-205",
+        "DOC-206",
+        "DOC-207",
+        "DOC-208",
+        "DOC-210",
+        "DOC-212",
+        "DOC-213",
+        "DOC-215",
+        "DOC-216",
+        "DOC-217",
+        "DOC-218",
+        "DOC-219",
+        "DOC-220",
+        "DOC-221",
+        "DOC-222",
+        "DOC-225",
+        "DOC-226",
+        "DOC-227",
+        "DOC-228",
+        "DOC-229",
+        "DOC-230",
+        "DOC-231",
+        "DOC-232",
+        "DOC-233",
+        "DOC-234",
+        "DOC-235",
+        "DOC-236",
+        "DOC-237",
+        "DOC-238",
+        "DOC-239",
+        "DOC-240",
+        "DOC-241",
+        "DOC-242",
+        "DOC-243",
+        "DOC-244",
+        "DOC-246",
+        "DOC-249",
+        "DOC-250",
+        "DOC-251",
+        "DOC-252",
+        "DOC-253",
+        "DOC-256",
+        "DOC-257",
+        "DOC-258",
+        "DOC-259",
+        "DOC-260",
+        "DOC-262",
+        "DOC-263",
+        "DOC-264",
+        "DOC-265",
+        "DOC-266",
+        "DOC-267",
+        "DOC-268",
+        "DOC-269",
+        "DOC-271",
+        "DOC-273",
+        "DOC-274",
+        "DOC-275",
+        "DOC-276",
+        "DOC-277",
+        "DOC-279",
+        "DOC-280",
+        "DOC-282",
+        "DOC-283",
+        "DOC-286",
+        "DOC-287",
+        "DOC-288",
+        "DOC-289",
+        "DOC-290",
+        "DOC-291",
+        "DOC-292",
+        "DOC-293",
+        "DOC-295",
+        "DOC-296",
+        "DOC-297",
+        "DOC-298",
+        "DOC-299",
+        "DOC-300"
+      ]
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 1.855,
+    "slm_time_sec": 0.118,
+    "total_time_sec": 1.973
+  },
+  "cached_at": "2026-09-28T08:48:22.789912+00:00"
+}

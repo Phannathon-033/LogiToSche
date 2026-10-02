@@ -48,6 +48,14 @@ import {
   type PerformanceLogResponse,
 } from "../../services/adminApi";
 
+function metricPercent(value: number): number {
+  return Math.max(0, Math.min(100, value <= 1 ? value * 100 : value));
+}
+
+function sparkHeight(value: number): number {
+  return Math.max(4, Math.min(24, metricPercent(value) * 0.22));
+}
+
 export interface AdminOverviewProps {
   analytics: AdminAnalyticsPoint[];
   documents: AdminDocumentRecord[];
@@ -180,7 +188,7 @@ export function AdminOverview({
       const recent = documents.slice(-7);
       return {
         total: recent.map((_, i) => 30 + i * 10),
-        success: recent.map((d) => (d.status === "success" ? 100 : d.overallConfidence * 100)),
+        success: recent.map((d) => (d.status === "success" ? 100 : metricPercent(d.overallConfidence))),
         review: recent.map((d) => (d.status === "review" ? 80 : 20)),
         error: recent.map((d) => (d.status === "error" ? 90 : 15)),
       };
@@ -498,7 +506,7 @@ export function AdminOverview({
                 <div
                   key={i}
                   className="w-1.5 rounded-sm bg-blue-500 transition-all"
-                  style={{ height: `${Math.max(4, h * 0.22)}px` }}
+                  style={{ height: `${sparkHeight(h)}px` }}
                 />
               ))}
             </div>
@@ -526,7 +534,7 @@ export function AdminOverview({
                 <div
                   key={i}
                   className="w-1.5 rounded-sm bg-emerald-500 transition-all"
-                  style={{ height: `${Math.max(4, h * 0.22)}px` }}
+                  style={{ height: `${sparkHeight(h)}px` }}
                 />
               ))}
             </div>
@@ -557,7 +565,7 @@ export function AdminOverview({
                 <div
                   key={i}
                   className="w-1.5 rounded-sm bg-amber-500 transition-all"
-                  style={{ height: `${Math.max(4, h * 0.22)}px` }}
+                  style={{ height: `${sparkHeight(h)}px` }}
                 />
               ))}
             </div>
@@ -589,7 +597,7 @@ export function AdminOverview({
                 <div
                   key={i}
                   className="w-1.5 rounded-sm bg-rose-500 transition-all"
-                  style={{ height: `${Math.max(4, h * 0.22)}px` }}
+                  style={{ height: `${sparkHeight(h)}px` }}
                 />
               ))}
             </div>

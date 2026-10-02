@@ -1,0 +1,27 @@
+{
+  "id": "DOC-280",
+  "rank": 280,
+  "file_name": "280_val_imagesj_j_m_a_jma09e00_2029370253-a.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "113042",
+    "document_date": "2023-05-01",
+    "sender": "MANAGEMENT CORPORATION",
+    "receiver": "-",
+    "origin": "Washington, DC 20044",
+    "destination": "ACCT, OR",
+    "reference_number": "-",
+    "unit_price": 213.52,
+    "total_amount": 213.52,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:37:03"
+}

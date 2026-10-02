@@ -1,0 +1,5652 @@
+{
+  "document_id": "DOC-267",
+  "file_name": "267_val_imagesb_b_y_c_byc37c00_2047190666.png",
+  "cache_schema_version": 2,
+  "prompt_hash": "e1abb4746f2a86199e65819797164ad347862007f0f20aecb2f2f57c31e4911d",
+  "variant": "zero-shot",
+  "benchmark_example_ids": [],
+  "benchmark_example_confidences": [],
+  "training_document_ids": [
+    "DOC-001",
+    "DOC-002",
+    "DOC-003",
+    "DOC-004",
+    "DOC-005",
+    "DOC-007",
+    "DOC-009",
+    "DOC-011",
+    "DOC-012",
+    "DOC-013",
+    "DOC-014",
+    "DOC-015",
+    "DOC-016",
+    "DOC-017",
+    "DOC-019",
+    "DOC-020",
+    "DOC-021",
+    "DOC-022",
+    "DOC-023",
+    "DOC-024",
+    "DOC-027",
+    "DOC-028",
+    "DOC-029",
+    "DOC-030",
+    "DOC-031",
+    "DOC-032",
+    "DOC-033",
+    "DOC-035",
+    "DOC-036",
+    "DOC-037",
+    "DOC-038",
+    "DOC-039",
+    "DOC-040",
+    "DOC-041",
+    "DOC-042",
+    "DOC-044",
+    "DOC-045",
+    "DOC-048",
+    "DOC-049",
+    "DOC-050",
+    "DOC-051",
+    "DOC-052",
+    "DOC-053",
+    "DOC-054",
+    "DOC-055",
+    "DOC-056",
+    "DOC-057",
+    "DOC-059",
+    "DOC-060",
+    "DOC-062",
+    "DOC-063",
+    "DOC-065",
+    "DOC-066",
+    "DOC-067",
+    "DOC-068",
+    "DOC-069",
+    "DOC-070",
+    "DOC-071",
+    "DOC-072",
+    "DOC-073",
+    "DOC-075",
+    "DOC-080",
+    "DOC-081",
+    "DOC-082",
+    "DOC-083",
+    "DOC-084",
+    "DOC-085",
+    "DOC-086",
+    "DOC-087",
+    "DOC-088",
+    "DOC-089",
+    "DOC-090",
+    "DOC-092",
+    "DOC-095",
+    "DOC-096",
+    "DOC-097",
+    "DOC-099",
+    "DOC-100",
+    "DOC-101",
+    "DOC-102",
+    "DOC-103",
+    "DOC-104",
+    "DOC-106",
+    "DOC-107",
+    "DOC-108",
+    "DOC-109",
+    "DOC-111",
+    "DOC-113",
+    "DOC-115",
+    "DOC-116",
+    "DOC-117",
+    "DOC-118",
+    "DOC-119",
+    "DOC-121",
+    "DOC-122",
+    "DOC-123",
+    "DOC-124",
+    "DOC-125",
+    "DOC-126",
+    "DOC-127",
+    "DOC-128",
+    "DOC-129",
+    "DOC-130",
+    "DOC-131",
+    "DOC-132",
+    "DOC-133",
+    "DOC-134",
+    "DOC-135",
+    "DOC-136",
+    "DOC-137",
+    "DOC-138",
+    "DOC-139",
+    "DOC-140",
+    "DOC-141",
+    "DOC-142",
+    "DOC-143",
+    "DOC-144",
+    "DOC-146",
+    "DOC-147",
+    "DOC-148",
+    "DOC-150",
+    "DOC-151",
+    "DOC-152",
+    "DOC-154",
+    "DOC-155",
+    "DOC-156",
+    "DOC-157",
+    "DOC-159",
+    "DOC-160",
+    "DOC-161",
+    "DOC-162",
+    "DOC-163",
+    "DOC-164",
+    "DOC-167",
+    "DOC-168",
+    "DOC-169",
+    "DOC-170",
+    "DOC-171",
+    "DOC-172",
+    "DOC-173",
+    "DOC-174",
+    "DOC-175",
+    "DOC-177",
+    "DOC-178",
+    "DOC-179",
+    "DOC-180",
+    "DOC-182",
+    "DOC-184",
+    "DOC-185",
+    "DOC-186",
+    "DOC-187",
+    "DOC-188",
+    "DOC-189",
+    "DOC-190",
+    "DOC-191",
+    "DOC-192",
+    "DOC-194",
+    "DOC-195",
+    "DOC-196",
+    "DOC-198",
+    "DOC-199",
+    "DOC-200",
+    "DOC-201",
+    "DOC-202",
+    "DOC-203",
+    "DOC-205",
+    "DOC-206",
+    "DOC-207",
+    "DOC-208",
+    "DOC-209",
+    "DOC-210",
+    "DOC-211",
+    "DOC-213",
+    "DOC-214",
+    "DOC-215",
+    "DOC-217",
+    "DOC-218",
+    "DOC-220",
+    "DOC-221",
+    "DOC-223",
+    "DOC-224",
+    "DOC-225",
+    "DOC-226",
+    "DOC-228",
+    "DOC-229",
+    "DOC-231",
+    "DOC-233",
+    "DOC-236",
+    "DOC-237",
+    "DOC-241",
+    "DOC-242",
+    "DOC-243",
+    "DOC-244",
+    "DOC-245",
+    "DOC-246",
+    "DOC-247",
+    "DOC-248",
+    "DOC-249",
+    "DOC-252",
+    "DOC-253",
+    "DOC-254",
+    "DOC-255",
+    "DOC-256",
+    "DOC-257",
+    "DOC-258",
+    "DOC-259",
+    "DOC-260",
+    "DOC-261",
+    "DOC-262",
+    "DOC-263",
+    "DOC-264",
+    "DOC-265",
+    "DOC-266",
+    "DOC-268",
+    "DOC-269",
+    "DOC-270",
+    "DOC-271",
+    "DOC-272",
+    "DOC-273",
+    "DOC-274",
+    "DOC-275",
+    "DOC-276",
+    "DOC-277",
+    "DOC-278",
+    "DOC-280",
+    "DOC-281",
+    "DOC-283",
+    "DOC-284",
+    "DOC-285",
+    "DOC-286",
+    "DOC-288",
+    "DOC-289",
+    "DOC-291",
+    "DOC-292",
+    "DOC-293",
+    "DOC-294",
+    "DOC-295",
+    "DOC-297",
+    "DOC-299",
+    "DOC-300"
+  ],
+  "json_schema": {
+    "document_type": "invoice",
+    "document_number": "231GY6",
+    "document_date": "2019-07-01",
+    "sender": "MANAGEMENT CORPORATION",
+    "receiver": "",
+    "origin": "icy",
+    "destination": "",
+    "reference_number": "",
+    "unit_price": 25000.0,
+    "total_amount": 25000.0,
+    "currency": "USD",
+    "other": {
+      "source_file": "267_val_imagesb_b_y_c_byc37c00_2047190666.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-267",
+      "filename": "267_val_imagesb_b_y_c_byc37c00_2047190666.png",
+      "ocr_text": "UHCOMPANIES\nFOR ACCOUNTING USE ONLY\nMANAGEMENT CORPORATION\nPHILIP MORRIS\nINCORPORATED\nVOUCHER\nVOUCHER NUMBER\nDATE VOUCHER IS PREPARED\n(OMIT IF NO SPECIFIC DATE REQUIRED)\n7/11/95\nDATE DUE:\nla7lgs\nTIME:\nPAYEE\nACCOUNTING CODE\nThe George Bush Presidential Library Foundation\n$25,000.00\nTexas A & M University\n004 -06045100- 0800000\nMail Stop 1145\nTOFA\n25,000.00\nAPROVAL FOR PAYMENTS\nEXPLANATION FOR PAYMENT:\natron sponsorship of The Forum for International Policy\nCOMPLETE THIS SECTION IF RETURNED CHECK IS REOUIRED-\nRETURN TO: NAME\nDEPARTMENT\nBUILDING/FLOOR\nPHONE EXT.\nRalph Rogers\nFinance & Analysis\n120 Park/24\n2206\nREASON FOR REQUEST:\nTo be sent with transmittal letter.\nACCOUNTING USE ONLY\nVENDOR# 231GY6_\nCOMPANYO(005-COMPANIES; C09-MANAGEMENT, 010-INCORPORATED\n-VOUCHER TYPEI (1-Reg; 2-P.P.; 3-C.M.; 4-D.M.; 5-C.P.; 6-V.C.; 7-V.A.) VOUCHER/INVOICE DATE _069295\nBANK−>\nDUEDATE->0227น\nSEP CHK-→_\n1099 CD--\nD\n1099 AMT-\nSEPHND->_ATIN.RIRT NAME-..RALH_ROCRENS\nDIST AP >A PREPDVOID --→\nCASHIER\nDATE\nCONTRACT>_\nFREQUENCY\nALT PAYEE-->01 000\nAPPROVAL\nDATE\nLINE 001\nCORP/ACCT01 D09 26QY5L09 2SQ2000_\nAMT/PCT ->\n25.000=\nA ID/BRCD --→\nRECEIVED\nL\nDESC >\nCollamore\nnt.Poluy\nLINE 002\nCORP/ACCT Q1\nJUL 111995\nAMT/PCT ->\nA ID/BRCD-→\nDESC →\nCORPORATEAFFARS\nGUDCRECEIVED\nLINE 003\nCORP/ACCT 01\nAMT/PCT ->\nAID/BRCD--→\n-DESC ->\nJUL 12 1995\n2047190666\nLINE 004\nCORP/ACCT Q1\nCORPORATE AFFANS\nAMT/PCT ->\nA ID/BRCD--→\nBUDGETS & CONTROLS\nDESC >\nRECEIVED\nLINE 005\nCORP/ACCT Q1\nJUL 19 1995\nDESC ->\nAMT/PCT ->\nA ID/BRCD--→\nCORPORATE AFFAIRS\nBUDGETS & CONTROLS\nFORM 43488 NY\nPM ING/USA/CO'S REV 8/96\nCOMP A2",
+      "ocr_lines": [
+        {
+          "text": "UHCOMPANIES",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              35.0,
+              102.0
+            ],
+            [
+              115.0,
+              102.0
+            ],
+            [
+              115.0,
+              115.0
+            ],
+            [
+              35.0,
+              115.0
+            ]
+          ],
+          "box": [
+            [
+              35.0,
+              102.0
+            ],
+            [
+              115.0,
+              102.0
+            ],
+            [
+              115.0,
+              115.0
+            ],
+            [
+              35.0,
+              115.0
+            ]
+          ],
+          "position": {
+            "x": 35,
+            "y": 102,
+            "width": 80,
+            "height": 13,
+            "center_x": 75.0,
+            "center_y": 108.5,
+            "region": "top-left",
+            "tag": "[y:102, x:35]"
+          }
+        },
+        {
+          "text": "FOR ACCOUNTING USE ONLY",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              432.0,
+              104.0
+            ],
+            [
+              608.0,
+              105.0
+            ],
+            [
+              608.0,
+              119.0
+            ],
+            [
+              432.0,
+              118.0
+            ]
+          ],
+          "box": [
+            [
+              432.0,
+              104.0
+            ],
+            [
+              608.0,
+              105.0
+            ],
+            [
+              608.0,
+              119.0
+            ],
+            [
+              432.0,
+              118.0
+            ]
+          ],
+          "position": {
+            "x": 432,
+            "y": 104,
+            "width": 176,
+            "height": 15,
+            "center_x": 520.0,
+            "center_y": 111.5,
+            "region": "top-right",
+            "tag": "[y:104, x:432]"
+          }
+        },
+        {
+          "text": "MANAGEMENT CORPORATION",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              46.0,
+              116.0
+            ],
+            [
+              204.0,
+              116.0
+            ],
+            [
+              204.0,
+              126.0
+            ],
+            [
+              46.0,
+              126.0
+            ]
+          ],
+          "box": [
+            [
+              46.0,
+              116.0
+            ],
+            [
+              204.0,
+              116.0
+            ],
+            [
+              204.0,
+              126.0
+            ],
+            [
+              46.0,
+              126.0
+            ]
+          ],
+          "position": {
+            "x": 46,
+            "y": 116,
+            "width": 158,
+            "height": 10,
+            "center_x": 125.0,
+            "center_y": 121.0,
+            "region": "top-left",
+            "tag": "[y:116, x:46]"
+          }
+        },
+        {
+          "text": "PHILIP MORRIS",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              243.0,
+              111.0
+            ],
+            [
+              414.0,
+              112.0
+            ],
+            [
+              414.0,
+              133.0
+            ],
+            [
+              242.0,
+              132.0
+            ]
+          ],
+          "box": [
+            [
+              243.0,
+              111.0
+            ],
+            [
+              414.0,
+              112.0
+            ],
+            [
+              414.0,
+              133.0
+            ],
+            [
+              242.0,
+              132.0
+            ]
+          ],
+          "position": {
+            "x": 242,
+            "y": 111,
+            "width": 172,
+            "height": 22,
+            "center_x": 328.0,
+            "center_y": 122.0,
+            "region": "top-center",
+            "tag": "[y:111, x:242]"
+          }
+        },
+        {
+          "text": "INCORPORATED",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              40.0,
+              126.0
+            ],
+            [
+              135.0,
+              126.0
+            ],
+            [
+              135.0,
+              139.0
+            ],
+            [
+              40.0,
+              139.0
+            ]
+          ],
+          "box": [
+            [
+              40.0,
+              126.0
+            ],
+            [
+              135.0,
+              126.0
+            ],
+            [
+              135.0,
+              139.0
+            ],
+            [
+              40.0,
+              139.0
+            ]
+          ],
+          "position": {
+            "x": 40,
+            "y": 126,
+            "width": 95,
+            "height": 13,
+            "center_x": 87.5,
+            "center_y": 132.5,
+            "region": "top-left",
+            "tag": "[y:126, x:40]"
+          }
+        },
+        {
+          "text": "VOUCHER",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              273.0,
+              134.0
+            ],
+            [
+              387.0,
+              134.0
+            ],
+            [
+              387.0,
+              154.0
+            ],
+            [
+              273.0,
+              154.0
+            ]
+          ],
+          "box": [
+            [
+              273.0,
+              134.0
+            ],
+            [
+              387.0,
+              134.0
+            ],
+            [
+              387.0,
+              154.0
+            ],
+            [
+              273.0,
+              154.0
+            ]
+          ],
+          "position": {
+            "x": 273,
+            "y": 134,
+            "width": 114,
+            "height": 20,
+            "center_x": 330.0,
+            "center_y": 144.0,
+            "region": "top-center",
+            "tag": "[y:134, x:273]"
+          }
+        },
+        {
+          "text": "VOUCHER NUMBER",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              432.0,
+              121.0
+            ],
+            [
+              547.0,
+              122.0
+            ],
+            [
+              547.0,
+              136.0
+            ],
+            [
+              432.0,
+              135.0
+            ]
+          ],
+          "box": [
+            [
+              432.0,
+              121.0
+            ],
+            [
+              547.0,
+              122.0
+            ],
+            [
+              547.0,
+              136.0
+            ],
+            [
+              432.0,
+              135.0
+            ]
+          ],
+          "position": {
+            "x": 432,
+            "y": 121,
+            "width": 115,
+            "height": 15,
+            "center_x": 489.5,
+            "center_y": 128.5,
+            "region": "top-right",
+            "tag": "[y:121, x:432]"
+          }
+        },
+        {
+          "text": "DATE VOUCHER IS PREPARED",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              39.0,
+              145.0
+            ],
+            [
+              219.0,
+              145.0
+            ],
+            [
+              219.0,
+              158.0
+            ],
+            [
+              39.0,
+              158.0
+            ]
+          ],
+          "box": [
+            [
+              39.0,
+              145.0
+            ],
+            [
+              219.0,
+              145.0
+            ],
+            [
+              219.0,
+              158.0
+            ],
+            [
+              39.0,
+              158.0
+            ]
+          ],
+          "position": {
+            "x": 39,
+            "y": 145,
+            "width": 180,
+            "height": 13,
+            "center_x": 129.0,
+            "center_y": 151.5,
+            "region": "top-left",
+            "tag": "[y:145, x:39]"
+          }
+        },
+        {
+          "text": "(OMIT IF NO SPECIFIC DATE REQUIRED)",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              452.0,
+              149.0
+            ],
+            [
+              688.0,
+              151.0
+            ],
+            [
+              688.0,
+              165.0
+            ],
+            [
+              452.0,
+              163.0
+            ]
+          ],
+          "box": [
+            [
+              452.0,
+              149.0
+            ],
+            [
+              688.0,
+              151.0
+            ],
+            [
+              688.0,
+              165.0
+            ],
+            [
+              452.0,
+              163.0
+            ]
+          ],
+          "position": {
+            "x": 452,
+            "y": 149,
+            "width": 236,
+            "height": 16,
+            "center_x": 570.0,
+            "center_y": 157.0,
+            "region": "top-right",
+            "tag": "[y:149, x:452]"
+          }
+        },
+        {
+          "text": "7/11/95",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              108.0,
+              160.0
+            ],
+            [
+              148.0,
+              160.0
+            ],
+            [
+              148.0,
+              174.0
+            ],
+            [
+              108.0,
+              174.0
+            ]
+          ],
+          "box": [
+            [
+              108.0,
+              160.0
+            ],
+            [
+              148.0,
+              160.0
+            ],
+            [
+              148.0,
+              174.0
+            ],
+            [
+              108.0,
+              174.0
+            ]
+          ],
+          "position": {
+            "x": 108,
+            "y": 160,
+            "width": 40,
+            "height": 14,
+            "center_x": 128.0,
+            "center_y": 167.0,
+            "region": "top-left",
+            "tag": "[y:160, x:108]"
+          }
+        },
+        {
+          "text": "DATE DUE:",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              432.0,
+              163.0
+            ],
+            [
+              496.0,
+              163.0
+            ],
+            [
+              496.0,
+              177.0
+            ],
+            [
+              432.0,
+              177.0
+            ]
+          ],
+          "box": [
+            [
+              432.0,
+              163.0
+            ],
+            [
+              496.0,
+              163.0
+            ],
+            [
+              496.0,
+              177.0
+            ],
+            [
+              432.0,
+              177.0
+            ]
+          ],
+          "position": {
+            "x": 432,
+            "y": 163,
+            "width": 64,
+            "height": 14,
+            "center_x": 464.0,
+            "center_y": 170.0,
+            "region": "top-right",
+            "tag": "[y:163, x:432]"
+          }
+        },
+        {
+          "text": "la7lgs",
+          "confidence": 0.5,
+          "bounding_box": [
+            [
+              513.0,
+              164.0
+            ],
+            [
+              576.0,
+              167.0
+            ],
+            [
+              575.0,
+              188.0
+            ],
+            [
+              512.0,
+              185.0
+            ]
+          ],
+          "box": [
+            [
+              513.0,
+              164.0
+            ],
+            [
+              576.0,
+              167.0
+            ],
+            [
+              575.0,
+              188.0
+            ],
+            [
+              512.0,
+              185.0
+            ]
+          ],
+          "position": {
+            "x": 512,
+            "y": 164,
+            "width": 64,
+            "height": 24,
+            "center_x": 544.0,
+            "center_y": 176.0,
+            "region": "top-right",
+            "tag": "[y:164, x:512]"
+          }
+        },
+        {
+          "text": "TIME:",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              592.0,
+              163.0
+            ],
+            [
+              624.0,
+              163.0
+            ],
+            [
+              624.0,
+              178.0
+            ],
+            [
+              592.0,
+              178.0
+            ]
+          ],
+          "box": [
+            [
+              592.0,
+              163.0
+            ],
+            [
+              624.0,
+              163.0
+            ],
+            [
+              624.0,
+              178.0
+            ],
+            [
+              592.0,
+              178.0
+            ]
+          ],
+          "position": {
+            "x": 592,
+            "y": 163,
+            "width": 32,
+            "height": 15,
+            "center_x": 608.0,
+            "center_y": 170.5,
+            "region": "top-right",
+            "tag": "[y:163, x:592]"
+          }
+        },
+        {
+          "text": "PAYEE",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              49.0,
+              191.0
+            ],
+            [
+              93.0,
+              191.0
+            ],
+            [
+              93.0,
+              205.0
+            ],
+            [
+              49.0,
+              205.0
+            ]
+          ],
+          "box": [
+            [
+              49.0,
+              191.0
+            ],
+            [
+              93.0,
+              191.0
+            ],
+            [
+              93.0,
+              205.0
+            ],
+            [
+              49.0,
+              205.0
+            ]
+          ],
+          "position": {
+            "x": 49,
+            "y": 191,
+            "width": 44,
+            "height": 14,
+            "center_x": 71.0,
+            "center_y": 198.0,
+            "region": "top-left",
+            "tag": "[y:191, x:49]"
+          }
+        },
+        {
+          "text": "ACCOUNTING CODE",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              412.0,
+              190.0
+            ],
+            [
+              534.0,
+              192.0
+            ],
+            [
+              534.0,
+              206.0
+            ],
+            [
+              412.0,
+              205.0
+            ]
+          ],
+          "box": [
+            [
+              412.0,
+              190.0
+            ],
+            [
+              534.0,
+              192.0
+            ],
+            [
+              534.0,
+              206.0
+            ],
+            [
+              412.0,
+              205.0
+            ]
+          ],
+          "position": {
+            "x": 412,
+            "y": 190,
+            "width": 122,
+            "height": 16,
+            "center_x": 473.0,
+            "center_y": 198.0,
+            "region": "top-right",
+            "tag": "[y:190, x:412]"
+          }
+        },
+        {
+          "text": "The George Bush Presidential Library Foundation",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              49.0,
+              206.0
+            ],
+            [
+              326.0,
+              206.0
+            ],
+            [
+              326.0,
+              219.0
+            ],
+            [
+              49.0,
+              219.0
+            ]
+          ],
+          "box": [
+            [
+              49.0,
+              206.0
+            ],
+            [
+              326.0,
+              206.0
+            ],
+            [
+              326.0,
+              219.0
+            ],
+            [
+              49.0,
+              219.0
+            ]
+          ],
+          "position": {
+            "x": 49,
+            "y": 206,
+            "width": 277,
+            "height": 13,
+            "center_x": 187.5,
+            "center_y": 212.5,
+            "region": "top-left",
+            "tag": "[y:206, x:49]"
+          }
+        },
+        {
+          "text": "$25,000.00",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              626.0,
+              205.0
+            ],
+            [
+              694.0,
+              205.0
+            ],
+            [
+              694.0,
+              219.0
+            ],
+            [
+              626.0,
+              219.0
+            ]
+          ],
+          "box": [
+            [
+              626.0,
+              205.0
+            ],
+            [
+              694.0,
+              205.0
+            ],
+            [
+              694.0,
+              219.0
+            ],
+            [
+              626.0,
+              219.0
+            ]
+          ],
+          "position": {
+            "x": 626,
+            "y": 205,
+            "width": 68,
+            "height": 14,
+            "center_x": 660.0,
+            "center_y": 212.0,
+            "region": "top-right",
+            "tag": "[y:205, x:626]"
+          }
+        },
+        {
+          "text": "Texas A & M University",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              49.0,
+              222.0
+            ],
+            [
+              188.0,
+              222.0
+            ],
+            [
+              188.0,
+              236.0
+            ],
+            [
+              49.0,
+              236.0
+            ]
+          ],
+          "box": [
+            [
+              49.0,
+              222.0
+            ],
+            [
+              188.0,
+              222.0
+            ],
+            [
+              188.0,
+              236.0
+            ],
+            [
+              49.0,
+              236.0
+            ]
+          ],
+          "position": {
+            "x": 49,
+            "y": 222,
+            "width": 139,
+            "height": 14,
+            "center_x": 118.5,
+            "center_y": 229.0,
+            "region": "top-left",
+            "tag": "[y:222, x:49]"
+          }
+        },
+        {
+          "text": "004 -06045100- 0800000",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              365.0,
+              221.0
+            ],
+            [
+              564.0,
+              221.0
+            ],
+            [
+              564.0,
+              235.0
+            ],
+            [
+              365.0,
+              235.0
+            ]
+          ],
+          "box": [
+            [
+              365.0,
+              221.0
+            ],
+            [
+              564.0,
+              221.0
+            ],
+            [
+              564.0,
+              235.0
+            ],
+            [
+              365.0,
+              235.0
+            ]
+          ],
+          "position": {
+            "x": 365,
+            "y": 221,
+            "width": 199,
+            "height": 14,
+            "center_x": 464.5,
+            "center_y": 228.0,
+            "region": "top-right",
+            "tag": "[y:221, x:365]"
+          }
+        },
+        {
+          "text": "Mail Stop 1145",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              48.0,
+              238.0
+            ],
+            [
+              136.0,
+              236.0
+            ],
+            [
+              137.0,
+              251.0
+            ],
+            [
+              48.0,
+              253.0
+            ]
+          ],
+          "box": [
+            [
+              48.0,
+              238.0
+            ],
+            [
+              136.0,
+              236.0
+            ],
+            [
+              137.0,
+              251.0
+            ],
+            [
+              48.0,
+              253.0
+            ]
+          ],
+          "position": {
+            "x": 48,
+            "y": 236,
+            "width": 89,
+            "height": 17,
+            "center_x": 92.5,
+            "center_y": 244.5,
+            "region": "top-left",
+            "tag": "[y:236, x:48]"
+          }
+        },
+        {
+          "text": "TOFA",
+          "confidence": 0.79,
+          "bounding_box": [
+            [
+              543.0,
+              262.0
+            ],
+            [
+              583.0,
+              262.0
+            ],
+            [
+              583.0,
+              276.0
+            ],
+            [
+              543.0,
+              276.0
+            ]
+          ],
+          "box": [
+            [
+              543.0,
+              262.0
+            ],
+            [
+              583.0,
+              262.0
+            ],
+            [
+              583.0,
+              276.0
+            ],
+            [
+              543.0,
+              276.0
+            ]
+          ],
+          "position": {
+            "x": 543,
+            "y": 262,
+            "width": 40,
+            "height": 14,
+            "center_x": 563.0,
+            "center_y": 269.0,
+            "region": "top-right",
+            "tag": "[y:262, x:543]"
+          }
+        },
+        {
+          "text": "25,000.00",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              634.0,
+              259.0
+            ],
+            [
+              695.0,
+              259.0
+            ],
+            [
+              695.0,
+              276.0
+            ],
+            [
+              634.0,
+              276.0
+            ]
+          ],
+          "box": [
+            [
+              634.0,
+              259.0
+            ],
+            [
+              695.0,
+              259.0
+            ],
+            [
+              695.0,
+              276.0
+            ],
+            [
+              634.0,
+              276.0
+            ]
+          ],
+          "position": {
+            "x": 634,
+            "y": 259,
+            "width": 61,
+            "height": 17,
+            "center_x": 664.5,
+            "center_y": 267.5,
+            "region": "top-right",
+            "tag": "[y:259, x:634]"
+          }
+        },
+        {
+          "text": "APROVAL FOR PAYMENTS",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              47.0,
+              275.0
+            ],
+            [
+              226.0,
+              275.0
+            ],
+            [
+              226.0,
+              292.0
+            ],
+            [
+              47.0,
+              292.0
+            ]
+          ],
+          "box": [
+            [
+              47.0,
+              275.0
+            ],
+            [
+              226.0,
+              275.0
+            ],
+            [
+              226.0,
+              292.0
+            ],
+            [
+              47.0,
+              292.0
+            ]
+          ],
+          "position": {
+            "x": 47,
+            "y": 275,
+            "width": 179,
+            "height": 17,
+            "center_x": 136.5,
+            "center_y": 283.5,
+            "region": "middle-left",
+            "tag": "[y:275, x:47]"
+          }
+        },
+        {
+          "text": "EXPLANATION FOR PAYMENT:",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              233.0,
+              275.0
+            ],
+            [
+              416.0,
+              275.0
+            ],
+            [
+              416.0,
+              292.0
+            ],
+            [
+              233.0,
+              292.0
+            ]
+          ],
+          "box": [
+            [
+              233.0,
+              275.0
+            ],
+            [
+              416.0,
+              275.0
+            ],
+            [
+              416.0,
+              292.0
+            ],
+            [
+              233.0,
+              292.0
+            ]
+          ],
+          "position": {
+            "x": 233,
+            "y": 275,
+            "width": 183,
+            "height": 17,
+            "center_x": 324.5,
+            "center_y": 283.5,
+            "region": "middle",
+            "tag": "[y:275, x:233]"
+          }
+        },
+        {
+          "text": "atron sponsorship of The Forum for International Policy",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              239.0,
+              292.0
+            ],
+            [
+              554.0,
+              292.0
+            ],
+            [
+              554.0,
+              306.0
+            ],
+            [
+              239.0,
+              306.0
+            ]
+          ],
+          "box": [
+            [
+              239.0,
+              292.0
+            ],
+            [
+              554.0,
+              292.0
+            ],
+            [
+              554.0,
+              306.0
+            ],
+            [
+              239.0,
+              306.0
+            ]
+          ],
+          "position": {
+            "x": 239,
+            "y": 292,
+            "width": 315,
+            "height": 14,
+            "center_x": 396.5,
+            "center_y": 299.0,
+            "region": "middle",
+            "tag": "[y:292, x:239]"
+          }
+        },
+        {
+          "text": "COMPLETE THIS SECTION IF RETURNED CHECK IS REOUIRED-",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              48.0,
+              325.0
+            ],
+            [
+              424.0,
+              326.0
+            ],
+            [
+              424.0,
+              340.0
+            ],
+            [
+              48.0,
+              339.0
+            ]
+          ],
+          "box": [
+            [
+              48.0,
+              325.0
+            ],
+            [
+              424.0,
+              326.0
+            ],
+            [
+              424.0,
+              340.0
+            ],
+            [
+              48.0,
+              339.0
+            ]
+          ],
+          "position": {
+            "x": 48,
+            "y": 325,
+            "width": 376,
+            "height": 15,
+            "center_x": 236.0,
+            "center_y": 332.5,
+            "region": "middle-left",
+            "tag": "[y:325, x:48]"
+          }
+        },
+        {
+          "text": "RETURN TO: NAME",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              49.0,
+              341.0
+            ],
+            [
+              161.0,
+              341.0
+            ],
+            [
+              161.0,
+              354.0
+            ],
+            [
+              49.0,
+              354.0
+            ]
+          ],
+          "box": [
+            [
+              49.0,
+              341.0
+            ],
+            [
+              161.0,
+              341.0
+            ],
+            [
+              161.0,
+              354.0
+            ],
+            [
+              49.0,
+              354.0
+            ]
+          ],
+          "position": {
+            "x": 49,
+            "y": 341,
+            "width": 112,
+            "height": 13,
+            "center_x": 105.0,
+            "center_y": 347.5,
+            "region": "middle-left",
+            "tag": "[y:341, x:49]"
+          }
+        },
+        {
+          "text": "DEPARTMENT",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              404.0,
+              341.0
+            ],
+            [
+              488.0,
+              341.0
+            ],
+            [
+              488.0,
+              354.0
+            ],
+            [
+              404.0,
+              354.0
+            ]
+          ],
+          "box": [
+            [
+              404.0,
+              341.0
+            ],
+            [
+              488.0,
+              341.0
+            ],
+            [
+              488.0,
+              354.0
+            ],
+            [
+              404.0,
+              354.0
+            ]
+          ],
+          "position": {
+            "x": 404,
+            "y": 341,
+            "width": 84,
+            "height": 13,
+            "center_x": 446.0,
+            "center_y": 347.5,
+            "region": "middle",
+            "tag": "[y:341, x:404]"
+          }
+        },
+        {
+          "text": "BUILDING/FLOOR",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              510.0,
+              340.0
+            ],
+            [
+              618.0,
+              340.0
+            ],
+            [
+              618.0,
+              353.0
+            ],
+            [
+              510.0,
+              353.0
+            ]
+          ],
+          "box": [
+            [
+              510.0,
+              340.0
+            ],
+            [
+              618.0,
+              340.0
+            ],
+            [
+              618.0,
+              353.0
+            ],
+            [
+              510.0,
+              353.0
+            ]
+          ],
+          "position": {
+            "x": 510,
+            "y": 340,
+            "width": 108,
+            "height": 13,
+            "center_x": 564.0,
+            "center_y": 346.5,
+            "region": "middle-right",
+            "tag": "[y:340, x:510]"
+          }
+        },
+        {
+          "text": "PHONE EXT.",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              614.0,
+              340.0
+            ],
+            [
+              696.0,
+              341.0
+            ],
+            [
+              696.0,
+              355.0
+            ],
+            [
+              614.0,
+              354.0
+            ]
+          ],
+          "box": [
+            [
+              614.0,
+              340.0
+            ],
+            [
+              696.0,
+              341.0
+            ],
+            [
+              696.0,
+              355.0
+            ],
+            [
+              614.0,
+              354.0
+            ]
+          ],
+          "position": {
+            "x": 614,
+            "y": 340,
+            "width": 82,
+            "height": 15,
+            "center_x": 655.0,
+            "center_y": 347.5,
+            "region": "middle-right",
+            "tag": "[y:340, x:614]"
+          }
+        },
+        {
+          "text": "Ralph Rogers",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              48.0,
+              354.0
+            ],
+            [
+              130.0,
+              354.0
+            ],
+            [
+              130.0,
+              371.0
+            ],
+            [
+              48.0,
+              371.0
+            ]
+          ],
+          "box": [
+            [
+              48.0,
+              354.0
+            ],
+            [
+              130.0,
+              354.0
+            ],
+            [
+              130.0,
+              371.0
+            ],
+            [
+              48.0,
+              371.0
+            ]
+          ],
+          "position": {
+            "x": 48,
+            "y": 354,
+            "width": 82,
+            "height": 17,
+            "center_x": 89.0,
+            "center_y": 362.5,
+            "region": "middle-left",
+            "tag": "[y:354, x:48]"
+          }
+        },
+        {
+          "text": "Finance & Analysis",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              384.0,
+              352.0
+            ],
+            [
+              497.0,
+              353.0
+            ],
+            [
+              497.0,
+              370.0
+            ],
+            [
+              384.0,
+              369.0
+            ]
+          ],
+          "box": [
+            [
+              384.0,
+              352.0
+            ],
+            [
+              497.0,
+              353.0
+            ],
+            [
+              497.0,
+              370.0
+            ],
+            [
+              384.0,
+              369.0
+            ]
+          ],
+          "position": {
+            "x": 384,
+            "y": 352,
+            "width": 113,
+            "height": 18,
+            "center_x": 440.5,
+            "center_y": 361.0,
+            "region": "middle",
+            "tag": "[y:352, x:384]"
+          }
+        },
+        {
+          "text": "120 Park/24",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              528.0,
+              353.0
+            ],
+            [
+              599.0,
+              353.0
+            ],
+            [
+              599.0,
+              370.0
+            ],
+            [
+              528.0,
+              370.0
+            ]
+          ],
+          "box": [
+            [
+              528.0,
+              353.0
+            ],
+            [
+              599.0,
+              353.0
+            ],
+            [
+              599.0,
+              370.0
+            ],
+            [
+              528.0,
+              370.0
+            ]
+          ],
+          "position": {
+            "x": 528,
+            "y": 353,
+            "width": 71,
+            "height": 17,
+            "center_x": 563.5,
+            "center_y": 361.5,
+            "region": "middle-right",
+            "tag": "[y:353, x:528]"
+          }
+        },
+        {
+          "text": "2206",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              640.0,
+              353.0
+            ],
+            [
+              675.0,
+              353.0
+            ],
+            [
+              675.0,
+              371.0
+            ],
+            [
+              640.0,
+              371.0
+            ]
+          ],
+          "box": [
+            [
+              640.0,
+              353.0
+            ],
+            [
+              675.0,
+              353.0
+            ],
+            [
+              675.0,
+              371.0
+            ],
+            [
+              640.0,
+              371.0
+            ]
+          ],
+          "position": {
+            "x": 640,
+            "y": 353,
+            "width": 35,
+            "height": 18,
+            "center_x": 657.5,
+            "center_y": 362.0,
+            "region": "middle-right",
+            "tag": "[y:353, x:640]"
+          }
+        },
+        {
+          "text": "REASON FOR REQUEST:",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              49.0,
+              376.0
+            ],
+            [
+              193.0,
+              376.0
+            ],
+            [
+              193.0,
+              389.0
+            ],
+            [
+              49.0,
+              389.0
+            ]
+          ],
+          "box": [
+            [
+              49.0,
+              376.0
+            ],
+            [
+              193.0,
+              376.0
+            ],
+            [
+              193.0,
+              389.0
+            ],
+            [
+              49.0,
+              389.0
+            ]
+          ],
+          "position": {
+            "x": 49,
+            "y": 376,
+            "width": 144,
+            "height": 13,
+            "center_x": 121.0,
+            "center_y": 382.5,
+            "region": "middle-left",
+            "tag": "[y:376, x:49]"
+          }
+        },
+        {
+          "text": "To be sent with transmittal letter.",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              50.0,
+              391.0
+            ],
+            [
+              230.0,
+              391.0
+            ],
+            [
+              230.0,
+              404.0
+            ],
+            [
+              50.0,
+              404.0
+            ]
+          ],
+          "box": [
+            [
+              50.0,
+              391.0
+            ],
+            [
+              230.0,
+              391.0
+            ],
+            [
+              230.0,
+              404.0
+            ],
+            [
+              50.0,
+              404.0
+            ]
+          ],
+          "position": {
+            "x": 50,
+            "y": 391,
+            "width": 180,
+            "height": 13,
+            "center_x": 140.0,
+            "center_y": 397.5,
+            "region": "middle-left",
+            "tag": "[y:391, x:50]"
+          }
+        },
+        {
+          "text": "ACCOUNTING USE ONLY",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              242.0,
+              411.0
+            ],
+            [
+              434.0,
+              411.0
+            ],
+            [
+              434.0,
+              424.0
+            ],
+            [
+              242.0,
+              424.0
+            ]
+          ],
+          "box": [
+            [
+              242.0,
+              411.0
+            ],
+            [
+              434.0,
+              411.0
+            ],
+            [
+              434.0,
+              424.0
+            ],
+            [
+              242.0,
+              424.0
+            ]
+          ],
+          "position": {
+            "x": 242,
+            "y": 411,
+            "width": 192,
+            "height": 13,
+            "center_x": 338.0,
+            "center_y": 417.5,
+            "region": "middle",
+            "tag": "[y:411, x:242]"
+          }
+        },
+        {
+          "text": "VENDOR# 231GY6_",
+          "confidence": 0.85,
+          "bounding_box": [
+            [
+              42.0,
+              430.0
+            ],
+            [
+              187.0,
+              430.0
+            ],
+            [
+              187.0,
+              448.0
+            ],
+            [
+              42.0,
+              448.0
+            ]
+          ],
+          "box": [
+            [
+              42.0,
+              430.0
+            ],
+            [
+              187.0,
+              430.0
+            ],
+            [
+              187.0,
+              448.0
+            ],
+            [
+              42.0,
+              448.0
+            ]
+          ],
+          "position": {
+            "x": 42,
+            "y": 430,
+            "width": 145,
+            "height": 18,
+            "center_x": 114.5,
+            "center_y": 439.0,
+            "region": "middle-left",
+            "tag": "[y:430, x:42]"
+          }
+        },
+        {
+          "text": "COMPANYO(005-COMPANIES; C09-MANAGEMENT, 010-INCORPORATED",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              200.0,
+              430.0
+            ],
+            [
+              583.0,
+              430.0
+            ],
+            [
+              583.0,
+              448.0
+            ],
+            [
+              200.0,
+              448.0
+            ]
+          ],
+          "box": [
+            [
+              200.0,
+              430.0
+            ],
+            [
+              583.0,
+              430.0
+            ],
+            [
+              583.0,
+              448.0
+            ],
+            [
+              200.0,
+              448.0
+            ]
+          ],
+          "position": {
+            "x": 200,
+            "y": 430,
+            "width": 383,
+            "height": 18,
+            "center_x": 391.5,
+            "center_y": 439.0,
+            "region": "middle",
+            "tag": "[y:430, x:200]"
+          }
+        },
+        {
+          "text": "-VOUCHER TYPEI (1-Reg; 2-P.P.; 3-C.M.; 4-D.M.; 5-C.P.; 6-V.C.; 7-V.A.) VOUCHER/INVOICE DATE _069295",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              39.0,
+              451.0
+            ],
+            [
+              606.0,
+              449.0
+            ],
+            [
+              606.0,
+              469.0
+            ],
+            [
+              39.0,
+              471.0
+            ]
+          ],
+          "box": [
+            [
+              39.0,
+              451.0
+            ],
+            [
+              606.0,
+              449.0
+            ],
+            [
+              606.0,
+              469.0
+            ],
+            [
+              39.0,
+              471.0
+            ]
+          ],
+          "position": {
+            "x": 39,
+            "y": 449,
+            "width": 567,
+            "height": 22,
+            "center_x": 322.5,
+            "center_y": 460.0,
+            "region": "middle",
+            "tag": "[y:449, x:39]"
+          }
+        },
+        {
+          "text": "BANK−>",
+          "confidence": 0.81,
+          "bounding_box": [
+            [
+              42.0,
+              477.0
+            ],
+            [
+              94.0,
+              477.0
+            ],
+            [
+              94.0,
+              491.0
+            ],
+            [
+              42.0,
+              491.0
+            ]
+          ],
+          "box": [
+            [
+              42.0,
+              477.0
+            ],
+            [
+              94.0,
+              477.0
+            ],
+            [
+              94.0,
+              491.0
+            ],
+            [
+              42.0,
+              491.0
+            ]
+          ],
+          "position": {
+            "x": 42,
+            "y": 477,
+            "width": 52,
+            "height": 14,
+            "center_x": 68.0,
+            "center_y": 484.0,
+            "region": "middle-left",
+            "tag": "[y:477, x:42]"
+          }
+        },
+        {
+          "text": "DUEDATE->0227น",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              135.0,
+              476.0
+            ],
+            [
+              278.0,
+              476.0
+            ],
+            [
+              278.0,
+              490.0
+            ],
+            [
+              135.0,
+              490.0
+            ]
+          ],
+          "box": [
+            [
+              135.0,
+              476.0
+            ],
+            [
+              278.0,
+              476.0
+            ],
+            [
+              278.0,
+              490.0
+            ],
+            [
+              135.0,
+              490.0
+            ]
+          ],
+          "position": {
+            "x": 135,
+            "y": 476,
+            "width": 143,
+            "height": 14,
+            "center_x": 206.5,
+            "center_y": 483.0,
+            "region": "middle-left",
+            "tag": "[y:476, x:135]"
+          }
+        },
+        {
+          "text": "SEP CHK-→_",
+          "confidence": 0.79,
+          "bounding_box": [
+            [
+              297.0,
+              474.0
+            ],
+            [
+              375.0,
+              476.0
+            ],
+            [
+              375.0,
+              493.0
+            ],
+            [
+              296.0,
+              491.0
+            ]
+          ],
+          "box": [
+            [
+              297.0,
+              474.0
+            ],
+            [
+              375.0,
+              476.0
+            ],
+            [
+              375.0,
+              493.0
+            ],
+            [
+              296.0,
+              491.0
+            ]
+          ],
+          "position": {
+            "x": 296,
+            "y": 474,
+            "width": 79,
+            "height": 19,
+            "center_x": 335.5,
+            "center_y": 483.5,
+            "region": "middle",
+            "tag": "[y:474, x:296]"
+          }
+        },
+        {
+          "text": "1099 CD--",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              416.0,
+              474.0
+            ],
+            [
+              503.0,
+              478.0
+            ],
+            [
+              502.0,
+              495.0
+            ],
+            [
+              415.0,
+              491.0
+            ]
+          ],
+          "box": [
+            [
+              416.0,
+              474.0
+            ],
+            [
+              503.0,
+              478.0
+            ],
+            [
+              502.0,
+              495.0
+            ],
+            [
+              415.0,
+              491.0
+            ]
+          ],
+          "position": {
+            "x": 415,
+            "y": 474,
+            "width": 88,
+            "height": 21,
+            "center_x": 459.0,
+            "center_y": 484.5,
+            "region": "middle-right",
+            "tag": "[y:474, x:415]"
+          }
+        },
+        {
+          "text": "D",
+          "confidence": 0.38,
+          "bounding_box": [
+            [
+              117.0,
+              507.0
+            ],
+            [
+              131.0,
+              507.0
+            ],
+            [
+              131.0,
+              523.0
+            ],
+            [
+              117.0,
+              523.0
+            ]
+          ],
+          "box": [
+            [
+              117.0,
+              507.0
+            ],
+            [
+              131.0,
+              507.0
+            ],
+            [
+              131.0,
+              523.0
+            ],
+            [
+              117.0,
+              523.0
+            ]
+          ],
+          "position": {
+            "x": 117,
+            "y": 507,
+            "width": 14,
+            "height": 16,
+            "center_x": 124.0,
+            "center_y": 515.0,
+            "region": "middle-left",
+            "tag": "[y:507, x:117]"
+          }
+        },
+        {
+          "text": "1099 AMT-",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              330.0,
+              501.0
+            ],
+            [
+              377.0,
+              501.0
+            ],
+            [
+              377.0,
+              512.0
+            ],
+            [
+              330.0,
+              512.0
+            ]
+          ],
+          "box": [
+            [
+              330.0,
+              501.0
+            ],
+            [
+              377.0,
+              501.0
+            ],
+            [
+              377.0,
+              512.0
+            ],
+            [
+              330.0,
+              512.0
+            ]
+          ],
+          "position": {
+            "x": 330,
+            "y": 501,
+            "width": 47,
+            "height": 11,
+            "center_x": 353.5,
+            "center_y": 506.5,
+            "region": "middle",
+            "tag": "[y:501, x:330]"
+          }
+        },
+        {
+          "text": "SEPHND->_ATIN.RIRT NAME-..RALH_ROCRENS",
+          "confidence": 0.67,
+          "bounding_box": [
+            [
+              38.0,
+              513.0
+            ],
+            [
+              415.0,
+              512.0
+            ],
+            [
+              415.0,
+              536.0
+            ],
+            [
+              38.0,
+              537.0
+            ]
+          ],
+          "box": [
+            [
+              38.0,
+              513.0
+            ],
+            [
+              415.0,
+              512.0
+            ],
+            [
+              415.0,
+              536.0
+            ],
+            [
+              38.0,
+              537.0
+            ]
+          ],
+          "position": {
+            "x": 38,
+            "y": 512,
+            "width": 377,
+            "height": 25,
+            "center_x": 226.5,
+            "center_y": 524.5,
+            "region": "middle-left",
+            "tag": "[y:512, x:38]"
+          }
+        },
+        {
+          "text": "DIST AP >A PREPDVOID --→",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              42.0,
+              543.0
+            ],
+            [
+              191.0,
+              543.0
+            ],
+            [
+              191.0,
+              556.0
+            ],
+            [
+              42.0,
+              556.0
+            ]
+          ],
+          "box": [
+            [
+              42.0,
+              543.0
+            ],
+            [
+              191.0,
+              543.0
+            ],
+            [
+              191.0,
+              556.0
+            ],
+            [
+              42.0,
+              556.0
+            ]
+          ],
+          "position": {
+            "x": 42,
+            "y": 543,
+            "width": 149,
+            "height": 13,
+            "center_x": 116.5,
+            "center_y": 549.5,
+            "region": "middle-left",
+            "tag": "[y:543, x:42]"
+          }
+        },
+        {
+          "text": "CASHIER",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              530.0,
+              552.0
+            ],
+            [
+              583.0,
+              552.0
+            ],
+            [
+              583.0,
+              567.0
+            ],
+            [
+              530.0,
+              567.0
+            ]
+          ],
+          "box": [
+            [
+              530.0,
+              552.0
+            ],
+            [
+              583.0,
+              552.0
+            ],
+            [
+              583.0,
+              567.0
+            ],
+            [
+              530.0,
+              567.0
+            ]
+          ],
+          "position": {
+            "x": 530,
+            "y": 552,
+            "width": 53,
+            "height": 15,
+            "center_x": 556.5,
+            "center_y": 559.5,
+            "region": "middle-right",
+            "tag": "[y:552, x:530]"
+          }
+        },
+        {
+          "text": "DATE",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              616.0,
+              551.0
+            ],
+            [
+              652.0,
+              551.0
+            ],
+            [
+              652.0,
+              566.0
+            ],
+            [
+              616.0,
+              566.0
+            ]
+          ],
+          "box": [
+            [
+              616.0,
+              551.0
+            ],
+            [
+              652.0,
+              551.0
+            ],
+            [
+              652.0,
+              566.0
+            ],
+            [
+              616.0,
+              566.0
+            ]
+          ],
+          "position": {
+            "x": 616,
+            "y": 551,
+            "width": 36,
+            "height": 15,
+            "center_x": 634.0,
+            "center_y": 558.5,
+            "region": "middle-right",
+            "tag": "[y:551, x:616]"
+          }
+        },
+        {
+          "text": "CONTRACT>_",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              43.0,
+              566.0
+            ],
+            [
+              130.0,
+              566.0
+            ],
+            [
+              130.0,
+              579.0
+            ],
+            [
+              43.0,
+              579.0
+            ]
+          ],
+          "box": [
+            [
+              43.0,
+              566.0
+            ],
+            [
+              130.0,
+              566.0
+            ],
+            [
+              130.0,
+              579.0
+            ],
+            [
+              43.0,
+              579.0
+            ]
+          ],
+          "position": {
+            "x": 43,
+            "y": 566,
+            "width": 87,
+            "height": 13,
+            "center_x": 86.5,
+            "center_y": 572.5,
+            "region": "middle-left",
+            "tag": "[y:566, x:43]"
+          }
+        },
+        {
+          "text": "FREQUENCY",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              137.0,
+              567.0
+            ],
+            [
+              201.0,
+              567.0
+            ],
+            [
+              201.0,
+              578.0
+            ],
+            [
+              137.0,
+              578.0
+            ]
+          ],
+          "box": [
+            [
+              137.0,
+              567.0
+            ],
+            [
+              201.0,
+              567.0
+            ],
+            [
+              201.0,
+              578.0
+            ],
+            [
+              137.0,
+              578.0
+            ]
+          ],
+          "position": {
+            "x": 137,
+            "y": 567,
+            "width": 64,
+            "height": 11,
+            "center_x": 169.0,
+            "center_y": 572.5,
+            "region": "middle-left",
+            "tag": "[y:567, x:137]"
+          }
+        },
+        {
+          "text": "ALT PAYEE-->01 000",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              42.0,
+              588.0
+            ],
+            [
+              157.0,
+              588.0
+            ],
+            [
+              157.0,
+              601.0
+            ],
+            [
+              42.0,
+              601.0
+            ]
+          ],
+          "box": [
+            [
+              42.0,
+              588.0
+            ],
+            [
+              157.0,
+              588.0
+            ],
+            [
+              157.0,
+              601.0
+            ],
+            [
+              42.0,
+              601.0
+            ]
+          ],
+          "position": {
+            "x": 42,
+            "y": 588,
+            "width": 115,
+            "height": 13,
+            "center_x": 99.5,
+            "center_y": 594.5,
+            "region": "middle-left",
+            "tag": "[y:588, x:42]"
+          }
+        },
+        {
+          "text": "APPROVAL",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              533.0,
+              600.0
+            ],
+            [
+              603.0,
+              600.0
+            ],
+            [
+              603.0,
+              614.0
+            ],
+            [
+              533.0,
+              614.0
+            ]
+          ],
+          "box": [
+            [
+              533.0,
+              600.0
+            ],
+            [
+              603.0,
+              600.0
+            ],
+            [
+              603.0,
+              614.0
+            ],
+            [
+              533.0,
+              614.0
+            ]
+          ],
+          "position": {
+            "x": 533,
+            "y": 600,
+            "width": 70,
+            "height": 14,
+            "center_x": 568.0,
+            "center_y": 607.0,
+            "region": "middle-right",
+            "tag": "[y:600, x:533]"
+          }
+        },
+        {
+          "text": "DATE",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              616.0,
+              600.0
+            ],
+            [
+              653.0,
+              600.0
+            ],
+            [
+              653.0,
+              614.0
+            ],
+            [
+              616.0,
+              614.0
+            ]
+          ],
+          "box": [
+            [
+              616.0,
+              600.0
+            ],
+            [
+              653.0,
+              600.0
+            ],
+            [
+              653.0,
+              614.0
+            ],
+            [
+              616.0,
+              614.0
+            ]
+          ],
+          "position": {
+            "x": 616,
+            "y": 600,
+            "width": 37,
+            "height": 14,
+            "center_x": 634.5,
+            "center_y": 607.0,
+            "region": "middle-right",
+            "tag": "[y:600, x:616]"
+          }
+        },
+        {
+          "text": "LINE 001",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              60.0,
+              626.0
+            ],
+            [
+              113.0,
+              626.0
+            ],
+            [
+              113.0,
+              640.0
+            ],
+            [
+              60.0,
+              640.0
+            ]
+          ],
+          "box": [
+            [
+              60.0,
+              626.0
+            ],
+            [
+              113.0,
+              626.0
+            ],
+            [
+              113.0,
+              640.0
+            ],
+            [
+              60.0,
+              640.0
+            ]
+          ],
+          "position": {
+            "x": 60,
+            "y": 626,
+            "width": 53,
+            "height": 14,
+            "center_x": 86.5,
+            "center_y": 633.0,
+            "region": "middle-left",
+            "tag": "[y:626, x:60]"
+          }
+        },
+        {
+          "text": "CORP/ACCT01 D09 26QY5L09 2SQ2000_",
+          "confidence": 0.62,
+          "bounding_box": [
+            [
+              112.0,
+              621.0
+            ],
+            [
+              509.0,
+              619.0
+            ],
+            [
+              510.0,
+              642.0
+            ],
+            [
+              112.0,
+              644.0
+            ]
+          ],
+          "box": [
+            [
+              112.0,
+              621.0
+            ],
+            [
+              509.0,
+              619.0
+            ],
+            [
+              510.0,
+              642.0
+            ],
+            [
+              112.0,
+              644.0
+            ]
+          ],
+          "position": {
+            "x": 112,
+            "y": 619,
+            "width": 398,
+            "height": 25,
+            "center_x": 311.0,
+            "center_y": 631.5,
+            "region": "middle",
+            "tag": "[y:619, x:112]"
+          }
+        },
+        {
+          "text": "AMT/PCT ->",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              57.0,
+              643.0
+            ],
+            [
+              127.0,
+              643.0
+            ],
+            [
+              127.0,
+              657.0
+            ],
+            [
+              57.0,
+              657.0
+            ]
+          ],
+          "box": [
+            [
+              57.0,
+              643.0
+            ],
+            [
+              127.0,
+              643.0
+            ],
+            [
+              127.0,
+              657.0
+            ],
+            [
+              57.0,
+              657.0
+            ]
+          ],
+          "position": {
+            "x": 57,
+            "y": 643,
+            "width": 70,
+            "height": 14,
+            "center_x": 92.0,
+            "center_y": 650.0,
+            "region": "middle-left",
+            "tag": "[y:643, x:57]"
+          }
+        },
+        {
+          "text": "25.000=",
+          "confidence": 0.81,
+          "bounding_box": [
+            [
+              142.0,
+              640.0
+            ],
+            [
+              226.0,
+              640.0
+            ],
+            [
+              226.0,
+              658.0
+            ],
+            [
+              142.0,
+              658.0
+            ]
+          ],
+          "box": [
+            [
+              142.0,
+              640.0
+            ],
+            [
+              226.0,
+              640.0
+            ],
+            [
+              226.0,
+              658.0
+            ],
+            [
+              142.0,
+              658.0
+            ]
+          ],
+          "position": {
+            "x": 142,
+            "y": 640,
+            "width": 84,
+            "height": 18,
+            "center_x": 184.0,
+            "center_y": 649.0,
+            "region": "middle-left",
+            "tag": "[y:640, x:142]"
+          }
+        },
+        {
+          "text": "A ID/BRCD --→",
+          "confidence": 0.82,
+          "bounding_box": [
+            [
+              283.0,
+              643.0
+            ],
+            [
+              367.0,
+              644.0
+            ],
+            [
+              367.0,
+              658.0
+            ],
+            [
+              283.0,
+              657.0
+            ]
+          ],
+          "box": [
+            [
+              283.0,
+              643.0
+            ],
+            [
+              367.0,
+              644.0
+            ],
+            [
+              367.0,
+              658.0
+            ],
+            [
+              283.0,
+              657.0
+            ]
+          ],
+          "position": {
+            "x": 283,
+            "y": 643,
+            "width": 84,
+            "height": 15,
+            "center_x": 325.0,
+            "center_y": 650.5,
+            "region": "middle",
+            "tag": "[y:643, x:283]"
+          }
+        },
+        {
+          "text": "RECEIVED",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              547.0,
+              644.0
+            ],
+            [
+              629.0,
+              646.0
+            ],
+            [
+              629.0,
+              664.0
+            ],
+            [
+              547.0,
+              662.0
+            ]
+          ],
+          "box": [
+            [
+              547.0,
+              644.0
+            ],
+            [
+              629.0,
+              646.0
+            ],
+            [
+              629.0,
+              664.0
+            ],
+            [
+              547.0,
+              662.0
+            ]
+          ],
+          "position": {
+            "x": 547,
+            "y": 644,
+            "width": 82,
+            "height": 20,
+            "center_x": 588.0,
+            "center_y": 654.0,
+            "region": "middle-right",
+            "tag": "[y:644, x:547]"
+          }
+        },
+        {
+          "text": "L",
+          "confidence": 0.26,
+          "bounding_box": [
+            [
+              47.0,
+              647.0
+            ],
+            [
+              61.0,
+              647.0
+            ],
+            [
+              61.0,
+              655.0
+            ],
+            [
+              47.0,
+              655.0
+            ]
+          ],
+          "box": [
+            [
+              47.0,
+              647.0
+            ],
+            [
+              61.0,
+              647.0
+            ],
+            [
+              61.0,
+              655.0
+            ],
+            [
+              47.0,
+              655.0
+            ]
+          ],
+          "position": {
+            "x": 47,
+            "y": 647,
+            "width": 14,
+            "height": 8,
+            "center_x": 54.0,
+            "center_y": 651.0,
+            "region": "middle-left",
+            "tag": "[y:647, x:47]"
+          }
+        },
+        {
+          "text": "DESC >",
+          "confidence": 0.87,
+          "bounding_box": [
+            [
+              61.0,
+              655.0
+            ],
+            [
+              112.0,
+              659.0
+            ],
+            [
+              111.0,
+              674.0
+            ],
+            [
+              60.0,
+              670.0
+            ]
+          ],
+          "box": [
+            [
+              61.0,
+              655.0
+            ],
+            [
+              112.0,
+              659.0
+            ],
+            [
+              111.0,
+              674.0
+            ],
+            [
+              60.0,
+              670.0
+            ]
+          ],
+          "position": {
+            "x": 60,
+            "y": 655,
+            "width": 52,
+            "height": 19,
+            "center_x": 86.0,
+            "center_y": 664.5,
+            "region": "middle-left",
+            "tag": "[y:655, x:60]"
+          }
+        },
+        {
+          "text": "Collamore",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              149.0,
+              658.0
+            ],
+            [
+              233.0,
+              658.0
+            ],
+            [
+              233.0,
+              676.0
+            ],
+            [
+              149.0,
+              676.0
+            ]
+          ],
+          "box": [
+            [
+              149.0,
+              658.0
+            ],
+            [
+              233.0,
+              658.0
+            ],
+            [
+              233.0,
+              676.0
+            ],
+            [
+              149.0,
+              676.0
+            ]
+          ],
+          "position": {
+            "x": 149,
+            "y": 658,
+            "width": 84,
+            "height": 18,
+            "center_x": 191.0,
+            "center_y": 667.0,
+            "region": "middle-left",
+            "tag": "[y:658, x:149]"
+          }
+        },
+        {
+          "text": "nt.Poluy",
+          "confidence": 0.71,
+          "bounding_box": [
+            [
+              229.0,
+              652.0
+            ],
+            [
+              321.0,
+              654.0
+            ],
+            [
+              321.0,
+              679.0
+            ],
+            [
+              229.0,
+              676.0
+            ]
+          ],
+          "box": [
+            [
+              229.0,
+              652.0
+            ],
+            [
+              321.0,
+              654.0
+            ],
+            [
+              321.0,
+              679.0
+            ],
+            [
+              229.0,
+              676.0
+            ]
+          ],
+          "position": {
+            "x": 229,
+            "y": 652,
+            "width": 92,
+            "height": 27,
+            "center_x": 275.0,
+            "center_y": 665.5,
+            "region": "middle",
+            "tag": "[y:652, x:229]"
+          }
+        },
+        {
+          "text": "LINE 002",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              62.0,
+              688.0
+            ],
+            [
+              111.0,
+              688.0
+            ],
+            [
+              111.0,
+              699.0
+            ],
+            [
+              62.0,
+              699.0
+            ]
+          ],
+          "box": [
+            [
+              62.0,
+              688.0
+            ],
+            [
+              111.0,
+              688.0
+            ],
+            [
+              111.0,
+              699.0
+            ],
+            [
+              62.0,
+              699.0
+            ]
+          ],
+          "position": {
+            "x": 62,
+            "y": 688,
+            "width": 49,
+            "height": 11,
+            "center_x": 86.5,
+            "center_y": 693.5,
+            "region": "middle-left",
+            "tag": "[y:688, x:62]"
+          }
+        },
+        {
+          "text": "CORP/ACCT Q1",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              123.0,
+              684.0
+            ],
+            [
+              209.0,
+              687.0
+            ],
+            [
+              209.0,
+              701.0
+            ],
+            [
+              123.0,
+              698.0
+            ]
+          ],
+          "box": [
+            [
+              123.0,
+              684.0
+            ],
+            [
+              209.0,
+              687.0
+            ],
+            [
+              209.0,
+              701.0
+            ],
+            [
+              123.0,
+              698.0
+            ]
+          ],
+          "position": {
+            "x": 123,
+            "y": 684,
+            "width": 86,
+            "height": 17,
+            "center_x": 166.0,
+            "center_y": 692.5,
+            "region": "middle-left",
+            "tag": "[y:684, x:123]"
+          }
+        },
+        {
+          "text": "JUL 111995",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              547.0,
+              681.0
+            ],
+            [
+              628.0,
+              684.0
+            ],
+            [
+              627.0,
+              702.0
+            ],
+            [
+              547.0,
+              699.0
+            ]
+          ],
+          "box": [
+            [
+              547.0,
+              681.0
+            ],
+            [
+              628.0,
+              684.0
+            ],
+            [
+              627.0,
+              702.0
+            ],
+            [
+              547.0,
+              699.0
+            ]
+          ],
+          "position": {
+            "x": 547,
+            "y": 681,
+            "width": 81,
+            "height": 21,
+            "center_x": 587.5,
+            "center_y": 691.5,
+            "region": "middle-right",
+            "tag": "[y:681, x:547]"
+          }
+        },
+        {
+          "text": "AMT/PCT ->",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              59.0,
+              701.0
+            ],
+            [
+              128.0,
+              704.0
+            ],
+            [
+              127.0,
+              718.0
+            ],
+            [
+              59.0,
+              716.0
+            ]
+          ],
+          "box": [
+            [
+              59.0,
+              701.0
+            ],
+            [
+              128.0,
+              704.0
+            ],
+            [
+              127.0,
+              718.0
+            ],
+            [
+              59.0,
+              716.0
+            ]
+          ],
+          "position": {
+            "x": 59,
+            "y": 701,
+            "width": 69,
+            "height": 17,
+            "center_x": 93.5,
+            "center_y": 709.5,
+            "region": "bottom-left",
+            "tag": "[y:701, x:59]"
+          }
+        },
+        {
+          "text": "A ID/BRCD-→",
+          "confidence": 0.87,
+          "bounding_box": [
+            [
+              284.0,
+              704.0
+            ],
+            [
+              368.0,
+              704.0
+            ],
+            [
+              368.0,
+              718.0
+            ],
+            [
+              284.0,
+              718.0
+            ]
+          ],
+          "box": [
+            [
+              284.0,
+              704.0
+            ],
+            [
+              368.0,
+              704.0
+            ],
+            [
+              368.0,
+              718.0
+            ],
+            [
+              284.0,
+              718.0
+            ]
+          ],
+          "position": {
+            "x": 284,
+            "y": 704,
+            "width": 84,
+            "height": 14,
+            "center_x": 326.0,
+            "center_y": 711.0,
+            "region": "bottom-center",
+            "tag": "[y:704, x:284]"
+          }
+        },
+        {
+          "text": "DESC →",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              60.0,
+              718.0
+            ],
+            [
+              113.0,
+              718.0
+            ],
+            [
+              113.0,
+              732.0
+            ],
+            [
+              60.0,
+              732.0
+            ]
+          ],
+          "box": [
+            [
+              60.0,
+              718.0
+            ],
+            [
+              113.0,
+              718.0
+            ],
+            [
+              113.0,
+              732.0
+            ],
+            [
+              60.0,
+              732.0
+            ]
+          ],
+          "position": {
+            "x": 60,
+            "y": 718,
+            "width": 53,
+            "height": 14,
+            "center_x": 86.5,
+            "center_y": 725.0,
+            "region": "bottom-left",
+            "tag": "[y:718, x:60]"
+          }
+        },
+        {
+          "text": "CORPORATEAFFARS",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              521.0,
+              713.0
+            ],
+            [
+              649.0,
+              714.0
+            ],
+            [
+              649.0,
+              731.0
+            ],
+            [
+              521.0,
+              730.0
+            ]
+          ],
+          "box": [
+            [
+              521.0,
+              713.0
+            ],
+            [
+              649.0,
+              714.0
+            ],
+            [
+              649.0,
+              731.0
+            ],
+            [
+              521.0,
+              730.0
+            ]
+          ],
+          "position": {
+            "x": 521,
+            "y": 713,
+            "width": 128,
+            "height": 18,
+            "center_x": 585.0,
+            "center_y": 722.0,
+            "region": "bottom-right",
+            "tag": "[y:713, x:521]"
+          }
+        },
+        {
+          "text": "GUDCRECEIVED",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              517.0,
+              726.0
+            ],
+            [
+              637.0,
+              736.0
+            ],
+            [
+              635.0,
+              762.0
+            ],
+            [
+              515.0,
+              751.0
+            ]
+          ],
+          "box": [
+            [
+              517.0,
+              726.0
+            ],
+            [
+              637.0,
+              736.0
+            ],
+            [
+              635.0,
+              762.0
+            ],
+            [
+              515.0,
+              751.0
+            ]
+          ],
+          "position": {
+            "x": 515,
+            "y": 726,
+            "width": 122,
+            "height": 36,
+            "center_x": 576.0,
+            "center_y": 744.0,
+            "region": "bottom-right",
+            "tag": "[y:726, x:515]"
+          }
+        },
+        {
+          "text": "LINE 003",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              61.0,
+              747.0
+            ],
+            [
+              112.0,
+              747.0
+            ],
+            [
+              112.0,
+              758.0
+            ],
+            [
+              61.0,
+              758.0
+            ]
+          ],
+          "box": [
+            [
+              61.0,
+              747.0
+            ],
+            [
+              112.0,
+              747.0
+            ],
+            [
+              112.0,
+              758.0
+            ],
+            [
+              61.0,
+              758.0
+            ]
+          ],
+          "position": {
+            "x": 61,
+            "y": 747,
+            "width": 51,
+            "height": 11,
+            "center_x": 86.5,
+            "center_y": 752.5,
+            "region": "bottom-left",
+            "tag": "[y:747, x:61]"
+          }
+        },
+        {
+          "text": "CORP/ACCT 01",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              123.0,
+              745.0
+            ],
+            [
+              209.0,
+              746.0
+            ],
+            [
+              209.0,
+              760.0
+            ],
+            [
+              123.0,
+              759.0
+            ]
+          ],
+          "box": [
+            [
+              123.0,
+              745.0
+            ],
+            [
+              209.0,
+              746.0
+            ],
+            [
+              209.0,
+              760.0
+            ],
+            [
+              123.0,
+              759.0
+            ]
+          ],
+          "position": {
+            "x": 123,
+            "y": 745,
+            "width": 86,
+            "height": 15,
+            "center_x": 166.0,
+            "center_y": 752.5,
+            "region": "bottom-left",
+            "tag": "[y:745, x:123]"
+          }
+        },
+        {
+          "text": "AMT/PCT ->",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              61.0,
+              763.0
+            ],
+            [
+              128.0,
+              763.0
+            ],
+            [
+              128.0,
+              777.0
+            ],
+            [
+              61.0,
+              777.0
+            ]
+          ],
+          "box": [
+            [
+              61.0,
+              763.0
+            ],
+            [
+              128.0,
+              763.0
+            ],
+            [
+              128.0,
+              777.0
+            ],
+            [
+              61.0,
+              777.0
+            ]
+          ],
+          "position": {
+            "x": 61,
+            "y": 763,
+            "width": 67,
+            "height": 14,
+            "center_x": 94.5,
+            "center_y": 770.0,
+            "region": "bottom-left",
+            "tag": "[y:763, x:61]"
+          }
+        },
+        {
+          "text": "AID/BRCD--→",
+          "confidence": 0.86,
+          "bounding_box": [
+            [
+              284.0,
+              764.0
+            ],
+            [
+              366.0,
+              764.0
+            ],
+            [
+              366.0,
+              777.0
+            ],
+            [
+              284.0,
+              777.0
+            ]
+          ],
+          "box": [
+            [
+              284.0,
+              764.0
+            ],
+            [
+              366.0,
+              764.0
+            ],
+            [
+              366.0,
+              777.0
+            ],
+            [
+              284.0,
+              777.0
+            ]
+          ],
+          "position": {
+            "x": 284,
+            "y": 764,
+            "width": 82,
+            "height": 13,
+            "center_x": 325.0,
+            "center_y": 770.5,
+            "region": "bottom-center",
+            "tag": "[y:764, x:284]"
+          }
+        },
+        {
+          "text": "-DESC ->",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              44.0,
+              779.0
+            ],
+            [
+              111.0,
+              779.0
+            ],
+            [
+              111.0,
+              790.0
+            ],
+            [
+              44.0,
+              790.0
+            ]
+          ],
+          "box": [
+            [
+              44.0,
+              779.0
+            ],
+            [
+              111.0,
+              779.0
+            ],
+            [
+              111.0,
+              790.0
+            ],
+            [
+              44.0,
+              790.0
+            ]
+          ],
+          "position": {
+            "x": 44,
+            "y": 779,
+            "width": 67,
+            "height": 11,
+            "center_x": 77.5,
+            "center_y": 784.5,
+            "region": "bottom-left",
+            "tag": "[y:779, x:44]"
+          }
+        },
+        {
+          "text": "JUL 12 1995",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              550.0,
+              772.0
+            ],
+            [
+              629.0,
+              774.0
+            ],
+            [
+              629.0,
+              793.0
+            ],
+            [
+              550.0,
+              790.0
+            ]
+          ],
+          "box": [
+            [
+              550.0,
+              772.0
+            ],
+            [
+              629.0,
+              774.0
+            ],
+            [
+              629.0,
+              793.0
+            ],
+            [
+              550.0,
+              790.0
+            ]
+          ],
+          "position": {
+            "x": 550,
+            "y": 772,
+            "width": 79,
+            "height": 21,
+            "center_x": 589.5,
+            "center_y": 782.5,
+            "region": "bottom-right",
+            "tag": "[y:772, x:550]"
+          }
+        },
+        {
+          "text": "2047190666",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              660.0,
+              790.0
+            ],
+            [
+              687.0,
+              790.0
+            ],
+            [
+              687.0,
+              925.0
+            ],
+            [
+              660.0,
+              925.0
+            ]
+          ],
+          "box": [
+            [
+              660.0,
+              790.0
+            ],
+            [
+              687.0,
+              790.0
+            ],
+            [
+              687.0,
+              925.0
+            ],
+            [
+              660.0,
+              925.0
+            ]
+          ],
+          "position": {
+            "x": 660,
+            "y": 790,
+            "width": 27,
+            "height": 135,
+            "center_x": 673.5,
+            "center_y": 857.5,
+            "region": "bottom-right",
+            "tag": "[y:790, x:660]"
+          }
+        },
+        {
+          "text": "LINE 004",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              61.0,
+              806.0
+            ],
+            [
+              114.0,
+              806.0
+            ],
+            [
+              114.0,
+              821.0
+            ],
+            [
+              61.0,
+              821.0
+            ]
+          ],
+          "box": [
+            [
+              61.0,
+              806.0
+            ],
+            [
+              114.0,
+              806.0
+            ],
+            [
+              114.0,
+              821.0
+            ],
+            [
+              61.0,
+              821.0
+            ]
+          ],
+          "position": {
+            "x": 61,
+            "y": 806,
+            "width": 53,
+            "height": 15,
+            "center_x": 87.5,
+            "center_y": 813.5,
+            "region": "bottom-left",
+            "tag": "[y:806, x:61]"
+          }
+        },
+        {
+          "text": "CORP/ACCT Q1",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              122.0,
+              805.0
+            ],
+            [
+              209.0,
+              807.0
+            ],
+            [
+              209.0,
+              821.0
+            ],
+            [
+              122.0,
+              820.0
+            ]
+          ],
+          "box": [
+            [
+              122.0,
+              805.0
+            ],
+            [
+              209.0,
+              807.0
+            ],
+            [
+              209.0,
+              821.0
+            ],
+            [
+              122.0,
+              820.0
+            ]
+          ],
+          "position": {
+            "x": 122,
+            "y": 805,
+            "width": 87,
+            "height": 16,
+            "center_x": 165.5,
+            "center_y": 813.0,
+            "region": "bottom-left",
+            "tag": "[y:805, x:122]"
+          }
+        },
+        {
+          "text": "CORPORATE AFFANS",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              526.0,
+              801.0
+            ],
+            [
+              653.0,
+              805.0
+            ],
+            [
+              653.0,
+              825.0
+            ],
+            [
+              525.0,
+              821.0
+            ]
+          ],
+          "box": [
+            [
+              526.0,
+              801.0
+            ],
+            [
+              653.0,
+              805.0
+            ],
+            [
+              653.0,
+              825.0
+            ],
+            [
+              525.0,
+              821.0
+            ]
+          ],
+          "position": {
+            "x": 525,
+            "y": 801,
+            "width": 128,
+            "height": 24,
+            "center_x": 589.0,
+            "center_y": 813.0,
+            "region": "bottom-right",
+            "tag": "[y:801, x:525]"
+          }
+        },
+        {
+          "text": "AMT/PCT ->",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              61.0,
+              824.0
+            ],
+            [
+              128.0,
+              824.0
+            ],
+            [
+              128.0,
+              838.0
+            ],
+            [
+              61.0,
+              838.0
+            ]
+          ],
+          "box": [
+            [
+              61.0,
+              824.0
+            ],
+            [
+              128.0,
+              824.0
+            ],
+            [
+              128.0,
+              838.0
+            ],
+            [
+              61.0,
+              838.0
+            ]
+          ],
+          "position": {
+            "x": 61,
+            "y": 824,
+            "width": 67,
+            "height": 14,
+            "center_x": 94.5,
+            "center_y": 831.0,
+            "region": "bottom-left",
+            "tag": "[y:824, x:61]"
+          }
+        },
+        {
+          "text": "A ID/BRCD--→",
+          "confidence": 0.85,
+          "bounding_box": [
+            [
+              283.0,
+              824.0
+            ],
+            [
+              366.0,
+              825.0
+            ],
+            [
+              366.0,
+              839.0
+            ],
+            [
+              283.0,
+              838.0
+            ]
+          ],
+          "box": [
+            [
+              283.0,
+              824.0
+            ],
+            [
+              366.0,
+              825.0
+            ],
+            [
+              366.0,
+              839.0
+            ],
+            [
+              283.0,
+              838.0
+            ]
+          ],
+          "position": {
+            "x": 283,
+            "y": 824,
+            "width": 83,
+            "height": 15,
+            "center_x": 324.5,
+            "center_y": 831.5,
+            "region": "bottom-center",
+            "tag": "[y:824, x:283]"
+          }
+        },
+        {
+          "text": "BUDGETS & CONTROLS",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              521.0,
+              820.0
+            ],
+            [
+              659.0,
+              823.0
+            ],
+            [
+              659.0,
+              840.0
+            ],
+            [
+              520.0,
+              838.0
+            ]
+          ],
+          "box": [
+            [
+              521.0,
+              820.0
+            ],
+            [
+              659.0,
+              823.0
+            ],
+            [
+              659.0,
+              840.0
+            ],
+            [
+              520.0,
+              838.0
+            ]
+          ],
+          "position": {
+            "x": 520,
+            "y": 820,
+            "width": 139,
+            "height": 20,
+            "center_x": 589.5,
+            "center_y": 830.0,
+            "region": "bottom-right",
+            "tag": "[y:820, x:520]"
+          }
+        },
+        {
+          "text": "DESC >",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              59.0,
+              838.0
+            ],
+            [
+              112.0,
+              838.0
+            ],
+            [
+              112.0,
+              852.0
+            ],
+            [
+              59.0,
+              852.0
+            ]
+          ],
+          "box": [
+            [
+              59.0,
+              838.0
+            ],
+            [
+              112.0,
+              838.0
+            ],
+            [
+              112.0,
+              852.0
+            ],
+            [
+              59.0,
+              852.0
+            ]
+          ],
+          "position": {
+            "x": 59,
+            "y": 838,
+            "width": 53,
+            "height": 14,
+            "center_x": 85.5,
+            "center_y": 845.0,
+            "region": "bottom-left",
+            "tag": "[y:838, x:59]"
+          }
+        },
+        {
+          "text": "RECEIVED",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              538.0,
+              846.0
+            ],
+            [
+              621.0,
+              849.0
+            ],
+            [
+              620.0,
+              867.0
+            ],
+            [
+              537.0,
+              864.0
+            ]
+          ],
+          "box": [
+            [
+              538.0,
+              846.0
+            ],
+            [
+              621.0,
+              849.0
+            ],
+            [
+              620.0,
+              867.0
+            ],
+            [
+              537.0,
+              864.0
+            ]
+          ],
+          "position": {
+            "x": 537,
+            "y": 846,
+            "width": 84,
+            "height": 21,
+            "center_x": 579.0,
+            "center_y": 856.5,
+            "region": "bottom-right",
+            "tag": "[y:846, x:537]"
+          }
+        },
+        {
+          "text": "LINE 005",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              62.0,
+              868.0
+            ],
+            [
+              112.0,
+              868.0
+            ],
+            [
+              112.0,
+              879.0
+            ],
+            [
+              62.0,
+              879.0
+            ]
+          ],
+          "box": [
+            [
+              62.0,
+              868.0
+            ],
+            [
+              112.0,
+              868.0
+            ],
+            [
+              112.0,
+              879.0
+            ],
+            [
+              62.0,
+              879.0
+            ]
+          ],
+          "position": {
+            "x": 62,
+            "y": 868,
+            "width": 50,
+            "height": 11,
+            "center_x": 87.0,
+            "center_y": 873.5,
+            "region": "bottom-left",
+            "tag": "[y:868, x:62]"
+          }
+        },
+        {
+          "text": "CORP/ACCT Q1",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              116.0,
+              866.0
+            ],
+            [
+              208.0,
+              868.0
+            ],
+            [
+              208.0,
+              882.0
+            ],
+            [
+              116.0,
+              880.0
+            ]
+          ],
+          "box": [
+            [
+              116.0,
+              866.0
+            ],
+            [
+              208.0,
+              868.0
+            ],
+            [
+              208.0,
+              882.0
+            ],
+            [
+              116.0,
+              880.0
+            ]
+          ],
+          "position": {
+            "x": 116,
+            "y": 866,
+            "width": 92,
+            "height": 16,
+            "center_x": 162.0,
+            "center_y": 874.0,
+            "region": "bottom-left",
+            "tag": "[y:866, x:116]"
+          }
+        },
+        {
+          "text": "JUL 19 1995",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              539.0,
+              882.0
+            ],
+            [
+              619.0,
+              885.0
+            ],
+            [
+              618.0,
+              903.0
+            ],
+            [
+              538.0,
+              900.0
+            ]
+          ],
+          "box": [
+            [
+              539.0,
+              882.0
+            ],
+            [
+              619.0,
+              885.0
+            ],
+            [
+              618.0,
+              903.0
+            ],
+            [
+              538.0,
+              900.0
+            ]
+          ],
+          "position": {
+            "x": 538,
+            "y": 882,
+            "width": 81,
+            "height": 21,
+            "center_x": 578.5,
+            "center_y": 892.5,
+            "region": "bottom-right",
+            "tag": "[y:882, x:538]"
+          }
+        },
+        {
+          "text": "DESC ->",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              61.0,
+              899.0
+            ],
+            [
+              111.0,
+              899.0
+            ],
+            [
+              111.0,
+              910.0
+            ],
+            [
+              61.0,
+              910.0
+            ]
+          ],
+          "box": [
+            [
+              61.0,
+              899.0
+            ],
+            [
+              111.0,
+              899.0
+            ],
+            [
+              111.0,
+              910.0
+            ],
+            [
+              61.0,
+              910.0
+            ]
+          ],
+          "position": {
+            "x": 61,
+            "y": 899,
+            "width": 50,
+            "height": 11,
+            "center_x": 86.0,
+            "center_y": 904.5,
+            "region": "bottom-left",
+            "tag": "[y:899, x:61]"
+          }
+        },
+        {
+          "text": "AMT/PCT ->",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              62.0,
+              885.0
+            ],
+            [
+              127.0,
+              885.0
+            ],
+            [
+              127.0,
+              896.0
+            ],
+            [
+              62.0,
+              896.0
+            ]
+          ],
+          "box": [
+            [
+              62.0,
+              885.0
+            ],
+            [
+              127.0,
+              885.0
+            ],
+            [
+              127.0,
+              896.0
+            ],
+            [
+              62.0,
+              896.0
+            ]
+          ],
+          "position": {
+            "x": 62,
+            "y": 885,
+            "width": 65,
+            "height": 11,
+            "center_x": 94.5,
+            "center_y": 890.5,
+            "region": "bottom-left",
+            "tag": "[y:885, x:62]"
+          }
+        },
+        {
+          "text": "A ID/BRCD--→",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              284.0,
+              885.0
+            ],
+            [
+              367.0,
+              885.0
+            ],
+            [
+              367.0,
+              898.0
+            ],
+            [
+              284.0,
+              898.0
+            ]
+          ],
+          "box": [
+            [
+              284.0,
+              885.0
+            ],
+            [
+              367.0,
+              885.0
+            ],
+            [
+              367.0,
+              898.0
+            ],
+            [
+              284.0,
+              898.0
+            ]
+          ],
+          "position": {
+            "x": 284,
+            "y": 885,
+            "width": 83,
+            "height": 13,
+            "center_x": 325.5,
+            "center_y": 891.5,
+            "region": "bottom-center",
+            "tag": "[y:885, x:284]"
+          }
+        },
+        {
+          "text": "CORPORATE AFFAIRS",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              515.0,
+              913.0
+            ],
+            [
+              639.0,
+              915.0
+            ],
+            [
+              639.0,
+              933.0
+            ],
+            [
+              514.0,
+              930.0
+            ]
+          ],
+          "box": [
+            [
+              515.0,
+              913.0
+            ],
+            [
+              639.0,
+              915.0
+            ],
+            [
+              639.0,
+              933.0
+            ],
+            [
+              514.0,
+              930.0
+            ]
+          ],
+          "position": {
+            "x": 514,
+            "y": 913,
+            "width": 125,
+            "height": 20,
+            "center_x": 576.5,
+            "center_y": 923.0,
+            "region": "bottom-right",
+            "tag": "[y:913, x:514]"
+          }
+        },
+        {
+          "text": "BUDGETS & CONTROLS",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              509.0,
+              929.0
+            ],
+            [
+              645.0,
+              933.0
+            ],
+            [
+              645.0,
+              950.0
+            ],
+            [
+              508.0,
+              946.0
+            ]
+          ],
+          "box": [
+            [
+              509.0,
+              929.0
+            ],
+            [
+              645.0,
+              933.0
+            ],
+            [
+              645.0,
+              950.0
+            ],
+            [
+              508.0,
+              946.0
+            ]
+          ],
+          "position": {
+            "x": 508,
+            "y": 929,
+            "width": 137,
+            "height": 21,
+            "center_x": 576.5,
+            "center_y": 939.5,
+            "region": "bottom-right",
+            "tag": "[y:929, x:508]"
+          }
+        },
+        {
+          "text": "FORM 43488 NY",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              36.0,
+              957.0
+            ],
+            [
+              120.0,
+              957.0
+            ],
+            [
+              120.0,
+              970.0
+            ],
+            [
+              36.0,
+              970.0
+            ]
+          ],
+          "box": [
+            [
+              36.0,
+              957.0
+            ],
+            [
+              120.0,
+              957.0
+            ],
+            [
+              120.0,
+              970.0
+            ],
+            [
+              36.0,
+              970.0
+            ]
+          ],
+          "position": {
+            "x": 36,
+            "y": 957,
+            "width": 84,
+            "height": 13,
+            "center_x": 78.0,
+            "center_y": 963.5,
+            "region": "bottom-left",
+            "tag": "[y:957, x:36]"
+          }
+        },
+        {
+          "text": "PM ING/USA/CO'S REV 8/96",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              135.0,
+              957.0
+            ],
+            [
+              273.0,
+              957.0
+            ],
+            [
+              273.0,
+              970.0
+            ],
+            [
+              135.0,
+              970.0
+            ]
+          ],
+          "box": [
+            [
+              135.0,
+              957.0
+            ],
+            [
+              273.0,
+              957.0
+            ],
+            [
+              273.0,
+              970.0
+            ],
+            [
+              135.0,
+              970.0
+            ]
+          ],
+          "position": {
+            "x": 135,
+            "y": 957,
+            "width": 138,
+            "height": 13,
+            "center_x": 204.0,
+            "center_y": 963.5,
+            "region": "bottom-left",
+            "tag": "[y:957, x:135]"
+          }
+        },
+        {
+          "text": "COMP A2",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              286.0,
+              958.0
+            ],
+            [
+              334.0,
+              958.0
+            ],
+            [
+              334.0,
+              969.0
+            ],
+            [
+              286.0,
+              969.0
+            ]
+          ],
+          "box": [
+            [
+              286.0,
+              958.0
+            ],
+            [
+              334.0,
+              958.0
+            ],
+            [
+              334.0,
+              969.0
+            ],
+            [
+              286.0,
+              969.0
+            ]
+          ],
+          "position": {
+            "x": 286,
+            "y": 958,
+            "width": 48,
+            "height": 11,
+            "center_x": 310.0,
+            "center_y": 963.5,
+            "region": "bottom-center",
+            "tag": "[y:958, x:286]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 1.042,
+      "cached_at": "2026-09-27T16:30:13.648675+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "invoice",
+        "document_number": "231GY6",
+        "document_date": "2019-07-01",
+        "sender": "MANAGEMENT CORPORATION",
+        "receiver": "",
+        "origin": "icy",
+        "destination": "",
+        "reference_number": "",
+        "unit_price": 25000.0,
+        "total_amount": 25000.0,
+        "currency": "USD",
+        "other": {
+          "source_file": "267_val_imagesb_b_y_c_byc37c00_2047190666.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "-VOUCHER TYPEI (1-Reg; 2-P.P.; 3-C.M.; 4-D.M.; 5-C.P.; 6-V.C.; 7-V.A.) VOUCHER/INVOICE DATE _069295",
+          "field": "document_type",
+          "value": "invoice",
+          "confidence": 93,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "VENDOR# 231GY6_",
+          "field": "document_number",
+          "value": "231GY6",
+          "confidence": 92,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "2019-07-01",
+          "field": "document_date",
+          "value": "2019-07-01",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "MANAGEMENT CORPORATION",
+          "field": "sender",
+          "value": "MANAGEMENT CORPORATION",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "receiver",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "atron sponsorship of The Forum for International Policy",
+          "field": "origin",
+          "value": "icy",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "destination",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "reference_number",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "$25,000.00",
+          "field": "unit_price",
+          "value": "25000.0",
+          "confidence": 98,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "$25,000.00",
+          "field": "total_amount",
+          "value": "25000.0",
+          "confidence": 98,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "267_val_imagesb_b_y_c_byc37c00_2047190666.png",
+          "field": "source_file",
+          "value": "267_val_imagesb_b_y_c_byc37c00_2047190666.png",
+          "confidence": 92,
+          "status": "success",
+          "isOther": true
+        }
+      ],
+      "confidence": {
+        "overall": 85,
+        "ocr": 92,
+        "slm": 88,
+        "mapping": 73,
+        "completeness": 73
+      },
+      "review_items": [
+        {
+          "field": "receiver",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "destination",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "reference_number",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": {
+        "accuracy_pct": 73.0,
+        "inference_time_sec": 0.15,
+        "tokens_generated": 0,
+        "token_speed_tps": 0,
+        "core_fields_fill_rate_pct": 73.0,
+        "schema_valid": true,
+        "math_integrity_status": "no_subtotal",
+        "math_integrity_notes": "Sources: 25,000.00",
+        "field_accuracies": {}
+      },
+      "model": "Qwen/Qwen2.5-1.5B-Instruct (Fallback: 502: SLM returned invalid JSON: Expecting ',' delimiter: line 17 column 4 (char 504))",
+      "device": "cpu/fallback"
+    },
+    "performance": {
+      "ocr_time_sec": 1.042,
+      "slm_time_sec": 59.61,
+      "total_time_sec": 60.652
+    },
+    "prompt_integrity": {
+      "cache_schema_version": 2,
+      "prompt_hash": "e1abb4746f2a86199e65819797164ad347862007f0f20aecb2f2f57c31e4911d",
+      "variant": "zero-shot",
+      "benchmark_example_ids": [],
+      "benchmark_example_confidences": [],
+      "training_document_ids": [
+        "DOC-001",
+        "DOC-002",
+        "DOC-003",
+        "DOC-004",
+        "DOC-005",
+        "DOC-007",
+        "DOC-009",
+        "DOC-011",
+        "DOC-012",
+        "DOC-013",
+        "DOC-014",
+        "DOC-015",
+        "DOC-016",
+        "DOC-017",
+        "DOC-019",
+        "DOC-020",
+        "DOC-021",
+        "DOC-022",
+        "DOC-023",
+        "DOC-024",
+        "DOC-027",
+        "DOC-028",
+        "DOC-029",
+        "DOC-030",
+        "DOC-031",
+        "DOC-032",
+        "DOC-033",
+        "DOC-035",
+        "DOC-036",
+        "DOC-037",
+        "DOC-038",
+        "DOC-039",
+        "DOC-040",
+        "DOC-041",
+        "DOC-042",
+        "DOC-044",
+        "DOC-045",
+        "DOC-048",
+        "DOC-049",
+        "DOC-050",
+        "DOC-051",
+        "DOC-052",
+        "DOC-053",
+        "DOC-054",
+        "DOC-055",
+        "DOC-056",
+        "DOC-057",
+        "DOC-059",
+        "DOC-060",
+        "DOC-062",
+        "DOC-063",
+        "DOC-065",
+        "DOC-066",
+        "DOC-067",
+        "DOC-068",
+        "DOC-069",
+        "DOC-070",
+        "DOC-071",
+        "DOC-072",
+        "DOC-073",
+        "DOC-075",
+        "DOC-080",
+        "DOC-081",
+        "DOC-082",
+        "DOC-083",
+        "DOC-084",
+        "DOC-085",
+        "DOC-086",
+        "DOC-087",
+        "DOC-088",
+        "DOC-089",
+        "DOC-090",
+        "DOC-092",
+        "DOC-095",
+        "DOC-096",
+        "DOC-097",
+        "DOC-099",
+        "DOC-100",
+        "DOC-101",
+        "DOC-102",
+        "DOC-103",
+        "DOC-104",
+        "DOC-106",
+        "DOC-107",
+        "DOC-108",
+        "DOC-109",
+        "DOC-111",
+        "DOC-113",
+        "DOC-115",
+        "DOC-116",
+        "DOC-117",
+        "DOC-118",
+        "DOC-119",
+        "DOC-121",
+        "DOC-122",
+        "DOC-123",
+        "DOC-124",
+        "DOC-125",
+        "DOC-126",
+        "DOC-127",
+        "DOC-128",
+        "DOC-129",
+        "DOC-130",
+        "DOC-131",
+        "DOC-132",
+        "DOC-133",
+        "DOC-134",
+        "DOC-135",
+        "DOC-136",
+        "DOC-137",
+        "DOC-138",
+        "DOC-139",
+        "DOC-140",
+        "DOC-141",
+        "DOC-142",
+        "DOC-143",
+        "DOC-144",
+        "DOC-146",
+        "DOC-147",
+        "DOC-148",
+        "DOC-150",
+        "DOC-151",
+        "DOC-152",
+        "DOC-154",
+        "DOC-155",
+        "DOC-156",
+        "DOC-157",
+        "DOC-159",
+        "DOC-160",
+        "DOC-161",
+        "DOC-162",
+        "DOC-163",
+        "DOC-164",
+        "DOC-167",
+        "DOC-168",
+        "DOC-169",
+        "DOC-170",
+        "DOC-171",
+        "DOC-172",
+        "DOC-173",
+        "DOC-174",
+        "DOC-175",
+        "DOC-177",
+        "DOC-178",
+        "DOC-179",
+        "DOC-180",
+        "DOC-182",
+        "DOC-184",
+        "DOC-185",
+        "DOC-186",
+        "DOC-187",
+        "DOC-188",
+        "DOC-189",
+        "DOC-190",
+        "DOC-191",
+        "DOC-192",
+        "DOC-194",
+        "DOC-195",
+        "DOC-196",
+        "DOC-198",
+        "DOC-199",
+        "DOC-200",
+        "DOC-201",
+        "DOC-202",
+        "DOC-203",
+        "DOC-205",
+        "DOC-206",
+        "DOC-207",
+        "DOC-208",
+        "DOC-209",
+        "DOC-210",
+        "DOC-211",
+        "DOC-213",
+        "DOC-214",
+        "DOC-215",
+        "DOC-217",
+        "DOC-218",
+        "DOC-220",
+        "DOC-221",
+        "DOC-223",
+        "DOC-224",
+        "DOC-225",
+        "DOC-226",
+        "DOC-228",
+        "DOC-229",
+        "DOC-231",
+        "DOC-233",
+        "DOC-236",
+        "DOC-237",
+        "DOC-241",
+        "DOC-242",
+        "DOC-243",
+        "DOC-244",
+        "DOC-245",
+        "DOC-246",
+        "DOC-247",
+        "DOC-248",
+        "DOC-249",
+        "DOC-252",
+        "DOC-253",
+        "DOC-254",
+        "DOC-255",
+        "DOC-256",
+        "DOC-257",
+        "DOC-258",
+        "DOC-259",
+        "DOC-260",
+        "DOC-261",
+        "DOC-262",
+        "DOC-263",
+        "DOC-264",
+        "DOC-265",
+        "DOC-266",
+        "DOC-268",
+        "DOC-269",
+        "DOC-270",
+        "DOC-271",
+        "DOC-272",
+        "DOC-273",
+        "DOC-274",
+        "DOC-275",
+        "DOC-276",
+        "DOC-277",
+        "DOC-278",
+        "DOC-280",
+        "DOC-281",
+        "DOC-283",
+        "DOC-284",
+        "DOC-285",
+        "DOC-286",
+        "DOC-288",
+        "DOC-289",
+        "DOC-291",
+        "DOC-292",
+        "DOC-293",
+        "DOC-294",
+        "DOC-295",
+        "DOC-297",
+        "DOC-299",
+        "DOC-300"
+      ]
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 1.042,
+    "slm_time_sec": 59.61,
+    "total_time_sec": 60.652
+  },
+  "cached_at": "2026-09-27T16:31:13.276068+00:00"
+}

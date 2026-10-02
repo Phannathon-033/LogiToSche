@@ -1,0 +1,27 @@
+{
+  "id": "DOC-006",
+  "rank": 6,
+  "file_name": "006_train_imagesg_g_o_i_goi66d00_514225065+-5065.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "27102",
+    "document_date": "1999-12-22",
+    "sender": "Inventory on or after",
+    "receiver": "-",
+    "origin": "ater Teresa M. Swith",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 7006.0,
+    "total_amount": 7006.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:04:19"
+}

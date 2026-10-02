@@ -1,0 +1,27 @@
+{
+  "id": "DOC-270",
+  "rank": 270,
+  "file_name": "270_train_imagesw_w_k_b_wkb52c00_2074104163.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "-",
+    "document_date": "1996-10-23",
+    "sender": "COMPANY",
+    "receiver": "-",
+    "origin": "itical Contribution-Campaign",
+    "destination": "Saint Petersburg, FL 33704",
+    "reference_number": "-",
+    "unit_price": 500.0,
+    "total_amount": 500.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 82,
+    "ocr": 95,
+    "slm": 82,
+    "mapping": 98,
+    "completeness": 73
+  },
+  "annotated_at": "2026-09-14 15:35:48"
+}

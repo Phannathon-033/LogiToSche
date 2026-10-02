@@ -1,0 +1,27 @@
+{
+  "id": "DOC-175",
+  "rank": 175,
+  "file_name": "175_test_imagesg_g_e_e_gee21e00_87104135.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "354B",
+    "document_date": "1985-02-12",
+    "sender": "LABORATORIES AMERICA, INC",
+    "receiver": "-",
+    "origin": "VIENNA, VA",
+    "destination": "Greensboro, NC 27420",
+    "reference_number": "-",
+    "unit_price": 2050.0,
+    "total_amount": 2050.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:24:48"
+}

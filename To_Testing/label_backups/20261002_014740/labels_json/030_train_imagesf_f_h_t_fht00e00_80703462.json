@@ -1,0 +1,27 @@
+{
+  "id": "DOC-030",
+  "rank": 30,
+  "file_name": "030_train_imagesf_f_h_t_fht00e00_80703462.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "h1/1",
+    "document_date": "1981-11-01",
+    "sender": "A. H.VILLEPIGUE, INC.",
+    "receiver": "-",
+    "origin": "LORILLARD, OH",
+    "destination": "OUTD O, OR",
+    "reference_number": "-",
+    "unit_price": 1678.6,
+    "total_amount": 1678.6,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:06:43"
+}

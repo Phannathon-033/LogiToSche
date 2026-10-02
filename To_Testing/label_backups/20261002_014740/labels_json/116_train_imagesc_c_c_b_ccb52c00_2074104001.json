@@ -1,0 +1,27 @@
+{
+  "id": "DOC-116",
+  "rank": 116,
+  "file_name": "116_train_imagesc_c_c_b_ccb52c00_2074104001.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "-",
+    "document_date": "1996-09-19",
+    "sender": "COMPANY",
+    "receiver": "-",
+    "origin": "CON -- WII be hand-dellvered",
+    "destination": "alo Timathy Osmond, OK",
+    "reference_number": "Box635",
+    "unit_price": 2000.0,
+    "total_amount": 2000.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:16:58"
+}

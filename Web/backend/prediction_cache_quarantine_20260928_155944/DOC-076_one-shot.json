@@ -1,0 +1,2018 @@
+{
+  "document_id": "DOC-076",
+  "file_name": "076_train_imagesm_m_m_j_mmj97e00_1000047237.png",
+  "cache_schema_version": 2,
+  "prompt_hash": "89b7cee5808a08c571dbbca48a3c981fa2715c1c841c08a4e4a26363dffb3be8",
+  "variant": "one-shot",
+  "benchmark_example_ids": [
+    "DOC-009"
+  ],
+  "benchmark_example_confidences": [
+    98.13
+  ],
+  "training_document_ids": [
+    "DOC-001",
+    "DOC-002",
+    "DOC-003",
+    "DOC-004",
+    "DOC-005",
+    "DOC-007",
+    "DOC-009",
+    "DOC-011",
+    "DOC-012",
+    "DOC-013",
+    "DOC-014",
+    "DOC-015",
+    "DOC-016",
+    "DOC-017",
+    "DOC-019",
+    "DOC-020",
+    "DOC-021",
+    "DOC-022",
+    "DOC-023",
+    "DOC-024",
+    "DOC-027",
+    "DOC-028",
+    "DOC-029",
+    "DOC-030",
+    "DOC-031",
+    "DOC-032",
+    "DOC-033",
+    "DOC-035",
+    "DOC-036",
+    "DOC-037",
+    "DOC-038",
+    "DOC-039",
+    "DOC-040",
+    "DOC-041",
+    "DOC-042",
+    "DOC-044",
+    "DOC-045",
+    "DOC-048",
+    "DOC-049",
+    "DOC-050",
+    "DOC-051",
+    "DOC-052",
+    "DOC-053",
+    "DOC-054",
+    "DOC-055",
+    "DOC-056",
+    "DOC-057",
+    "DOC-059",
+    "DOC-060",
+    "DOC-062",
+    "DOC-063",
+    "DOC-065",
+    "DOC-066",
+    "DOC-067",
+    "DOC-068",
+    "DOC-069",
+    "DOC-070",
+    "DOC-071",
+    "DOC-072",
+    "DOC-073",
+    "DOC-075",
+    "DOC-080",
+    "DOC-081",
+    "DOC-082",
+    "DOC-083",
+    "DOC-084",
+    "DOC-085",
+    "DOC-086",
+    "DOC-087",
+    "DOC-088",
+    "DOC-089",
+    "DOC-090",
+    "DOC-092",
+    "DOC-095",
+    "DOC-096",
+    "DOC-097",
+    "DOC-099",
+    "DOC-100",
+    "DOC-101",
+    "DOC-102",
+    "DOC-103",
+    "DOC-104",
+    "DOC-106",
+    "DOC-107",
+    "DOC-108",
+    "DOC-109",
+    "DOC-111",
+    "DOC-113",
+    "DOC-115",
+    "DOC-116",
+    "DOC-117",
+    "DOC-118",
+    "DOC-119",
+    "DOC-121",
+    "DOC-122",
+    "DOC-123",
+    "DOC-124",
+    "DOC-125",
+    "DOC-126",
+    "DOC-127",
+    "DOC-128",
+    "DOC-129",
+    "DOC-130",
+    "DOC-131",
+    "DOC-132",
+    "DOC-133",
+    "DOC-134",
+    "DOC-135",
+    "DOC-136",
+    "DOC-137",
+    "DOC-138",
+    "DOC-139",
+    "DOC-140",
+    "DOC-141",
+    "DOC-142",
+    "DOC-143",
+    "DOC-144",
+    "DOC-146",
+    "DOC-147",
+    "DOC-148",
+    "DOC-150",
+    "DOC-151",
+    "DOC-152",
+    "DOC-154",
+    "DOC-155",
+    "DOC-156",
+    "DOC-157",
+    "DOC-159",
+    "DOC-160",
+    "DOC-161",
+    "DOC-162",
+    "DOC-163",
+    "DOC-164",
+    "DOC-167",
+    "DOC-168",
+    "DOC-169",
+    "DOC-170",
+    "DOC-171",
+    "DOC-172",
+    "DOC-173",
+    "DOC-174",
+    "DOC-175",
+    "DOC-177",
+    "DOC-178",
+    "DOC-179",
+    "DOC-180",
+    "DOC-182",
+    "DOC-184",
+    "DOC-185",
+    "DOC-186",
+    "DOC-187",
+    "DOC-188",
+    "DOC-189",
+    "DOC-190",
+    "DOC-191",
+    "DOC-192",
+    "DOC-194",
+    "DOC-195",
+    "DOC-196",
+    "DOC-198",
+    "DOC-199",
+    "DOC-200",
+    "DOC-201",
+    "DOC-202",
+    "DOC-203",
+    "DOC-205",
+    "DOC-206",
+    "DOC-207",
+    "DOC-208",
+    "DOC-209",
+    "DOC-210",
+    "DOC-211",
+    "DOC-213",
+    "DOC-214",
+    "DOC-215",
+    "DOC-217",
+    "DOC-218",
+    "DOC-220",
+    "DOC-221",
+    "DOC-223",
+    "DOC-224",
+    "DOC-225",
+    "DOC-226",
+    "DOC-228",
+    "DOC-229",
+    "DOC-231",
+    "DOC-233",
+    "DOC-236",
+    "DOC-237",
+    "DOC-241",
+    "DOC-242",
+    "DOC-243",
+    "DOC-244",
+    "DOC-245",
+    "DOC-246",
+    "DOC-247",
+    "DOC-248",
+    "DOC-249",
+    "DOC-252",
+    "DOC-253",
+    "DOC-254",
+    "DOC-255",
+    "DOC-256",
+    "DOC-257",
+    "DOC-258",
+    "DOC-259",
+    "DOC-260",
+    "DOC-261",
+    "DOC-262",
+    "DOC-263",
+    "DOC-264",
+    "DOC-265",
+    "DOC-266",
+    "DOC-268",
+    "DOC-269",
+    "DOC-270",
+    "DOC-271",
+    "DOC-272",
+    "DOC-273",
+    "DOC-274",
+    "DOC-275",
+    "DOC-276",
+    "DOC-277",
+    "DOC-278",
+    "DOC-280",
+    "DOC-281",
+    "DOC-283",
+    "DOC-284",
+    "DOC-285",
+    "DOC-286",
+    "DOC-288",
+    "DOC-289",
+    "DOC-291",
+    "DOC-292",
+    "DOC-293",
+    "DOC-294",
+    "DOC-295",
+    "DOC-297",
+    "DOC-299",
+    "DOC-300"
+  ],
+  "json_schema": {
+    "document_type": "invoice",
+    "document_number": "17631",
+    "document_date": "1977-12-22",
+    "sender": "OUR AGENCY TO THE PARTICIPATING",
+    "receiver": "",
+    "origin": "",
+    "destination": "",
+    "reference_number": "",
+    "unit_price": 641.0,
+    "total_amount": 641.0,
+    "currency": "USD",
+    "other": {
+      "source_file": "076_train_imagesm_m_m_j_mmj97e00_1000047237.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-076",
+      "filename": "076_train_imagesm_m_m_j_mmj97e00_1000047237.png",
+      "ocr_text": "INVOICE\nHILLER TRAVELSERVICE,INC.\n200 EAST 42nd STREET\nNEW YORK, NEW YORK 10017\nPhone: (212) 986-0380\nTO:\nDR. RAGNAR RYLANDER\nNo. 17631\nDepartment of Environmental Byglene\nUniversity of Gothenburg\n400 33 COTEENBURG 33\nSWEDBN\nDATE: 22.12.77\na/c Dr. Ragnar Rylander\nvia SK IKT:117:8823:803:751/752 Y/P\nGothenburg/Stockholm\n17.01\nStockholm/Hapburg\n18.01\nHamburg/Koln\n18.01\nDusseldorf/Amgterdam/Gothenburg 19.01\nUSD$ 641.00\n0000047237\nTHIS INVOICE REPRESENTS AN IMMEDIATE TRANSFER OF FUNDS FROM OUR AGENCY TO THE PARTICIPATING\nCARRIERS UPON ISSUANCE OF TICKETS. YOUR PROMPT REMITTANCE WILL BE APPRECIATED.",
+      "ocr_lines": [
+        {
+          "text": "INVOICE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              368.0,
+              255.0
+            ],
+            [
+              433.0,
+              255.0
+            ],
+            [
+              433.0,
+              273.0
+            ],
+            [
+              368.0,
+              273.0
+            ]
+          ],
+          "box": [
+            [
+              368.0,
+              255.0
+            ],
+            [
+              433.0,
+              255.0
+            ],
+            [
+              433.0,
+              273.0
+            ],
+            [
+              368.0,
+              273.0
+            ]
+          ],
+          "position": {
+            "x": 368,
+            "y": 255,
+            "width": 65,
+            "height": 18,
+            "center_x": 400.5,
+            "center_y": 264.0,
+            "region": "middle",
+            "tag": "[y:255, x:368]"
+          }
+        },
+        {
+          "text": "HILLER TRAVELSERVICE,INC.",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              262.0,
+              277.0
+            ],
+            [
+              528.0,
+              281.0
+            ],
+            [
+              528.0,
+              303.0
+            ],
+            [
+              262.0,
+              298.0
+            ]
+          ],
+          "box": [
+            [
+              262.0,
+              277.0
+            ],
+            [
+              528.0,
+              281.0
+            ],
+            [
+              528.0,
+              303.0
+            ],
+            [
+              262.0,
+              298.0
+            ]
+          ],
+          "position": {
+            "x": 262,
+            "y": 277,
+            "width": 266,
+            "height": 26,
+            "center_x": 395.0,
+            "center_y": 290.0,
+            "region": "middle",
+            "tag": "[y:277, x:262]"
+          }
+        },
+        {
+          "text": "200 EAST 42nd STREET",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              322.0,
+              296.0
+            ],
+            [
+              471.0,
+              298.0
+            ],
+            [
+              470.0,
+              316.0
+            ],
+            [
+              322.0,
+              313.0
+            ]
+          ],
+          "box": [
+            [
+              322.0,
+              296.0
+            ],
+            [
+              471.0,
+              298.0
+            ],
+            [
+              470.0,
+              316.0
+            ],
+            [
+              322.0,
+              313.0
+            ]
+          ],
+          "position": {
+            "x": 322,
+            "y": 296,
+            "width": 149,
+            "height": 20,
+            "center_x": 396.5,
+            "center_y": 306.0,
+            "region": "middle",
+            "tag": "[y:296, x:322]"
+          }
+        },
+        {
+          "text": "NEW YORK, NEW YORK 10017",
+          "confidence": 0.87,
+          "bounding_box": [
+            [
+              302.0,
+              310.0
+            ],
+            [
+              489.0,
+              313.0
+            ],
+            [
+              489.0,
+              330.0
+            ],
+            [
+              301.0,
+              328.0
+            ]
+          ],
+          "box": [
+            [
+              302.0,
+              310.0
+            ],
+            [
+              489.0,
+              313.0
+            ],
+            [
+              489.0,
+              330.0
+            ],
+            [
+              301.0,
+              328.0
+            ]
+          ],
+          "position": {
+            "x": 301,
+            "y": 310,
+            "width": 188,
+            "height": 20,
+            "center_x": 395.0,
+            "center_y": 320.0,
+            "region": "middle",
+            "tag": "[y:310, x:301]"
+          }
+        },
+        {
+          "text": "Phone: (212) 986-0380",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              328.0,
+              326.0
+            ],
+            [
+              462.0,
+              326.0
+            ],
+            [
+              462.0,
+              343.0
+            ],
+            [
+              328.0,
+              343.0
+            ]
+          ],
+          "box": [
+            [
+              328.0,
+              326.0
+            ],
+            [
+              462.0,
+              326.0
+            ],
+            [
+              462.0,
+              343.0
+            ],
+            [
+              328.0,
+              343.0
+            ]
+          ],
+          "position": {
+            "x": 328,
+            "y": 326,
+            "width": 134,
+            "height": 17,
+            "center_x": 395.0,
+            "center_y": 334.5,
+            "region": "middle",
+            "tag": "[y:326, x:328]"
+          }
+        },
+        {
+          "text": "TO:",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              64.0,
+              404.0
+            ],
+            [
+              91.0,
+              404.0
+            ],
+            [
+              91.0,
+              422.0
+            ],
+            [
+              64.0,
+              422.0
+            ]
+          ],
+          "box": [
+            [
+              64.0,
+              404.0
+            ],
+            [
+              91.0,
+              404.0
+            ],
+            [
+              91.0,
+              422.0
+            ],
+            [
+              64.0,
+              422.0
+            ]
+          ],
+          "position": {
+            "x": 64,
+            "y": 404,
+            "width": 27,
+            "height": 18,
+            "center_x": 77.5,
+            "center_y": 413.0,
+            "region": "middle-left",
+            "tag": "[y:404, x:64]"
+          }
+        },
+        {
+          "text": "DR. RAGNAR RYLANDER",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              140.0,
+              408.0
+            ],
+            [
+              286.0,
+              408.0
+            ],
+            [
+              286.0,
+              422.0
+            ],
+            [
+              140.0,
+              422.0
+            ]
+          ],
+          "box": [
+            [
+              140.0,
+              408.0
+            ],
+            [
+              286.0,
+              408.0
+            ],
+            [
+              286.0,
+              422.0
+            ],
+            [
+              140.0,
+              422.0
+            ]
+          ],
+          "position": {
+            "x": 140,
+            "y": 408,
+            "width": 146,
+            "height": 14,
+            "center_x": 213.0,
+            "center_y": 415.0,
+            "region": "middle-left",
+            "tag": "[y:408, x:140]"
+          }
+        },
+        {
+          "text": "No. 17631",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              629.0,
+              412.0
+            ],
+            [
+              747.0,
+              414.0
+            ],
+            [
+              746.0,
+              444.0
+            ],
+            [
+              628.0,
+              441.0
+            ]
+          ],
+          "box": [
+            [
+              629.0,
+              412.0
+            ],
+            [
+              747.0,
+              414.0
+            ],
+            [
+              746.0,
+              444.0
+            ],
+            [
+              628.0,
+              441.0
+            ]
+          ],
+          "position": {
+            "x": 628,
+            "y": 412,
+            "width": 119,
+            "height": 32,
+            "center_x": 687.5,
+            "center_y": 428.0,
+            "region": "middle-right",
+            "tag": "[y:412, x:628]"
+          }
+        },
+        {
+          "text": "Department of Environmental Byglene",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              138.0,
+              423.0
+            ],
+            [
+              407.0,
+              423.0
+            ],
+            [
+              407.0,
+              441.0
+            ],
+            [
+              138.0,
+              441.0
+            ]
+          ],
+          "box": [
+            [
+              138.0,
+              423.0
+            ],
+            [
+              407.0,
+              423.0
+            ],
+            [
+              407.0,
+              441.0
+            ],
+            [
+              138.0,
+              441.0
+            ]
+          ],
+          "position": {
+            "x": 138,
+            "y": 423,
+            "width": 269,
+            "height": 18,
+            "center_x": 272.5,
+            "center_y": 432.0,
+            "region": "middle",
+            "tag": "[y:423, x:138]"
+          }
+        },
+        {
+          "text": "University of Gothenburg",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              139.0,
+              437.0
+            ],
+            [
+              326.0,
+              439.0
+            ],
+            [
+              326.0,
+              457.0
+            ],
+            [
+              139.0,
+              456.0
+            ]
+          ],
+          "box": [
+            [
+              139.0,
+              437.0
+            ],
+            [
+              326.0,
+              439.0
+            ],
+            [
+              326.0,
+              457.0
+            ],
+            [
+              139.0,
+              456.0
+            ]
+          ],
+          "position": {
+            "x": 139,
+            "y": 437,
+            "width": 187,
+            "height": 20,
+            "center_x": 232.5,
+            "center_y": 447.0,
+            "region": "middle-left",
+            "tag": "[y:437, x:139]"
+          }
+        },
+        {
+          "text": "400 33 COTEENBURG 33",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              139.0,
+              454.0
+            ],
+            [
+              295.0,
+              454.0
+            ],
+            [
+              295.0,
+              471.0
+            ],
+            [
+              139.0,
+              471.0
+            ]
+          ],
+          "box": [
+            [
+              139.0,
+              454.0
+            ],
+            [
+              295.0,
+              454.0
+            ],
+            [
+              295.0,
+              471.0
+            ],
+            [
+              139.0,
+              471.0
+            ]
+          ],
+          "position": {
+            "x": 139,
+            "y": 454,
+            "width": 156,
+            "height": 17,
+            "center_x": 217.0,
+            "center_y": 462.5,
+            "region": "middle-left",
+            "tag": "[y:454, x:139]"
+          }
+        },
+        {
+          "text": "SWEDBN",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              175.0,
+              470.0
+            ],
+            [
+              266.0,
+              470.0
+            ],
+            [
+              266.0,
+              484.0
+            ],
+            [
+              175.0,
+              484.0
+            ]
+          ],
+          "box": [
+            [
+              175.0,
+              470.0
+            ],
+            [
+              266.0,
+              470.0
+            ],
+            [
+              266.0,
+              484.0
+            ],
+            [
+              175.0,
+              484.0
+            ]
+          ],
+          "position": {
+            "x": 175,
+            "y": 470,
+            "width": 91,
+            "height": 14,
+            "center_x": 220.5,
+            "center_y": 477.0,
+            "region": "middle-left",
+            "tag": "[y:470, x:175]"
+          }
+        },
+        {
+          "text": "DATE: 22.12.77",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              526.0,
+              468.0
+            ],
+            [
+              644.0,
+              466.0
+            ],
+            [
+              645.0,
+              486.0
+            ],
+            [
+              526.0,
+              488.0
+            ]
+          ],
+          "box": [
+            [
+              526.0,
+              468.0
+            ],
+            [
+              644.0,
+              466.0
+            ],
+            [
+              645.0,
+              486.0
+            ],
+            [
+              526.0,
+              488.0
+            ]
+          ],
+          "position": {
+            "x": 526,
+            "y": 466,
+            "width": 119,
+            "height": 22,
+            "center_x": 585.5,
+            "center_y": 477.0,
+            "region": "middle-right",
+            "tag": "[y:466, x:526]"
+          }
+        },
+        {
+          "text": "a/c Dr. Ragnar Rylander",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              140.0,
+              543.0
+            ],
+            [
+              316.0,
+              543.0
+            ],
+            [
+              316.0,
+              560.0
+            ],
+            [
+              140.0,
+              560.0
+            ]
+          ],
+          "box": [
+            [
+              140.0,
+              543.0
+            ],
+            [
+              316.0,
+              543.0
+            ],
+            [
+              316.0,
+              560.0
+            ],
+            [
+              140.0,
+              560.0
+            ]
+          ],
+          "position": {
+            "x": 140,
+            "y": 543,
+            "width": 176,
+            "height": 17,
+            "center_x": 228.0,
+            "center_y": 551.5,
+            "region": "middle-left",
+            "tag": "[y:543, x:140]"
+          }
+        },
+        {
+          "text": "via SK IKT:117:8823:803:751/752 Y/P",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              138.0,
+              572.0
+            ],
+            [
+              438.0,
+              572.0
+            ],
+            [
+              438.0,
+              592.0
+            ],
+            [
+              138.0,
+              592.0
+            ]
+          ],
+          "box": [
+            [
+              138.0,
+              572.0
+            ],
+            [
+              438.0,
+              572.0
+            ],
+            [
+              438.0,
+              592.0
+            ],
+            [
+              138.0,
+              592.0
+            ]
+          ],
+          "position": {
+            "x": 138,
+            "y": 572,
+            "width": 300,
+            "height": 20,
+            "center_x": 288.0,
+            "center_y": 582.0,
+            "region": "middle",
+            "tag": "[y:572, x:138]"
+          }
+        },
+        {
+          "text": "Gothenburg/Stockholm",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              138.0,
+              605.0
+            ],
+            [
+              294.0,
+              604.0
+            ],
+            [
+              294.0,
+              621.0
+            ],
+            [
+              138.0,
+              622.0
+            ]
+          ],
+          "box": [
+            [
+              138.0,
+              605.0
+            ],
+            [
+              294.0,
+              604.0
+            ],
+            [
+              294.0,
+              621.0
+            ],
+            [
+              138.0,
+              622.0
+            ]
+          ],
+          "position": {
+            "x": 138,
+            "y": 604,
+            "width": 156,
+            "height": 18,
+            "center_x": 216.0,
+            "center_y": 613.0,
+            "region": "middle-left",
+            "tag": "[y:604, x:138]"
+          }
+        },
+        {
+          "text": "17.01",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              365.0,
+              606.0
+            ],
+            [
+              408.0,
+              606.0
+            ],
+            [
+              408.0,
+              621.0
+            ],
+            [
+              365.0,
+              621.0
+            ]
+          ],
+          "box": [
+            [
+              365.0,
+              606.0
+            ],
+            [
+              408.0,
+              606.0
+            ],
+            [
+              408.0,
+              621.0
+            ],
+            [
+              365.0,
+              621.0
+            ]
+          ],
+          "position": {
+            "x": 365,
+            "y": 606,
+            "width": 43,
+            "height": 15,
+            "center_x": 386.5,
+            "center_y": 613.5,
+            "region": "middle",
+            "tag": "[y:606, x:365]"
+          }
+        },
+        {
+          "text": "Stockholm/Hapburg",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              139.0,
+              620.0
+            ],
+            [
+              273.0,
+              621.0
+            ],
+            [
+              273.0,
+              638.0
+            ],
+            [
+              139.0,
+              637.0
+            ]
+          ],
+          "box": [
+            [
+              139.0,
+              620.0
+            ],
+            [
+              273.0,
+              621.0
+            ],
+            [
+              273.0,
+              638.0
+            ],
+            [
+              139.0,
+              637.0
+            ]
+          ],
+          "position": {
+            "x": 139,
+            "y": 620,
+            "width": 134,
+            "height": 18,
+            "center_x": 206.0,
+            "center_y": 629.0,
+            "region": "bottom-left",
+            "tag": "[y:620, x:139]"
+          }
+        },
+        {
+          "text": "18.01",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              365.0,
+              620.0
+            ],
+            [
+              409.0,
+              620.0
+            ],
+            [
+              409.0,
+              638.0
+            ],
+            [
+              365.0,
+              638.0
+            ]
+          ],
+          "box": [
+            [
+              365.0,
+              620.0
+            ],
+            [
+              409.0,
+              620.0
+            ],
+            [
+              409.0,
+              638.0
+            ],
+            [
+              365.0,
+              638.0
+            ]
+          ],
+          "position": {
+            "x": 365,
+            "y": 620,
+            "width": 44,
+            "height": 18,
+            "center_x": 387.0,
+            "center_y": 629.0,
+            "region": "bottom-center",
+            "tag": "[y:620, x:365]"
+          }
+        },
+        {
+          "text": "Hamburg/Koln",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              139.0,
+              636.0
+            ],
+            [
+              235.0,
+              636.0
+            ],
+            [
+              235.0,
+              653.0
+            ],
+            [
+              139.0,
+              653.0
+            ]
+          ],
+          "box": [
+            [
+              139.0,
+              636.0
+            ],
+            [
+              235.0,
+              636.0
+            ],
+            [
+              235.0,
+              653.0
+            ],
+            [
+              139.0,
+              653.0
+            ]
+          ],
+          "position": {
+            "x": 139,
+            "y": 636,
+            "width": 96,
+            "height": 17,
+            "center_x": 187.0,
+            "center_y": 644.5,
+            "region": "bottom-left",
+            "tag": "[y:636, x:139]"
+          }
+        },
+        {
+          "text": "18.01",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              366.0,
+              637.0
+            ],
+            [
+              409.0,
+              637.0
+            ],
+            [
+              409.0,
+              652.0
+            ],
+            [
+              366.0,
+              652.0
+            ]
+          ],
+          "box": [
+            [
+              366.0,
+              637.0
+            ],
+            [
+              409.0,
+              637.0
+            ],
+            [
+              409.0,
+              652.0
+            ],
+            [
+              366.0,
+              652.0
+            ]
+          ],
+          "position": {
+            "x": 366,
+            "y": 637,
+            "width": 43,
+            "height": 15,
+            "center_x": 387.5,
+            "center_y": 644.5,
+            "region": "bottom-center",
+            "tag": "[y:637, x:366]"
+          }
+        },
+        {
+          "text": "Dusseldorf/Amgterdam/Gothenburg 19.01",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              140.0,
+              651.0
+            ],
+            [
+              423.0,
+              651.0
+            ],
+            [
+              423.0,
+              668.0
+            ],
+            [
+              140.0,
+              668.0
+            ]
+          ],
+          "box": [
+            [
+              140.0,
+              651.0
+            ],
+            [
+              423.0,
+              651.0
+            ],
+            [
+              423.0,
+              668.0
+            ],
+            [
+              140.0,
+              668.0
+            ]
+          ],
+          "position": {
+            "x": 140,
+            "y": 651,
+            "width": 283,
+            "height": 17,
+            "center_x": 281.5,
+            "center_y": 659.5,
+            "region": "bottom-center",
+            "tag": "[y:651, x:140]"
+          }
+        },
+        {
+          "text": "USD$ 641.00",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              494.0,
+              650.0
+            ],
+            [
+              590.0,
+              650.0
+            ],
+            [
+              590.0,
+              668.0
+            ],
+            [
+              494.0,
+              668.0
+            ]
+          ],
+          "box": [
+            [
+              494.0,
+              650.0
+            ],
+            [
+              590.0,
+              650.0
+            ],
+            [
+              590.0,
+              668.0
+            ],
+            [
+              494.0,
+              668.0
+            ]
+          ],
+          "position": {
+            "x": 494,
+            "y": 650,
+            "width": 96,
+            "height": 18,
+            "center_x": 542.0,
+            "center_y": 659.0,
+            "region": "bottom-right",
+            "tag": "[y:650, x:494]"
+          }
+        },
+        {
+          "text": "0000047237",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              705.0,
+              710.0
+            ],
+            [
+              733.0,
+              712.0
+            ],
+            [
+              726.0,
+              854.0
+            ],
+            [
+              698.0,
+              853.0
+            ]
+          ],
+          "box": [
+            [
+              705.0,
+              710.0
+            ],
+            [
+              733.0,
+              712.0
+            ],
+            [
+              726.0,
+              854.0
+            ],
+            [
+              698.0,
+              853.0
+            ]
+          ],
+          "position": {
+            "x": 698,
+            "y": 710,
+            "width": 35,
+            "height": 144,
+            "center_x": 715.5,
+            "center_y": 782.0,
+            "region": "bottom-right",
+            "tag": "[y:710, x:698]"
+          }
+        },
+        {
+          "text": "THIS INVOICE REPRESENTS AN IMMEDIATE TRANSFER OF FUNDS FROM OUR AGENCY TO THE PARTICIPATING",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              84.0,
+              801.0
+            ],
+            [
+              693.0,
+              811.0
+            ],
+            [
+              693.0,
+              828.0
+            ],
+            [
+              84.0,
+              818.0
+            ]
+          ],
+          "box": [
+            [
+              84.0,
+              801.0
+            ],
+            [
+              693.0,
+              811.0
+            ],
+            [
+              693.0,
+              828.0
+            ],
+            [
+              84.0,
+              818.0
+            ]
+          ],
+          "position": {
+            "x": 84,
+            "y": 801,
+            "width": 609,
+            "height": 27,
+            "center_x": 388.5,
+            "center_y": 814.5,
+            "region": "bottom-center",
+            "tag": "[y:801, x:84]"
+          }
+        },
+        {
+          "text": "CARRIERS UPON ISSUANCE OF TICKETS. YOUR PROMPT REMITTANCE WILL BE APPRECIATED.",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              133.0,
+              816.0
+            ],
+            [
+              647.0,
+              824.0
+            ],
+            [
+              646.0,
+              840.0
+            ],
+            [
+              132.0,
+              833.0
+            ]
+          ],
+          "box": [
+            [
+              133.0,
+              816.0
+            ],
+            [
+              647.0,
+              824.0
+            ],
+            [
+              646.0,
+              840.0
+            ],
+            [
+              132.0,
+              833.0
+            ]
+          ],
+          "position": {
+            "x": 132,
+            "y": 816,
+            "width": 515,
+            "height": 24,
+            "center_x": 389.5,
+            "center_y": 828.0,
+            "region": "bottom-center",
+            "tag": "[y:816, x:132]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 0.731,
+      "cached_at": "2026-09-28T08:15:43.023133+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "invoice",
+        "document_number": "17631",
+        "document_date": "1977-12-22",
+        "sender": "OUR AGENCY TO THE PARTICIPATING",
+        "receiver": "",
+        "origin": "",
+        "destination": "",
+        "reference_number": "",
+        "unit_price": 641.0,
+        "total_amount": 641.0,
+        "currency": "USD",
+        "other": {
+          "source_file": "076_train_imagesm_m_m_j_mmj97e00_1000047237.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "INVOICE",
+          "field": "document_type",
+          "value": "invoice",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "No. 17631",
+          "field": "document_number",
+          "value": "17631",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "1977-12-22",
+          "field": "document_date",
+          "value": "1977-12-22",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "THIS INVOICE REPRESENTS AN IMMEDIATE TRANSFER OF FUNDS FROM OUR AGENCY TO THE PARTICIPATING",
+          "field": "sender",
+          "value": "OUR AGENCY TO THE PARTICIPATING",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "receiver",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "origin",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "destination",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "reference_number",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD$ 641.00",
+          "field": "unit_price",
+          "value": "641.0",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD$ 641.00",
+          "field": "total_amount",
+          "value": "641.0",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD$ 641.00",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "076_train_imagesm_m_m_j_mmj97e00_1000047237.png",
+          "field": "source_file",
+          "value": "076_train_imagesm_m_m_j_mmj97e00_1000047237.png",
+          "confidence": 92,
+          "status": "success",
+          "isOther": true
+        }
+      ],
+      "confidence": {
+        "overall": 83,
+        "ocr": 95,
+        "slm": 88,
+        "mapping": 64,
+        "completeness": 64
+      },
+      "review_items": [
+        {
+          "field": "receiver",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "origin",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "destination",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "reference_number",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": {
+        "accuracy_pct": 64.0,
+        "inference_time_sec": 0.15,
+        "tokens_generated": 0,
+        "token_speed_tps": 0,
+        "core_fields_fill_rate_pct": 64.0,
+        "schema_valid": true,
+        "math_integrity_status": "no_subtotal",
+        "math_integrity_notes": "Sources: 641.00",
+        "field_accuracies": {}
+      },
+      "model": "Qwen/Qwen2.5-1.5B-Instruct (Fallback: CUDA error: out of memory\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n)",
+      "device": "cpu/fallback"
+    },
+    "performance": {
+      "ocr_time_sec": 0.731,
+      "slm_time_sec": 0.045,
+      "total_time_sec": 0.776
+    },
+    "prompt_integrity": {
+      "cache_schema_version": 2,
+      "prompt_hash": "89b7cee5808a08c571dbbca48a3c981fa2715c1c841c08a4e4a26363dffb3be8",
+      "variant": "one-shot",
+      "benchmark_example_ids": [
+        "DOC-009"
+      ],
+      "benchmark_example_confidences": [
+        98.13
+      ],
+      "training_document_ids": [
+        "DOC-001",
+        "DOC-002",
+        "DOC-003",
+        "DOC-004",
+        "DOC-005",
+        "DOC-007",
+        "DOC-009",
+        "DOC-011",
+        "DOC-012",
+        "DOC-013",
+        "DOC-014",
+        "DOC-015",
+        "DOC-016",
+        "DOC-017",
+        "DOC-019",
+        "DOC-020",
+        "DOC-021",
+        "DOC-022",
+        "DOC-023",
+        "DOC-024",
+        "DOC-027",
+        "DOC-028",
+        "DOC-029",
+        "DOC-030",
+        "DOC-031",
+        "DOC-032",
+        "DOC-033",
+        "DOC-035",
+        "DOC-036",
+        "DOC-037",
+        "DOC-038",
+        "DOC-039",
+        "DOC-040",
+        "DOC-041",
+        "DOC-042",
+        "DOC-044",
+        "DOC-045",
+        "DOC-048",
+        "DOC-049",
+        "DOC-050",
+        "DOC-051",
+        "DOC-052",
+        "DOC-053",
+        "DOC-054",
+        "DOC-055",
+        "DOC-056",
+        "DOC-057",
+        "DOC-059",
+        "DOC-060",
+        "DOC-062",
+        "DOC-063",
+        "DOC-065",
+        "DOC-066",
+        "DOC-067",
+        "DOC-068",
+        "DOC-069",
+        "DOC-070",
+        "DOC-071",
+        "DOC-072",
+        "DOC-073",
+        "DOC-075",
+        "DOC-080",
+        "DOC-081",
+        "DOC-082",
+        "DOC-083",
+        "DOC-084",
+        "DOC-085",
+        "DOC-086",
+        "DOC-087",
+        "DOC-088",
+        "DOC-089",
+        "DOC-090",
+        "DOC-092",
+        "DOC-095",
+        "DOC-096",
+        "DOC-097",
+        "DOC-099",
+        "DOC-100",
+        "DOC-101",
+        "DOC-102",
+        "DOC-103",
+        "DOC-104",
+        "DOC-106",
+        "DOC-107",
+        "DOC-108",
+        "DOC-109",
+        "DOC-111",
+        "DOC-113",
+        "DOC-115",
+        "DOC-116",
+        "DOC-117",
+        "DOC-118",
+        "DOC-119",
+        "DOC-121",
+        "DOC-122",
+        "DOC-123",
+        "DOC-124",
+        "DOC-125",
+        "DOC-126",
+        "DOC-127",
+        "DOC-128",
+        "DOC-129",
+        "DOC-130",
+        "DOC-131",
+        "DOC-132",
+        "DOC-133",
+        "DOC-134",
+        "DOC-135",
+        "DOC-136",
+        "DOC-137",
+        "DOC-138",
+        "DOC-139",
+        "DOC-140",
+        "DOC-141",
+        "DOC-142",
+        "DOC-143",
+        "DOC-144",
+        "DOC-146",
+        "DOC-147",
+        "DOC-148",
+        "DOC-150",
+        "DOC-151",
+        "DOC-152",
+        "DOC-154",
+        "DOC-155",
+        "DOC-156",
+        "DOC-157",
+        "DOC-159",
+        "DOC-160",
+        "DOC-161",
+        "DOC-162",
+        "DOC-163",
+        "DOC-164",
+        "DOC-167",
+        "DOC-168",
+        "DOC-169",
+        "DOC-170",
+        "DOC-171",
+        "DOC-172",
+        "DOC-173",
+        "DOC-174",
+        "DOC-175",
+        "DOC-177",
+        "DOC-178",
+        "DOC-179",
+        "DOC-180",
+        "DOC-182",
+        "DOC-184",
+        "DOC-185",
+        "DOC-186",
+        "DOC-187",
+        "DOC-188",
+        "DOC-189",
+        "DOC-190",
+        "DOC-191",
+        "DOC-192",
+        "DOC-194",
+        "DOC-195",
+        "DOC-196",
+        "DOC-198",
+        "DOC-199",
+        "DOC-200",
+        "DOC-201",
+        "DOC-202",
+        "DOC-203",
+        "DOC-205",
+        "DOC-206",
+        "DOC-207",
+        "DOC-208",
+        "DOC-209",
+        "DOC-210",
+        "DOC-211",
+        "DOC-213",
+        "DOC-214",
+        "DOC-215",
+        "DOC-217",
+        "DOC-218",
+        "DOC-220",
+        "DOC-221",
+        "DOC-223",
+        "DOC-224",
+        "DOC-225",
+        "DOC-226",
+        "DOC-228",
+        "DOC-229",
+        "DOC-231",
+        "DOC-233",
+        "DOC-236",
+        "DOC-237",
+        "DOC-241",
+        "DOC-242",
+        "DOC-243",
+        "DOC-244",
+        "DOC-245",
+        "DOC-246",
+        "DOC-247",
+        "DOC-248",
+        "DOC-249",
+        "DOC-252",
+        "DOC-253",
+        "DOC-254",
+        "DOC-255",
+        "DOC-256",
+        "DOC-257",
+        "DOC-258",
+        "DOC-259",
+        "DOC-260",
+        "DOC-261",
+        "DOC-262",
+        "DOC-263",
+        "DOC-264",
+        "DOC-265",
+        "DOC-266",
+        "DOC-268",
+        "DOC-269",
+        "DOC-270",
+        "DOC-271",
+        "DOC-272",
+        "DOC-273",
+        "DOC-274",
+        "DOC-275",
+        "DOC-276",
+        "DOC-277",
+        "DOC-278",
+        "DOC-280",
+        "DOC-281",
+        "DOC-283",
+        "DOC-284",
+        "DOC-285",
+        "DOC-286",
+        "DOC-288",
+        "DOC-289",
+        "DOC-291",
+        "DOC-292",
+        "DOC-293",
+        "DOC-294",
+        "DOC-295",
+        "DOC-297",
+        "DOC-299",
+        "DOC-300"
+      ]
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 0.731,
+    "slm_time_sec": 0.045,
+    "total_time_sec": 0.776
+  },
+  "cached_at": "2026-09-28T08:15:43.075718+00:00"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-048",
+  "rank": 48,
+  "file_name": "048_train_imagesi_i_g_j_igj64d00_506436617.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "355By",
+    "document_date": "1987-03-30",
+    "sender": "R. L. McGee",
+    "receiver": "-",
+    "origin": "-",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 7.0,
+    "total_amount": 7.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 77,
+    "ocr": 95,
+    "slm": 77,
+    "mapping": 98,
+    "completeness": 64
+  },
+  "annotated_at": "2026-09-14 15:08:47"
+}

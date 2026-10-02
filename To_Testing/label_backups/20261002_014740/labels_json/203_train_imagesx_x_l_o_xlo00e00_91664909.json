@@ -1,0 +1,27 @@
+{
+  "id": "DOC-203",
+  "rank": 203,
+  "file_name": "203_train_imagesx_x_l_o_xlo00e00_91664909.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "033263",
+    "document_date": "1992-05-12",
+    "sender": "The New York Times Company Magazine Group",
+    "receiver": "EILEEN ANTIONIELLO",
+    "origin": "NEW YORK, NY 10016",
+    "destination": "YORK, NY 10008",
+    "reference_number": "80X",
+    "unit_price": 3.29,
+    "total_amount": 4794.6,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:27:55"
+}

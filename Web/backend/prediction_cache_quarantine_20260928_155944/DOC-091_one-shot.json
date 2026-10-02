@@ -1,0 +1,2184 @@
+{
+  "document_id": "DOC-091",
+  "file_name": "091_test_imageso_o_t_d_otd40c00_ti10161636.png",
+  "cache_schema_version": 2,
+  "prompt_hash": "3afe309de18e090cdea10f5981dbebbe06615422047b55829885be7ad744eeef",
+  "variant": "one-shot",
+  "benchmark_example_ids": [
+    "DOC-009"
+  ],
+  "benchmark_example_confidences": [
+    98.13
+  ],
+  "training_document_ids": [
+    "DOC-001",
+    "DOC-002",
+    "DOC-003",
+    "DOC-004",
+    "DOC-007",
+    "DOC-009",
+    "DOC-010",
+    "DOC-012",
+    "DOC-013",
+    "DOC-014",
+    "DOC-015",
+    "DOC-016",
+    "DOC-017",
+    "DOC-018",
+    "DOC-019",
+    "DOC-020",
+    "DOC-021",
+    "DOC-023",
+    "DOC-025",
+    "DOC-026",
+    "DOC-027",
+    "DOC-028",
+    "DOC-030",
+    "DOC-031",
+    "DOC-032",
+    "DOC-033",
+    "DOC-036",
+    "DOC-039",
+    "DOC-040",
+    "DOC-041",
+    "DOC-042",
+    "DOC-043",
+    "DOC-044",
+    "DOC-045",
+    "DOC-046",
+    "DOC-047",
+    "DOC-048",
+    "DOC-049",
+    "DOC-050",
+    "DOC-051",
+    "DOC-052",
+    "DOC-053",
+    "DOC-055",
+    "DOC-057",
+    "DOC-058",
+    "DOC-059",
+    "DOC-060",
+    "DOC-061",
+    "DOC-063",
+    "DOC-064",
+    "DOC-065",
+    "DOC-066",
+    "DOC-068",
+    "DOC-069",
+    "DOC-071",
+    "DOC-072",
+    "DOC-073",
+    "DOC-074",
+    "DOC-075",
+    "DOC-076",
+    "DOC-077",
+    "DOC-078",
+    "DOC-079",
+    "DOC-081",
+    "DOC-082",
+    "DOC-083",
+    "DOC-084",
+    "DOC-085",
+    "DOC-086",
+    "DOC-087",
+    "DOC-088",
+    "DOC-089",
+    "DOC-090",
+    "DOC-093",
+    "DOC-094",
+    "DOC-095",
+    "DOC-096",
+    "DOC-097",
+    "DOC-098",
+    "DOC-099",
+    "DOC-100",
+    "DOC-102",
+    "DOC-104",
+    "DOC-105",
+    "DOC-107",
+    "DOC-109",
+    "DOC-110",
+    "DOC-111",
+    "DOC-112",
+    "DOC-114",
+    "DOC-115",
+    "DOC-117",
+    "DOC-118",
+    "DOC-119",
+    "DOC-120",
+    "DOC-122",
+    "DOC-123",
+    "DOC-124",
+    "DOC-125",
+    "DOC-127",
+    "DOC-128",
+    "DOC-130",
+    "DOC-131",
+    "DOC-132",
+    "DOC-134",
+    "DOC-135",
+    "DOC-136",
+    "DOC-138",
+    "DOC-139",
+    "DOC-140",
+    "DOC-141",
+    "DOC-142",
+    "DOC-145",
+    "DOC-146",
+    "DOC-147",
+    "DOC-148",
+    "DOC-149",
+    "DOC-150",
+    "DOC-151",
+    "DOC-152",
+    "DOC-154",
+    "DOC-155",
+    "DOC-157",
+    "DOC-158",
+    "DOC-159",
+    "DOC-160",
+    "DOC-164",
+    "DOC-165",
+    "DOC-166",
+    "DOC-167",
+    "DOC-168",
+    "DOC-169",
+    "DOC-170",
+    "DOC-171",
+    "DOC-172",
+    "DOC-173",
+    "DOC-176",
+    "DOC-177",
+    "DOC-178",
+    "DOC-179",
+    "DOC-180",
+    "DOC-181",
+    "DOC-183",
+    "DOC-184",
+    "DOC-185",
+    "DOC-186",
+    "DOC-187",
+    "DOC-188",
+    "DOC-189",
+    "DOC-190",
+    "DOC-191",
+    "DOC-192",
+    "DOC-193",
+    "DOC-194",
+    "DOC-195",
+    "DOC-199",
+    "DOC-200",
+    "DOC-201",
+    "DOC-202",
+    "DOC-203",
+    "DOC-204",
+    "DOC-205",
+    "DOC-206",
+    "DOC-207",
+    "DOC-209",
+    "DOC-210",
+    "DOC-212",
+    "DOC-213",
+    "DOC-214",
+    "DOC-215",
+    "DOC-216",
+    "DOC-218",
+    "DOC-219",
+    "DOC-220",
+    "DOC-221",
+    "DOC-224",
+    "DOC-225",
+    "DOC-226",
+    "DOC-227",
+    "DOC-228",
+    "DOC-229",
+    "DOC-230",
+    "DOC-231",
+    "DOC-232",
+    "DOC-233",
+    "DOC-234",
+    "DOC-235",
+    "DOC-236",
+    "DOC-237",
+    "DOC-238",
+    "DOC-240",
+    "DOC-241",
+    "DOC-243",
+    "DOC-244",
+    "DOC-245",
+    "DOC-246",
+    "DOC-248",
+    "DOC-250",
+    "DOC-251",
+    "DOC-252",
+    "DOC-253",
+    "DOC-254",
+    "DOC-255",
+    "DOC-256",
+    "DOC-257",
+    "DOC-258",
+    "DOC-262",
+    "DOC-263",
+    "DOC-265",
+    "DOC-266",
+    "DOC-267",
+    "DOC-269",
+    "DOC-270",
+    "DOC-271",
+    "DOC-272",
+    "DOC-273",
+    "DOC-274",
+    "DOC-275",
+    "DOC-276",
+    "DOC-277",
+    "DOC-279",
+    "DOC-280",
+    "DOC-281",
+    "DOC-282",
+    "DOC-283",
+    "DOC-285",
+    "DOC-286",
+    "DOC-287",
+    "DOC-288",
+    "DOC-289",
+    "DOC-290",
+    "DOC-291",
+    "DOC-292",
+    "DOC-294",
+    "DOC-295",
+    "DOC-296",
+    "DOC-297",
+    "DOC-298",
+    "DOC-299",
+    "DOC-300"
+  ],
+  "json_schema": {
+    "document_type": "invoice",
+    "document_number": "4959",
+    "document_date": "1992-11-39",
+    "sender": "",
+    "receiver": "",
+    "origin": "Fasfac, VA 22030",
+    "destination": "",
+    "reference_number": "",
+    "unit_price": 10.71,
+    "total_amount": 10.71,
+    "currency": "USD",
+    "other": {
+      "source_file": "091_test_imageso_o_t_d_otd40c00_ti10161636.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-091",
+      "filename": "091_test_imageso_o_t_d_otd40c00_ti10161636.png",
+      "ocr_text": "INVOICE\n10378 Demoxracy Lane\nHBI\nHealthy Btikings Initermational, lnc\nFasfac VA 22030\nf7031 352-0102\nfae (7031 352-0151\nCov ngton & BurIing\n120f Pennsylvaria Avemue,N.w.\nWashington,D.C.20044\nINVOICE NO -\n4959\nDATE Nov 39, 1992\nYOUR REF.: Mr.John Rupp\nNovember Servlces\nTo the services rendered by HBl, Ine. as consultents to the\nTobadeoInstitute during the month of November 1992.\n$29,000-09-\nTotalprice now dueforpayment .\nPor HBIIne.\nGray @ober tson\nCR:dh\n824,000\n55000\nspeual aur\nKay Raien\n130217301\n10.719น.\nTI1016-1636",
+      "ocr_lines": [
+        {
+          "text": "INVOICE",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              578.0,
+              79.0
+            ],
+            [
+              655.0,
+              75.0
+            ],
+            [
+              656.0,
+              100.0
+            ],
+            [
+              579.0,
+              104.0
+            ]
+          ],
+          "box": [
+            [
+              578.0,
+              79.0
+            ],
+            [
+              655.0,
+              75.0
+            ],
+            [
+              656.0,
+              100.0
+            ],
+            [
+              579.0,
+              104.0
+            ]
+          ],
+          "position": {
+            "x": 578,
+            "y": 75,
+            "width": 78,
+            "height": 29,
+            "center_x": 617.0,
+            "center_y": 89.5,
+            "region": "top-right",
+            "tag": "[y:75, x:578]"
+          }
+        },
+        {
+          "text": "10378 Demoxracy Lane",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              468.0,
+              154.0
+            ],
+            [
+              567.0,
+              153.0
+            ],
+            [
+              568.0,
+              167.0
+            ],
+            [
+              468.0,
+              168.0
+            ]
+          ],
+          "box": [
+            [
+              468.0,
+              154.0
+            ],
+            [
+              567.0,
+              153.0
+            ],
+            [
+              568.0,
+              167.0
+            ],
+            [
+              468.0,
+              168.0
+            ]
+          ],
+          "position": {
+            "x": 468,
+            "y": 153,
+            "width": 100,
+            "height": 15,
+            "center_x": 518.0,
+            "center_y": 160.5,
+            "region": "top-right",
+            "tag": "[y:153, x:468]"
+          }
+        },
+        {
+          "text": "HBI",
+          "confidence": 0.77,
+          "bounding_box": [
+            [
+              33.0,
+              175.0
+            ],
+            [
+              64.0,
+              175.0
+            ],
+            [
+              64.0,
+              195.0
+            ],
+            [
+              33.0,
+              195.0
+            ]
+          ],
+          "box": [
+            [
+              33.0,
+              175.0
+            ],
+            [
+              64.0,
+              175.0
+            ],
+            [
+              64.0,
+              195.0
+            ],
+            [
+              33.0,
+              195.0
+            ]
+          ],
+          "position": {
+            "x": 33,
+            "y": 175,
+            "width": 31,
+            "height": 20,
+            "center_x": 48.5,
+            "center_y": 185.0,
+            "region": "top-left",
+            "tag": "[y:175, x:33]"
+          }
+        },
+        {
+          "text": "Healthy Btikings Initermational, lnc",
+          "confidence": 0.74,
+          "bounding_box": [
+            [
+              100.0,
+              173.0
+            ],
+            [
+              303.0,
+              170.0
+            ],
+            [
+              303.0,
+              190.0
+            ],
+            [
+              100.0,
+              194.0
+            ]
+          ],
+          "box": [
+            [
+              100.0,
+              173.0
+            ],
+            [
+              303.0,
+              170.0
+            ],
+            [
+              303.0,
+              190.0
+            ],
+            [
+              100.0,
+              194.0
+            ]
+          ],
+          "position": {
+            "x": 100,
+            "y": 170,
+            "width": 203,
+            "height": 24,
+            "center_x": 201.5,
+            "center_y": 182.0,
+            "region": "top-left",
+            "tag": "[y:170, x:100]"
+          }
+        },
+        {
+          "text": "Fasfac VA 22030",
+          "confidence": 0.77,
+          "bounding_box": [
+            [
+              464.0,
+              167.0
+            ],
+            [
+              545.0,
+              167.0
+            ],
+            [
+              545.0,
+              181.0
+            ],
+            [
+              464.0,
+              181.0
+            ]
+          ],
+          "box": [
+            [
+              464.0,
+              167.0
+            ],
+            [
+              545.0,
+              167.0
+            ],
+            [
+              545.0,
+              181.0
+            ],
+            [
+              464.0,
+              181.0
+            ]
+          ],
+          "position": {
+            "x": 464,
+            "y": 167,
+            "width": 81,
+            "height": 14,
+            "center_x": 504.5,
+            "center_y": 174.0,
+            "region": "top-right",
+            "tag": "[y:167, x:464]"
+          }
+        },
+        {
+          "text": "f7031 352-0102",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              465.0,
+              180.0
+            ],
+            [
+              538.0,
+              180.0
+            ],
+            [
+              538.0,
+              195.0
+            ],
+            [
+              465.0,
+              195.0
+            ]
+          ],
+          "box": [
+            [
+              465.0,
+              180.0
+            ],
+            [
+              538.0,
+              180.0
+            ],
+            [
+              538.0,
+              195.0
+            ],
+            [
+              465.0,
+              195.0
+            ]
+          ],
+          "position": {
+            "x": 465,
+            "y": 180,
+            "width": 73,
+            "height": 15,
+            "center_x": 501.5,
+            "center_y": 187.5,
+            "region": "top-right",
+            "tag": "[y:180, x:465]"
+          }
+        },
+        {
+          "text": "fae (7031 352-0151",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              483.0,
+              193.0
+            ],
+            [
+              565.0,
+              193.0
+            ],
+            [
+              565.0,
+              206.0
+            ],
+            [
+              483.0,
+              206.0
+            ]
+          ],
+          "box": [
+            [
+              483.0,
+              193.0
+            ],
+            [
+              565.0,
+              193.0
+            ],
+            [
+              565.0,
+              206.0
+            ],
+            [
+              483.0,
+              206.0
+            ]
+          ],
+          "position": {
+            "x": 483,
+            "y": 193,
+            "width": 82,
+            "height": 13,
+            "center_x": 524.0,
+            "center_y": 199.5,
+            "region": "top-right",
+            "tag": "[y:193, x:483]"
+          }
+        },
+        {
+          "text": "Cov ngton & BurIing",
+          "confidence": 0.59,
+          "bounding_box": [
+            [
+              109.0,
+              211.0
+            ],
+            [
+              245.0,
+              211.0
+            ],
+            [
+              245.0,
+              228.0
+            ],
+            [
+              109.0,
+              228.0
+            ]
+          ],
+          "box": [
+            [
+              109.0,
+              211.0
+            ],
+            [
+              245.0,
+              211.0
+            ],
+            [
+              245.0,
+              228.0
+            ],
+            [
+              109.0,
+              228.0
+            ]
+          ],
+          "position": {
+            "x": 109,
+            "y": 211,
+            "width": 136,
+            "height": 17,
+            "center_x": 177.0,
+            "center_y": 219.5,
+            "region": "top-left",
+            "tag": "[y:211, x:109]"
+          }
+        },
+        {
+          "text": "120f Pennsylvaria Avemue,N.w.",
+          "confidence": 0.8,
+          "bounding_box": [
+            [
+              109.0,
+              225.0
+            ],
+            [
+              316.0,
+              221.0
+            ],
+            [
+              316.0,
+              238.0
+            ],
+            [
+              109.0,
+              242.0
+            ]
+          ],
+          "box": [
+            [
+              109.0,
+              225.0
+            ],
+            [
+              316.0,
+              221.0
+            ],
+            [
+              316.0,
+              238.0
+            ],
+            [
+              109.0,
+              242.0
+            ]
+          ],
+          "position": {
+            "x": 109,
+            "y": 221,
+            "width": 207,
+            "height": 21,
+            "center_x": 212.5,
+            "center_y": 231.5,
+            "region": "top-left",
+            "tag": "[y:221, x:109]"
+          }
+        },
+        {
+          "text": "Washington,D.C.20044",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              110.0,
+              239.0
+            ],
+            [
+              271.0,
+              236.0
+            ],
+            [
+              271.0,
+              253.0
+            ],
+            [
+              110.0,
+              256.0
+            ]
+          ],
+          "box": [
+            [
+              110.0,
+              239.0
+            ],
+            [
+              271.0,
+              236.0
+            ],
+            [
+              271.0,
+              253.0
+            ],
+            [
+              110.0,
+              256.0
+            ]
+          ],
+          "position": {
+            "x": 110,
+            "y": 236,
+            "width": 161,
+            "height": 20,
+            "center_x": 190.5,
+            "center_y": 246.0,
+            "region": "top-left",
+            "tag": "[y:236, x:110]"
+          }
+        },
+        {
+          "text": "INVOICE NO -",
+          "confidence": 0.86,
+          "bounding_box": [
+            [
+              476.0,
+              269.0
+            ],
+            [
+              560.0,
+              267.0
+            ],
+            [
+              561.0,
+              283.0
+            ],
+            [
+              476.0,
+              285.0
+            ]
+          ],
+          "box": [
+            [
+              476.0,
+              269.0
+            ],
+            [
+              560.0,
+              267.0
+            ],
+            [
+              561.0,
+              283.0
+            ],
+            [
+              476.0,
+              285.0
+            ]
+          ],
+          "position": {
+            "x": 476,
+            "y": 267,
+            "width": 85,
+            "height": 18,
+            "center_x": 518.5,
+            "center_y": 276.0,
+            "region": "middle-right",
+            "tag": "[y:267, x:476]"
+          }
+        },
+        {
+          "text": "4959",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              585.0,
+              263.0
+            ],
+            [
+              634.0,
+              263.0
+            ],
+            [
+              634.0,
+              285.0
+            ],
+            [
+              585.0,
+              285.0
+            ]
+          ],
+          "box": [
+            [
+              585.0,
+              263.0
+            ],
+            [
+              634.0,
+              263.0
+            ],
+            [
+              634.0,
+              285.0
+            ],
+            [
+              585.0,
+              285.0
+            ]
+          ],
+          "position": {
+            "x": 585,
+            "y": 263,
+            "width": 49,
+            "height": 22,
+            "center_x": 609.5,
+            "center_y": 274.0,
+            "region": "middle-right",
+            "tag": "[y:263, x:585]"
+          }
+        },
+        {
+          "text": "DATE Nov 39, 1992",
+          "confidence": 0.87,
+          "bounding_box": [
+            [
+              511.0,
+              295.0
+            ],
+            [
+              628.0,
+              299.0
+            ],
+            [
+              627.0,
+              317.0
+            ],
+            [
+              510.0,
+              313.0
+            ]
+          ],
+          "box": [
+            [
+              511.0,
+              295.0
+            ],
+            [
+              628.0,
+              299.0
+            ],
+            [
+              627.0,
+              317.0
+            ],
+            [
+              510.0,
+              313.0
+            ]
+          ],
+          "position": {
+            "x": 510,
+            "y": 295,
+            "width": 118,
+            "height": 22,
+            "center_x": 569.0,
+            "center_y": 306.0,
+            "region": "middle-right",
+            "tag": "[y:295, x:510]"
+          }
+        },
+        {
+          "text": "YOUR REF.: Mr.John Rupp",
+          "confidence": 0.85,
+          "bounding_box": [
+            [
+              46.0,
+              332.0
+            ],
+            [
+              205.0,
+              334.0
+            ],
+            [
+              205.0,
+              351.0
+            ],
+            [
+              46.0,
+              349.0
+            ]
+          ],
+          "box": [
+            [
+              46.0,
+              332.0
+            ],
+            [
+              205.0,
+              334.0
+            ],
+            [
+              205.0,
+              351.0
+            ],
+            [
+              46.0,
+              349.0
+            ]
+          ],
+          "position": {
+            "x": 46,
+            "y": 332,
+            "width": 159,
+            "height": 19,
+            "center_x": 125.5,
+            "center_y": 341.5,
+            "region": "middle-left",
+            "tag": "[y:332, x:46]"
+          }
+        },
+        {
+          "text": "November Servlces",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              254.0,
+              386.0
+            ],
+            [
+              383.0,
+              383.0
+            ],
+            [
+              383.0,
+              401.0
+            ],
+            [
+              255.0,
+              404.0
+            ]
+          ],
+          "box": [
+            [
+              254.0,
+              386.0
+            ],
+            [
+              383.0,
+              383.0
+            ],
+            [
+              383.0,
+              401.0
+            ],
+            [
+              255.0,
+              404.0
+            ]
+          ],
+          "position": {
+            "x": 254,
+            "y": 383,
+            "width": 129,
+            "height": 21,
+            "center_x": 318.5,
+            "center_y": 393.5,
+            "region": "middle",
+            "tag": "[y:383, x:254]"
+          }
+        },
+        {
+          "text": "To the services rendered by HBl, Ine. as consultents to the",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              113.0,
+              415.0
+            ],
+            [
+              518.0,
+              408.0
+            ],
+            [
+              518.0,
+              425.0
+            ],
+            [
+              113.0,
+              433.0
+            ]
+          ],
+          "box": [
+            [
+              113.0,
+              415.0
+            ],
+            [
+              518.0,
+              408.0
+            ],
+            [
+              518.0,
+              425.0
+            ],
+            [
+              113.0,
+              433.0
+            ]
+          ],
+          "position": {
+            "x": 113,
+            "y": 408,
+            "width": 405,
+            "height": 25,
+            "center_x": 315.5,
+            "center_y": 420.5,
+            "region": "middle",
+            "tag": "[y:408, x:113]"
+          }
+        },
+        {
+          "text": "TobadeoInstitute during the month of November 1992.",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              112.0,
+              431.0
+            ],
+            [
+              470.0,
+              423.0
+            ],
+            [
+              470.0,
+              440.0
+            ],
+            [
+              112.0,
+              448.0
+            ]
+          ],
+          "box": [
+            [
+              112.0,
+              431.0
+            ],
+            [
+              470.0,
+              423.0
+            ],
+            [
+              470.0,
+              440.0
+            ],
+            [
+              112.0,
+              448.0
+            ]
+          ],
+          "position": {
+            "x": 112,
+            "y": 423,
+            "width": 358,
+            "height": 25,
+            "center_x": 291.0,
+            "center_y": 435.5,
+            "region": "middle",
+            "tag": "[y:423, x:112]"
+          }
+        },
+        {
+          "text": "$29,000-09-",
+          "confidence": 0.74,
+          "bounding_box": [
+            [
+              548.0,
+              449.0
+            ],
+            [
+              632.0,
+              446.0
+            ],
+            [
+              632.0,
+              464.0
+            ],
+            [
+              548.0,
+              466.0
+            ]
+          ],
+          "box": [
+            [
+              548.0,
+              449.0
+            ],
+            [
+              632.0,
+              446.0
+            ],
+            [
+              632.0,
+              464.0
+            ],
+            [
+              548.0,
+              466.0
+            ]
+          ],
+          "position": {
+            "x": 548,
+            "y": 446,
+            "width": 84,
+            "height": 20,
+            "center_x": 590.0,
+            "center_y": 456.0,
+            "region": "middle-right",
+            "tag": "[y:446, x:548]"
+          }
+        },
+        {
+          "text": "Totalprice now dueforpayment .",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              114.0,
+              456.0
+            ],
+            [
+              341.0,
+              453.0
+            ],
+            [
+              342.0,
+              471.0
+            ],
+            [
+              114.0,
+              474.0
+            ]
+          ],
+          "box": [
+            [
+              114.0,
+              456.0
+            ],
+            [
+              341.0,
+              453.0
+            ],
+            [
+              342.0,
+              471.0
+            ],
+            [
+              114.0,
+              474.0
+            ]
+          ],
+          "position": {
+            "x": 114,
+            "y": 453,
+            "width": 228,
+            "height": 21,
+            "center_x": 228.0,
+            "center_y": 463.5,
+            "region": "middle-left",
+            "tag": "[y:453, x:114]"
+          }
+        },
+        {
+          "text": "Por HBIIne.",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              316.0,
+              479.0
+            ],
+            [
+              402.0,
+              478.0
+            ],
+            [
+              403.0,
+              496.0
+            ],
+            [
+              316.0,
+              497.0
+            ]
+          ],
+          "box": [
+            [
+              316.0,
+              479.0
+            ],
+            [
+              402.0,
+              478.0
+            ],
+            [
+              403.0,
+              496.0
+            ],
+            [
+              316.0,
+              497.0
+            ]
+          ],
+          "position": {
+            "x": 316,
+            "y": 478,
+            "width": 87,
+            "height": 19,
+            "center_x": 359.5,
+            "center_y": 487.5,
+            "region": "middle",
+            "tag": "[y:478, x:316]"
+          }
+        },
+        {
+          "text": "Gray @ober tson",
+          "confidence": 0.81,
+          "bounding_box": [
+            [
+              316.0,
+              534.0
+            ],
+            [
+              419.0,
+              529.0
+            ],
+            [
+              420.0,
+              550.0
+            ],
+            [
+              317.0,
+              555.0
+            ]
+          ],
+          "box": [
+            [
+              316.0,
+              534.0
+            ],
+            [
+              419.0,
+              529.0
+            ],
+            [
+              420.0,
+              550.0
+            ],
+            [
+              317.0,
+              555.0
+            ]
+          ],
+          "position": {
+            "x": 316,
+            "y": 529,
+            "width": 104,
+            "height": 26,
+            "center_x": 368.0,
+            "center_y": 542.0,
+            "region": "middle",
+            "tag": "[y:529, x:316]"
+          }
+        },
+        {
+          "text": "CR:dh",
+          "confidence": 0.85,
+          "bounding_box": [
+            [
+              113.0,
+              566.0
+            ],
+            [
+              154.0,
+              566.0
+            ],
+            [
+              154.0,
+              584.0
+            ],
+            [
+              113.0,
+              584.0
+            ]
+          ],
+          "box": [
+            [
+              113.0,
+              566.0
+            ],
+            [
+              154.0,
+              566.0
+            ],
+            [
+              154.0,
+              584.0
+            ],
+            [
+              113.0,
+              584.0
+            ]
+          ],
+          "position": {
+            "x": 113,
+            "y": 566,
+            "width": 41,
+            "height": 18,
+            "center_x": 133.5,
+            "center_y": 575.0,
+            "region": "middle-left",
+            "tag": "[y:566, x:113]"
+          }
+        },
+        {
+          "text": "824,000",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              349.0,
+              615.0
+            ],
+            [
+              428.0,
+              612.0
+            ],
+            [
+              429.0,
+              636.0
+            ],
+            [
+              350.0,
+              639.0
+            ]
+          ],
+          "box": [
+            [
+              349.0,
+              615.0
+            ],
+            [
+              428.0,
+              612.0
+            ],
+            [
+              429.0,
+              636.0
+            ],
+            [
+              350.0,
+              639.0
+            ]
+          ],
+          "position": {
+            "x": 349,
+            "y": 612,
+            "width": 80,
+            "height": 27,
+            "center_x": 389.0,
+            "center_y": 625.5,
+            "region": "middle",
+            "tag": "[y:612, x:349]"
+          }
+        },
+        {
+          "text": "55000",
+          "confidence": 0.64,
+          "bounding_box": [
+            [
+              543.0,
+              610.0
+            ],
+            [
+              611.0,
+              605.0
+            ],
+            [
+              613.0,
+              630.0
+            ],
+            [
+              545.0,
+              636.0
+            ]
+          ],
+          "box": [
+            [
+              543.0,
+              610.0
+            ],
+            [
+              611.0,
+              605.0
+            ],
+            [
+              613.0,
+              630.0
+            ],
+            [
+              545.0,
+              636.0
+            ]
+          ],
+          "position": {
+            "x": 543,
+            "y": 605,
+            "width": 70,
+            "height": 31,
+            "center_x": 578.0,
+            "center_y": 620.5,
+            "region": "middle-right",
+            "tag": "[y:605, x:543]"
+          }
+        },
+        {
+          "text": "speual aur",
+          "confidence": 0.77,
+          "bounding_box": [
+            [
+              557.0,
+              633.0
+            ],
+            [
+              680.0,
+              627.0
+            ],
+            [
+              682.0,
+              651.0
+            ],
+            [
+              559.0,
+              658.0
+            ]
+          ],
+          "box": [
+            [
+              557.0,
+              633.0
+            ],
+            [
+              680.0,
+              627.0
+            ],
+            [
+              682.0,
+              651.0
+            ],
+            [
+              559.0,
+              658.0
+            ]
+          ],
+          "position": {
+            "x": 557,
+            "y": 627,
+            "width": 125,
+            "height": 31,
+            "center_x": 619.5,
+            "center_y": 642.5,
+            "region": "middle-right",
+            "tag": "[y:627, x:557]"
+          }
+        },
+        {
+          "text": "Kay Raien",
+          "confidence": 0.62,
+          "bounding_box": [
+            [
+              343.0,
+              668.0
+            ],
+            [
+              479.0,
+              661.0
+            ],
+            [
+              481.0,
+              693.0
+            ],
+            [
+              345.0,
+              700.0
+            ]
+          ],
+          "box": [
+            [
+              343.0,
+              668.0
+            ],
+            [
+              479.0,
+              661.0
+            ],
+            [
+              481.0,
+              693.0
+            ],
+            [
+              345.0,
+              700.0
+            ]
+          ],
+          "position": {
+            "x": 343,
+            "y": 661,
+            "width": 138,
+            "height": 39,
+            "center_x": 412.0,
+            "center_y": 680.5,
+            "region": "middle",
+            "tag": "[y:661, x:343]"
+          }
+        },
+        {
+          "text": "130217301",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              364.0,
+              745.0
+            ],
+            [
+              456.0,
+              739.0
+            ],
+            [
+              458.0,
+              765.0
+            ],
+            [
+              365.0,
+              771.0
+            ]
+          ],
+          "box": [
+            [
+              364.0,
+              745.0
+            ],
+            [
+              456.0,
+              739.0
+            ],
+            [
+              458.0,
+              765.0
+            ],
+            [
+              365.0,
+              771.0
+            ]
+          ],
+          "position": {
+            "x": 364,
+            "y": 739,
+            "width": 94,
+            "height": 32,
+            "center_x": 411.0,
+            "center_y": 755.0,
+            "region": "bottom-center",
+            "tag": "[y:739, x:364]"
+          }
+        },
+        {
+          "text": "10.719น.",
+          "confidence": 0.61,
+          "bounding_box": [
+            [
+              377.0,
+              774.0
+            ],
+            [
+              456.0,
+              768.0
+            ],
+            [
+              458.0,
+              789.0
+            ],
+            [
+              378.0,
+              795.0
+            ]
+          ],
+          "box": [
+            [
+              377.0,
+              774.0
+            ],
+            [
+              456.0,
+              768.0
+            ],
+            [
+              458.0,
+              789.0
+            ],
+            [
+              378.0,
+              795.0
+            ]
+          ],
+          "position": {
+            "x": 377,
+            "y": 768,
+            "width": 81,
+            "height": 27,
+            "center_x": 417.5,
+            "center_y": 781.5,
+            "region": "bottom-center",
+            "tag": "[y:768, x:377]"
+          }
+        },
+        {
+          "text": "TI1016-1636",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              626.0,
+              959.0
+            ],
+            [
+              712.0,
+              959.0
+            ],
+            [
+              712.0,
+              977.0
+            ],
+            [
+              626.0,
+              977.0
+            ]
+          ],
+          "box": [
+            [
+              626.0,
+              959.0
+            ],
+            [
+              712.0,
+              959.0
+            ],
+            [
+              712.0,
+              977.0
+            ],
+            [
+              626.0,
+              977.0
+            ]
+          ],
+          "position": {
+            "x": 626,
+            "y": 959,
+            "width": 86,
+            "height": 18,
+            "center_x": 669.0,
+            "center_y": 968.0,
+            "region": "bottom-right",
+            "tag": "[y:959, x:626]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 0.741,
+      "cached_at": "2026-09-28T08:32:11.459805+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "invoice",
+        "document_number": "4959",
+        "document_date": "1992-11-39",
+        "sender": "",
+        "receiver": "",
+        "origin": "Fasfac, VA 22030",
+        "destination": "",
+        "reference_number": "",
+        "unit_price": 10.71,
+        "total_amount": 10.71,
+        "currency": "USD",
+        "other": {
+          "source_file": "091_test_imageso_o_t_d_otd40c00_ti10161636.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "INVOICE",
+          "field": "document_type",
+          "value": "invoice",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "4959",
+          "field": "document_number",
+          "value": "4959",
+          "confidence": 98,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "1992-11-39",
+          "field": "document_date",
+          "value": "1992-11-39",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "sender",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "receiver",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "Fasfac VA 22030",
+          "field": "origin",
+          "value": "Fasfac, VA 22030",
+          "confidence": 88,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "destination",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "reference_number",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "10.719น.",
+          "field": "unit_price",
+          "value": "10.71",
+          "confidence": 82,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "10.719น.",
+          "field": "total_amount",
+          "value": "10.71",
+          "confidence": 82,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "091_test_imageso_o_t_d_otd40c00_ti10161636.png",
+          "field": "source_file",
+          "value": "091_test_imageso_o_t_d_otd40c00_ti10161636.png",
+          "confidence": 92,
+          "status": "success",
+          "isOther": true
+        }
+      ],
+      "confidence": {
+        "overall": 79,
+        "ocr": 84,
+        "slm": 88,
+        "mapping": 64,
+        "completeness": 64
+      },
+      "review_items": [
+        {
+          "field": "sender",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "receiver",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "destination",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "reference_number",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "unit_price",
+          "ocrValue": "10.719น.",
+          "slmValue": "10.71",
+          "confidence": 82,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "total_amount",
+          "ocrValue": "10.719น.",
+          "slmValue": "10.71",
+          "confidence": 82,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": {
+        "accuracy_pct": 64.0,
+        "inference_time_sec": 0.15,
+        "tokens_generated": 0,
+        "token_speed_tps": 0,
+        "core_fields_fill_rate_pct": 64.0,
+        "schema_valid": true,
+        "math_integrity_status": "no_subtotal",
+        "math_integrity_notes": "Sources: 10.71",
+        "field_accuracies": {}
+      },
+      "model": "Qwen/Qwen2.5-1.5B-Instruct (Fallback: CUDA error: out of memory\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n)",
+      "device": "cpu/fallback"
+    },
+    "performance": {
+      "ocr_time_sec": 0.741,
+      "slm_time_sec": 0.108,
+      "total_time_sec": 0.849
+    },
+    "prompt_integrity": {
+      "cache_schema_version": 2,
+      "prompt_hash": "3afe309de18e090cdea10f5981dbebbe06615422047b55829885be7ad744eeef",
+      "variant": "one-shot",
+      "benchmark_example_ids": [
+        "DOC-009"
+      ],
+      "benchmark_example_confidences": [
+        98.13
+      ],
+      "training_document_ids": [
+        "DOC-001",
+        "DOC-002",
+        "DOC-003",
+        "DOC-004",
+        "DOC-007",
+        "DOC-009",
+        "DOC-010",
+        "DOC-012",
+        "DOC-013",
+        "DOC-014",
+        "DOC-015",
+        "DOC-016",
+        "DOC-017",
+        "DOC-018",
+        "DOC-019",
+        "DOC-020",
+        "DOC-021",
+        "DOC-023",
+        "DOC-025",
+        "DOC-026",
+        "DOC-027",
+        "DOC-028",
+        "DOC-030",
+        "DOC-031",
+        "DOC-032",
+        "DOC-033",
+        "DOC-036",
+        "DOC-039",
+        "DOC-040",
+        "DOC-041",
+        "DOC-042",
+        "DOC-043",
+        "DOC-044",
+        "DOC-045",
+        "DOC-046",
+        "DOC-047",
+        "DOC-048",
+        "DOC-049",
+        "DOC-050",
+        "DOC-051",
+        "DOC-052",
+        "DOC-053",
+        "DOC-055",
+        "DOC-057",
+        "DOC-058",
+        "DOC-059",
+        "DOC-060",
+        "DOC-061",
+        "DOC-063",
+        "DOC-064",
+        "DOC-065",
+        "DOC-066",
+        "DOC-068",
+        "DOC-069",
+        "DOC-071",
+        "DOC-072",
+        "DOC-073",
+        "DOC-074",
+        "DOC-075",
+        "DOC-076",
+        "DOC-077",
+        "DOC-078",
+        "DOC-079",
+        "DOC-081",
+        "DOC-082",
+        "DOC-083",
+        "DOC-084",
+        "DOC-085",
+        "DOC-086",
+        "DOC-087",
+        "DOC-088",
+        "DOC-089",
+        "DOC-090",
+        "DOC-093",
+        "DOC-094",
+        "DOC-095",
+        "DOC-096",
+        "DOC-097",
+        "DOC-098",
+        "DOC-099",
+        "DOC-100",
+        "DOC-102",
+        "DOC-104",
+        "DOC-105",
+        "DOC-107",
+        "DOC-109",
+        "DOC-110",
+        "DOC-111",
+        "DOC-112",
+        "DOC-114",
+        "DOC-115",
+        "DOC-117",
+        "DOC-118",
+        "DOC-119",
+        "DOC-120",
+        "DOC-122",
+        "DOC-123",
+        "DOC-124",
+        "DOC-125",
+        "DOC-127",
+        "DOC-128",
+        "DOC-130",
+        "DOC-131",
+        "DOC-132",
+        "DOC-134",
+        "DOC-135",
+        "DOC-136",
+        "DOC-138",
+        "DOC-139",
+        "DOC-140",
+        "DOC-141",
+        "DOC-142",
+        "DOC-145",
+        "DOC-146",
+        "DOC-147",
+        "DOC-148",
+        "DOC-149",
+        "DOC-150",
+        "DOC-151",
+        "DOC-152",
+        "DOC-154",
+        "DOC-155",
+        "DOC-157",
+        "DOC-158",
+        "DOC-159",
+        "DOC-160",
+        "DOC-164",
+        "DOC-165",
+        "DOC-166",
+        "DOC-167",
+        "DOC-168",
+        "DOC-169",
+        "DOC-170",
+        "DOC-171",
+        "DOC-172",
+        "DOC-173",
+        "DOC-176",
+        "DOC-177",
+        "DOC-178",
+        "DOC-179",
+        "DOC-180",
+        "DOC-181",
+        "DOC-183",
+        "DOC-184",
+        "DOC-185",
+        "DOC-186",
+        "DOC-187",
+        "DOC-188",
+        "DOC-189",
+        "DOC-190",
+        "DOC-191",
+        "DOC-192",
+        "DOC-193",
+        "DOC-194",
+        "DOC-195",
+        "DOC-199",
+        "DOC-200",
+        "DOC-201",
+        "DOC-202",
+        "DOC-203",
+        "DOC-204",
+        "DOC-205",
+        "DOC-206",
+        "DOC-207",
+        "DOC-209",
+        "DOC-210",
+        "DOC-212",
+        "DOC-213",
+        "DOC-214",
+        "DOC-215",
+        "DOC-216",
+        "DOC-218",
+        "DOC-219",
+        "DOC-220",
+        "DOC-221",
+        "DOC-224",
+        "DOC-225",
+        "DOC-226",
+        "DOC-227",
+        "DOC-228",
+        "DOC-229",
+        "DOC-230",
+        "DOC-231",
+        "DOC-232",
+        "DOC-233",
+        "DOC-234",
+        "DOC-235",
+        "DOC-236",
+        "DOC-237",
+        "DOC-238",
+        "DOC-240",
+        "DOC-241",
+        "DOC-243",
+        "DOC-244",
+        "DOC-245",
+        "DOC-246",
+        "DOC-248",
+        "DOC-250",
+        "DOC-251",
+        "DOC-252",
+        "DOC-253",
+        "DOC-254",
+        "DOC-255",
+        "DOC-256",
+        "DOC-257",
+        "DOC-258",
+        "DOC-262",
+        "DOC-263",
+        "DOC-265",
+        "DOC-266",
+        "DOC-267",
+        "DOC-269",
+        "DOC-270",
+        "DOC-271",
+        "DOC-272",
+        "DOC-273",
+        "DOC-274",
+        "DOC-275",
+        "DOC-276",
+        "DOC-277",
+        "DOC-279",
+        "DOC-280",
+        "DOC-281",
+        "DOC-282",
+        "DOC-283",
+        "DOC-285",
+        "DOC-286",
+        "DOC-287",
+        "DOC-288",
+        "DOC-289",
+        "DOC-290",
+        "DOC-291",
+        "DOC-292",
+        "DOC-294",
+        "DOC-295",
+        "DOC-296",
+        "DOC-297",
+        "DOC-298",
+        "DOC-299",
+        "DOC-300"
+      ]
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 0.741,
+    "slm_time_sec": 0.108,
+    "total_time_sec": 0.849
+  },
+  "cached_at": "2026-09-28T08:32:11.581577+00:00"
+}

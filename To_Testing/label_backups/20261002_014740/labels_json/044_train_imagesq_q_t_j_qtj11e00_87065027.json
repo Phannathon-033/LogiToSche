@@ -1,0 +1,27 @@
+{
+  "id": "DOC-044",
+  "rank": 44,
+  "file_name": "044_train_imagesq_q_t_j_qtj11e00_87065027.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "11113",
+    "document_date": "1987-08-20",
+    "sender": "HOME VIEWER PUBLICATIONS, INC.",
+    "receiver": "LORILLARD MEDIA",
+    "origin": "Philadelphia, PA 19106",
+    "destination": "NEW YORK, NY",
+    "reference_number": "NPT-291-3",
+    "unit_price": 12675.0,
+    "total_amount": 12675.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:08:21"
+}

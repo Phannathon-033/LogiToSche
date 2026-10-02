@@ -1,0 +1,27 @@
+{
+  "id": "DOC-183",
+  "rank": 183,
+  "file_name": "183_train_imagesu_u_n_g_ung41e00_80233821.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "286B",
+    "document_date": "1986-03-17",
+    "sender": "LABORATORIES AMERICA, INC.",
+    "receiver": "Dr. J. Daniel Heck",
+    "origin": "VIENNA, VA",
+    "destination": "Greensboro, NC 27420",
+    "reference_number": "-",
+    "unit_price": 1200.0,
+    "total_amount": 1200.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:25:46"
+}

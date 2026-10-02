@@ -1,0 +1,27 @@
+{
+  "id": "DOC-091",
+  "rank": 91,
+  "file_name": "091_test_imageso_o_t_d_otd40c00_ti10161636.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "4959",
+    "document_date": "1992-11-30",
+    "sender": "Healthy Buikdings.International,Inc",
+    "receiver": "-",
+    "origin": "Faifax, VA 22030",
+    "destination": "Fasfac, VA 22030",
+    "reference_number": "-",
+    "unit_price": 29000.0,
+    "total_amount": 29000.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:13:46"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-181",
+  "rank": 181,
+  "file_name": "181_train_imagesn_n_v_d_nvd23d00_513265741_513265875.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "10150008",
+    "document_date": "1990-12-12",
+    "sender": "R J REYNOLDS TOBACCO COMPANY",
+    "receiver": "LOUISE NORMAN",
+    "origin": "SALEM, NC 27102",
+    "destination": "Irvine, CA 92718",
+    "reference_number": "-",
+    "unit_price": 4550.76,
+    "total_amount": 4550.76,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:25:32"
+}

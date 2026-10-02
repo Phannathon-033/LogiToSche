@@ -1,0 +1,4576 @@
+{
+  "document_id": "DOC-006",
+  "file_name": "006_train_imagesg_g_o_i_goi66d00_514225065+-5065.png",
+  "cache_schema_version": 2,
+  "prompt_hash": "89b7cee5808a08c571dbbca48a3c981fa2715c1c841c08a4e4a26363dffb3be8",
+  "variant": "one-shot",
+  "benchmark_example_ids": [
+    "DOC-009"
+  ],
+  "benchmark_example_confidences": [
+    98.13
+  ],
+  "training_document_ids": [
+    "DOC-001",
+    "DOC-002",
+    "DOC-003",
+    "DOC-004",
+    "DOC-005",
+    "DOC-007",
+    "DOC-009",
+    "DOC-011",
+    "DOC-012",
+    "DOC-013",
+    "DOC-014",
+    "DOC-015",
+    "DOC-016",
+    "DOC-017",
+    "DOC-019",
+    "DOC-020",
+    "DOC-021",
+    "DOC-022",
+    "DOC-023",
+    "DOC-024",
+    "DOC-027",
+    "DOC-028",
+    "DOC-029",
+    "DOC-030",
+    "DOC-031",
+    "DOC-032",
+    "DOC-033",
+    "DOC-035",
+    "DOC-036",
+    "DOC-037",
+    "DOC-038",
+    "DOC-039",
+    "DOC-040",
+    "DOC-041",
+    "DOC-042",
+    "DOC-044",
+    "DOC-045",
+    "DOC-048",
+    "DOC-049",
+    "DOC-050",
+    "DOC-051",
+    "DOC-052",
+    "DOC-053",
+    "DOC-054",
+    "DOC-055",
+    "DOC-056",
+    "DOC-057",
+    "DOC-059",
+    "DOC-060",
+    "DOC-062",
+    "DOC-063",
+    "DOC-065",
+    "DOC-066",
+    "DOC-067",
+    "DOC-068",
+    "DOC-069",
+    "DOC-070",
+    "DOC-071",
+    "DOC-072",
+    "DOC-073",
+    "DOC-075",
+    "DOC-080",
+    "DOC-081",
+    "DOC-082",
+    "DOC-083",
+    "DOC-084",
+    "DOC-085",
+    "DOC-086",
+    "DOC-087",
+    "DOC-088",
+    "DOC-089",
+    "DOC-090",
+    "DOC-092",
+    "DOC-095",
+    "DOC-096",
+    "DOC-097",
+    "DOC-099",
+    "DOC-100",
+    "DOC-101",
+    "DOC-102",
+    "DOC-103",
+    "DOC-104",
+    "DOC-106",
+    "DOC-107",
+    "DOC-108",
+    "DOC-109",
+    "DOC-111",
+    "DOC-113",
+    "DOC-115",
+    "DOC-116",
+    "DOC-117",
+    "DOC-118",
+    "DOC-119",
+    "DOC-121",
+    "DOC-122",
+    "DOC-123",
+    "DOC-124",
+    "DOC-125",
+    "DOC-126",
+    "DOC-127",
+    "DOC-128",
+    "DOC-129",
+    "DOC-130",
+    "DOC-131",
+    "DOC-132",
+    "DOC-133",
+    "DOC-134",
+    "DOC-135",
+    "DOC-136",
+    "DOC-137",
+    "DOC-138",
+    "DOC-139",
+    "DOC-140",
+    "DOC-141",
+    "DOC-142",
+    "DOC-143",
+    "DOC-144",
+    "DOC-146",
+    "DOC-147",
+    "DOC-148",
+    "DOC-150",
+    "DOC-151",
+    "DOC-152",
+    "DOC-154",
+    "DOC-155",
+    "DOC-156",
+    "DOC-157",
+    "DOC-159",
+    "DOC-160",
+    "DOC-161",
+    "DOC-162",
+    "DOC-163",
+    "DOC-164",
+    "DOC-167",
+    "DOC-168",
+    "DOC-169",
+    "DOC-170",
+    "DOC-171",
+    "DOC-172",
+    "DOC-173",
+    "DOC-174",
+    "DOC-175",
+    "DOC-177",
+    "DOC-178",
+    "DOC-179",
+    "DOC-180",
+    "DOC-182",
+    "DOC-184",
+    "DOC-185",
+    "DOC-186",
+    "DOC-187",
+    "DOC-188",
+    "DOC-189",
+    "DOC-190",
+    "DOC-191",
+    "DOC-192",
+    "DOC-194",
+    "DOC-195",
+    "DOC-196",
+    "DOC-198",
+    "DOC-199",
+    "DOC-200",
+    "DOC-201",
+    "DOC-202",
+    "DOC-203",
+    "DOC-205",
+    "DOC-206",
+    "DOC-207",
+    "DOC-208",
+    "DOC-209",
+    "DOC-210",
+    "DOC-211",
+    "DOC-213",
+    "DOC-214",
+    "DOC-215",
+    "DOC-217",
+    "DOC-218",
+    "DOC-220",
+    "DOC-221",
+    "DOC-223",
+    "DOC-224",
+    "DOC-225",
+    "DOC-226",
+    "DOC-228",
+    "DOC-229",
+    "DOC-231",
+    "DOC-233",
+    "DOC-236",
+    "DOC-237",
+    "DOC-241",
+    "DOC-242",
+    "DOC-243",
+    "DOC-244",
+    "DOC-245",
+    "DOC-246",
+    "DOC-247",
+    "DOC-248",
+    "DOC-249",
+    "DOC-252",
+    "DOC-253",
+    "DOC-254",
+    "DOC-255",
+    "DOC-256",
+    "DOC-257",
+    "DOC-258",
+    "DOC-259",
+    "DOC-260",
+    "DOC-261",
+    "DOC-262",
+    "DOC-263",
+    "DOC-264",
+    "DOC-265",
+    "DOC-266",
+    "DOC-268",
+    "DOC-269",
+    "DOC-270",
+    "DOC-271",
+    "DOC-272",
+    "DOC-273",
+    "DOC-274",
+    "DOC-275",
+    "DOC-276",
+    "DOC-277",
+    "DOC-278",
+    "DOC-280",
+    "DOC-281",
+    "DOC-283",
+    "DOC-284",
+    "DOC-285",
+    "DOC-286",
+    "DOC-288",
+    "DOC-289",
+    "DOC-291",
+    "DOC-292",
+    "DOC-293",
+    "DOC-294",
+    "DOC-295",
+    "DOC-297",
+    "DOC-299",
+    "DOC-300"
+  ],
+  "json_schema": {
+    "document_type": "invoice",
+    "document_number": "R197",
+    "document_date": "",
+    "sender": "Inventory on or after",
+    "receiver": "",
+    "origin": "ator",
+    "destination": "",
+    "reference_number": "",
+    "unit_price": 9.62,
+    "total_amount": 9.62,
+    "currency": "USD",
+    "other": {
+      "source_file": "006_train_imagesg_g_o_i_goi66d00_514225065+-5065.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-006",
+      "filename": "006_train_imagesg_g_o_i_goi66d00_514225065+-5065.png",
+      "ocr_text": "RJReynodr\nSALES AND MARKETING MATERIALS\nDISPOSAL AUTHORIZATION\nWinston-Salem, NC 27102\n5385\nOriginator\nTeres M.Boih\nControl No.\nPhone No.\nSMS\nTEM\nTOTAL\nMETHOD\nREASON\nSTATU\nCATEGORY\nDIGIS\nNUMBER\nCOST\nITEM DESCRIPTION\nDISPOSAL (1)\nOF\nCODE\nCODE\nO DIGITS\n2\n483131\n,002621.0CAm NAME GEN Insert\nD\n3\nD\n483125\n5607.OO60O CAm NAMEGEN INSErH\nD\n3\nexplaktigu: Printed with wrong formpt for Wan\nCdpture info.\nTOTAL COST 9.627.10\n(1) Method of Dlsposal:\n(2) Reason Codes:\n(3)Status Codes after Processing:\nL - Liquidate\n1 - Graphics Revision\nA - Active\nD- Destroy (see Instructions\n2- Cancelled Promations\nD- Discontinued\nn ack of form\n3 - Obsolete Materials\nH - Hoid\n4 - Overpurchased/Unusable\nL - Lquidate\n5- Other (explalin)\nRemove from Inventory on or after\n194\nAR#\nDato 12/22/9y\nFinancial Services Reviewer\nApproval: Department Director/Brand Manager\nDate Dh21e\nRETURN FORM TO ORIGINATOR FOR ASSIGNMENT OF CONTROL NUMBER\nOriginator: When top portion Is complete, send to: Group Manager - Sales Materials Management, Plaza 12.\nApproval: Group Manager - Sales Materials Management\nDate\nIf \"Method of Disposa!\" Is \"Liquidate\", send to: Purchasing Department.\nMETHOD OF DISPOSAL (check one):\nSHIPPING ADDRESS:\nDestroy\nDonate\nLiquidate\n51422 5065\nDelivery Date:\nApproval: Purchasing\nDate\nSEND TO: GROUP MANAGER - SALES MATERIALS MANAGEMENT, SALES MATERIALS MANAGEMENT, PLAZA 12\nShipping Order Reference Number\nR197 Fm p681 - Rav 7.00",
+      "ocr_lines": [
+        {
+          "text": "RJReynodr",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              21.0,
+              17.0
+            ],
+            [
+              176.0,
+              17.0
+            ],
+            [
+              176.0,
+              55.0
+            ],
+            [
+              21.0,
+              55.0
+            ]
+          ],
+          "box": [
+            [
+              21.0,
+              17.0
+            ],
+            [
+              176.0,
+              17.0
+            ],
+            [
+              176.0,
+              55.0
+            ],
+            [
+              21.0,
+              55.0
+            ]
+          ],
+          "position": {
+            "x": 21,
+            "y": 17,
+            "width": 155,
+            "height": 38,
+            "center_x": 98.5,
+            "center_y": 36.0,
+            "region": "top-left",
+            "tag": "[y:17, x:21]"
+          }
+        },
+        {
+          "text": "SALES AND MARKETING MATERIALS",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              233.0,
+              36.0
+            ],
+            [
+              493.0,
+              36.0
+            ],
+            [
+              493.0,
+              50.0
+            ],
+            [
+              233.0,
+              50.0
+            ]
+          ],
+          "box": [
+            [
+              233.0,
+              36.0
+            ],
+            [
+              493.0,
+              36.0
+            ],
+            [
+              493.0,
+              50.0
+            ],
+            [
+              233.0,
+              50.0
+            ]
+          ],
+          "position": {
+            "x": 233,
+            "y": 36,
+            "width": 260,
+            "height": 14,
+            "center_x": 363.0,
+            "center_y": 43.0,
+            "region": "top-center",
+            "tag": "[y:36, x:233]"
+          }
+        },
+        {
+          "text": "DISPOSAL AUTHORIZATION",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              264.0,
+              51.0
+            ],
+            [
+              459.0,
+              51.0
+            ],
+            [
+              459.0,
+              66.0
+            ],
+            [
+              264.0,
+              66.0
+            ]
+          ],
+          "box": [
+            [
+              264.0,
+              51.0
+            ],
+            [
+              459.0,
+              51.0
+            ],
+            [
+              459.0,
+              66.0
+            ],
+            [
+              264.0,
+              66.0
+            ]
+          ],
+          "position": {
+            "x": 264,
+            "y": 51,
+            "width": 195,
+            "height": 15,
+            "center_x": 361.5,
+            "center_y": 58.5,
+            "region": "top-center",
+            "tag": "[y:51, x:264]"
+          }
+        },
+        {
+          "text": "Winston-Salem, NC 27102",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              22.0,
+              69.0
+            ],
+            [
+              171.0,
+              69.0
+            ],
+            [
+              171.0,
+              83.0
+            ],
+            [
+              22.0,
+              83.0
+            ]
+          ],
+          "box": [
+            [
+              22.0,
+              69.0
+            ],
+            [
+              171.0,
+              69.0
+            ],
+            [
+              171.0,
+              83.0
+            ],
+            [
+              22.0,
+              83.0
+            ]
+          ],
+          "position": {
+            "x": 22,
+            "y": 69,
+            "width": 149,
+            "height": 14,
+            "center_x": 96.5,
+            "center_y": 76.0,
+            "region": "top-left",
+            "tag": "[y:69, x:22]"
+          }
+        },
+        {
+          "text": "5385",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              590.0,
+              85.0
+            ],
+            [
+              656.0,
+              85.0
+            ],
+            [
+              656.0,
+              120.0
+            ],
+            [
+              590.0,
+              120.0
+            ]
+          ],
+          "box": [
+            [
+              590.0,
+              85.0
+            ],
+            [
+              656.0,
+              85.0
+            ],
+            [
+              656.0,
+              120.0
+            ],
+            [
+              590.0,
+              120.0
+            ]
+          ],
+          "position": {
+            "x": 590,
+            "y": 85,
+            "width": 66,
+            "height": 35,
+            "center_x": 623.0,
+            "center_y": 102.5,
+            "region": "top-right",
+            "tag": "[y:85, x:590]"
+          }
+        },
+        {
+          "text": "Originator",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              14.0,
+              103.0
+            ],
+            [
+              74.0,
+              102.0
+            ],
+            [
+              75.0,
+              121.0
+            ],
+            [
+              14.0,
+              122.0
+            ]
+          ],
+          "box": [
+            [
+              14.0,
+              103.0
+            ],
+            [
+              74.0,
+              102.0
+            ],
+            [
+              75.0,
+              121.0
+            ],
+            [
+              14.0,
+              122.0
+            ]
+          ],
+          "position": {
+            "x": 14,
+            "y": 102,
+            "width": 61,
+            "height": 20,
+            "center_x": 44.5,
+            "center_y": 112.0,
+            "region": "top-left",
+            "tag": "[y:102, x:14]"
+          }
+        },
+        {
+          "text": "Teres M.Boih",
+          "confidence": 0.63,
+          "bounding_box": [
+            [
+              102.0,
+              91.0
+            ],
+            [
+              292.0,
+              91.0
+            ],
+            [
+              292.0,
+              122.0
+            ],
+            [
+              102.0,
+              122.0
+            ]
+          ],
+          "box": [
+            [
+              102.0,
+              91.0
+            ],
+            [
+              292.0,
+              91.0
+            ],
+            [
+              292.0,
+              122.0
+            ],
+            [
+              102.0,
+              122.0
+            ]
+          ],
+          "position": {
+            "x": 102,
+            "y": 91,
+            "width": 190,
+            "height": 31,
+            "center_x": 197.0,
+            "center_y": 106.5,
+            "region": "top-left",
+            "tag": "[y:91, x:102]"
+          }
+        },
+        {
+          "text": "Control No.",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              344.0,
+              104.0
+            ],
+            [
+              410.0,
+              104.0
+            ],
+            [
+              410.0,
+              122.0
+            ],
+            [
+              344.0,
+              122.0
+            ]
+          ],
+          "box": [
+            [
+              344.0,
+              104.0
+            ],
+            [
+              410.0,
+              104.0
+            ],
+            [
+              410.0,
+              122.0
+            ],
+            [
+              344.0,
+              122.0
+            ]
+          ],
+          "position": {
+            "x": 344,
+            "y": 104,
+            "width": 66,
+            "height": 18,
+            "center_x": 377.0,
+            "center_y": 113.0,
+            "region": "top-center",
+            "tag": "[y:104, x:344]"
+          }
+        },
+        {
+          "text": "Phone No.",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              518.0,
+              104.0
+            ],
+            [
+              584.0,
+              104.0
+            ],
+            [
+              584.0,
+              122.0
+            ],
+            [
+              518.0,
+              122.0
+            ]
+          ],
+          "box": [
+            [
+              518.0,
+              104.0
+            ],
+            [
+              584.0,
+              104.0
+            ],
+            [
+              584.0,
+              122.0
+            ],
+            [
+              518.0,
+              122.0
+            ]
+          ],
+          "position": {
+            "x": 518,
+            "y": 104,
+            "width": 66,
+            "height": 18,
+            "center_x": 551.0,
+            "center_y": 113.0,
+            "region": "top-right",
+            "tag": "[y:104, x:518]"
+          }
+        },
+        {
+          "text": "SMS",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              54.0,
+              129.0
+            ],
+            [
+              83.0,
+              129.0
+            ],
+            [
+              83.0,
+              143.0
+            ],
+            [
+              54.0,
+              143.0
+            ]
+          ],
+          "box": [
+            [
+              54.0,
+              129.0
+            ],
+            [
+              83.0,
+              129.0
+            ],
+            [
+              83.0,
+              143.0
+            ],
+            [
+              54.0,
+              143.0
+            ]
+          ],
+          "position": {
+            "x": 54,
+            "y": 129,
+            "width": 29,
+            "height": 14,
+            "center_x": 68.5,
+            "center_y": 136.0,
+            "region": "top-left",
+            "tag": "[y:129, x:54]"
+          }
+        },
+        {
+          "text": "TEM",
+          "confidence": 0.85,
+          "bounding_box": [
+            [
+              145.0,
+              128.0
+            ],
+            [
+              177.0,
+              128.0
+            ],
+            [
+              177.0,
+              143.0
+            ],
+            [
+              145.0,
+              143.0
+            ]
+          ],
+          "box": [
+            [
+              145.0,
+              128.0
+            ],
+            [
+              177.0,
+              128.0
+            ],
+            [
+              177.0,
+              143.0
+            ],
+            [
+              145.0,
+              143.0
+            ]
+          ],
+          "position": {
+            "x": 145,
+            "y": 128,
+            "width": 32,
+            "height": 15,
+            "center_x": 161.0,
+            "center_y": 135.5,
+            "region": "top-left",
+            "tag": "[y:128, x:145]"
+          }
+        },
+        {
+          "text": "TOTAL",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              255.0,
+              134.0
+            ],
+            [
+              296.0,
+              134.0
+            ],
+            [
+              296.0,
+              149.0
+            ],
+            [
+              255.0,
+              149.0
+            ]
+          ],
+          "box": [
+            [
+              255.0,
+              134.0
+            ],
+            [
+              296.0,
+              134.0
+            ],
+            [
+              296.0,
+              149.0
+            ],
+            [
+              255.0,
+              149.0
+            ]
+          ],
+          "position": {
+            "x": 255,
+            "y": 134,
+            "width": 41,
+            "height": 15,
+            "center_x": 275.5,
+            "center_y": 141.5,
+            "region": "top-center",
+            "tag": "[y:134, x:255]"
+          }
+        },
+        {
+          "text": "METHOD",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              557.0,
+              129.0
+            ],
+            [
+              608.0,
+              129.0
+            ],
+            [
+              608.0,
+              143.0
+            ],
+            [
+              557.0,
+              143.0
+            ]
+          ],
+          "box": [
+            [
+              557.0,
+              129.0
+            ],
+            [
+              608.0,
+              129.0
+            ],
+            [
+              608.0,
+              143.0
+            ],
+            [
+              557.0,
+              143.0
+            ]
+          ],
+          "position": {
+            "x": 557,
+            "y": 129,
+            "width": 51,
+            "height": 14,
+            "center_x": 582.5,
+            "center_y": 136.0,
+            "region": "top-right",
+            "tag": "[y:129, x:557]"
+          }
+        },
+        {
+          "text": "REASON",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              622.0,
+              130.0
+            ],
+            [
+              671.0,
+              130.0
+            ],
+            [
+              671.0,
+              144.0
+            ],
+            [
+              622.0,
+              144.0
+            ]
+          ],
+          "box": [
+            [
+              622.0,
+              130.0
+            ],
+            [
+              671.0,
+              130.0
+            ],
+            [
+              671.0,
+              144.0
+            ],
+            [
+              622.0,
+              144.0
+            ]
+          ],
+          "position": {
+            "x": 622,
+            "y": 130,
+            "width": 49,
+            "height": 14,
+            "center_x": 646.5,
+            "center_y": 137.0,
+            "region": "top-right",
+            "tag": "[y:130, x:622]"
+          }
+        },
+        {
+          "text": "STATU",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              673.0,
+              130.0
+            ],
+            [
+              713.0,
+              130.0
+            ],
+            [
+              713.0,
+              145.0
+            ],
+            [
+              673.0,
+              145.0
+            ]
+          ],
+          "box": [
+            [
+              673.0,
+              130.0
+            ],
+            [
+              713.0,
+              130.0
+            ],
+            [
+              713.0,
+              145.0
+            ],
+            [
+              673.0,
+              145.0
+            ]
+          ],
+          "position": {
+            "x": 673,
+            "y": 130,
+            "width": 40,
+            "height": 15,
+            "center_x": 693.0,
+            "center_y": 137.5,
+            "region": "top-right",
+            "tag": "[y:130, x:673]"
+          }
+        },
+        {
+          "text": "CATEGORY",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              37.0,
+              137.0
+            ],
+            [
+              100.0,
+              139.0
+            ],
+            [
+              100.0,
+              156.0
+            ],
+            [
+              36.0,
+              154.0
+            ]
+          ],
+          "box": [
+            [
+              37.0,
+              137.0
+            ],
+            [
+              100.0,
+              139.0
+            ],
+            [
+              100.0,
+              156.0
+            ],
+            [
+              36.0,
+              154.0
+            ]
+          ],
+          "position": {
+            "x": 36,
+            "y": 137,
+            "width": 64,
+            "height": 19,
+            "center_x": 68.0,
+            "center_y": 146.5,
+            "region": "top-left",
+            "tag": "[y:137, x:36]"
+          }
+        },
+        {
+          "text": "DIGIS",
+          "confidence": 0.3,
+          "bounding_box": [
+            [
+              131.0,
+              149.0
+            ],
+            [
+              189.0,
+              149.0
+            ],
+            [
+              189.0,
+              166.0
+            ],
+            [
+              131.0,
+              166.0
+            ]
+          ],
+          "box": [
+            [
+              131.0,
+              149.0
+            ],
+            [
+              189.0,
+              149.0
+            ],
+            [
+              189.0,
+              166.0
+            ],
+            [
+              131.0,
+              166.0
+            ]
+          ],
+          "position": {
+            "x": 131,
+            "y": 149,
+            "width": 58,
+            "height": 17,
+            "center_x": 160.0,
+            "center_y": 157.5,
+            "region": "top-left",
+            "tag": "[y:149, x:131]"
+          }
+        },
+        {
+          "text": "NUMBER",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              135.0,
+              140.0
+            ],
+            [
+              188.0,
+              140.0
+            ],
+            [
+              188.0,
+              154.0
+            ],
+            [
+              135.0,
+              154.0
+            ]
+          ],
+          "box": [
+            [
+              135.0,
+              140.0
+            ],
+            [
+              188.0,
+              140.0
+            ],
+            [
+              188.0,
+              154.0
+            ],
+            [
+              135.0,
+              154.0
+            ]
+          ],
+          "position": {
+            "x": 135,
+            "y": 140,
+            "width": 53,
+            "height": 14,
+            "center_x": 161.5,
+            "center_y": 147.0,
+            "region": "top-left",
+            "tag": "[y:140, x:135]"
+          }
+        },
+        {
+          "text": "COST",
+          "confidence": 0.55,
+          "bounding_box": [
+            [
+              256.0,
+              144.0
+            ],
+            [
+              295.0,
+              144.0
+            ],
+            [
+              295.0,
+              162.0
+            ],
+            [
+              256.0,
+              162.0
+            ]
+          ],
+          "box": [
+            [
+              256.0,
+              144.0
+            ],
+            [
+              295.0,
+              144.0
+            ],
+            [
+              295.0,
+              162.0
+            ],
+            [
+              256.0,
+              162.0
+            ]
+          ],
+          "position": {
+            "x": 256,
+            "y": 144,
+            "width": 39,
+            "height": 18,
+            "center_x": 275.5,
+            "center_y": 153.0,
+            "region": "top-center",
+            "tag": "[y:144, x:256]"
+          }
+        },
+        {
+          "text": "ITEM DESCRIPTION",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              377.0,
+              141.0
+            ],
+            [
+              481.0,
+              141.0
+            ],
+            [
+              481.0,
+              155.0
+            ],
+            [
+              377.0,
+              155.0
+            ]
+          ],
+          "box": [
+            [
+              377.0,
+              141.0
+            ],
+            [
+              481.0,
+              141.0
+            ],
+            [
+              481.0,
+              155.0
+            ],
+            [
+              377.0,
+              155.0
+            ]
+          ],
+          "position": {
+            "x": 377,
+            "y": 141,
+            "width": 104,
+            "height": 14,
+            "center_x": 429.0,
+            "center_y": 148.0,
+            "region": "top-center",
+            "tag": "[y:141, x:377]"
+          }
+        },
+        {
+          "text": "DISPOSAL (1)",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              544.0,
+              148.0
+            ],
+            [
+              620.0,
+              150.0
+            ],
+            [
+              619.0,
+              169.0
+            ],
+            [
+              544.0,
+              166.0
+            ]
+          ],
+          "box": [
+            [
+              544.0,
+              148.0
+            ],
+            [
+              620.0,
+              150.0
+            ],
+            [
+              619.0,
+              169.0
+            ],
+            [
+              544.0,
+              166.0
+            ]
+          ],
+          "position": {
+            "x": 544,
+            "y": 148,
+            "width": 76,
+            "height": 21,
+            "center_x": 582.0,
+            "center_y": 158.5,
+            "region": "top-right",
+            "tag": "[y:148, x:544]"
+          }
+        },
+        {
+          "text": "OF",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              573.0,
+              141.0
+            ],
+            [
+              594.0,
+              141.0
+            ],
+            [
+              594.0,
+              155.0
+            ],
+            [
+              573.0,
+              155.0
+            ]
+          ],
+          "box": [
+            [
+              573.0,
+              141.0
+            ],
+            [
+              594.0,
+              141.0
+            ],
+            [
+              594.0,
+              155.0
+            ],
+            [
+              573.0,
+              155.0
+            ]
+          ],
+          "position": {
+            "x": 573,
+            "y": 141,
+            "width": 21,
+            "height": 14,
+            "center_x": 583.5,
+            "center_y": 148.0,
+            "region": "top-right",
+            "tag": "[y:141, x:573]"
+          }
+        },
+        {
+          "text": "CODE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              628.0,
+              140.0
+            ],
+            [
+              666.0,
+              140.0
+            ],
+            [
+              666.0,
+              155.0
+            ],
+            [
+              628.0,
+              155.0
+            ]
+          ],
+          "box": [
+            [
+              628.0,
+              140.0
+            ],
+            [
+              666.0,
+              140.0
+            ],
+            [
+              666.0,
+              155.0
+            ],
+            [
+              628.0,
+              155.0
+            ]
+          ],
+          "position": {
+            "x": 628,
+            "y": 140,
+            "width": 38,
+            "height": 15,
+            "center_x": 647.0,
+            "center_y": 147.5,
+            "region": "top-right",
+            "tag": "[y:140, x:628]"
+          }
+        },
+        {
+          "text": "CODE",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              678.0,
+              140.0
+            ],
+            [
+              714.0,
+              140.0
+            ],
+            [
+              714.0,
+              155.0
+            ],
+            [
+              678.0,
+              155.0
+            ]
+          ],
+          "box": [
+            [
+              678.0,
+              140.0
+            ],
+            [
+              714.0,
+              140.0
+            ],
+            [
+              714.0,
+              155.0
+            ],
+            [
+              678.0,
+              155.0
+            ]
+          ],
+          "position": {
+            "x": 678,
+            "y": 140,
+            "width": 36,
+            "height": 15,
+            "center_x": 696.0,
+            "center_y": 147.5,
+            "region": "top-right",
+            "tag": "[y:140, x:678]"
+          }
+        },
+        {
+          "text": "O DIGITS",
+          "confidence": 0.59,
+          "bounding_box": [
+            [
+              40.0,
+              150.0
+            ],
+            [
+              98.0,
+              150.0
+            ],
+            [
+              98.0,
+              167.0
+            ],
+            [
+              40.0,
+              167.0
+            ]
+          ],
+          "box": [
+            [
+              40.0,
+              150.0
+            ],
+            [
+              98.0,
+              150.0
+            ],
+            [
+              98.0,
+              167.0
+            ],
+            [
+              40.0,
+              167.0
+            ]
+          ],
+          "position": {
+            "x": 40,
+            "y": 150,
+            "width": 58,
+            "height": 17,
+            "center_x": 69.0,
+            "center_y": 158.5,
+            "region": "top-left",
+            "tag": "[y:150, x:40]"
+          }
+        },
+        {
+          "text": "2",
+          "confidence": 0.39,
+          "bounding_box": [
+            [
+              637.0,
+              150.0
+            ],
+            [
+              657.0,
+              150.0
+            ],
+            [
+              657.0,
+              168.0
+            ],
+            [
+              637.0,
+              168.0
+            ]
+          ],
+          "box": [
+            [
+              637.0,
+              150.0
+            ],
+            [
+              657.0,
+              150.0
+            ],
+            [
+              657.0,
+              168.0
+            ],
+            [
+              637.0,
+              168.0
+            ]
+          ],
+          "position": {
+            "x": 637,
+            "y": 150,
+            "width": 20,
+            "height": 18,
+            "center_x": 647.0,
+            "center_y": 159.0,
+            "region": "top-right",
+            "tag": "[y:150, x:637]"
+          }
+        },
+        {
+          "text": "483131",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              121.0,
+              170.0
+            ],
+            [
+              191.0,
+              170.0
+            ],
+            [
+              191.0,
+              197.0
+            ],
+            [
+              121.0,
+              197.0
+            ]
+          ],
+          "box": [
+            [
+              121.0,
+              170.0
+            ],
+            [
+              191.0,
+              170.0
+            ],
+            [
+              191.0,
+              197.0
+            ],
+            [
+              121.0,
+              197.0
+            ]
+          ],
+          "position": {
+            "x": 121,
+            "y": 170,
+            "width": 70,
+            "height": 27,
+            "center_x": 156.0,
+            "center_y": 183.5,
+            "region": "top-left",
+            "tag": "[y:170, x:121]"
+          }
+        },
+        {
+          "text": ",002621.0CAm NAME GEN Insert",
+          "confidence": 0.69,
+          "bounding_box": [
+            [
+              198.0,
+              172.0
+            ],
+            [
+              509.0,
+              170.0
+            ],
+            [
+              510.0,
+              198.0
+            ],
+            [
+              198.0,
+              200.0
+            ]
+          ],
+          "box": [
+            [
+              198.0,
+              172.0
+            ],
+            [
+              509.0,
+              170.0
+            ],
+            [
+              510.0,
+              198.0
+            ],
+            [
+              198.0,
+              200.0
+            ]
+          ],
+          "position": {
+            "x": 198,
+            "y": 170,
+            "width": 312,
+            "height": 30,
+            "center_x": 354.0,
+            "center_y": 185.0,
+            "region": "top-center",
+            "tag": "[y:170, x:198]"
+          }
+        },
+        {
+          "text": "D",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              561.0,
+              169.0
+            ],
+            [
+              586.0,
+              169.0
+            ],
+            [
+              586.0,
+              198.0
+            ],
+            [
+              561.0,
+              198.0
+            ]
+          ],
+          "box": [
+            [
+              561.0,
+              169.0
+            ],
+            [
+              586.0,
+              169.0
+            ],
+            [
+              586.0,
+              198.0
+            ],
+            [
+              561.0,
+              198.0
+            ]
+          ],
+          "position": {
+            "x": 561,
+            "y": 169,
+            "width": 25,
+            "height": 29,
+            "center_x": 573.5,
+            "center_y": 183.5,
+            "region": "top-right",
+            "tag": "[y:169, x:561]"
+          }
+        },
+        {
+          "text": "3",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              628.0,
+              171.0
+            ],
+            [
+              649.0,
+              171.0
+            ],
+            [
+              649.0,
+              196.0
+            ],
+            [
+              628.0,
+              196.0
+            ]
+          ],
+          "box": [
+            [
+              628.0,
+              171.0
+            ],
+            [
+              649.0,
+              171.0
+            ],
+            [
+              649.0,
+              196.0
+            ],
+            [
+              628.0,
+              196.0
+            ]
+          ],
+          "position": {
+            "x": 628,
+            "y": 171,
+            "width": 21,
+            "height": 25,
+            "center_x": 638.5,
+            "center_y": 183.5,
+            "region": "top-right",
+            "tag": "[y:171, x:628]"
+          }
+        },
+        {
+          "text": "D",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              676.0,
+              170.0
+            ],
+            [
+              700.0,
+              170.0
+            ],
+            [
+              700.0,
+              196.0
+            ],
+            [
+              676.0,
+              196.0
+            ]
+          ],
+          "box": [
+            [
+              676.0,
+              170.0
+            ],
+            [
+              700.0,
+              170.0
+            ],
+            [
+              700.0,
+              196.0
+            ],
+            [
+              676.0,
+              196.0
+            ]
+          ],
+          "position": {
+            "x": 676,
+            "y": 170,
+            "width": 24,
+            "height": 26,
+            "center_x": 688.0,
+            "center_y": 183.0,
+            "region": "top-right",
+            "tag": "[y:170, x:676]"
+          }
+        },
+        {
+          "text": "483125",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              120.0,
+              200.0
+            ],
+            [
+              196.0,
+              200.0
+            ],
+            [
+              196.0,
+              228.0
+            ],
+            [
+              120.0,
+              228.0
+            ]
+          ],
+          "box": [
+            [
+              120.0,
+              200.0
+            ],
+            [
+              196.0,
+              200.0
+            ],
+            [
+              196.0,
+              228.0
+            ],
+            [
+              120.0,
+              228.0
+            ]
+          ],
+          "position": {
+            "x": 120,
+            "y": 200,
+            "width": 76,
+            "height": 28,
+            "center_x": 158.0,
+            "center_y": 214.0,
+            "region": "top-left",
+            "tag": "[y:200, x:120]"
+          }
+        },
+        {
+          "text": "5607.OO60O CAm NAMEGEN INSErH",
+          "confidence": 0.62,
+          "bounding_box": [
+            [
+              198.0,
+              203.0
+            ],
+            [
+              523.0,
+              202.0
+            ],
+            [
+              523.0,
+              227.0
+            ],
+            [
+              198.0,
+              228.0
+            ]
+          ],
+          "box": [
+            [
+              198.0,
+              203.0
+            ],
+            [
+              523.0,
+              202.0
+            ],
+            [
+              523.0,
+              227.0
+            ],
+            [
+              198.0,
+              228.0
+            ]
+          ],
+          "position": {
+            "x": 198,
+            "y": 202,
+            "width": 325,
+            "height": 26,
+            "center_x": 360.5,
+            "center_y": 215.0,
+            "region": "top-center",
+            "tag": "[y:202, x:198]"
+          }
+        },
+        {
+          "text": "D",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              558.0,
+              200.0
+            ],
+            [
+              580.0,
+              200.0
+            ],
+            [
+              580.0,
+              226.0
+            ],
+            [
+              558.0,
+              226.0
+            ]
+          ],
+          "box": [
+            [
+              558.0,
+              200.0
+            ],
+            [
+              580.0,
+              200.0
+            ],
+            [
+              580.0,
+              226.0
+            ],
+            [
+              558.0,
+              226.0
+            ]
+          ],
+          "position": {
+            "x": 558,
+            "y": 200,
+            "width": 22,
+            "height": 26,
+            "center_x": 569.0,
+            "center_y": 213.0,
+            "region": "top-right",
+            "tag": "[y:200, x:558]"
+          }
+        },
+        {
+          "text": "3",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              624.0,
+              203.0
+            ],
+            [
+              646.0,
+              203.0
+            ],
+            [
+              646.0,
+              229.0
+            ],
+            [
+              624.0,
+              229.0
+            ]
+          ],
+          "box": [
+            [
+              624.0,
+              203.0
+            ],
+            [
+              646.0,
+              203.0
+            ],
+            [
+              646.0,
+              229.0
+            ],
+            [
+              624.0,
+              229.0
+            ]
+          ],
+          "position": {
+            "x": 624,
+            "y": 203,
+            "width": 22,
+            "height": 26,
+            "center_x": 635.0,
+            "center_y": 216.0,
+            "region": "top-right",
+            "tag": "[y:203, x:624]"
+          }
+        },
+        {
+          "text": "explaktigu: Printed with wrong formpt for Wan",
+          "confidence": 0.82,
+          "bounding_box": [
+            [
+              126.0,
+              284.0
+            ],
+            [
+              686.0,
+              284.0
+            ],
+            [
+              686.0,
+              325.0
+            ],
+            [
+              126.0,
+              325.0
+            ]
+          ],
+          "box": [
+            [
+              126.0,
+              284.0
+            ],
+            [
+              686.0,
+              284.0
+            ],
+            [
+              686.0,
+              325.0
+            ],
+            [
+              126.0,
+              325.0
+            ]
+          ],
+          "position": {
+            "x": 126,
+            "y": 284,
+            "width": 560,
+            "height": 41,
+            "center_x": 406.0,
+            "center_y": 304.5,
+            "region": "middle",
+            "tag": "[y:284, x:126]"
+          }
+        },
+        {
+          "text": "Cdpture info.",
+          "confidence": 0.73,
+          "bounding_box": [
+            [
+              280.0,
+              319.0
+            ],
+            [
+              446.0,
+              324.0
+            ],
+            [
+              445.0,
+              359.0
+            ],
+            [
+              280.0,
+              355.0
+            ]
+          ],
+          "box": [
+            [
+              280.0,
+              319.0
+            ],
+            [
+              446.0,
+              324.0
+            ],
+            [
+              445.0,
+              359.0
+            ],
+            [
+              280.0,
+              355.0
+            ]
+          ],
+          "position": {
+            "x": 280,
+            "y": 319,
+            "width": 166,
+            "height": 40,
+            "center_x": 363.0,
+            "center_y": 339.0,
+            "region": "middle",
+            "tag": "[y:319, x:280]"
+          }
+        },
+        {
+          "text": "TOTAL COST 9.627.10",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              129.0,
+              374.0
+            ],
+            [
+              307.0,
+              378.0
+            ],
+            [
+              306.0,
+              414.0
+            ],
+            [
+              128.0,
+              409.0
+            ]
+          ],
+          "box": [
+            [
+              129.0,
+              374.0
+            ],
+            [
+              307.0,
+              378.0
+            ],
+            [
+              306.0,
+              414.0
+            ],
+            [
+              128.0,
+              409.0
+            ]
+          ],
+          "position": {
+            "x": 128,
+            "y": 374,
+            "width": 179,
+            "height": 40,
+            "center_x": 217.5,
+            "center_y": 394.0,
+            "region": "middle-left",
+            "tag": "[y:374, x:128]"
+          }
+        },
+        {
+          "text": "(1) Method of Dlsposal:",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              27.0,
+              409.0
+            ],
+            [
+              155.0,
+              409.0
+            ],
+            [
+              155.0,
+              426.0
+            ],
+            [
+              27.0,
+              426.0
+            ]
+          ],
+          "box": [
+            [
+              27.0,
+              409.0
+            ],
+            [
+              155.0,
+              409.0
+            ],
+            [
+              155.0,
+              426.0
+            ],
+            [
+              27.0,
+              426.0
+            ]
+          ],
+          "position": {
+            "x": 27,
+            "y": 409,
+            "width": 128,
+            "height": 17,
+            "center_x": 91.0,
+            "center_y": 417.5,
+            "region": "middle-left",
+            "tag": "[y:409, x:27]"
+          }
+        },
+        {
+          "text": "(2) Reason Codes:",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              277.0,
+              412.0
+            ],
+            [
+              380.0,
+              412.0
+            ],
+            [
+              380.0,
+              426.0
+            ],
+            [
+              277.0,
+              426.0
+            ]
+          ],
+          "box": [
+            [
+              277.0,
+              412.0
+            ],
+            [
+              380.0,
+              412.0
+            ],
+            [
+              380.0,
+              426.0
+            ],
+            [
+              277.0,
+              426.0
+            ]
+          ],
+          "position": {
+            "x": 277,
+            "y": 412,
+            "width": 103,
+            "height": 14,
+            "center_x": 328.5,
+            "center_y": 419.0,
+            "region": "middle",
+            "tag": "[y:412, x:277]"
+          }
+        },
+        {
+          "text": "(3)Status Codes after Processing:",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              520.0,
+              410.0
+            ],
+            [
+              708.0,
+              411.0
+            ],
+            [
+              708.0,
+              428.0
+            ],
+            [
+              520.0,
+              427.0
+            ]
+          ],
+          "box": [
+            [
+              520.0,
+              410.0
+            ],
+            [
+              708.0,
+              411.0
+            ],
+            [
+              708.0,
+              428.0
+            ],
+            [
+              520.0,
+              427.0
+            ]
+          ],
+          "position": {
+            "x": 520,
+            "y": 410,
+            "width": 188,
+            "height": 18,
+            "center_x": 614.0,
+            "center_y": 419.0,
+            "region": "middle-right",
+            "tag": "[y:410, x:520]"
+          }
+        },
+        {
+          "text": "L - Liquidate",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              48.0,
+              424.0
+            ],
+            [
+              119.0,
+              427.0
+            ],
+            [
+              118.0,
+              445.0
+            ],
+            [
+              48.0,
+              442.0
+            ]
+          ],
+          "box": [
+            [
+              48.0,
+              424.0
+            ],
+            [
+              119.0,
+              427.0
+            ],
+            [
+              118.0,
+              445.0
+            ],
+            [
+              48.0,
+              442.0
+            ]
+          ],
+          "position": {
+            "x": 48,
+            "y": 424,
+            "width": 71,
+            "height": 21,
+            "center_x": 83.5,
+            "center_y": 434.5,
+            "region": "middle-left",
+            "tag": "[y:424, x:48]"
+          }
+        },
+        {
+          "text": "1 - Graphics Revision",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              299.0,
+              425.0
+            ],
+            [
+              408.0,
+              426.0
+            ],
+            [
+              408.0,
+              444.0
+            ],
+            [
+              298.0,
+              442.0
+            ]
+          ],
+          "box": [
+            [
+              299.0,
+              425.0
+            ],
+            [
+              408.0,
+              426.0
+            ],
+            [
+              408.0,
+              444.0
+            ],
+            [
+              298.0,
+              442.0
+            ]
+          ],
+          "position": {
+            "x": 298,
+            "y": 425,
+            "width": 110,
+            "height": 19,
+            "center_x": 353.0,
+            "center_y": 434.5,
+            "region": "middle",
+            "tag": "[y:425, x:298]"
+          }
+        },
+        {
+          "text": "A - Active",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              544.0,
+              427.0
+            ],
+            [
+              601.0,
+              427.0
+            ],
+            [
+              601.0,
+              445.0
+            ],
+            [
+              544.0,
+              445.0
+            ]
+          ],
+          "box": [
+            [
+              544.0,
+              427.0
+            ],
+            [
+              601.0,
+              427.0
+            ],
+            [
+              601.0,
+              445.0
+            ],
+            [
+              544.0,
+              445.0
+            ]
+          ],
+          "position": {
+            "x": 544,
+            "y": 427,
+            "width": 57,
+            "height": 18,
+            "center_x": 572.5,
+            "center_y": 436.0,
+            "region": "middle-right",
+            "tag": "[y:427, x:544]"
+          }
+        },
+        {
+          "text": "D- Destroy (see Instructions",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              48.0,
+              440.0
+            ],
+            [
+              193.0,
+              443.0
+            ],
+            [
+              193.0,
+              460.0
+            ],
+            [
+              48.0,
+              458.0
+            ]
+          ],
+          "box": [
+            [
+              48.0,
+              440.0
+            ],
+            [
+              193.0,
+              443.0
+            ],
+            [
+              193.0,
+              460.0
+            ],
+            [
+              48.0,
+              458.0
+            ]
+          ],
+          "position": {
+            "x": 48,
+            "y": 440,
+            "width": 145,
+            "height": 20,
+            "center_x": 120.5,
+            "center_y": 450.0,
+            "region": "middle-left",
+            "tag": "[y:440, x:48]"
+          }
+        },
+        {
+          "text": "2- Cancelled Promations",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              298.0,
+              441.0
+            ],
+            [
+              426.0,
+              443.0
+            ],
+            [
+              426.0,
+              460.0
+            ],
+            [
+              297.0,
+              459.0
+            ]
+          ],
+          "box": [
+            [
+              298.0,
+              441.0
+            ],
+            [
+              426.0,
+              443.0
+            ],
+            [
+              426.0,
+              460.0
+            ],
+            [
+              297.0,
+              459.0
+            ]
+          ],
+          "position": {
+            "x": 297,
+            "y": 441,
+            "width": 129,
+            "height": 19,
+            "center_x": 361.5,
+            "center_y": 450.5,
+            "region": "middle",
+            "tag": "[y:441, x:297]"
+          }
+        },
+        {
+          "text": "D- Discontinued",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              543.0,
+              441.0
+            ],
+            [
+              634.0,
+              444.0
+            ],
+            [
+              634.0,
+              461.0
+            ],
+            [
+              543.0,
+              459.0
+            ]
+          ],
+          "box": [
+            [
+              543.0,
+              441.0
+            ],
+            [
+              634.0,
+              444.0
+            ],
+            [
+              634.0,
+              461.0
+            ],
+            [
+              543.0,
+              459.0
+            ]
+          ],
+          "position": {
+            "x": 543,
+            "y": 441,
+            "width": 91,
+            "height": 20,
+            "center_x": 588.5,
+            "center_y": 451.0,
+            "region": "middle-right",
+            "tag": "[y:441, x:543]"
+          }
+        },
+        {
+          "text": "n ack of form",
+          "confidence": 0.37,
+          "bounding_box": [
+            [
+              69.0,
+              454.0
+            ],
+            [
+              154.0,
+              454.0
+            ],
+            [
+              154.0,
+              471.0
+            ],
+            [
+              69.0,
+              471.0
+            ]
+          ],
+          "box": [
+            [
+              69.0,
+              454.0
+            ],
+            [
+              154.0,
+              454.0
+            ],
+            [
+              154.0,
+              471.0
+            ],
+            [
+              69.0,
+              471.0
+            ]
+          ],
+          "position": {
+            "x": 69,
+            "y": 454,
+            "width": 85,
+            "height": 17,
+            "center_x": 111.5,
+            "center_y": 462.5,
+            "region": "middle-left",
+            "tag": "[y:454, x:69]"
+          }
+        },
+        {
+          "text": "3 - Obsolete Materials",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              299.0,
+              460.0
+            ],
+            [
+              408.0,
+              460.0
+            ],
+            [
+              408.0,
+              474.0
+            ],
+            [
+              299.0,
+              474.0
+            ]
+          ],
+          "box": [
+            [
+              299.0,
+              460.0
+            ],
+            [
+              408.0,
+              460.0
+            ],
+            [
+              408.0,
+              474.0
+            ],
+            [
+              299.0,
+              474.0
+            ]
+          ],
+          "position": {
+            "x": 299,
+            "y": 460,
+            "width": 109,
+            "height": 14,
+            "center_x": 353.5,
+            "center_y": 467.0,
+            "region": "middle",
+            "tag": "[y:460, x:299]"
+          }
+        },
+        {
+          "text": "H - Hoid",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              545.0,
+              460.0
+            ],
+            [
+              595.0,
+              460.0
+            ],
+            [
+              595.0,
+              476.0
+            ],
+            [
+              545.0,
+              476.0
+            ]
+          ],
+          "box": [
+            [
+              545.0,
+              460.0
+            ],
+            [
+              595.0,
+              460.0
+            ],
+            [
+              595.0,
+              476.0
+            ],
+            [
+              545.0,
+              476.0
+            ]
+          ],
+          "position": {
+            "x": 545,
+            "y": 460,
+            "width": 50,
+            "height": 16,
+            "center_x": 570.0,
+            "center_y": 468.0,
+            "region": "middle-right",
+            "tag": "[y:460, x:545]"
+          }
+        },
+        {
+          "text": "4 - Overpurchased/Unusable",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              299.0,
+              476.0
+            ],
+            [
+              442.0,
+              476.0
+            ],
+            [
+              442.0,
+              490.0
+            ],
+            [
+              299.0,
+              490.0
+            ]
+          ],
+          "box": [
+            [
+              299.0,
+              476.0
+            ],
+            [
+              442.0,
+              476.0
+            ],
+            [
+              442.0,
+              490.0
+            ],
+            [
+              299.0,
+              490.0
+            ]
+          ],
+          "position": {
+            "x": 299,
+            "y": 476,
+            "width": 143,
+            "height": 14,
+            "center_x": 370.5,
+            "center_y": 483.0,
+            "region": "middle",
+            "tag": "[y:476, x:299]"
+          }
+        },
+        {
+          "text": "L - Lquidate",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              544.0,
+              475.0
+            ],
+            [
+              616.0,
+              475.0
+            ],
+            [
+              616.0,
+              492.0
+            ],
+            [
+              544.0,
+              492.0
+            ]
+          ],
+          "box": [
+            [
+              544.0,
+              475.0
+            ],
+            [
+              616.0,
+              475.0
+            ],
+            [
+              616.0,
+              492.0
+            ],
+            [
+              544.0,
+              492.0
+            ]
+          ],
+          "position": {
+            "x": 544,
+            "y": 475,
+            "width": 72,
+            "height": 17,
+            "center_x": 580.0,
+            "center_y": 483.5,
+            "region": "middle-right",
+            "tag": "[y:475, x:544]"
+          }
+        },
+        {
+          "text": "5- Other (explalin)",
+          "confidence": 0.86,
+          "bounding_box": [
+            [
+              297.0,
+              489.0
+            ],
+            [
+              393.0,
+              491.0
+            ],
+            [
+              392.0,
+              508.0
+            ],
+            [
+              296.0,
+              506.0
+            ]
+          ],
+          "box": [
+            [
+              297.0,
+              489.0
+            ],
+            [
+              393.0,
+              491.0
+            ],
+            [
+              392.0,
+              508.0
+            ],
+            [
+              296.0,
+              506.0
+            ]
+          ],
+          "position": {
+            "x": 296,
+            "y": 489,
+            "width": 97,
+            "height": 19,
+            "center_x": 344.5,
+            "center_y": 498.5,
+            "region": "middle",
+            "tag": "[y:489, x:296]"
+          }
+        },
+        {
+          "text": "Remove from Inventory on or after",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              13.0,
+              538.0
+            ],
+            [
+              198.0,
+              538.0
+            ],
+            [
+              198.0,
+              555.0
+            ],
+            [
+              13.0,
+              555.0
+            ]
+          ],
+          "box": [
+            [
+              13.0,
+              538.0
+            ],
+            [
+              198.0,
+              538.0
+            ],
+            [
+              198.0,
+              555.0
+            ],
+            [
+              13.0,
+              555.0
+            ]
+          ],
+          "position": {
+            "x": 13,
+            "y": 538,
+            "width": 185,
+            "height": 17,
+            "center_x": 105.5,
+            "center_y": 546.5,
+            "region": "middle-left",
+            "tag": "[y:538, x:13]"
+          }
+        },
+        {
+          "text": "194",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              277.0,
+              529.0
+            ],
+            [
+              313.0,
+              529.0
+            ],
+            [
+              313.0,
+              553.0
+            ],
+            [
+              277.0,
+              553.0
+            ]
+          ],
+          "box": [
+            [
+              277.0,
+              529.0
+            ],
+            [
+              313.0,
+              529.0
+            ],
+            [
+              313.0,
+              553.0
+            ],
+            [
+              277.0,
+              553.0
+            ]
+          ],
+          "position": {
+            "x": 277,
+            "y": 529,
+            "width": 36,
+            "height": 24,
+            "center_x": 295.0,
+            "center_y": 541.0,
+            "region": "middle",
+            "tag": "[y:529, x:277]"
+          }
+        },
+        {
+          "text": "AR#",
+          "confidence": 0.79,
+          "bounding_box": [
+            [
+              542.0,
+              538.0
+            ],
+            [
+              583.0,
+              538.0
+            ],
+            [
+              583.0,
+              557.0
+            ],
+            [
+              542.0,
+              557.0
+            ]
+          ],
+          "box": [
+            [
+              542.0,
+              538.0
+            ],
+            [
+              583.0,
+              538.0
+            ],
+            [
+              583.0,
+              557.0
+            ],
+            [
+              542.0,
+              557.0
+            ]
+          ],
+          "position": {
+            "x": 542,
+            "y": 538,
+            "width": 41,
+            "height": 19,
+            "center_x": 562.5,
+            "center_y": 547.5,
+            "region": "middle-right",
+            "tag": "[y:538, x:542]"
+          }
+        },
+        {
+          "text": "Dato 12/22/9y",
+          "confidence": 0.74,
+          "bounding_box": [
+            [
+              535.0,
+              556.0
+            ],
+            [
+              661.0,
+              551.0
+            ],
+            [
+              662.0,
+              586.0
+            ],
+            [
+              536.0,
+              591.0
+            ]
+          ],
+          "box": [
+            [
+              535.0,
+              556.0
+            ],
+            [
+              661.0,
+              551.0
+            ],
+            [
+              662.0,
+              586.0
+            ],
+            [
+              536.0,
+              591.0
+            ]
+          ],
+          "position": {
+            "x": 535,
+            "y": 551,
+            "width": 127,
+            "height": 40,
+            "center_x": 598.5,
+            "center_y": 571.0,
+            "region": "middle-right",
+            "tag": "[y:551, x:535]"
+          }
+        },
+        {
+          "text": "Financial Services Reviewer",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              13.0,
+              569.0
+            ],
+            [
+              165.0,
+              569.0
+            ],
+            [
+              165.0,
+              583.0
+            ],
+            [
+              13.0,
+              583.0
+            ]
+          ],
+          "box": [
+            [
+              13.0,
+              569.0
+            ],
+            [
+              165.0,
+              569.0
+            ],
+            [
+              165.0,
+              583.0
+            ],
+            [
+              13.0,
+              583.0
+            ]
+          ],
+          "position": {
+            "x": 13,
+            "y": 569,
+            "width": 152,
+            "height": 14,
+            "center_x": 89.0,
+            "center_y": 576.0,
+            "region": "middle-left",
+            "tag": "[y:569, x:13]"
+          }
+        },
+        {
+          "text": "Approval: Department Director/Brand Manager",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              12.0,
+              597.0
+            ],
+            [
+              260.0,
+              598.0
+            ],
+            [
+              260.0,
+              615.0
+            ],
+            [
+              12.0,
+              614.0
+            ]
+          ],
+          "box": [
+            [
+              12.0,
+              597.0
+            ],
+            [
+              260.0,
+              598.0
+            ],
+            [
+              260.0,
+              615.0
+            ],
+            [
+              12.0,
+              614.0
+            ]
+          ],
+          "position": {
+            "x": 12,
+            "y": 597,
+            "width": 248,
+            "height": 18,
+            "center_x": 136.0,
+            "center_y": 606.0,
+            "region": "middle-left",
+            "tag": "[y:597, x:12]"
+          }
+        },
+        {
+          "text": "Date Dh21e",
+          "confidence": 0.72,
+          "bounding_box": [
+            [
+              538.0,
+              591.0
+            ],
+            [
+              644.0,
+              587.0
+            ],
+            [
+              645.0,
+              615.0
+            ],
+            [
+              539.0,
+              618.0
+            ]
+          ],
+          "box": [
+            [
+              538.0,
+              591.0
+            ],
+            [
+              644.0,
+              587.0
+            ],
+            [
+              645.0,
+              615.0
+            ],
+            [
+              539.0,
+              618.0
+            ]
+          ],
+          "position": {
+            "x": 538,
+            "y": 587,
+            "width": 107,
+            "height": 31,
+            "center_x": 591.5,
+            "center_y": 602.5,
+            "region": "middle-right",
+            "tag": "[y:587, x:538]"
+          }
+        },
+        {
+          "text": "RETURN FORM TO ORIGINATOR FOR ASSIGNMENT OF CONTROL NUMBER",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              163.0,
+              634.0
+            ],
+            [
+              559.0,
+              634.0
+            ],
+            [
+              559.0,
+              648.0
+            ],
+            [
+              163.0,
+              648.0
+            ]
+          ],
+          "box": [
+            [
+              163.0,
+              634.0
+            ],
+            [
+              559.0,
+              634.0
+            ],
+            [
+              559.0,
+              648.0
+            ],
+            [
+              163.0,
+              648.0
+            ]
+          ],
+          "position": {
+            "x": 163,
+            "y": 634,
+            "width": 396,
+            "height": 14,
+            "center_x": 361.0,
+            "center_y": 641.0,
+            "region": "middle",
+            "tag": "[y:634, x:163]"
+          }
+        },
+        {
+          "text": "Originator: When top portion Is complete, send to: Group Manager - Sales Materials Management, Plaza 12.",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              12.0,
+              656.0
+            ],
+            [
+              595.0,
+              657.0
+            ],
+            [
+              595.0,
+              674.0
+            ],
+            [
+              12.0,
+              673.0
+            ]
+          ],
+          "box": [
+            [
+              12.0,
+              656.0
+            ],
+            [
+              595.0,
+              657.0
+            ],
+            [
+              595.0,
+              674.0
+            ],
+            [
+              12.0,
+              673.0
+            ]
+          ],
+          "position": {
+            "x": 12,
+            "y": 656,
+            "width": 583,
+            "height": 18,
+            "center_x": 303.5,
+            "center_y": 665.0,
+            "region": "middle",
+            "tag": "[y:656, x:12]"
+          }
+        },
+        {
+          "text": "Approval: Group Manager - Sales Materials Management",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              11.0,
+              686.0
+            ],
+            [
+              320.0,
+              688.0
+            ],
+            [
+              320.0,
+              705.0
+            ],
+            [
+              11.0,
+              704.0
+            ]
+          ],
+          "box": [
+            [
+              11.0,
+              686.0
+            ],
+            [
+              320.0,
+              688.0
+            ],
+            [
+              320.0,
+              705.0
+            ],
+            [
+              11.0,
+              704.0
+            ]
+          ],
+          "position": {
+            "x": 11,
+            "y": 686,
+            "width": 309,
+            "height": 19,
+            "center_x": 165.5,
+            "center_y": 695.5,
+            "region": "middle-left",
+            "tag": "[y:686, x:11]"
+          }
+        },
+        {
+          "text": "Date",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              541.0,
+              688.0
+            ],
+            [
+              576.0,
+              688.0
+            ],
+            [
+              576.0,
+              707.0
+            ],
+            [
+              541.0,
+              707.0
+            ]
+          ],
+          "box": [
+            [
+              541.0,
+              688.0
+            ],
+            [
+              576.0,
+              688.0
+            ],
+            [
+              576.0,
+              707.0
+            ],
+            [
+              541.0,
+              707.0
+            ]
+          ],
+          "position": {
+            "x": 541,
+            "y": 688,
+            "width": 35,
+            "height": 19,
+            "center_x": 558.5,
+            "center_y": 697.5,
+            "region": "middle-right",
+            "tag": "[y:688, x:541]"
+          }
+        },
+        {
+          "text": "If \"Method of Disposa!\" Is \"Liquidate\", send to: Purchasing Department.",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              64.0,
+              706.0
+            ],
+            [
+              448.0,
+              707.0
+            ],
+            [
+              448.0,
+              724.0
+            ],
+            [
+              64.0,
+              723.0
+            ]
+          ],
+          "box": [
+            [
+              64.0,
+              706.0
+            ],
+            [
+              448.0,
+              707.0
+            ],
+            [
+              448.0,
+              724.0
+            ],
+            [
+              64.0,
+              723.0
+            ]
+          ],
+          "position": {
+            "x": 64,
+            "y": 706,
+            "width": 384,
+            "height": 18,
+            "center_x": 256.0,
+            "center_y": 715.0,
+            "region": "bottom-center",
+            "tag": "[y:706, x:64]"
+          }
+        },
+        {
+          "text": "METHOD OF DISPOSAL (check one):",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              11.0,
+              730.0
+            ],
+            [
+              213.0,
+              731.0
+            ],
+            [
+              213.0,
+              748.0
+            ],
+            [
+              11.0,
+              747.0
+            ]
+          ],
+          "box": [
+            [
+              11.0,
+              730.0
+            ],
+            [
+              213.0,
+              731.0
+            ],
+            [
+              213.0,
+              748.0
+            ],
+            [
+              11.0,
+              747.0
+            ]
+          ],
+          "position": {
+            "x": 11,
+            "y": 730,
+            "width": 202,
+            "height": 18,
+            "center_x": 112.0,
+            "center_y": 739.0,
+            "region": "bottom-left",
+            "tag": "[y:730, x:11]"
+          }
+        },
+        {
+          "text": "SHIPPING ADDRESS:",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              307.0,
+              732.0
+            ],
+            [
+              424.0,
+              732.0
+            ],
+            [
+              424.0,
+              746.0
+            ],
+            [
+              307.0,
+              746.0
+            ]
+          ],
+          "box": [
+            [
+              307.0,
+              732.0
+            ],
+            [
+              424.0,
+              732.0
+            ],
+            [
+              424.0,
+              746.0
+            ],
+            [
+              307.0,
+              746.0
+            ]
+          ],
+          "position": {
+            "x": 307,
+            "y": 732,
+            "width": 117,
+            "height": 14,
+            "center_x": 365.5,
+            "center_y": 739.0,
+            "region": "bottom-center",
+            "tag": "[y:732, x:307]"
+          }
+        },
+        {
+          "text": "Destroy",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              31.0,
+              757.0
+            ],
+            [
+              82.0,
+              759.0
+            ],
+            [
+              81.0,
+              781.0
+            ],
+            [
+              30.0,
+              778.0
+            ]
+          ],
+          "box": [
+            [
+              31.0,
+              757.0
+            ],
+            [
+              82.0,
+              759.0
+            ],
+            [
+              81.0,
+              781.0
+            ],
+            [
+              30.0,
+              778.0
+            ]
+          ],
+          "position": {
+            "x": 30,
+            "y": 757,
+            "width": 52,
+            "height": 24,
+            "center_x": 56.0,
+            "center_y": 769.0,
+            "region": "bottom-left",
+            "tag": "[y:757, x:30]"
+          }
+        },
+        {
+          "text": "Donate",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              33.0,
+              790.0
+            ],
+            [
+              77.0,
+              790.0
+            ],
+            [
+              77.0,
+              805.0
+            ],
+            [
+              33.0,
+              805.0
+            ]
+          ],
+          "box": [
+            [
+              33.0,
+              790.0
+            ],
+            [
+              77.0,
+              790.0
+            ],
+            [
+              77.0,
+              805.0
+            ],
+            [
+              33.0,
+              805.0
+            ]
+          ],
+          "position": {
+            "x": 33,
+            "y": 790,
+            "width": 44,
+            "height": 15,
+            "center_x": 55.0,
+            "center_y": 797.5,
+            "region": "bottom-left",
+            "tag": "[y:790, x:33]"
+          }
+        },
+        {
+          "text": "Liquidate",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              33.0,
+              816.0
+            ],
+            [
+              88.0,
+              819.0
+            ],
+            [
+              87.0,
+              838.0
+            ],
+            [
+              32.0,
+              835.0
+            ]
+          ],
+          "box": [
+            [
+              33.0,
+              816.0
+            ],
+            [
+              88.0,
+              819.0
+            ],
+            [
+              87.0,
+              838.0
+            ],
+            [
+              32.0,
+              835.0
+            ]
+          ],
+          "position": {
+            "x": 32,
+            "y": 816,
+            "width": 56,
+            "height": 22,
+            "center_x": 60.0,
+            "center_y": 827.0,
+            "region": "bottom-left",
+            "tag": "[y:816, x:32]"
+          }
+        },
+        {
+          "text": "51422 5065",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              674.0,
+              827.0
+            ],
+            [
+              692.0,
+              829.0
+            ],
+            [
+              685.0,
+              923.0
+            ],
+            [
+              667.0,
+              921.0
+            ]
+          ],
+          "box": [
+            [
+              674.0,
+              827.0
+            ],
+            [
+              692.0,
+              829.0
+            ],
+            [
+              685.0,
+              923.0
+            ],
+            [
+              667.0,
+              921.0
+            ]
+          ],
+          "position": {
+            "x": 667,
+            "y": 827,
+            "width": 25,
+            "height": 96,
+            "center_x": 679.5,
+            "center_y": 875.0,
+            "region": "bottom-right",
+            "tag": "[y:827, x:667]"
+          }
+        },
+        {
+          "text": "Delivery Date:",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              307.0,
+              850.0
+            ],
+            [
+              388.0,
+              850.0
+            ],
+            [
+              388.0,
+              867.0
+            ],
+            [
+              307.0,
+              867.0
+            ]
+          ],
+          "box": [
+            [
+              307.0,
+              850.0
+            ],
+            [
+              388.0,
+              850.0
+            ],
+            [
+              388.0,
+              867.0
+            ],
+            [
+              307.0,
+              867.0
+            ]
+          ],
+          "position": {
+            "x": 307,
+            "y": 850,
+            "width": 81,
+            "height": 17,
+            "center_x": 347.5,
+            "center_y": 858.5,
+            "region": "bottom-center",
+            "tag": "[y:850, x:307]"
+          }
+        },
+        {
+          "text": "Approval: Purchasing",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              12.0,
+              893.0
+            ],
+            [
+              129.0,
+              893.0
+            ],
+            [
+              129.0,
+              910.0
+            ],
+            [
+              12.0,
+              910.0
+            ]
+          ],
+          "box": [
+            [
+              12.0,
+              893.0
+            ],
+            [
+              129.0,
+              893.0
+            ],
+            [
+              129.0,
+              910.0
+            ],
+            [
+              12.0,
+              910.0
+            ]
+          ],
+          "position": {
+            "x": 12,
+            "y": 893,
+            "width": 117,
+            "height": 17,
+            "center_x": 70.5,
+            "center_y": 901.5,
+            "region": "bottom-left",
+            "tag": "[y:893, x:12]"
+          }
+        },
+        {
+          "text": "Date",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              542.0,
+              893.0
+            ],
+            [
+              576.0,
+              893.0
+            ],
+            [
+              576.0,
+              911.0
+            ],
+            [
+              542.0,
+              911.0
+            ]
+          ],
+          "box": [
+            [
+              542.0,
+              893.0
+            ],
+            [
+              576.0,
+              893.0
+            ],
+            [
+              576.0,
+              911.0
+            ],
+            [
+              542.0,
+              911.0
+            ]
+          ],
+          "position": {
+            "x": 542,
+            "y": 893,
+            "width": 34,
+            "height": 18,
+            "center_x": 559.0,
+            "center_y": 902.0,
+            "region": "bottom-right",
+            "tag": "[y:893, x:542]"
+          }
+        },
+        {
+          "text": "SEND TO: GROUP MANAGER - SALES MATERIALS MANAGEMENT, SALES MATERIALS MANAGEMENT, PLAZA 12",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              14.0,
+              939.0
+            ],
+            [
+              635.0,
+              939.0
+            ],
+            [
+              635.0,
+              953.0
+            ],
+            [
+              14.0,
+              953.0
+            ]
+          ],
+          "box": [
+            [
+              14.0,
+              939.0
+            ],
+            [
+              635.0,
+              939.0
+            ],
+            [
+              635.0,
+              953.0
+            ],
+            [
+              14.0,
+              953.0
+            ]
+          ],
+          "position": {
+            "x": 14,
+            "y": 939,
+            "width": 621,
+            "height": 14,
+            "center_x": 324.5,
+            "center_y": 946.0,
+            "region": "bottom-center",
+            "tag": "[y:939, x:14]"
+          }
+        },
+        {
+          "text": "Shipping Order Reference Number",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              309.0,
+              970.0
+            ],
+            [
+              494.0,
+              970.0
+            ],
+            [
+              494.0,
+              984.0
+            ],
+            [
+              309.0,
+              984.0
+            ]
+          ],
+          "box": [
+            [
+              309.0,
+              970.0
+            ],
+            [
+              494.0,
+              970.0
+            ],
+            [
+              494.0,
+              984.0
+            ],
+            [
+              309.0,
+              984.0
+            ]
+          ],
+          "position": {
+            "x": 309,
+            "y": 970,
+            "width": 185,
+            "height": 14,
+            "center_x": 401.5,
+            "center_y": 977.0,
+            "region": "bottom-center",
+            "tag": "[y:970, x:309]"
+          }
+        },
+        {
+          "text": "R197 Fm p681 - Rav 7.00",
+          "confidence": 0.61,
+          "bounding_box": [
+            [
+              12.0,
+              978.0
+            ],
+            [
+              105.0,
+              978.0
+            ],
+            [
+              105.0,
+              988.0
+            ],
+            [
+              12.0,
+              988.0
+            ]
+          ],
+          "box": [
+            [
+              12.0,
+              978.0
+            ],
+            [
+              105.0,
+              978.0
+            ],
+            [
+              105.0,
+              988.0
+            ],
+            [
+              12.0,
+              988.0
+            ]
+          ],
+          "position": {
+            "x": 12,
+            "y": 978,
+            "width": 93,
+            "height": 10,
+            "center_x": 58.5,
+            "center_y": 983.0,
+            "region": "bottom-left",
+            "tag": "[y:978, x:12]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 9.759,
+      "cached_at": "2026-09-28T08:07:53.278788+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "invoice",
+        "document_number": "R197",
+        "document_date": "",
+        "sender": "Inventory on or after",
+        "receiver": "",
+        "origin": "ator",
+        "destination": "",
+        "reference_number": "",
+        "unit_price": 9.62,
+        "total_amount": 9.62,
+        "currency": "USD",
+        "other": {
+          "source_file": "006_train_imagesg_g_o_i_goi66d00_514225065+-5065.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "invoice",
+          "field": "document_type",
+          "value": "invoice",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "R197 Fm p681 - Rav 7.00",
+          "field": "document_number",
+          "value": "R197",
+          "confidence": 82,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "document_date",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "Remove from Inventory on or after",
+          "field": "sender",
+          "value": "Inventory on or after",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "receiver",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "Originator",
+          "field": "origin",
+          "value": "ator",
+          "confidence": 98,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "destination",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "reference_number",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "TOTAL COST 9.627.10",
+          "field": "unit_price",
+          "value": "9.62",
+          "confidence": 91,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "TOTAL COST 9.627.10",
+          "field": "total_amount",
+          "value": "9.62",
+          "confidence": 91,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "006_train_imagesg_g_o_i_goi66d00_514225065+-5065.png",
+          "field": "source_file",
+          "value": "006_train_imagesg_g_o_i_goi66d00_514225065+-5065.png",
+          "confidence": 92,
+          "status": "success",
+          "isOther": true
+        }
+      ],
+      "confidence": {
+        "overall": 82,
+        "ocr": 90,
+        "slm": 88,
+        "mapping": 64,
+        "completeness": 64
+      },
+      "review_items": [
+        {
+          "field": "document_number",
+          "ocrValue": "R197 Fm p681 - Rav 7.00",
+          "slmValue": "R197",
+          "confidence": 82,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "document_date",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "receiver",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "destination",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "reference_number",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": {
+        "accuracy_pct": 64.0,
+        "inference_time_sec": 0.15,
+        "tokens_generated": 0,
+        "token_speed_tps": 0,
+        "core_fields_fill_rate_pct": 64.0,
+        "schema_valid": true,
+        "math_integrity_status": "no_subtotal",
+        "math_integrity_notes": "Sources: 9.62",
+        "field_accuracies": {}
+      },
+      "model": "Qwen/Qwen2.5-1.5B-Instruct (Fallback: CUDA error: out of memory\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n)",
+      "device": "cpu/fallback"
+    },
+    "performance": {
+      "ocr_time_sec": 9.759,
+      "slm_time_sec": 216.415,
+      "total_time_sec": 226.174
+    },
+    "prompt_integrity": {
+      "cache_schema_version": 2,
+      "prompt_hash": "89b7cee5808a08c571dbbca48a3c981fa2715c1c841c08a4e4a26363dffb3be8",
+      "variant": "one-shot",
+      "benchmark_example_ids": [
+        "DOC-009"
+      ],
+      "benchmark_example_confidences": [
+        98.13
+      ],
+      "training_document_ids": [
+        "DOC-001",
+        "DOC-002",
+        "DOC-003",
+        "DOC-004",
+        "DOC-005",
+        "DOC-007",
+        "DOC-009",
+        "DOC-011",
+        "DOC-012",
+        "DOC-013",
+        "DOC-014",
+        "DOC-015",
+        "DOC-016",
+        "DOC-017",
+        "DOC-019",
+        "DOC-020",
+        "DOC-021",
+        "DOC-022",
+        "DOC-023",
+        "DOC-024",
+        "DOC-027",
+        "DOC-028",
+        "DOC-029",
+        "DOC-030",
+        "DOC-031",
+        "DOC-032",
+        "DOC-033",
+        "DOC-035",
+        "DOC-036",
+        "DOC-037",
+        "DOC-038",
+        "DOC-039",
+        "DOC-040",
+        "DOC-041",
+        "DOC-042",
+        "DOC-044",
+        "DOC-045",
+        "DOC-048",
+        "DOC-049",
+        "DOC-050",
+        "DOC-051",
+        "DOC-052",
+        "DOC-053",
+        "DOC-054",
+        "DOC-055",
+        "DOC-056",
+        "DOC-057",
+        "DOC-059",
+        "DOC-060",
+        "DOC-062",
+        "DOC-063",
+        "DOC-065",
+        "DOC-066",
+        "DOC-067",
+        "DOC-068",
+        "DOC-069",
+        "DOC-070",
+        "DOC-071",
+        "DOC-072",
+        "DOC-073",
+        "DOC-075",
+        "DOC-080",
+        "DOC-081",
+        "DOC-082",
+        "DOC-083",
+        "DOC-084",
+        "DOC-085",
+        "DOC-086",
+        "DOC-087",
+        "DOC-088",
+        "DOC-089",
+        "DOC-090",
+        "DOC-092",
+        "DOC-095",
+        "DOC-096",
+        "DOC-097",
+        "DOC-099",
+        "DOC-100",
+        "DOC-101",
+        "DOC-102",
+        "DOC-103",
+        "DOC-104",
+        "DOC-106",
+        "DOC-107",
+        "DOC-108",
+        "DOC-109",
+        "DOC-111",
+        "DOC-113",
+        "DOC-115",
+        "DOC-116",
+        "DOC-117",
+        "DOC-118",
+        "DOC-119",
+        "DOC-121",
+        "DOC-122",
+        "DOC-123",
+        "DOC-124",
+        "DOC-125",
+        "DOC-126",
+        "DOC-127",
+        "DOC-128",
+        "DOC-129",
+        "DOC-130",
+        "DOC-131",
+        "DOC-132",
+        "DOC-133",
+        "DOC-134",
+        "DOC-135",
+        "DOC-136",
+        "DOC-137",
+        "DOC-138",
+        "DOC-139",
+        "DOC-140",
+        "DOC-141",
+        "DOC-142",
+        "DOC-143",
+        "DOC-144",
+        "DOC-146",
+        "DOC-147",
+        "DOC-148",
+        "DOC-150",
+        "DOC-151",
+        "DOC-152",
+        "DOC-154",
+        "DOC-155",
+        "DOC-156",
+        "DOC-157",
+        "DOC-159",
+        "DOC-160",
+        "DOC-161",
+        "DOC-162",
+        "DOC-163",
+        "DOC-164",
+        "DOC-167",
+        "DOC-168",
+        "DOC-169",
+        "DOC-170",
+        "DOC-171",
+        "DOC-172",
+        "DOC-173",
+        "DOC-174",
+        "DOC-175",
+        "DOC-177",
+        "DOC-178",
+        "DOC-179",
+        "DOC-180",
+        "DOC-182",
+        "DOC-184",
+        "DOC-185",
+        "DOC-186",
+        "DOC-187",
+        "DOC-188",
+        "DOC-189",
+        "DOC-190",
+        "DOC-191",
+        "DOC-192",
+        "DOC-194",
+        "DOC-195",
+        "DOC-196",
+        "DOC-198",
+        "DOC-199",
+        "DOC-200",
+        "DOC-201",
+        "DOC-202",
+        "DOC-203",
+        "DOC-205",
+        "DOC-206",
+        "DOC-207",
+        "DOC-208",
+        "DOC-209",
+        "DOC-210",
+        "DOC-211",
+        "DOC-213",
+        "DOC-214",
+        "DOC-215",
+        "DOC-217",
+        "DOC-218",
+        "DOC-220",
+        "DOC-221",
+        "DOC-223",
+        "DOC-224",
+        "DOC-225",
+        "DOC-226",
+        "DOC-228",
+        "DOC-229",
+        "DOC-231",
+        "DOC-233",
+        "DOC-236",
+        "DOC-237",
+        "DOC-241",
+        "DOC-242",
+        "DOC-243",
+        "DOC-244",
+        "DOC-245",
+        "DOC-246",
+        "DOC-247",
+        "DOC-248",
+        "DOC-249",
+        "DOC-252",
+        "DOC-253",
+        "DOC-254",
+        "DOC-255",
+        "DOC-256",
+        "DOC-257",
+        "DOC-258",
+        "DOC-259",
+        "DOC-260",
+        "DOC-261",
+        "DOC-262",
+        "DOC-263",
+        "DOC-264",
+        "DOC-265",
+        "DOC-266",
+        "DOC-268",
+        "DOC-269",
+        "DOC-270",
+        "DOC-271",
+        "DOC-272",
+        "DOC-273",
+        "DOC-274",
+        "DOC-275",
+        "DOC-276",
+        "DOC-277",
+        "DOC-278",
+        "DOC-280",
+        "DOC-281",
+        "DOC-283",
+        "DOC-284",
+        "DOC-285",
+        "DOC-286",
+        "DOC-288",
+        "DOC-289",
+        "DOC-291",
+        "DOC-292",
+        "DOC-293",
+        "DOC-294",
+        "DOC-295",
+        "DOC-297",
+        "DOC-299",
+        "DOC-300"
+      ]
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 9.759,
+    "slm_time_sec": 216.415,
+    "total_time_sec": 226.174
+  },
+  "cached_at": "2026-09-28T08:11:29.755324+00:00"
+}

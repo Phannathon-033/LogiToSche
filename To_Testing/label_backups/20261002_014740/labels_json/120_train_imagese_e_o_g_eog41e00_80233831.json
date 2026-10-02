@@ -1,0 +1,27 @@
+{
+  "id": "DOC-120",
+  "rank": 120,
+  "file_name": "120_train_imagese_e_o_g_eog41e00_80233831.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "032218",
+    "document_date": "1985-12-10",
+    "sender": "LABORATORIES AMERICA, INC.",
+    "receiver": "Dr. Connie Stone",
+    "origin": "Greensboro, NC 27420",
+    "destination": "-",
+    "reference_number": "-",
+    "unit_price": 1200.0,
+    "total_amount": 1200.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 87,
+    "ocr": 95,
+    "slm": 87,
+    "mapping": 98,
+    "completeness": 82
+  },
+  "annotated_at": "2026-09-14 15:17:25"
+}

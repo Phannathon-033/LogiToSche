@@ -1,0 +1,27 @@
+{
+  "id": "DOC-289",
+  "rank": 289,
+  "file_name": "289_train_imagese_e_m_h_emh43a00_89001167.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "3438",
+    "document_date": "1986-09-24",
+    "sender": "MICROBIOLOGICAL",
+    "receiver": "LORILLARD RESEARCH CENTER",
+    "origin": "AL INVOICE",
+    "destination": "4567063",
+    "reference_number": "DATE",
+    "unit_price": 1375.0,
+    "total_amount": 1375.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:38:09"
+}

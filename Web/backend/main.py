@@ -5,6 +5,7 @@ from datetime import datetime
 import gc
 import io
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -14,6 +15,7 @@ import types
 from pathlib import Path
 from urllib.parse import quote
 from typing import Any
+import unicodedata
 
 try:
     import psutil
@@ -111,6 +113,25 @@ def slm_request_headers() -> dict[str, str]:
 
 
 _ocr_engines: dict[str, Any] = {}
+
+THAI_VOWELS_ABOVE = r"[\u0E31\u0E34-\u0E37\u0E47\u0E4D]"
+THAI_TONE_MARKS = r"[\u0E48-\u0E4C]"
+COMMON_OCR_WORD_MAP = {
+    r"รหัสพร[ญ้]?\s*อมเพย[6b]": "รหัสพร้อมเพย์",
+    r"พร[ญ้]\s*อมเพย[6b]": "พร้อมเพย์",
+    r"พร้อม\s*เพย์": "พร้อมเพย์",
+    r"(?i)\bprompt\s*pay\b": "Prompt Pay",
+    r"ใบก[ำํ]\s*กับภาษี": "ใบกำกับภาษี",
+    r"ใบกำกับ\s*ภาษี": "ใบกำกับภาษี",
+    r"ใบเสร็จ\s*รับเงิน": "ใบเสร็จรับเงิน",
+    r"ใบแจ[้ฐ]\s*งหนี[้6]": "ใบแจ้งหนี้",
+    r"ใบส[่ฐ]\s*งสินค[้ฐ]า": "ใบส่งสินค้า",
+    r"ใบส[ั่]\s*งซื้อ": "ใบสั่งซื้อ",
+    r"วันที[6b]\b": "วันที่",
+    r"เลขที[6b]\b": "เลขที่",
+    r"ภาษีมูลค[่ฐ]าเพิ[ม้][6b]": "ภาษีมูลค่าเพิ่ม",
+    r"รวมทั[ง้][6b]\s*สิ[น้][6b]": "รวมทั้งสิ้น",
+}
 
 
 class OcrLine(BaseModel):
@@ -400,7 +421,6 @@ async def ocr_document(file: UploadFile = File(...), lang: str = Form("th")) -> 
         }
     finally:
         tmp_path.unlink(missing_ok=True)
-        release_ocr_engines()
 
 
 @app.post("/api/ocr/release")
@@ -763,6 +783,11 @@ def get_engine(lang: str) -> Any:
                 use_doc_orientation_classify=False,
                 use_doc_unwarping=False,
                 use_textline_orientation=False,
+                text_det_limit_side_len=1536,
+                text_det_limit_type="max",
+                text_det_thresh=0.36,
+                text_det_box_thresh=0.60,
+                text_det_unclip_ratio=1.9,
                 enable_mkldnn=False,
             )
         except TypeError:
@@ -786,6 +811,51 @@ def predict(engine: Any, path: Path) -> Any:
     return engine.ocr(str(path), cls=True)
 
 
+def normalize_thai_ocr_text(text: str) -> str:
+    if not text:
+        return ""
+    text = re.sub(r"(?<=[\u0E00-\u0E7F])\s+(?=[\u0E00-\u0E7F])", "", text).strip()
+    text = unicodedata.normalize("NFC", text).replace("\u0E4D\u0E32", "\u0E33")
+    text = re.sub(f"({THAI_TONE_MARKS})({THAI_VOWELS_ABOVE})", r"\2\1", text)
+    text = re.sub(r"([\u0E48-\u0E4C])\1+", r"\1", text)
+    text = re.sub(r"([\u0E31\u0E34-\u0E37])\1+", r"\1", text)
+    for pattern, replacement in COMMON_OCR_WORD_MAP.items():
+        text = re.sub(pattern, replacement, text)
+    return text.strip()
+
+
+def get_box_bounds(box: list[list[float]]) -> tuple[float, float, float, float]:
+    xs = [float(point[0]) for point in box]
+    ys = [float(point[1]) for point in box]
+    return min(xs), min(ys), max(xs), max(ys)
+
+
+def is_noise_line(item: dict[str, Any]) -> bool:
+    text = item.get("text", "").strip()
+    if not text:
+        return True
+    conf = float(item.get("confidence", 0.0))
+    box = item.get("box") or []
+    if len(box) >= 4:
+        min_x, min_y, max_x, max_y = get_box_bounds(box)
+        if max_x - min_x < 8 and max_y - min_y < 8:
+            return True
+    if not re.sub(r"[^\w\u0E00-\u0E7F0-9]", "", text):
+        return True
+    if len(text) == 1 and conf < 0.50:
+        return True
+    return conf < 0.40
+
+
+def _self_check_ocr_cleanup() -> None:
+    assert normalize_thai_ocr_text("ใบกำกับ ภาษี") == "ใบกำกับภาษี"
+    assert normalize_thai_ocr_text("prompt pay") == "Prompt Pay"
+    assert is_noise_line({"text": ".", "confidence": 0.9, "box": [[0, 0], [2, 0], [2, 2], [0, 2]]})
+
+
+_self_check_ocr_cleanup()
+
+
 def extract_lines(raw_result: Any) -> list[dict[str, Any]]:
     raw_lines: list[dict[str, Any]] = []
 
@@ -799,7 +869,7 @@ def extract_lines(raw_result: Any) -> list[dict[str, Any]]:
             if isinstance(texts, list):
                 for index, text in enumerate(texts):
                     raw_lines.append({
-                        "text": str(text).strip(),
+                        "text": normalize_thai_ocr_text(str(text)),
                         "confidence": float(scores[index]) if index < len(scores) else 0.95,
                         "box": normalize_box(boxes[index]) if index < len(boxes) else None,
                     })
@@ -809,12 +879,13 @@ def extract_lines(raw_result: Any) -> list[dict[str, Any]]:
             return
         if isinstance(node, (list, tuple)):
             if len(node) >= 2 and isinstance(node[1], (list, tuple)) and len(node[1]) >= 2 and isinstance(node[1][0], str):
-                raw_lines.append({"text": str(node[1][0]).strip(), "confidence": float(node[1][1]), "box": normalize_box(node[0])})
+                raw_lines.append({"text": normalize_thai_ocr_text(str(node[1][0])), "confidence": float(node[1][1]), "box": normalize_box(node[0])})
                 return
             for value in node:
                 walk(value)
 
     walk(raw_result)
+    raw_lines = [item for item in raw_lines if not is_noise_line(item)]
     all_xs = [point[0] for line in raw_lines if line.get("box") for point in line["box"]]
     all_ys = [point[1] for line in raw_lines if line.get("box") for point in line["box"]]
     max_w = max(all_xs) if all_xs else 1000.0
@@ -825,7 +896,10 @@ def extract_lines(raw_result: Any) -> list[dict[str, Any]]:
             continue
         position = compute_position_info(item.get("box"), max_w, max_h)
         box = item.get("box") or []
-        lines.append({"text": item["text"], "confidence": round(float(item["confidence"]), 2), "bounding_box": box, "box": box, "position": position})
+        text = normalize_thai_ocr_text(item["text"])
+        if not text:
+            continue
+        lines.append({"text": text, "confidence": round(float(item["confidence"]), 2), "bounding_box": box, "box": box, "position": position})
     lines.sort(key=lambda line: (line["position"]["y"] // 15, line["position"]["x"]))
     return lines
 

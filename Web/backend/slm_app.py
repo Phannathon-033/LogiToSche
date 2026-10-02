@@ -210,6 +210,8 @@ class SlmExtractRequest(BaseModel):
 def fuse_image_ocr(payload: SlmExtractRequest) -> str:
     if not payload.image_base64:
         return payload.ocr_text
+    if len(payload.ocr_text.strip()) >= 20 and not os.environ.get("LOGIAI_SLM_FUSE_IMAGE_OCR", "false").lower() == "true":
+        return payload.ocr_text
     try:
         raw_b64 = payload.image_base64.split(",")[-1] if "," in payload.image_base64 else payload.image_base64
         image_bytes = base64.b64decode(raw_b64)
@@ -477,7 +479,7 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
     eos_ids = list(dict.fromkeys(i for i in eos_ids if i is not None))
     pad_id = tokenizer.pad_token_id or eos_ids[0]
 
-    if torch.cuda.is_available():
+    if os.environ.get("LOGIAI_SLM_EMPTY_CACHE_PER_REQUEST", "false").lower() == "true" and torch.cuda.is_available():
         torch.cuda.empty_cache()
 
     with torch.inference_mode():
@@ -493,7 +495,7 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
     output_ids = generated_ids[0][inputs.input_ids.shape[-1] :]
     decoded = tokenizer.decode(output_ids, skip_special_tokens=True)
     print(f"[SLM] Generated {len(output_ids)} tokens in {gen_time:.2f}s ({len(output_ids)/max(gen_time, 0.01):.1f} tps)!", flush=True)
-    if torch.cuda.is_available():
+    if os.environ.get("LOGIAI_SLM_EMPTY_CACHE_PER_REQUEST", "false").lower() == "true" and torch.cuda.is_available():
         torch.cuda.empty_cache()
     try:
         return parse_json_object(decoded)

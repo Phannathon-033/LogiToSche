@@ -1,0 +1,5144 @@
+{
+  "document_id": "DOC-286",
+  "file_name": "286_test_imagesp_p_z_s_pzs90e00_91514715.png",
+  "cache_schema_version": 2,
+  "prompt_hash": "98922cc6be9230e392f1c59559f7738ff546de81fbbd80909f76fac64d8db566",
+  "variant": "one-shot",
+  "benchmark_example_ids": [
+    "DOC-009"
+  ],
+  "benchmark_example_confidences": [
+    98.13
+  ],
+  "training_document_ids": [
+    "DOC-001",
+    "DOC-002",
+    "DOC-003",
+    "DOC-004",
+    "DOC-005",
+    "DOC-006",
+    "DOC-007",
+    "DOC-008",
+    "DOC-009",
+    "DOC-010",
+    "DOC-011",
+    "DOC-013",
+    "DOC-014",
+    "DOC-015",
+    "DOC-016",
+    "DOC-017",
+    "DOC-018",
+    "DOC-019",
+    "DOC-022",
+    "DOC-024",
+    "DOC-026",
+    "DOC-028",
+    "DOC-029",
+    "DOC-033",
+    "DOC-034",
+    "DOC-035",
+    "DOC-037",
+    "DOC-038",
+    "DOC-039",
+    "DOC-040",
+    "DOC-041",
+    "DOC-044",
+    "DOC-045",
+    "DOC-046",
+    "DOC-047",
+    "DOC-048",
+    "DOC-049",
+    "DOC-050",
+    "DOC-051",
+    "DOC-052",
+    "DOC-054",
+    "DOC-056",
+    "DOC-057",
+    "DOC-058",
+    "DOC-059",
+    "DOC-060",
+    "DOC-061",
+    "DOC-062",
+    "DOC-063",
+    "DOC-064",
+    "DOC-065",
+    "DOC-066",
+    "DOC-067",
+    "DOC-068",
+    "DOC-069",
+    "DOC-070",
+    "DOC-071",
+    "DOC-074",
+    "DOC-075",
+    "DOC-077",
+    "DOC-078",
+    "DOC-079",
+    "DOC-080",
+    "DOC-084",
+    "DOC-085",
+    "DOC-086",
+    "DOC-087",
+    "DOC-088",
+    "DOC-089",
+    "DOC-091",
+    "DOC-092",
+    "DOC-093",
+    "DOC-094",
+    "DOC-097",
+    "DOC-098",
+    "DOC-099",
+    "DOC-100",
+    "DOC-101",
+    "DOC-102",
+    "DOC-103",
+    "DOC-104",
+    "DOC-105",
+    "DOC-106",
+    "DOC-107",
+    "DOC-108",
+    "DOC-109",
+    "DOC-110",
+    "DOC-111",
+    "DOC-112",
+    "DOC-113",
+    "DOC-114",
+    "DOC-116",
+    "DOC-117",
+    "DOC-118",
+    "DOC-119",
+    "DOC-120",
+    "DOC-121",
+    "DOC-122",
+    "DOC-123",
+    "DOC-124",
+    "DOC-126",
+    "DOC-127",
+    "DOC-129",
+    "DOC-130",
+    "DOC-131",
+    "DOC-132",
+    "DOC-133",
+    "DOC-134",
+    "DOC-135",
+    "DOC-136",
+    "DOC-137",
+    "DOC-140",
+    "DOC-141",
+    "DOC-142",
+    "DOC-143",
+    "DOC-144",
+    "DOC-146",
+    "DOC-147",
+    "DOC-148",
+    "DOC-150",
+    "DOC-153",
+    "DOC-154",
+    "DOC-155",
+    "DOC-156",
+    "DOC-157",
+    "DOC-158",
+    "DOC-159",
+    "DOC-161",
+    "DOC-162",
+    "DOC-163",
+    "DOC-164",
+    "DOC-165",
+    "DOC-167",
+    "DOC-169",
+    "DOC-171",
+    "DOC-172",
+    "DOC-173",
+    "DOC-174",
+    "DOC-175",
+    "DOC-176",
+    "DOC-177",
+    "DOC-178",
+    "DOC-179",
+    "DOC-180",
+    "DOC-181",
+    "DOC-182",
+    "DOC-183",
+    "DOC-184",
+    "DOC-185",
+    "DOC-187",
+    "DOC-188",
+    "DOC-190",
+    "DOC-191",
+    "DOC-193",
+    "DOC-194",
+    "DOC-196",
+    "DOC-197",
+    "DOC-198",
+    "DOC-199",
+    "DOC-200",
+    "DOC-201",
+    "DOC-202",
+    "DOC-203",
+    "DOC-204",
+    "DOC-205",
+    "DOC-206",
+    "DOC-208",
+    "DOC-209",
+    "DOC-210",
+    "DOC-211",
+    "DOC-212",
+    "DOC-213",
+    "DOC-214",
+    "DOC-215",
+    "DOC-216",
+    "DOC-217",
+    "DOC-218",
+    "DOC-219",
+    "DOC-220",
+    "DOC-221",
+    "DOC-222",
+    "DOC-223",
+    "DOC-225",
+    "DOC-226",
+    "DOC-227",
+    "DOC-228",
+    "DOC-229",
+    "DOC-230",
+    "DOC-231",
+    "DOC-232",
+    "DOC-233",
+    "DOC-234",
+    "DOC-237",
+    "DOC-238",
+    "DOC-239",
+    "DOC-240",
+    "DOC-242",
+    "DOC-243",
+    "DOC-244",
+    "DOC-245",
+    "DOC-246",
+    "DOC-247",
+    "DOC-248",
+    "DOC-249",
+    "DOC-251",
+    "DOC-253",
+    "DOC-254",
+    "DOC-255",
+    "DOC-256",
+    "DOC-258",
+    "DOC-259",
+    "DOC-260",
+    "DOC-261",
+    "DOC-262",
+    "DOC-264",
+    "DOC-265",
+    "DOC-268",
+    "DOC-269",
+    "DOC-270",
+    "DOC-272",
+    "DOC-273",
+    "DOC-274",
+    "DOC-275",
+    "DOC-276",
+    "DOC-277",
+    "DOC-278",
+    "DOC-280",
+    "DOC-281",
+    "DOC-283",
+    "DOC-284",
+    "DOC-287",
+    "DOC-288",
+    "DOC-291",
+    "DOC-292",
+    "DOC-293",
+    "DOC-295",
+    "DOC-296",
+    "DOC-298",
+    "DOC-299",
+    "DOC-300"
+  ],
+  "json_schema": {
+    "document_type": "invoice",
+    "document_number": "236333",
+    "document_date": "1985-09-20",
+    "sender": "THE LAMAR CORPORATION",
+    "receiver": "COPY",
+    "origin": "BATON ROUGE, LA 70896",
+    "destination": "HEDIA SERVICES, OR",
+    "reference_number": "",
+    "unit_price": 9.99,
+    "total_amount": 9.99,
+    "currency": "USD",
+    "other": {
+      "source_file": "286_test_imagesp_p_z_s_pzs90e00_91514715.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-286",
+      "filename": "286_test_imagesp_p_z_s_pzs90e00_91514715.png",
+      "ocr_text": "THE LAMAR CORPORATION\nINVOICE\nOUTDOORADVERTISING SINCE 1902\nPOST OFFICE BOX G6338, BATON ROUGE, LA 70896\n404-793-2932\nADVERTISING LORIALLARD\nHEDIA SERVICES\nOR 504-426-1000\nDESIGN\nCONTRACT NO.\nLAMAR I.D. NO\n21990000\n614\nINVOICE NO.\n236333\nACCOUNT NO.\nSERVICE DATES\n9101/85\nINVOICE DATE\n9/0118S\nTO\nTBEG:\n1.55400\nGROSS\nCOMMISSION\nNET AMOUNT\nNAPS\nterpby cerify that this\n25901\n1.29499\nyertising sarvices we\nmvoce is trud and\ntorrect and w\nHTRS\neorovried as ds:\nBELVEDERE\n22200\nKEITH 3700\n1ESDD\nTO AND SUBSCRIBED BSFORSME\n491\nimbs\n1983\nNWL\nfo5\nCHADES WL\nCOMPANY\nParish of East Daon Rouge,\nand for the\nAUGUSTA\nSTATE TAX\nCITY TAX\nGROSS\nx\n1.77600\nCOMMISSION\nRILLARD MEDIA SERVICES\n29601\n1.48000\nTN.\nEPPERSON\nPLEASE RETURN\n1.479.99\nFIFTH AVENUE\nTHIS PORTION\nWITH PAYMENT\n-PAY THIS AMOUNT\nEU\nTORK\nFLOOR\nTO:\nThe LAMAR Corporation\nA030342199000023633?\nNY 10103\nBatanouge.\nFคน\npTU:\nRI OICE\nc0147999\n.-\nLC\nThe LAMAR Corporetion\n91514715\n:\nCUSTOMER COPY\nC014/YV\n33\nv\nSEP 20 1985",
+      "ocr_lines": [
+        {
+          "text": "THE LAMAR CORPORATION",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              9.0,
+              279.0
+            ],
+            [
+              275.0,
+              291.0
+            ],
+            [
+              274.0,
+              315.0
+            ],
+            [
+              8.0,
+              303.0
+            ]
+          ],
+          "box": [
+            [
+              9.0,
+              279.0
+            ],
+            [
+              275.0,
+              291.0
+            ],
+            [
+              274.0,
+              315.0
+            ],
+            [
+              8.0,
+              303.0
+            ]
+          ],
+          "position": {
+            "x": 8,
+            "y": 279,
+            "width": 267,
+            "height": 36,
+            "center_x": 141.5,
+            "center_y": 297.0,
+            "region": "middle-left",
+            "tag": "[y:279, x:8]"
+          }
+        },
+        {
+          "text": "INVOICE",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              297.0,
+              294.0
+            ],
+            [
+              456.0,
+              303.0
+            ],
+            [
+              455.0,
+              326.0
+            ],
+            [
+              296.0,
+              317.0
+            ]
+          ],
+          "box": [
+            [
+              297.0,
+              294.0
+            ],
+            [
+              456.0,
+              303.0
+            ],
+            [
+              455.0,
+              326.0
+            ],
+            [
+              296.0,
+              317.0
+            ]
+          ],
+          "position": {
+            "x": 296,
+            "y": 294,
+            "width": 160,
+            "height": 32,
+            "center_x": 376.0,
+            "center_y": 310.0,
+            "region": "middle",
+            "tag": "[y:294, x:296]"
+          }
+        },
+        {
+          "text": "OUTDOORADVERTISING SINCE 1902",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              42.0,
+              301.0
+            ],
+            [
+              231.0,
+              310.0
+            ],
+            [
+              231.0,
+              323.0
+            ],
+            [
+              41.0,
+              314.0
+            ]
+          ],
+          "box": [
+            [
+              42.0,
+              301.0
+            ],
+            [
+              231.0,
+              310.0
+            ],
+            [
+              231.0,
+              323.0
+            ],
+            [
+              41.0,
+              314.0
+            ]
+          ],
+          "position": {
+            "x": 41,
+            "y": 301,
+            "width": 190,
+            "height": 22,
+            "center_x": 136.0,
+            "center_y": 312.0,
+            "region": "middle-left",
+            "tag": "[y:301, x:41]"
+          }
+        },
+        {
+          "text": "POST OFFICE BOX G6338, BATON ROUGE, LA 70896",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              507.0,
+              303.0
+            ],
+            [
+              702.0,
+              313.0
+            ],
+            [
+              701.0,
+              326.0
+            ],
+            [
+              506.0,
+              316.0
+            ]
+          ],
+          "box": [
+            [
+              507.0,
+              303.0
+            ],
+            [
+              702.0,
+              313.0
+            ],
+            [
+              701.0,
+              326.0
+            ],
+            [
+              506.0,
+              316.0
+            ]
+          ],
+          "position": {
+            "x": 506,
+            "y": 303,
+            "width": 196,
+            "height": 23,
+            "center_x": 604.0,
+            "center_y": 314.5,
+            "region": "middle-right",
+            "tag": "[y:303, x:506]"
+          }
+        },
+        {
+          "text": "404-793-2932",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              507.0,
+              314.0
+            ],
+            [
+              616.0,
+              320.0
+            ],
+            [
+              615.0,
+              336.0
+            ],
+            [
+              506.0,
+              330.0
+            ]
+          ],
+          "box": [
+            [
+              507.0,
+              314.0
+            ],
+            [
+              616.0,
+              320.0
+            ],
+            [
+              615.0,
+              336.0
+            ],
+            [
+              506.0,
+              330.0
+            ]
+          ],
+          "position": {
+            "x": 506,
+            "y": 314,
+            "width": 110,
+            "height": 22,
+            "center_x": 561.0,
+            "center_y": 325.0,
+            "region": "middle-right",
+            "tag": "[y:314, x:506]"
+          }
+        },
+        {
+          "text": "ADVERTISING LORIALLARD",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              1.0,
+              318.0
+            ],
+            [
+              135.0,
+              322.0
+            ],
+            [
+              135.0,
+              336.0
+            ],
+            [
+              1.0,
+              333.0
+            ]
+          ],
+          "box": [
+            [
+              1.0,
+              318.0
+            ],
+            [
+              135.0,
+              322.0
+            ],
+            [
+              135.0,
+              336.0
+            ],
+            [
+              1.0,
+              333.0
+            ]
+          ],
+          "position": {
+            "x": 1,
+            "y": 318,
+            "width": 134,
+            "height": 18,
+            "center_x": 68.0,
+            "center_y": 327.0,
+            "region": "middle-left",
+            "tag": "[y:318, x:1]"
+          }
+        },
+        {
+          "text": "HEDIA SERVICES",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              137.0,
+              321.0
+            ],
+            [
+              263.0,
+              328.0
+            ],
+            [
+              262.0,
+              342.0
+            ],
+            [
+              137.0,
+              335.0
+            ]
+          ],
+          "box": [
+            [
+              137.0,
+              321.0
+            ],
+            [
+              263.0,
+              328.0
+            ],
+            [
+              262.0,
+              342.0
+            ],
+            [
+              137.0,
+              335.0
+            ]
+          ],
+          "position": {
+            "x": 137,
+            "y": 321,
+            "width": 126,
+            "height": 21,
+            "center_x": 200.0,
+            "center_y": 331.5,
+            "region": "middle-left",
+            "tag": "[y:321, x:137]"
+          }
+        },
+        {
+          "text": "OR 504-426-1000",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              619.0,
+              323.0
+            ],
+            [
+              684.0,
+              328.0
+            ],
+            [
+              683.0,
+              342.0
+            ],
+            [
+              618.0,
+              337.0
+            ]
+          ],
+          "box": [
+            [
+              619.0,
+              323.0
+            ],
+            [
+              684.0,
+              328.0
+            ],
+            [
+              683.0,
+              342.0
+            ],
+            [
+              618.0,
+              337.0
+            ]
+          ],
+          "position": {
+            "x": 618,
+            "y": 323,
+            "width": 66,
+            "height": 19,
+            "center_x": 651.0,
+            "center_y": 332.5,
+            "region": "middle-right",
+            "tag": "[y:323, x:618]"
+          }
+        },
+        {
+          "text": "DESIGN",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              1.0,
+              332.0
+            ],
+            [
+              30.0,
+              332.0
+            ],
+            [
+              30.0,
+              343.0
+            ],
+            [
+              1.0,
+              343.0
+            ]
+          ],
+          "box": [
+            [
+              1.0,
+              332.0
+            ],
+            [
+              30.0,
+              332.0
+            ],
+            [
+              30.0,
+              343.0
+            ],
+            [
+              1.0,
+              343.0
+            ]
+          ],
+          "position": {
+            "x": 1,
+            "y": 332,
+            "width": 29,
+            "height": 11,
+            "center_x": 15.5,
+            "center_y": 337.5,
+            "region": "middle-left",
+            "tag": "[y:332, x:1]"
+          }
+        },
+        {
+          "text": "CONTRACT NO.",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              1.0,
+              343.0
+            ],
+            [
+              51.0,
+              343.0
+            ],
+            [
+              51.0,
+              354.0
+            ],
+            [
+              1.0,
+              354.0
+            ]
+          ],
+          "box": [
+            [
+              1.0,
+              343.0
+            ],
+            [
+              51.0,
+              343.0
+            ],
+            [
+              51.0,
+              354.0
+            ],
+            [
+              1.0,
+              354.0
+            ]
+          ],
+          "position": {
+            "x": 1,
+            "y": 343,
+            "width": 50,
+            "height": 11,
+            "center_x": 26.0,
+            "center_y": 348.5,
+            "region": "middle-left",
+            "tag": "[y:343, x:1]"
+          }
+        },
+        {
+          "text": "LAMAR I.D. NO",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              365.0,
+              334.0
+            ],
+            [
+              436.0,
+              338.0
+            ],
+            [
+              435.0,
+              351.0
+            ],
+            [
+              365.0,
+              348.0
+            ]
+          ],
+          "box": [
+            [
+              365.0,
+              334.0
+            ],
+            [
+              436.0,
+              338.0
+            ],
+            [
+              435.0,
+              351.0
+            ],
+            [
+              365.0,
+              348.0
+            ]
+          ],
+          "position": {
+            "x": 365,
+            "y": 334,
+            "width": 71,
+            "height": 17,
+            "center_x": 400.5,
+            "center_y": 342.5,
+            "region": "middle",
+            "tag": "[y:334, x:365]"
+          }
+        },
+        {
+          "text": "21990000",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              435.0,
+              341.0
+            ],
+            [
+              519.0,
+              346.0
+            ],
+            [
+              518.0,
+              364.0
+            ],
+            [
+              435.0,
+              360.0
+            ]
+          ],
+          "box": [
+            [
+              435.0,
+              341.0
+            ],
+            [
+              519.0,
+              346.0
+            ],
+            [
+              518.0,
+              364.0
+            ],
+            [
+              435.0,
+              360.0
+            ]
+          ],
+          "position": {
+            "x": 435,
+            "y": 341,
+            "width": 84,
+            "height": 23,
+            "center_x": 477.0,
+            "center_y": 352.5,
+            "region": "middle",
+            "tag": "[y:341, x:435]"
+          }
+        },
+        {
+          "text": "614",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              462.0,
+              335.0
+            ],
+            [
+              493.0,
+              335.0
+            ],
+            [
+              493.0,
+              350.0
+            ],
+            [
+              462.0,
+              350.0
+            ]
+          ],
+          "box": [
+            [
+              462.0,
+              335.0
+            ],
+            [
+              493.0,
+              335.0
+            ],
+            [
+              493.0,
+              350.0
+            ],
+            [
+              462.0,
+              350.0
+            ]
+          ],
+          "position": {
+            "x": 462,
+            "y": 335,
+            "width": 31,
+            "height": 15,
+            "center_x": 477.5,
+            "center_y": 342.5,
+            "region": "middle",
+            "tag": "[y:335, x:462]"
+          }
+        },
+        {
+          "text": "INVOICE NO.",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              566.0,
+              342.0
+            ],
+            [
+              626.0,
+              346.0
+            ],
+            [
+              625.0,
+              360.0
+            ],
+            [
+              565.0,
+              357.0
+            ]
+          ],
+          "box": [
+            [
+              566.0,
+              342.0
+            ],
+            [
+              626.0,
+              346.0
+            ],
+            [
+              625.0,
+              360.0
+            ],
+            [
+              565.0,
+              357.0
+            ]
+          ],
+          "position": {
+            "x": 565,
+            "y": 342,
+            "width": 61,
+            "height": 18,
+            "center_x": 595.5,
+            "center_y": 351.0,
+            "region": "middle-right",
+            "tag": "[y:342, x:565]"
+          }
+        },
+        {
+          "text": "236333",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              638.0,
+              340.0
+            ],
+            [
+              694.0,
+              344.0
+            ],
+            [
+              693.0,
+              359.0
+            ],
+            [
+              637.0,
+              356.0
+            ]
+          ],
+          "box": [
+            [
+              638.0,
+              340.0
+            ],
+            [
+              694.0,
+              344.0
+            ],
+            [
+              693.0,
+              359.0
+            ],
+            [
+              637.0,
+              356.0
+            ]
+          ],
+          "position": {
+            "x": 637,
+            "y": 340,
+            "width": 57,
+            "height": 19,
+            "center_x": 665.5,
+            "center_y": 349.5,
+            "region": "middle-right",
+            "tag": "[y:340, x:637]"
+          }
+        },
+        {
+          "text": "ACCOUNT NO.",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              365.0,
+              347.0
+            ],
+            [
+              435.0,
+              350.0
+            ],
+            [
+              434.0,
+              361.0
+            ],
+            [
+              365.0,
+              358.0
+            ]
+          ],
+          "box": [
+            [
+              365.0,
+              347.0
+            ],
+            [
+              435.0,
+              350.0
+            ],
+            [
+              434.0,
+              361.0
+            ],
+            [
+              365.0,
+              358.0
+            ]
+          ],
+          "position": {
+            "x": 365,
+            "y": 347,
+            "width": 70,
+            "height": 14,
+            "center_x": 400.0,
+            "center_y": 354.0,
+            "region": "middle",
+            "tag": "[y:347, x:365]"
+          }
+        },
+        {
+          "text": "SERVICE DATES",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              365.0,
+              358.0
+            ],
+            [
+              439.0,
+              360.0
+            ],
+            [
+              439.0,
+              371.0
+            ],
+            [
+              365.0,
+              369.0
+            ]
+          ],
+          "box": [
+            [
+              365.0,
+              358.0
+            ],
+            [
+              439.0,
+              360.0
+            ],
+            [
+              439.0,
+              371.0
+            ],
+            [
+              365.0,
+              369.0
+            ]
+          ],
+          "position": {
+            "x": 365,
+            "y": 358,
+            "width": 74,
+            "height": 13,
+            "center_x": 402.0,
+            "center_y": 364.5,
+            "region": "middle",
+            "tag": "[y:358, x:365]"
+          }
+        },
+        {
+          "text": "9101/85",
+          "confidence": 0.62,
+          "bounding_box": [
+            [
+              454.0,
+              356.0
+            ],
+            [
+              518.0,
+              359.0
+            ],
+            [
+              517.0,
+              373.0
+            ],
+            [
+              453.0,
+              370.0
+            ]
+          ],
+          "box": [
+            [
+              454.0,
+              356.0
+            ],
+            [
+              518.0,
+              359.0
+            ],
+            [
+              517.0,
+              373.0
+            ],
+            [
+              453.0,
+              370.0
+            ]
+          ],
+          "position": {
+            "x": 453,
+            "y": 356,
+            "width": 65,
+            "height": 17,
+            "center_x": 485.5,
+            "center_y": 364.5,
+            "region": "middle",
+            "tag": "[y:356, x:453]"
+          }
+        },
+        {
+          "text": "INVOICE DATE",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              565.0,
+              354.0
+            ],
+            [
+              635.0,
+              358.0
+            ],
+            [
+              634.0,
+              372.0
+            ],
+            [
+              564.0,
+              368.0
+            ]
+          ],
+          "box": [
+            [
+              565.0,
+              354.0
+            ],
+            [
+              635.0,
+              358.0
+            ],
+            [
+              634.0,
+              372.0
+            ],
+            [
+              564.0,
+              368.0
+            ]
+          ],
+          "position": {
+            "x": 564,
+            "y": 354,
+            "width": 71,
+            "height": 18,
+            "center_x": 599.5,
+            "center_y": 363.0,
+            "region": "middle-right",
+            "tag": "[y:354, x:564]"
+          }
+        },
+        {
+          "text": "9/0118S",
+          "confidence": 0.65,
+          "bounding_box": [
+            [
+              646.0,
+              353.0
+            ],
+            [
+              710.0,
+              356.0
+            ],
+            [
+              709.0,
+              370.0
+            ],
+            [
+              645.0,
+              367.0
+            ]
+          ],
+          "box": [
+            [
+              646.0,
+              353.0
+            ],
+            [
+              710.0,
+              356.0
+            ],
+            [
+              709.0,
+              370.0
+            ],
+            [
+              645.0,
+              367.0
+            ]
+          ],
+          "position": {
+            "x": 645,
+            "y": 353,
+            "width": 65,
+            "height": 17,
+            "center_x": 677.5,
+            "center_y": 361.5,
+            "region": "middle-right",
+            "tag": "[y:353, x:645]"
+          }
+        },
+        {
+          "text": "TO",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              535.0,
+              365.0
+            ],
+            [
+              553.0,
+              365.0
+            ],
+            [
+              553.0,
+              378.0
+            ],
+            [
+              535.0,
+              378.0
+            ]
+          ],
+          "box": [
+            [
+              535.0,
+              365.0
+            ],
+            [
+              553.0,
+              365.0
+            ],
+            [
+              553.0,
+              378.0
+            ],
+            [
+              535.0,
+              378.0
+            ]
+          ],
+          "position": {
+            "x": 535,
+            "y": 365,
+            "width": 18,
+            "height": 13,
+            "center_x": 544.0,
+            "center_y": 371.5,
+            "region": "middle-right",
+            "tag": "[y:365, x:535]"
+          }
+        },
+        {
+          "text": "TBEG:",
+          "confidence": 0.8,
+          "bounding_box": [
+            [
+              280.0,
+              385.0
+            ],
+            [
+              327.0,
+              385.0
+            ],
+            [
+              327.0,
+              396.0
+            ],
+            [
+              280.0,
+              396.0
+            ]
+          ],
+          "box": [
+            [
+              280.0,
+              385.0
+            ],
+            [
+              327.0,
+              385.0
+            ],
+            [
+              327.0,
+              396.0
+            ],
+            [
+              280.0,
+              396.0
+            ]
+          ],
+          "position": {
+            "x": 280,
+            "y": 385,
+            "width": 47,
+            "height": 11,
+            "center_x": 303.5,
+            "center_y": 390.5,
+            "region": "middle",
+            "tag": "[y:385, x:280]"
+          }
+        },
+        {
+          "text": "1.55400",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              459.0,
+              388.0
+            ],
+            [
+              525.0,
+              391.0
+            ],
+            [
+              524.0,
+              406.0
+            ],
+            [
+              458.0,
+              403.0
+            ]
+          ],
+          "box": [
+            [
+              459.0,
+              388.0
+            ],
+            [
+              525.0,
+              391.0
+            ],
+            [
+              524.0,
+              406.0
+            ],
+            [
+              458.0,
+              403.0
+            ]
+          ],
+          "position": {
+            "x": 458,
+            "y": 388,
+            "width": 67,
+            "height": 18,
+            "center_x": 491.5,
+            "center_y": 397.0,
+            "region": "middle",
+            "tag": "[y:388, x:458]"
+          }
+        },
+        {
+          "text": "GROSS",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              474.0,
+              375.0
+            ],
+            [
+              504.0,
+              377.0
+            ],
+            [
+              503.0,
+              388.0
+            ],
+            [
+              473.0,
+              386.0
+            ]
+          ],
+          "box": [
+            [
+              474.0,
+              375.0
+            ],
+            [
+              504.0,
+              377.0
+            ],
+            [
+              503.0,
+              388.0
+            ],
+            [
+              473.0,
+              386.0
+            ]
+          ],
+          "position": {
+            "x": 473,
+            "y": 375,
+            "width": 31,
+            "height": 13,
+            "center_x": 488.5,
+            "center_y": 381.5,
+            "region": "middle",
+            "tag": "[y:375, x:473]"
+          }
+        },
+        {
+          "text": "COMMISSION",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              557.0,
+              379.0
+            ],
+            [
+              612.0,
+              382.0
+            ],
+            [
+              611.0,
+              393.0
+            ],
+            [
+              557.0,
+              390.0
+            ]
+          ],
+          "box": [
+            [
+              557.0,
+              379.0
+            ],
+            [
+              612.0,
+              382.0
+            ],
+            [
+              611.0,
+              393.0
+            ],
+            [
+              557.0,
+              390.0
+            ]
+          ],
+          "position": {
+            "x": 557,
+            "y": 379,
+            "width": 55,
+            "height": 14,
+            "center_x": 584.5,
+            "center_y": 386.0,
+            "region": "middle-right",
+            "tag": "[y:379, x:557]"
+          }
+        },
+        {
+          "text": "NET AMOUNT",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              653.0,
+              384.0
+            ],
+            [
+              708.0,
+              386.0
+            ],
+            [
+              708.0,
+              397.0
+            ],
+            [
+              653.0,
+              395.0
+            ]
+          ],
+          "box": [
+            [
+              653.0,
+              384.0
+            ],
+            [
+              708.0,
+              386.0
+            ],
+            [
+              708.0,
+              397.0
+            ],
+            [
+              653.0,
+              395.0
+            ]
+          ],
+          "position": {
+            "x": 653,
+            "y": 384,
+            "width": 55,
+            "height": 13,
+            "center_x": 680.5,
+            "center_y": 390.5,
+            "region": "middle-right",
+            "tag": "[y:384, x:653]"
+          }
+        },
+        {
+          "text": "NAPS",
+          "confidence": 0.7,
+          "bounding_box": [
+            [
+              226.0,
+              404.0
+            ],
+            [
+              261.0,
+              404.0
+            ],
+            [
+              261.0,
+              414.0
+            ],
+            [
+              226.0,
+              414.0
+            ]
+          ],
+          "box": [
+            [
+              226.0,
+              404.0
+            ],
+            [
+              261.0,
+              404.0
+            ],
+            [
+              261.0,
+              414.0
+            ],
+            [
+              226.0,
+              414.0
+            ]
+          ],
+          "position": {
+            "x": 226,
+            "y": 404,
+            "width": 35,
+            "height": 10,
+            "center_x": 243.5,
+            "center_y": 409.0,
+            "region": "middle-left",
+            "tag": "[y:404, x:226]"
+          }
+        },
+        {
+          "text": "terpby cerify that this",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              427.0,
+              402.0
+            ],
+            [
+              536.0,
+              410.0
+            ],
+            [
+              536.0,
+              424.0
+            ],
+            [
+              426.0,
+              416.0
+            ]
+          ],
+          "box": [
+            [
+              427.0,
+              402.0
+            ],
+            [
+              536.0,
+              410.0
+            ],
+            [
+              536.0,
+              424.0
+            ],
+            [
+              426.0,
+              416.0
+            ]
+          ],
+          "position": {
+            "x": 426,
+            "y": 402,
+            "width": 110,
+            "height": 22,
+            "center_x": 481.0,
+            "center_y": 413.0,
+            "region": "middle",
+            "tag": "[y:402, x:426]"
+          }
+        },
+        {
+          "text": "25901",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              573.0,
+              393.0
+            ],
+            [
+              621.0,
+              395.0
+            ],
+            [
+              620.0,
+              411.0
+            ],
+            [
+              572.0,
+              408.0
+            ]
+          ],
+          "box": [
+            [
+              573.0,
+              393.0
+            ],
+            [
+              621.0,
+              395.0
+            ],
+            [
+              620.0,
+              411.0
+            ],
+            [
+              572.0,
+              408.0
+            ]
+          ],
+          "position": {
+            "x": 572,
+            "y": 393,
+            "width": 49,
+            "height": 18,
+            "center_x": 596.5,
+            "center_y": 402.0,
+            "region": "middle-right",
+            "tag": "[y:393, x:572]"
+          }
+        },
+        {
+          "text": "1.29499",
+          "confidence": 0.78,
+          "bounding_box": [
+            [
+              650.0,
+              396.0
+            ],
+            [
+              718.0,
+              399.0
+            ],
+            [
+              718.0,
+              417.0
+            ],
+            [
+              649.0,
+              413.0
+            ]
+          ],
+          "box": [
+            [
+              650.0,
+              396.0
+            ],
+            [
+              718.0,
+              399.0
+            ],
+            [
+              718.0,
+              417.0
+            ],
+            [
+              649.0,
+              413.0
+            ]
+          ],
+          "position": {
+            "x": 649,
+            "y": 396,
+            "width": 69,
+            "height": 21,
+            "center_x": 683.5,
+            "center_y": 406.5,
+            "region": "middle-right",
+            "tag": "[y:396, x:649]"
+          }
+        },
+        {
+          "text": "yertising sarvices we",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              436.0,
+              415.0
+            ],
+            [
+              536.0,
+              423.0
+            ],
+            [
+              535.0,
+              437.0
+            ],
+            [
+              435.0,
+              429.0
+            ]
+          ],
+          "box": [
+            [
+              436.0,
+              415.0
+            ],
+            [
+              536.0,
+              423.0
+            ],
+            [
+              535.0,
+              437.0
+            ],
+            [
+              435.0,
+              429.0
+            ]
+          ],
+          "position": {
+            "x": 435,
+            "y": 415,
+            "width": 101,
+            "height": 22,
+            "center_x": 485.5,
+            "center_y": 426.0,
+            "region": "middle",
+            "tag": "[y:415, x:435]"
+          }
+        },
+        {
+          "text": "mvoce is trud and",
+          "confidence": 0.81,
+          "bounding_box": [
+            [
+              533.0,
+              410.0
+            ],
+            [
+              630.0,
+              418.0
+            ],
+            [
+              629.0,
+              432.0
+            ],
+            [
+              532.0,
+              424.0
+            ]
+          ],
+          "box": [
+            [
+              533.0,
+              410.0
+            ],
+            [
+              630.0,
+              418.0
+            ],
+            [
+              629.0,
+              432.0
+            ],
+            [
+              532.0,
+              424.0
+            ]
+          ],
+          "position": {
+            "x": 532,
+            "y": 410,
+            "width": 98,
+            "height": 22,
+            "center_x": 581.0,
+            "center_y": 421.0,
+            "region": "middle-right",
+            "tag": "[y:410, x:532]"
+          }
+        },
+        {
+          "text": "torrect and w",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              627.0,
+              418.0
+            ],
+            [
+              704.0,
+              424.0
+            ],
+            [
+              703.0,
+              437.0
+            ],
+            [
+              626.0,
+              431.0
+            ]
+          ],
+          "box": [
+            [
+              627.0,
+              418.0
+            ],
+            [
+              704.0,
+              424.0
+            ],
+            [
+              703.0,
+              437.0
+            ],
+            [
+              626.0,
+              431.0
+            ]
+          ],
+          "position": {
+            "x": 626,
+            "y": 418,
+            "width": 78,
+            "height": 19,
+            "center_x": 665.0,
+            "center_y": 427.5,
+            "region": "middle-right",
+            "tag": "[y:418, x:626]"
+          }
+        },
+        {
+          "text": "HTRS",
+          "confidence": 0.76,
+          "bounding_box": [
+            [
+              204.0,
+              424.0
+            ],
+            [
+              242.0,
+              427.0
+            ],
+            [
+              242.0,
+              437.0
+            ],
+            [
+              203.0,
+              434.0
+            ]
+          ],
+          "box": [
+            [
+              204.0,
+              424.0
+            ],
+            [
+              242.0,
+              427.0
+            ],
+            [
+              242.0,
+              437.0
+            ],
+            [
+              203.0,
+              434.0
+            ]
+          ],
+          "position": {
+            "x": 203,
+            "y": 424,
+            "width": 39,
+            "height": 13,
+            "center_x": 222.5,
+            "center_y": 430.5,
+            "region": "middle-left",
+            "tag": "[y:424, x:203]"
+          }
+        },
+        {
+          "text": "eorovried as ds:",
+          "confidence": 0.68,
+          "bounding_box": [
+            [
+              532.0,
+              422.0
+            ],
+            [
+              625.0,
+              429.0
+            ],
+            [
+              624.0,
+              443.0
+            ],
+            [
+              531.0,
+              436.0
+            ]
+          ],
+          "box": [
+            [
+              532.0,
+              422.0
+            ],
+            [
+              625.0,
+              429.0
+            ],
+            [
+              624.0,
+              443.0
+            ],
+            [
+              531.0,
+              436.0
+            ]
+          ],
+          "position": {
+            "x": 531,
+            "y": 422,
+            "width": 94,
+            "height": 21,
+            "center_x": 578.0,
+            "center_y": 432.5,
+            "region": "middle-right",
+            "tag": "[y:422, x:531]"
+          }
+        },
+        {
+          "text": "BELVEDERE",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              120.0,
+              485.0
+            ],
+            [
+              205.0,
+              488.0
+            ],
+            [
+              204.0,
+              501.0
+            ],
+            [
+              120.0,
+              498.0
+            ]
+          ],
+          "box": [
+            [
+              120.0,
+              485.0
+            ],
+            [
+              205.0,
+              488.0
+            ],
+            [
+              204.0,
+              501.0
+            ],
+            [
+              120.0,
+              498.0
+            ]
+          ],
+          "position": {
+            "x": 120,
+            "y": 485,
+            "width": 85,
+            "height": 16,
+            "center_x": 162.5,
+            "center_y": 493.0,
+            "region": "middle-left",
+            "tag": "[y:485, x:120]"
+          }
+        },
+        {
+          "text": "22200",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              473.0,
+              483.0
+            ],
+            [
+              522.0,
+              488.0
+            ],
+            [
+              520.0,
+              507.0
+            ],
+            [
+              472.0,
+              501.0
+            ]
+          ],
+          "box": [
+            [
+              473.0,
+              483.0
+            ],
+            [
+              522.0,
+              488.0
+            ],
+            [
+              520.0,
+              507.0
+            ],
+            [
+              472.0,
+              501.0
+            ]
+          ],
+          "position": {
+            "x": 472,
+            "y": 483,
+            "width": 50,
+            "height": 24,
+            "center_x": 497.0,
+            "center_y": 495.0,
+            "region": "middle-right",
+            "tag": "[y:483, x:472]"
+          }
+        },
+        {
+          "text": "KEITH 3700",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              544.0,
+              487.0
+            ],
+            [
+              616.0,
+              493.0
+            ],
+            [
+              615.0,
+              507.0
+            ],
+            [
+              543.0,
+              501.0
+            ]
+          ],
+          "box": [
+            [
+              544.0,
+              487.0
+            ],
+            [
+              616.0,
+              493.0
+            ],
+            [
+              615.0,
+              507.0
+            ],
+            [
+              543.0,
+              501.0
+            ]
+          ],
+          "position": {
+            "x": 543,
+            "y": 487,
+            "width": 73,
+            "height": 20,
+            "center_x": 579.5,
+            "center_y": 497.0,
+            "region": "middle-right",
+            "tag": "[y:487, x:543]"
+          }
+        },
+        {
+          "text": "1ESDD",
+          "confidence": 0.56,
+          "bounding_box": [
+            [
+              661.0,
+              494.0
+            ],
+            [
+              712.0,
+              496.0
+            ],
+            [
+              712.0,
+              511.0
+            ],
+            [
+              660.0,
+              509.0
+            ]
+          ],
+          "box": [
+            [
+              661.0,
+              494.0
+            ],
+            [
+              712.0,
+              496.0
+            ],
+            [
+              712.0,
+              511.0
+            ],
+            [
+              660.0,
+              509.0
+            ]
+          ],
+          "position": {
+            "x": 660,
+            "y": 494,
+            "width": 52,
+            "height": 17,
+            "center_x": 686.0,
+            "center_y": 502.5,
+            "region": "middle-right",
+            "tag": "[y:494, x:660]"
+          }
+        },
+        {
+          "text": "TO AND SUBSCRIBED BSFORSME",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              439.0,
+              499.0
+            ],
+            [
+              613.0,
+              512.0
+            ],
+            [
+              612.0,
+              527.0
+            ],
+            [
+              438.0,
+              513.0
+            ]
+          ],
+          "box": [
+            [
+              439.0,
+              499.0
+            ],
+            [
+              613.0,
+              512.0
+            ],
+            [
+              612.0,
+              527.0
+            ],
+            [
+              438.0,
+              513.0
+            ]
+          ],
+          "position": {
+            "x": 438,
+            "y": 499,
+            "width": 175,
+            "height": 28,
+            "center_x": 525.5,
+            "center_y": 513.0,
+            "region": "middle-right",
+            "tag": "[y:499, x:438]"
+          }
+        },
+        {
+          "text": "491",
+          "confidence": 0.78,
+          "bounding_box": [
+            [
+              223.0,
+              514.0
+            ],
+            [
+              271.0,
+              514.0
+            ],
+            [
+              271.0,
+              553.0
+            ],
+            [
+              223.0,
+              553.0
+            ]
+          ],
+          "box": [
+            [
+              223.0,
+              514.0
+            ],
+            [
+              271.0,
+              514.0
+            ],
+            [
+              271.0,
+              553.0
+            ],
+            [
+              223.0,
+              553.0
+            ]
+          ],
+          "position": {
+            "x": 223,
+            "y": 514,
+            "width": 48,
+            "height": 39,
+            "center_x": 247.0,
+            "center_y": 533.5,
+            "region": "middle-left",
+            "tag": "[y:514, x:223]"
+          }
+        },
+        {
+          "text": "imbs",
+          "confidence": 0.54,
+          "bounding_box": [
+            [
+              469.0,
+              513.0
+            ],
+            [
+              524.0,
+              519.0
+            ],
+            [
+              522.0,
+              533.0
+            ],
+            [
+              468.0,
+              527.0
+            ]
+          ],
+          "box": [
+            [
+              469.0,
+              513.0
+            ],
+            [
+              524.0,
+              519.0
+            ],
+            [
+              522.0,
+              533.0
+            ],
+            [
+              468.0,
+              527.0
+            ]
+          ],
+          "position": {
+            "x": 468,
+            "y": 513,
+            "width": 56,
+            "height": 20,
+            "center_x": 496.0,
+            "center_y": 523.0,
+            "region": "middle-right",
+            "tag": "[y:513, x:468]"
+          }
+        },
+        {
+          "text": "1983",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              546.0,
+              520.0
+            ],
+            [
+              600.0,
+              522.0
+            ],
+            [
+              600.0,
+              541.0
+            ],
+            [
+              545.0,
+              538.0
+            ]
+          ],
+          "box": [
+            [
+              546.0,
+              520.0
+            ],
+            [
+              600.0,
+              522.0
+            ],
+            [
+              600.0,
+              541.0
+            ],
+            [
+              545.0,
+              538.0
+            ]
+          ],
+          "position": {
+            "x": 545,
+            "y": 520,
+            "width": 55,
+            "height": 21,
+            "center_x": 572.5,
+            "center_y": 530.5,
+            "region": "middle-right",
+            "tag": "[y:520, x:545]"
+          }
+        },
+        {
+          "text": "NWL",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              259.0,
+              547.0
+            ],
+            [
+              330.0,
+              547.0
+            ],
+            [
+              330.0,
+              581.0
+            ],
+            [
+              259.0,
+              581.0
+            ]
+          ],
+          "box": [
+            [
+              259.0,
+              547.0
+            ],
+            [
+              330.0,
+              547.0
+            ],
+            [
+              330.0,
+              581.0
+            ],
+            [
+              259.0,
+              581.0
+            ]
+          ],
+          "position": {
+            "x": 259,
+            "y": 547,
+            "width": 71,
+            "height": 34,
+            "center_x": 294.5,
+            "center_y": 564.0,
+            "region": "middle",
+            "tag": "[y:547, x:259]"
+          }
+        },
+        {
+          "text": "fo5",
+          "confidence": 0.31,
+          "bounding_box": [
+            [
+              169.0,
+              558.0
+            ],
+            [
+              219.0,
+              558.0
+            ],
+            [
+              219.0,
+              595.0
+            ],
+            [
+              169.0,
+              595.0
+            ]
+          ],
+          "box": [
+            [
+              169.0,
+              558.0
+            ],
+            [
+              219.0,
+              558.0
+            ],
+            [
+              219.0,
+              595.0
+            ],
+            [
+              169.0,
+              595.0
+            ]
+          ],
+          "position": {
+            "x": 169,
+            "y": 558,
+            "width": 50,
+            "height": 37,
+            "center_x": 194.0,
+            "center_y": 576.5,
+            "region": "middle-left",
+            "tag": "[y:558, x:169]"
+          }
+        },
+        {
+          "text": "CHADES WL",
+          "confidence": 0.75,
+          "bounding_box": [
+            [
+              535.0,
+              571.0
+            ],
+            [
+              612.0,
+              579.0
+            ],
+            [
+              611.0,
+              590.0
+            ],
+            [
+              534.0,
+              582.0
+            ]
+          ],
+          "box": [
+            [
+              535.0,
+              571.0
+            ],
+            [
+              612.0,
+              579.0
+            ],
+            [
+              611.0,
+              590.0
+            ],
+            [
+              534.0,
+              582.0
+            ]
+          ],
+          "position": {
+            "x": 534,
+            "y": 571,
+            "width": 78,
+            "height": 19,
+            "center_x": 573.0,
+            "center_y": 580.5,
+            "region": "middle-right",
+            "tag": "[y:571, x:534]"
+          }
+        },
+        {
+          "text": "COMPANY",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              53.0,
+              594.0
+            ],
+            [
+              109.0,
+              598.0
+            ],
+            [
+              109.0,
+              612.0
+            ],
+            [
+              52.0,
+              609.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              594.0
+            ],
+            [
+              109.0,
+              598.0
+            ],
+            [
+              109.0,
+              612.0
+            ],
+            [
+              52.0,
+              609.0
+            ]
+          ],
+          "position": {
+            "x": 52,
+            "y": 594,
+            "width": 57,
+            "height": 18,
+            "center_x": 80.5,
+            "center_y": 603.0,
+            "region": "middle-left",
+            "tag": "[y:594, x:52]"
+          }
+        },
+        {
+          "text": "Parish of East Daon Rouge,",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              534.0,
+              594.0
+            ],
+            [
+              674.0,
+              607.0
+            ],
+            [
+              673.0,
+              621.0
+            ],
+            [
+              533.0,
+              608.0
+            ]
+          ],
+          "box": [
+            [
+              534.0,
+              594.0
+            ],
+            [
+              674.0,
+              607.0
+            ],
+            [
+              673.0,
+              621.0
+            ],
+            [
+              533.0,
+              608.0
+            ]
+          ],
+          "position": {
+            "x": 533,
+            "y": 594,
+            "width": 141,
+            "height": 27,
+            "center_x": 603.5,
+            "center_y": 607.5,
+            "region": "middle-right",
+            "tag": "[y:594, x:533]"
+          }
+        },
+        {
+          "text": "and for the",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              621.0,
+              589.0
+            ],
+            [
+              676.0,
+              595.0
+            ],
+            [
+              675.0,
+              609.0
+            ],
+            [
+              619.0,
+              603.0
+            ]
+          ],
+          "box": [
+            [
+              621.0,
+              589.0
+            ],
+            [
+              676.0,
+              595.0
+            ],
+            [
+              675.0,
+              609.0
+            ],
+            [
+              619.0,
+              603.0
+            ]
+          ],
+          "position": {
+            "x": 619,
+            "y": 589,
+            "width": 57,
+            "height": 20,
+            "center_x": 647.5,
+            "center_y": 599.0,
+            "region": "middle-right",
+            "tag": "[y:589, x:619]"
+          }
+        },
+        {
+          "text": "AUGUSTA",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              20.0,
+              609.0
+            ],
+            [
+              84.0,
+              612.0
+            ],
+            [
+              83.0,
+              626.0
+            ],
+            [
+              19.0,
+              623.0
+            ]
+          ],
+          "box": [
+            [
+              20.0,
+              609.0
+            ],
+            [
+              84.0,
+              612.0
+            ],
+            [
+              83.0,
+              626.0
+            ],
+            [
+              19.0,
+              623.0
+            ]
+          ],
+          "position": {
+            "x": 19,
+            "y": 609,
+            "width": 65,
+            "height": 17,
+            "center_x": 51.5,
+            "center_y": 617.5,
+            "region": "middle-left",
+            "tag": "[y:609, x:19]"
+          }
+        },
+        {
+          "text": "STATE TAX",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              196.0,
+              602.0
+            ],
+            [
+              241.0,
+              604.0
+            ],
+            [
+              241.0,
+              615.0
+            ],
+            [
+              196.0,
+              613.0
+            ]
+          ],
+          "box": [
+            [
+              196.0,
+              602.0
+            ],
+            [
+              241.0,
+              604.0
+            ],
+            [
+              241.0,
+              615.0
+            ],
+            [
+              196.0,
+              613.0
+            ]
+          ],
+          "position": {
+            "x": 196,
+            "y": 602,
+            "width": 45,
+            "height": 13,
+            "center_x": 218.5,
+            "center_y": 608.5,
+            "region": "middle-left",
+            "tag": "[y:602, x:196]"
+          }
+        },
+        {
+          "text": "CITY TAX",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              367.0,
+              611.0
+            ],
+            [
+              405.0,
+              611.0
+            ],
+            [
+              405.0,
+              622.0
+            ],
+            [
+              367.0,
+              622.0
+            ]
+          ],
+          "box": [
+            [
+              367.0,
+              611.0
+            ],
+            [
+              405.0,
+              611.0
+            ],
+            [
+              405.0,
+              622.0
+            ],
+            [
+              367.0,
+              622.0
+            ]
+          ],
+          "position": {
+            "x": 367,
+            "y": 611,
+            "width": 38,
+            "height": 11,
+            "center_x": 386.0,
+            "center_y": 616.5,
+            "region": "middle",
+            "tag": "[y:611, x:367]"
+          }
+        },
+        {
+          "text": "GROSS",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              462.0,
+              613.0
+            ],
+            [
+              493.0,
+              615.0
+            ],
+            [
+              492.0,
+              626.0
+            ],
+            [
+              461.0,
+              624.0
+            ]
+          ],
+          "box": [
+            [
+              462.0,
+              613.0
+            ],
+            [
+              493.0,
+              615.0
+            ],
+            [
+              492.0,
+              626.0
+            ],
+            [
+              461.0,
+              624.0
+            ]
+          ],
+          "position": {
+            "x": 461,
+            "y": 613,
+            "width": 32,
+            "height": 13,
+            "center_x": 477.0,
+            "center_y": 619.5,
+            "region": "middle",
+            "tag": "[y:613, x:461]"
+          }
+        },
+        {
+          "text": "x",
+          "confidence": 0.39,
+          "bounding_box": [
+            [
+              308.0,
+              620.0
+            ],
+            [
+              320.0,
+              620.0
+            ],
+            [
+              320.0,
+              643.0
+            ],
+            [
+              308.0,
+              643.0
+            ]
+          ],
+          "box": [
+            [
+              308.0,
+              620.0
+            ],
+            [
+              320.0,
+              620.0
+            ],
+            [
+              320.0,
+              643.0
+            ],
+            [
+              308.0,
+              643.0
+            ]
+          ],
+          "position": {
+            "x": 308,
+            "y": 620,
+            "width": 12,
+            "height": 23,
+            "center_x": 314.0,
+            "center_y": 631.5,
+            "region": "middle",
+            "tag": "[y:620, x:308]"
+          }
+        },
+        {
+          "text": "1.77600",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              448.0,
+              624.0
+            ],
+            [
+              515.0,
+              627.0
+            ],
+            [
+              514.0,
+              644.0
+            ],
+            [
+              447.0,
+              641.0
+            ]
+          ],
+          "box": [
+            [
+              448.0,
+              624.0
+            ],
+            [
+              515.0,
+              627.0
+            ],
+            [
+              514.0,
+              644.0
+            ],
+            [
+              447.0,
+              641.0
+            ]
+          ],
+          "position": {
+            "x": 447,
+            "y": 624,
+            "width": 68,
+            "height": 20,
+            "center_x": 481.0,
+            "center_y": 634.0,
+            "region": "middle",
+            "tag": "[y:624, x:447]"
+          }
+        },
+        {
+          "text": "COMMISSION",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              547.0,
+              618.0
+            ],
+            [
+              600.0,
+              620.0
+            ],
+            [
+              600.0,
+              631.0
+            ],
+            [
+              547.0,
+              629.0
+            ]
+          ],
+          "box": [
+            [
+              547.0,
+              618.0
+            ],
+            [
+              600.0,
+              620.0
+            ],
+            [
+              600.0,
+              631.0
+            ],
+            [
+              547.0,
+              629.0
+            ]
+          ],
+          "position": {
+            "x": 547,
+            "y": 618,
+            "width": 53,
+            "height": 13,
+            "center_x": 573.5,
+            "center_y": 624.5,
+            "region": "middle-right",
+            "tag": "[y:618, x:547]"
+          }
+        },
+        {
+          "text": "RILLARD MEDIA SERVICES",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              10.0,
+              641.0
+            ],
+            [
+              205.0,
+              649.0
+            ],
+            [
+              204.0,
+              664.0
+            ],
+            [
+              10.0,
+              655.0
+            ]
+          ],
+          "box": [
+            [
+              10.0,
+              641.0
+            ],
+            [
+              205.0,
+              649.0
+            ],
+            [
+              204.0,
+              664.0
+            ],
+            [
+              10.0,
+              655.0
+            ]
+          ],
+          "position": {
+            "x": 10,
+            "y": 641,
+            "width": 195,
+            "height": 23,
+            "center_x": 107.5,
+            "center_y": 652.5,
+            "region": "bottom-left",
+            "tag": "[y:641, x:10]"
+          }
+        },
+        {
+          "text": "29601",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              562.0,
+              630.0
+            ],
+            [
+              609.0,
+              632.0
+            ],
+            [
+              608.0,
+              647.0
+            ],
+            [
+              561.0,
+              645.0
+            ]
+          ],
+          "box": [
+            [
+              562.0,
+              630.0
+            ],
+            [
+              609.0,
+              632.0
+            ],
+            [
+              608.0,
+              647.0
+            ],
+            [
+              561.0,
+              645.0
+            ]
+          ],
+          "position": {
+            "x": 561,
+            "y": 630,
+            "width": 48,
+            "height": 17,
+            "center_x": 585.0,
+            "center_y": 638.5,
+            "region": "middle-right",
+            "tag": "[y:630, x:561]"
+          }
+        },
+        {
+          "text": "1.48000",
+          "confidence": 0.77,
+          "bounding_box": [
+            [
+              641.0,
+              632.0
+            ],
+            [
+              706.0,
+              634.0
+            ],
+            [
+              705.0,
+              652.0
+            ],
+            [
+              640.0,
+              650.0
+            ]
+          ],
+          "box": [
+            [
+              641.0,
+              632.0
+            ],
+            [
+              706.0,
+              634.0
+            ],
+            [
+              705.0,
+              652.0
+            ],
+            [
+              640.0,
+              650.0
+            ]
+          ],
+          "position": {
+            "x": 640,
+            "y": 632,
+            "width": 66,
+            "height": 20,
+            "center_x": 673.0,
+            "center_y": 642.0,
+            "region": "middle-right",
+            "tag": "[y:632, x:640]"
+          }
+        },
+        {
+          "text": "TN.",
+          "confidence": 0.62,
+          "bounding_box": [
+            [
+              11.0,
+              656.0
+            ],
+            [
+              37.0,
+              656.0
+            ],
+            [
+              37.0,
+              663.0
+            ],
+            [
+              11.0,
+              663.0
+            ]
+          ],
+          "box": [
+            [
+              11.0,
+              656.0
+            ],
+            [
+              37.0,
+              656.0
+            ],
+            [
+              37.0,
+              663.0
+            ],
+            [
+              11.0,
+              663.0
+            ]
+          ],
+          "position": {
+            "x": 11,
+            "y": 656,
+            "width": 26,
+            "height": 7,
+            "center_x": 24.0,
+            "center_y": 659.5,
+            "region": "bottom-left",
+            "tag": "[y:656, x:11]"
+          }
+        },
+        {
+          "text": "EPPERSON",
+          "confidence": 0.52,
+          "bounding_box": [
+            [
+              90.0,
+              656.0
+            ],
+            [
+              170.0,
+              659.0
+            ],
+            [
+              170.0,
+              673.0
+            ],
+            [
+              89.0,
+              669.0
+            ]
+          ],
+          "box": [
+            [
+              90.0,
+              656.0
+            ],
+            [
+              170.0,
+              659.0
+            ],
+            [
+              170.0,
+              673.0
+            ],
+            [
+              89.0,
+              669.0
+            ]
+          ],
+          "position": {
+            "x": 89,
+            "y": 656,
+            "width": 81,
+            "height": 17,
+            "center_x": 129.5,
+            "center_y": 664.5,
+            "region": "bottom-left",
+            "tag": "[y:656, x:89]"
+          }
+        },
+        {
+          "text": "PLEASE RETURN",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              351.0,
+              653.0
+            ],
+            [
+              406.0,
+              656.0
+            ],
+            [
+              405.0,
+              668.0
+            ],
+            [
+              350.0,
+              664.0
+            ]
+          ],
+          "box": [
+            [
+              351.0,
+              653.0
+            ],
+            [
+              406.0,
+              656.0
+            ],
+            [
+              405.0,
+              668.0
+            ],
+            [
+              350.0,
+              664.0
+            ]
+          ],
+          "position": {
+            "x": 350,
+            "y": 653,
+            "width": 56,
+            "height": 15,
+            "center_x": 378.0,
+            "center_y": 660.5,
+            "region": "bottom-center",
+            "tag": "[y:653, x:350]"
+          }
+        },
+        {
+          "text": "1.479.99",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              429.0,
+              656.0
+            ],
+            [
+              505.0,
+              660.0
+            ],
+            [
+              504.0,
+              677.0
+            ],
+            [
+              429.0,
+              673.0
+            ]
+          ],
+          "box": [
+            [
+              429.0,
+              656.0
+            ],
+            [
+              505.0,
+              660.0
+            ],
+            [
+              504.0,
+              677.0
+            ],
+            [
+              429.0,
+              673.0
+            ]
+          ],
+          "position": {
+            "x": 429,
+            "y": 656,
+            "width": 76,
+            "height": 21,
+            "center_x": 467.0,
+            "center_y": 666.5,
+            "region": "bottom-center",
+            "tag": "[y:656, x:429]"
+          }
+        },
+        {
+          "text": "FIFTH AVENUE",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              25.0,
+              664.0
+            ],
+            [
+              134.0,
+              670.0
+            ],
+            [
+              133.0,
+              683.0
+            ],
+            [
+              24.0,
+              677.0
+            ]
+          ],
+          "box": [
+            [
+              25.0,
+              664.0
+            ],
+            [
+              134.0,
+              670.0
+            ],
+            [
+              133.0,
+              683.0
+            ],
+            [
+              24.0,
+              677.0
+            ]
+          ],
+          "position": {
+            "x": 24,
+            "y": 664,
+            "width": 110,
+            "height": 19,
+            "center_x": 79.0,
+            "center_y": 673.5,
+            "region": "bottom-left",
+            "tag": "[y:664, x:24]"
+          }
+        },
+        {
+          "text": "THIS PORTION",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              350.0,
+              663.0
+            ],
+            [
+              401.0,
+              665.0
+            ],
+            [
+              400.0,
+              676.0
+            ],
+            [
+              349.0,
+              673.0
+            ]
+          ],
+          "box": [
+            [
+              350.0,
+              663.0
+            ],
+            [
+              401.0,
+              665.0
+            ],
+            [
+              400.0,
+              676.0
+            ],
+            [
+              349.0,
+              673.0
+            ]
+          ],
+          "position": {
+            "x": 349,
+            "y": 663,
+            "width": 52,
+            "height": 13,
+            "center_x": 375.0,
+            "center_y": 669.5,
+            "region": "bottom-center",
+            "tag": "[y:663, x:349]"
+          }
+        },
+        {
+          "text": "WITH PAYMENT",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              349.0,
+              672.0
+            ],
+            [
+              403.0,
+              675.0
+            ],
+            [
+              402.0,
+              685.0
+            ],
+            [
+              349.0,
+              682.0
+            ]
+          ],
+          "box": [
+            [
+              349.0,
+              672.0
+            ],
+            [
+              403.0,
+              675.0
+            ],
+            [
+              402.0,
+              685.0
+            ],
+            [
+              349.0,
+              682.0
+            ]
+          ],
+          "position": {
+            "x": 349,
+            "y": 672,
+            "width": 54,
+            "height": 13,
+            "center_x": 376.0,
+            "center_y": 678.5,
+            "region": "bottom-center",
+            "tag": "[y:672, x:349]"
+          }
+        },
+        {
+          "text": "-PAY THIS AMOUNT",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              574.0,
+              666.0
+            ],
+            [
+              686.0,
+              672.0
+            ],
+            [
+              685.0,
+              686.0
+            ],
+            [
+              573.0,
+              680.0
+            ]
+          ],
+          "box": [
+            [
+              574.0,
+              666.0
+            ],
+            [
+              686.0,
+              672.0
+            ],
+            [
+              685.0,
+              686.0
+            ],
+            [
+              573.0,
+              680.0
+            ]
+          ],
+          "position": {
+            "x": 573,
+            "y": 666,
+            "width": 113,
+            "height": 20,
+            "center_x": 629.5,
+            "center_y": 676.0,
+            "region": "bottom-right",
+            "tag": "[y:666, x:573]"
+          }
+        },
+        {
+          "text": "EU",
+          "confidence": 0.55,
+          "bounding_box": [
+            [
+              2.0,
+              688.0
+            ],
+            [
+              21.0,
+              688.0
+            ],
+            [
+              21.0,
+              696.0
+            ],
+            [
+              2.0,
+              696.0
+            ]
+          ],
+          "box": [
+            [
+              2.0,
+              688.0
+            ],
+            [
+              21.0,
+              688.0
+            ],
+            [
+              21.0,
+              696.0
+            ],
+            [
+              2.0,
+              696.0
+            ]
+          ],
+          "position": {
+            "x": 2,
+            "y": 688,
+            "width": 19,
+            "height": 8,
+            "center_x": 11.5,
+            "center_y": 692.0,
+            "region": "bottom-left",
+            "tag": "[y:688, x:2]"
+          }
+        },
+        {
+          "text": "TORK",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              25.0,
+              686.0
+            ],
+            [
+              63.0,
+              689.0
+            ],
+            [
+              62.0,
+              701.0
+            ],
+            [
+              24.0,
+              698.0
+            ]
+          ],
+          "box": [
+            [
+              25.0,
+              686.0
+            ],
+            [
+              63.0,
+              689.0
+            ],
+            [
+              62.0,
+              701.0
+            ],
+            [
+              24.0,
+              698.0
+            ]
+          ],
+          "position": {
+            "x": 24,
+            "y": 686,
+            "width": 39,
+            "height": 15,
+            "center_x": 43.5,
+            "center_y": 693.5,
+            "region": "bottom-left",
+            "tag": "[y:686, x:24]"
+          }
+        },
+        {
+          "text": "FLOOR",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              34.0,
+              676.0
+            ],
+            [
+              80.0,
+              679.0
+            ],
+            [
+              79.0,
+              691.0
+            ],
+            [
+              33.0,
+              688.0
+            ]
+          ],
+          "box": [
+            [
+              34.0,
+              676.0
+            ],
+            [
+              80.0,
+              679.0
+            ],
+            [
+              79.0,
+              691.0
+            ],
+            [
+              33.0,
+              688.0
+            ]
+          ],
+          "position": {
+            "x": 33,
+            "y": 676,
+            "width": 47,
+            "height": 15,
+            "center_x": 56.5,
+            "center_y": 683.5,
+            "region": "bottom-left",
+            "tag": "[y:676, x:33]"
+          }
+        },
+        {
+          "text": "TO:",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              350.0,
+              689.0
+            ],
+            [
+              369.0,
+              692.0
+            ],
+            [
+              367.0,
+              704.0
+            ],
+            [
+              348.0,
+              701.0
+            ]
+          ],
+          "box": [
+            [
+              350.0,
+              689.0
+            ],
+            [
+              369.0,
+              692.0
+            ],
+            [
+              367.0,
+              704.0
+            ],
+            [
+              348.0,
+              701.0
+            ]
+          ],
+          "position": {
+            "x": 348,
+            "y": 689,
+            "width": 21,
+            "height": 15,
+            "center_x": 358.5,
+            "center_y": 696.5,
+            "region": "bottom-center",
+            "tag": "[y:689, x:348]"
+          }
+        },
+        {
+          "text": "The LAMAR Corporation",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              371.0,
+              681.0
+            ],
+            [
+              477.0,
+              688.0
+            ],
+            [
+              477.0,
+              702.0
+            ],
+            [
+              371.0,
+              695.0
+            ]
+          ],
+          "box": [
+            [
+              371.0,
+              681.0
+            ],
+            [
+              477.0,
+              688.0
+            ],
+            [
+              477.0,
+              702.0
+            ],
+            [
+              371.0,
+              695.0
+            ]
+          ],
+          "position": {
+            "x": 371,
+            "y": 681,
+            "width": 106,
+            "height": 21,
+            "center_x": 424.0,
+            "center_y": 691.5,
+            "region": "bottom-center",
+            "tag": "[y:681, x:371]"
+          }
+        },
+        {
+          "text": "A030342199000023633?",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              524.0,
+              682.0
+            ],
+            [
+              701.0,
+              690.0
+            ],
+            [
+              700.0,
+              706.0
+            ],
+            [
+              523.0,
+              698.0
+            ]
+          ],
+          "box": [
+            [
+              524.0,
+              682.0
+            ],
+            [
+              701.0,
+              690.0
+            ],
+            [
+              700.0,
+              706.0
+            ],
+            [
+              523.0,
+              698.0
+            ]
+          ],
+          "position": {
+            "x": 523,
+            "y": 682,
+            "width": 178,
+            "height": 24,
+            "center_x": 612.0,
+            "center_y": 694.0,
+            "region": "bottom-right",
+            "tag": "[y:682, x:523]"
+          }
+        },
+        {
+          "text": "NY 10103",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              216.0,
+              690.0
+            ],
+            [
+              292.0,
+              695.0
+            ],
+            [
+              291.0,
+              712.0
+            ],
+            [
+              215.0,
+              707.0
+            ]
+          ],
+          "box": [
+            [
+              216.0,
+              690.0
+            ],
+            [
+              292.0,
+              695.0
+            ],
+            [
+              291.0,
+              712.0
+            ],
+            [
+              215.0,
+              707.0
+            ]
+          ],
+          "position": {
+            "x": 215,
+            "y": 690,
+            "width": 77,
+            "height": 22,
+            "center_x": 253.5,
+            "center_y": 701.0,
+            "region": "bottom-left",
+            "tag": "[y:690, x:215]"
+          }
+        },
+        {
+          "text": "Batanouge.",
+          "confidence": 0.48,
+          "bounding_box": [
+            [
+              371.0,
+              700.0
+            ],
+            [
+              431.0,
+              704.0
+            ],
+            [
+              430.0,
+              715.0
+            ],
+            [
+              371.0,
+              712.0
+            ]
+          ],
+          "box": [
+            [
+              371.0,
+              700.0
+            ],
+            [
+              431.0,
+              704.0
+            ],
+            [
+              430.0,
+              715.0
+            ],
+            [
+              371.0,
+              712.0
+            ]
+          ],
+          "position": {
+            "x": 371,
+            "y": 700,
+            "width": 60,
+            "height": 15,
+            "center_x": 401.0,
+            "center_y": 707.5,
+            "region": "bottom-center",
+            "tag": "[y:700, x:371]"
+          }
+        },
+        {
+          "text": "Fคน",
+          "confidence": 0.3,
+          "bounding_box": [
+            [
+              41.0,
+              717.0
+            ],
+            [
+              90.0,
+              717.0
+            ],
+            [
+              90.0,
+              731.0
+            ],
+            [
+              41.0,
+              731.0
+            ]
+          ],
+          "box": [
+            [
+              41.0,
+              717.0
+            ],
+            [
+              90.0,
+              717.0
+            ],
+            [
+              90.0,
+              731.0
+            ],
+            [
+              41.0,
+              731.0
+            ]
+          ],
+          "position": {
+            "x": 41,
+            "y": 717,
+            "width": 49,
+            "height": 14,
+            "center_x": 65.5,
+            "center_y": 724.0,
+            "region": "bottom-left",
+            "tag": "[y:717, x:41]"
+          }
+        },
+        {
+          "text": "pTU:",
+          "confidence": 0.32,
+          "bounding_box": [
+            [
+              95.0,
+              718.0
+            ],
+            [
+              147.0,
+              720.0
+            ],
+            [
+              146.0,
+              731.0
+            ],
+            [
+              94.0,
+              729.0
+            ]
+          ],
+          "box": [
+            [
+              95.0,
+              718.0
+            ],
+            [
+              147.0,
+              720.0
+            ],
+            [
+              146.0,
+              731.0
+            ],
+            [
+              94.0,
+              729.0
+            ]
+          ],
+          "position": {
+            "x": 94,
+            "y": 718,
+            "width": 53,
+            "height": 13,
+            "center_x": 120.5,
+            "center_y": 724.5,
+            "region": "bottom-left",
+            "tag": "[y:718, x:94]"
+          }
+        },
+        {
+          "text": "RI OICE",
+          "confidence": 0.33,
+          "bounding_box": [
+            [
+              361.0,
+              705.0
+            ],
+            [
+              483.0,
+              712.0
+            ],
+            [
+              482.0,
+              729.0
+            ],
+            [
+              360.0,
+              723.0
+            ]
+          ],
+          "box": [
+            [
+              361.0,
+              705.0
+            ],
+            [
+              483.0,
+              712.0
+            ],
+            [
+              482.0,
+              729.0
+            ],
+            [
+              360.0,
+              723.0
+            ]
+          ],
+          "position": {
+            "x": 360,
+            "y": 705,
+            "width": 123,
+            "height": 24,
+            "center_x": 421.5,
+            "center_y": 717.0,
+            "region": "bottom-center",
+            "tag": "[y:705, x:360]"
+          }
+        },
+        {
+          "text": "c0147999",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              585.0,
+              705.0
+            ],
+            [
+              657.0,
+              709.0
+            ],
+            [
+              657.0,
+              726.0
+            ],
+            [
+              584.0,
+              723.0
+            ]
+          ],
+          "box": [
+            [
+              585.0,
+              705.0
+            ],
+            [
+              657.0,
+              709.0
+            ],
+            [
+              657.0,
+              726.0
+            ],
+            [
+              584.0,
+              723.0
+            ]
+          ],
+          "position": {
+            "x": 584,
+            "y": 705,
+            "width": 73,
+            "height": 21,
+            "center_x": 620.5,
+            "center_y": 715.5,
+            "region": "bottom-right",
+            "tag": "[y:705, x:584]"
+          }
+        },
+        {
+          "text": ".-",
+          "confidence": 0.5,
+          "bounding_box": [
+            [
+              9.0,
+              722.0
+            ],
+            [
+              14.0,
+              722.0
+            ],
+            [
+              14.0,
+              729.0
+            ],
+            [
+              9.0,
+              729.0
+            ]
+          ],
+          "box": [
+            [
+              9.0,
+              722.0
+            ],
+            [
+              14.0,
+              722.0
+            ],
+            [
+              14.0,
+              729.0
+            ],
+            [
+              9.0,
+              729.0
+            ]
+          ],
+          "position": {
+            "x": 9,
+            "y": 722,
+            "width": 5,
+            "height": 7,
+            "center_x": 11.5,
+            "center_y": 725.5,
+            "region": "bottom-left",
+            "tag": "[y:722, x:9]"
+          }
+        },
+        {
+          "text": "LC",
+          "confidence": 0.74,
+          "bounding_box": [
+            [
+              50.0,
+              727.0
+            ],
+            [
+              95.0,
+              727.0
+            ],
+            [
+              95.0,
+              742.0
+            ],
+            [
+              50.0,
+              742.0
+            ]
+          ],
+          "box": [
+            [
+              50.0,
+              727.0
+            ],
+            [
+              95.0,
+              727.0
+            ],
+            [
+              95.0,
+              742.0
+            ],
+            [
+              50.0,
+              742.0
+            ]
+          ],
+          "position": {
+            "x": 50,
+            "y": 727,
+            "width": 45,
+            "height": 15,
+            "center_x": 72.5,
+            "center_y": 734.5,
+            "region": "bottom-left",
+            "tag": "[y:727, x:50]"
+          }
+        },
+        {
+          "text": "The LAMAR Corporetion",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              385.0,
+              733.0
+            ],
+            [
+              517.0,
+              734.0
+            ],
+            [
+              517.0,
+              748.0
+            ],
+            [
+              385.0,
+              747.0
+            ]
+          ],
+          "box": [
+            [
+              385.0,
+              733.0
+            ],
+            [
+              517.0,
+              734.0
+            ],
+            [
+              517.0,
+              748.0
+            ],
+            [
+              385.0,
+              747.0
+            ]
+          ],
+          "position": {
+            "x": 385,
+            "y": 733,
+            "width": 132,
+            "height": 15,
+            "center_x": 451.0,
+            "center_y": 740.5,
+            "region": "bottom-center",
+            "tag": "[y:733, x:385]"
+          }
+        },
+        {
+          "text": "91514715",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              701.0,
+              720.0
+            ],
+            [
+              724.0,
+              720.0
+            ],
+            [
+              724.0,
+              798.0
+            ],
+            [
+              701.0,
+              798.0
+            ]
+          ],
+          "box": [
+            [
+              701.0,
+              720.0
+            ],
+            [
+              724.0,
+              720.0
+            ],
+            [
+              724.0,
+              798.0
+            ],
+            [
+              701.0,
+              798.0
+            ]
+          ],
+          "position": {
+            "x": 701,
+            "y": 720,
+            "width": 23,
+            "height": 78,
+            "center_x": 712.5,
+            "center_y": 759.0,
+            "region": "bottom-right",
+            "tag": "[y:720, x:701]"
+          }
+        },
+        {
+          "text": ":",
+          "confidence": 0.22,
+          "bounding_box": [
+            [
+              278.0,
+              741.0
+            ],
+            [
+              286.0,
+              741.0
+            ],
+            [
+              286.0,
+              750.0
+            ],
+            [
+              278.0,
+              750.0
+            ]
+          ],
+          "box": [
+            [
+              278.0,
+              741.0
+            ],
+            [
+              286.0,
+              741.0
+            ],
+            [
+              286.0,
+              750.0
+            ],
+            [
+              278.0,
+              750.0
+            ]
+          ],
+          "position": {
+            "x": 278,
+            "y": 741,
+            "width": 8,
+            "height": 9,
+            "center_x": 282.0,
+            "center_y": 745.5,
+            "region": "bottom-center",
+            "tag": "[y:741, x:278]"
+          }
+        },
+        {
+          "text": "CUSTOMER COPY",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              400.0,
+              745.0
+            ],
+            [
+              516.0,
+              746.0
+            ],
+            [
+              515.0,
+              760.0
+            ],
+            [
+              400.0,
+              759.0
+            ]
+          ],
+          "box": [
+            [
+              400.0,
+              745.0
+            ],
+            [
+              516.0,
+              746.0
+            ],
+            [
+              515.0,
+              760.0
+            ],
+            [
+              400.0,
+              759.0
+            ]
+          ],
+          "position": {
+            "x": 400,
+            "y": 745,
+            "width": 116,
+            "height": 15,
+            "center_x": 458.0,
+            "center_y": 752.5,
+            "region": "bottom-center",
+            "tag": "[y:745, x:400]"
+          }
+        },
+        {
+          "text": "C014/YV",
+          "confidence": 0.74,
+          "bounding_box": [
+            [
+              603.0,
+              742.0
+            ],
+            [
+              664.0,
+              742.0
+            ],
+            [
+              664.0,
+              753.0
+            ],
+            [
+              603.0,
+              753.0
+            ]
+          ],
+          "box": [
+            [
+              603.0,
+              742.0
+            ],
+            [
+              664.0,
+              742.0
+            ],
+            [
+              664.0,
+              753.0
+            ],
+            [
+              603.0,
+              753.0
+            ]
+          ],
+          "position": {
+            "x": 603,
+            "y": 742,
+            "width": 61,
+            "height": 11,
+            "center_x": 633.5,
+            "center_y": 747.5,
+            "region": "bottom-right",
+            "tag": "[y:742, x:603]"
+          }
+        },
+        {
+          "text": "33",
+          "confidence": 0.19,
+          "bounding_box": [
+            [
+              739.0,
+              780.0
+            ],
+            [
+              758.0,
+              774.0
+            ],
+            [
+              761.0,
+              786.0
+            ],
+            [
+              743.0,
+              792.0
+            ]
+          ],
+          "box": [
+            [
+              739.0,
+              780.0
+            ],
+            [
+              758.0,
+              774.0
+            ],
+            [
+              761.0,
+              786.0
+            ],
+            [
+              743.0,
+              792.0
+            ]
+          ],
+          "position": {
+            "x": 739,
+            "y": 774,
+            "width": 22,
+            "height": 18,
+            "center_x": 750.0,
+            "center_y": 783.0,
+            "region": "bottom-right",
+            "tag": "[y:774, x:739]"
+          }
+        },
+        {
+          "text": "v",
+          "confidence": 0.24,
+          "bounding_box": [
+            [
+              83.0,
+              807.0
+            ],
+            [
+              127.0,
+              807.0
+            ],
+            [
+              127.0,
+              818.0
+            ],
+            [
+              83.0,
+              818.0
+            ]
+          ],
+          "box": [
+            [
+              83.0,
+              807.0
+            ],
+            [
+              127.0,
+              807.0
+            ],
+            [
+              127.0,
+              818.0
+            ],
+            [
+              83.0,
+              818.0
+            ]
+          ],
+          "position": {
+            "x": 83,
+            "y": 807,
+            "width": 44,
+            "height": 11,
+            "center_x": 105.0,
+            "center_y": 812.5,
+            "region": "bottom-left",
+            "tag": "[y:807, x:83]"
+          }
+        },
+        {
+          "text": "SEP 20 1985",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              582.0,
+              864.0
+            ],
+            [
+              690.0,
+              850.0
+            ],
+            [
+              694.0,
+              878.0
+            ],
+            [
+              586.0,
+              892.0
+            ]
+          ],
+          "box": [
+            [
+              582.0,
+              864.0
+            ],
+            [
+              690.0,
+              850.0
+            ],
+            [
+              694.0,
+              878.0
+            ],
+            [
+              586.0,
+              892.0
+            ]
+          ],
+          "position": {
+            "x": 582,
+            "y": 850,
+            "width": 112,
+            "height": 42,
+            "center_x": 638.0,
+            "center_y": 871.0,
+            "region": "bottom-right",
+            "tag": "[y:850, x:582]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 0.876,
+      "cached_at": "2026-09-28T08:25:55.361803+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "invoice",
+        "document_number": "236333",
+        "document_date": "1985-09-20",
+        "sender": "THE LAMAR CORPORATION",
+        "receiver": "COPY",
+        "origin": "BATON ROUGE, LA 70896",
+        "destination": "HEDIA SERVICES, OR",
+        "reference_number": "",
+        "unit_price": 9.99,
+        "total_amount": 9.99,
+        "currency": "USD",
+        "other": {
+          "source_file": "286_test_imagesp_p_z_s_pzs90e00_91514715.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "INVOICE",
+          "field": "document_type",
+          "value": "invoice",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "236333",
+          "field": "document_number",
+          "value": "236333",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "1985-09-20",
+          "field": "document_date",
+          "value": "1985-09-20",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "THE LAMAR CORPORATION",
+          "field": "sender",
+          "value": "THE LAMAR CORPORATION",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "CUSTOMER COPY",
+          "field": "receiver",
+          "value": "COPY",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "POST OFFICE BOX G6338, BATON ROUGE, LA 70896",
+          "field": "origin",
+          "value": "BATON ROUGE, LA 70896",
+          "confidence": 93,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "HEDIA SERVICES",
+          "field": "destination",
+          "value": "HEDIA SERVICES, OR",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "reference_number",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "1.479.99",
+          "field": "unit_price",
+          "value": "9.99",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "1.479.99",
+          "field": "total_amount",
+          "value": "9.99",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "286_test_imagesp_p_z_s_pzs90e00_91514715.png",
+          "field": "source_file",
+          "value": "286_test_imagesp_p_z_s_pzs90e00_91514715.png",
+          "confidence": 92,
+          "status": "success",
+          "isOther": true
+        }
+      ],
+      "confidence": {
+        "overall": 87,
+        "ocr": 83,
+        "slm": 88,
+        "mapping": 91,
+        "completeness": 91
+      },
+      "review_items": [
+        {
+          "field": "reference_number",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": {
+        "accuracy_pct": 91.0,
+        "inference_time_sec": 0.15,
+        "tokens_generated": 0,
+        "token_speed_tps": 0,
+        "core_fields_fill_rate_pct": 91.0,
+        "schema_valid": true,
+        "math_integrity_status": "no_subtotal",
+        "math_integrity_notes": "Sources: 9.99",
+        "field_accuracies": {}
+      },
+      "model": "Qwen/Qwen2.5-1.5B-Instruct (Fallback: CUDA error: out of memory\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n)",
+      "device": "cpu/fallback"
+    },
+    "performance": {
+      "ocr_time_sec": 0.876,
+      "slm_time_sec": 0.118,
+      "total_time_sec": 0.994
+    },
+    "prompt_integrity": {
+      "cache_schema_version": 2,
+      "prompt_hash": "98922cc6be9230e392f1c59559f7738ff546de81fbbd80909f76fac64d8db566",
+      "variant": "one-shot",
+      "benchmark_example_ids": [
+        "DOC-009"
+      ],
+      "benchmark_example_confidences": [
+        98.13
+      ],
+      "training_document_ids": [
+        "DOC-001",
+        "DOC-002",
+        "DOC-003",
+        "DOC-004",
+        "DOC-005",
+        "DOC-006",
+        "DOC-007",
+        "DOC-008",
+        "DOC-009",
+        "DOC-010",
+        "DOC-011",
+        "DOC-013",
+        "DOC-014",
+        "DOC-015",
+        "DOC-016",
+        "DOC-017",
+        "DOC-018",
+        "DOC-019",
+        "DOC-022",
+        "DOC-024",
+        "DOC-026",
+        "DOC-028",
+        "DOC-029",
+        "DOC-033",
+        "DOC-034",
+        "DOC-035",
+        "DOC-037",
+        "DOC-038",
+        "DOC-039",
+        "DOC-040",
+        "DOC-041",
+        "DOC-044",
+        "DOC-045",
+        "DOC-046",
+        "DOC-047",
+        "DOC-048",
+        "DOC-049",
+        "DOC-050",
+        "DOC-051",
+        "DOC-052",
+        "DOC-054",
+        "DOC-056",
+        "DOC-057",
+        "DOC-058",
+        "DOC-059",
+        "DOC-060",
+        "DOC-061",
+        "DOC-062",
+        "DOC-063",
+        "DOC-064",
+        "DOC-065",
+        "DOC-066",
+        "DOC-067",
+        "DOC-068",
+        "DOC-069",
+        "DOC-070",
+        "DOC-071",
+        "DOC-074",
+        "DOC-075",
+        "DOC-077",
+        "DOC-078",
+        "DOC-079",
+        "DOC-080",
+        "DOC-084",
+        "DOC-085",
+        "DOC-086",
+        "DOC-087",
+        "DOC-088",
+        "DOC-089",
+        "DOC-091",
+        "DOC-092",
+        "DOC-093",
+        "DOC-094",
+        "DOC-097",
+        "DOC-098",
+        "DOC-099",
+        "DOC-100",
+        "DOC-101",
+        "DOC-102",
+        "DOC-103",
+        "DOC-104",
+        "DOC-105",
+        "DOC-106",
+        "DOC-107",
+        "DOC-108",
+        "DOC-109",
+        "DOC-110",
+        "DOC-111",
+        "DOC-112",
+        "DOC-113",
+        "DOC-114",
+        "DOC-116",
+        "DOC-117",
+        "DOC-118",
+        "DOC-119",
+        "DOC-120",
+        "DOC-121",
+        "DOC-122",
+        "DOC-123",
+        "DOC-124",
+        "DOC-126",
+        "DOC-127",
+        "DOC-129",
+        "DOC-130",
+        "DOC-131",
+        "DOC-132",
+        "DOC-133",
+        "DOC-134",
+        "DOC-135",
+        "DOC-136",
+        "DOC-137",
+        "DOC-140",
+        "DOC-141",
+        "DOC-142",
+        "DOC-143",
+        "DOC-144",
+        "DOC-146",
+        "DOC-147",
+        "DOC-148",
+        "DOC-150",
+        "DOC-153",
+        "DOC-154",
+        "DOC-155",
+        "DOC-156",
+        "DOC-157",
+        "DOC-158",
+        "DOC-159",
+        "DOC-161",
+        "DOC-162",
+        "DOC-163",
+        "DOC-164",
+        "DOC-165",
+        "DOC-167",
+        "DOC-169",
+        "DOC-171",
+        "DOC-172",
+        "DOC-173",
+        "DOC-174",
+        "DOC-175",
+        "DOC-176",
+        "DOC-177",
+        "DOC-178",
+        "DOC-179",
+        "DOC-180",
+        "DOC-181",
+        "DOC-182",
+        "DOC-183",
+        "DOC-184",
+        "DOC-185",
+        "DOC-187",
+        "DOC-188",
+        "DOC-190",
+        "DOC-191",
+        "DOC-193",
+        "DOC-194",
+        "DOC-196",
+        "DOC-197",
+        "DOC-198",
+        "DOC-199",
+        "DOC-200",
+        "DOC-201",
+        "DOC-202",
+        "DOC-203",
+        "DOC-204",
+        "DOC-205",
+        "DOC-206",
+        "DOC-208",
+        "DOC-209",
+        "DOC-210",
+        "DOC-211",
+        "DOC-212",
+        "DOC-213",
+        "DOC-214",
+        "DOC-215",
+        "DOC-216",
+        "DOC-217",
+        "DOC-218",
+        "DOC-219",
+        "DOC-220",
+        "DOC-221",
+        "DOC-222",
+        "DOC-223",
+        "DOC-225",
+        "DOC-226",
+        "DOC-227",
+        "DOC-228",
+        "DOC-229",
+        "DOC-230",
+        "DOC-231",
+        "DOC-232",
+        "DOC-233",
+        "DOC-234",
+        "DOC-237",
+        "DOC-238",
+        "DOC-239",
+        "DOC-240",
+        "DOC-242",
+        "DOC-243",
+        "DOC-244",
+        "DOC-245",
+        "DOC-246",
+        "DOC-247",
+        "DOC-248",
+        "DOC-249",
+        "DOC-251",
+        "DOC-253",
+        "DOC-254",
+        "DOC-255",
+        "DOC-256",
+        "DOC-258",
+        "DOC-259",
+        "DOC-260",
+        "DOC-261",
+        "DOC-262",
+        "DOC-264",
+        "DOC-265",
+        "DOC-268",
+        "DOC-269",
+        "DOC-270",
+        "DOC-272",
+        "DOC-273",
+        "DOC-274",
+        "DOC-275",
+        "DOC-276",
+        "DOC-277",
+        "DOC-278",
+        "DOC-280",
+        "DOC-281",
+        "DOC-283",
+        "DOC-284",
+        "DOC-287",
+        "DOC-288",
+        "DOC-291",
+        "DOC-292",
+        "DOC-293",
+        "DOC-295",
+        "DOC-296",
+        "DOC-298",
+        "DOC-299",
+        "DOC-300"
+      ]
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 0.876,
+    "slm_time_sec": 0.118,
+    "total_time_sec": 0.994
+  },
+  "cached_at": "2026-09-28T08:25:55.496767+00:00"
+}

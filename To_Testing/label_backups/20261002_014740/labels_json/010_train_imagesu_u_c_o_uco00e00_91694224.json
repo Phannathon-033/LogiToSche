@@ -1,0 +1,27 @@
+{
+  "id": "DOC-010",
+  "rank": 10,
+  "file_name": "010_train_imagesu_u_c_o_uco00e00_91694224.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "invoice",
+    "document_number": "235",
+    "document_date": "1990-05-18",
+    "sender": "New Nork",
+    "receiver": "NEW YORK",
+    "origin": "MELVILLE, NY 11747",
+    "destination": "NEW YORK, NY 10016",
+    "reference_number": "-",
+    "unit_price": 6013.82,
+    "total_amount": 6013.82,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 92,
+    "ocr": 95,
+    "slm": 92,
+    "mapping": 98,
+    "completeness": 91
+  },
+  "annotated_at": "2026-09-14 15:04:42"
+}

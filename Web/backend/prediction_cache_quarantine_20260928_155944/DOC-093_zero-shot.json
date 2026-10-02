@@ -1,0 +1,4286 @@
+{
+  "document_id": "DOC-093",
+  "file_name": "093_train_imagesy_y_e_w_yew35f00_0060096969.png",
+  "cache_schema_version": 2,
+  "prompt_hash": "e1abb4746f2a86199e65819797164ad347862007f0f20aecb2f2f57c31e4911d",
+  "variant": "zero-shot",
+  "benchmark_example_ids": [],
+  "benchmark_example_confidences": [],
+  "training_document_ids": [
+    "DOC-001",
+    "DOC-002",
+    "DOC-003",
+    "DOC-004",
+    "DOC-005",
+    "DOC-007",
+    "DOC-009",
+    "DOC-011",
+    "DOC-012",
+    "DOC-013",
+    "DOC-014",
+    "DOC-015",
+    "DOC-016",
+    "DOC-017",
+    "DOC-019",
+    "DOC-020",
+    "DOC-021",
+    "DOC-022",
+    "DOC-023",
+    "DOC-024",
+    "DOC-027",
+    "DOC-028",
+    "DOC-029",
+    "DOC-030",
+    "DOC-031",
+    "DOC-032",
+    "DOC-033",
+    "DOC-035",
+    "DOC-036",
+    "DOC-037",
+    "DOC-038",
+    "DOC-039",
+    "DOC-040",
+    "DOC-041",
+    "DOC-042",
+    "DOC-044",
+    "DOC-045",
+    "DOC-048",
+    "DOC-049",
+    "DOC-050",
+    "DOC-051",
+    "DOC-052",
+    "DOC-053",
+    "DOC-054",
+    "DOC-055",
+    "DOC-056",
+    "DOC-057",
+    "DOC-059",
+    "DOC-060",
+    "DOC-062",
+    "DOC-063",
+    "DOC-065",
+    "DOC-066",
+    "DOC-067",
+    "DOC-068",
+    "DOC-069",
+    "DOC-070",
+    "DOC-071",
+    "DOC-072",
+    "DOC-073",
+    "DOC-075",
+    "DOC-080",
+    "DOC-081",
+    "DOC-082",
+    "DOC-083",
+    "DOC-084",
+    "DOC-085",
+    "DOC-086",
+    "DOC-087",
+    "DOC-088",
+    "DOC-089",
+    "DOC-090",
+    "DOC-092",
+    "DOC-095",
+    "DOC-096",
+    "DOC-097",
+    "DOC-099",
+    "DOC-100",
+    "DOC-101",
+    "DOC-102",
+    "DOC-103",
+    "DOC-104",
+    "DOC-106",
+    "DOC-107",
+    "DOC-108",
+    "DOC-109",
+    "DOC-111",
+    "DOC-113",
+    "DOC-115",
+    "DOC-116",
+    "DOC-117",
+    "DOC-118",
+    "DOC-119",
+    "DOC-121",
+    "DOC-122",
+    "DOC-123",
+    "DOC-124",
+    "DOC-125",
+    "DOC-126",
+    "DOC-127",
+    "DOC-128",
+    "DOC-129",
+    "DOC-130",
+    "DOC-131",
+    "DOC-132",
+    "DOC-133",
+    "DOC-134",
+    "DOC-135",
+    "DOC-136",
+    "DOC-137",
+    "DOC-138",
+    "DOC-139",
+    "DOC-140",
+    "DOC-141",
+    "DOC-142",
+    "DOC-143",
+    "DOC-144",
+    "DOC-146",
+    "DOC-147",
+    "DOC-148",
+    "DOC-150",
+    "DOC-151",
+    "DOC-152",
+    "DOC-154",
+    "DOC-155",
+    "DOC-156",
+    "DOC-157",
+    "DOC-159",
+    "DOC-160",
+    "DOC-161",
+    "DOC-162",
+    "DOC-163",
+    "DOC-164",
+    "DOC-167",
+    "DOC-168",
+    "DOC-169",
+    "DOC-170",
+    "DOC-171",
+    "DOC-172",
+    "DOC-173",
+    "DOC-174",
+    "DOC-175",
+    "DOC-177",
+    "DOC-178",
+    "DOC-179",
+    "DOC-180",
+    "DOC-182",
+    "DOC-184",
+    "DOC-185",
+    "DOC-186",
+    "DOC-187",
+    "DOC-188",
+    "DOC-189",
+    "DOC-190",
+    "DOC-191",
+    "DOC-192",
+    "DOC-194",
+    "DOC-195",
+    "DOC-196",
+    "DOC-198",
+    "DOC-199",
+    "DOC-200",
+    "DOC-201",
+    "DOC-202",
+    "DOC-203",
+    "DOC-205",
+    "DOC-206",
+    "DOC-207",
+    "DOC-208",
+    "DOC-209",
+    "DOC-210",
+    "DOC-211",
+    "DOC-213",
+    "DOC-214",
+    "DOC-215",
+    "DOC-217",
+    "DOC-218",
+    "DOC-220",
+    "DOC-221",
+    "DOC-223",
+    "DOC-224",
+    "DOC-225",
+    "DOC-226",
+    "DOC-228",
+    "DOC-229",
+    "DOC-231",
+    "DOC-233",
+    "DOC-236",
+    "DOC-237",
+    "DOC-241",
+    "DOC-242",
+    "DOC-243",
+    "DOC-244",
+    "DOC-245",
+    "DOC-246",
+    "DOC-247",
+    "DOC-248",
+    "DOC-249",
+    "DOC-252",
+    "DOC-253",
+    "DOC-254",
+    "DOC-255",
+    "DOC-256",
+    "DOC-257",
+    "DOC-258",
+    "DOC-259",
+    "DOC-260",
+    "DOC-261",
+    "DOC-262",
+    "DOC-263",
+    "DOC-264",
+    "DOC-265",
+    "DOC-266",
+    "DOC-268",
+    "DOC-269",
+    "DOC-270",
+    "DOC-271",
+    "DOC-272",
+    "DOC-273",
+    "DOC-274",
+    "DOC-275",
+    "DOC-276",
+    "DOC-277",
+    "DOC-278",
+    "DOC-280",
+    "DOC-281",
+    "DOC-283",
+    "DOC-284",
+    "DOC-285",
+    "DOC-286",
+    "DOC-288",
+    "DOC-289",
+    "DOC-291",
+    "DOC-292",
+    "DOC-293",
+    "DOC-294",
+    "DOC-295",
+    "DOC-297",
+    "DOC-299",
+    "DOC-300"
+  ],
+  "json_schema": {
+    "document_type": "invoice",
+    "document_number": "10018",
+    "document_date": "",
+    "sender": "EIVED BY",
+    "receiver": "Po",
+    "origin": "STAMFORD, CT",
+    "destination": "EXTENDEDI MANCMESTER, PA",
+    "reference_number": "Desc",
+    "unit_price": 8926.16,
+    "total_amount": 8926.16,
+    "currency": "USD",
+    "other": {
+      "source_file": "093_train_imagesy_y_e_w_yew35f00_0060096969.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-093",
+      "filename": "093_train_imagesy_y_e_w_yew35f00_0060096969.png",
+      "ocr_text": "EIVED BY\nRECEIVEDD\nMAY 382\nA\nEireet\nInvoice\nNuaber:usa-10018\n*** I NVOICE ±**\nFed. Eq. fayment\nTO: AHERICAN TOBACCO\n6 STAMFORD FORUM\nSTAMFORD, CT O6904-2380\ncllent Contact:\nCHRIS BURT\ncllent\nclient Po #:\nDesc:\nM12963\nQuantity\n(per thous)\nDescriptlon\nCPM\nAmount\nADDITIONAL POSTAGE NEEDED\nFOR PALL MALL RETENTION DUE\n$8,926.16\nTO THE PACKAGE WEIGHT\nAPROVAES\nDATE:\nHAT10AUS MCC\nMLRWLRNUEALP\nPะNO\nCHตE C5:\nAOXTNN\nT\nBmo\ntpass\nทปร\nB0-\n2\nU-FON\nRECEIPT\nENTERED:\nVENUUR ค\n1590\n8,926.16\nVOUCIER A\nC353\nsubtotal:\nMosy\nVOUCIER MOAT:\nPROCESSUR\ntn.\nAPPRUVS:\n2\n5/\n22250131\nACCOUNT 2\n1000075.5.210222750131\nTOTAL DUE...\n$8,926.16\nnotice: Any dlspute regarding charges on thls Involce should be made in\nriting and subnitted to the address lsted below within  days\nof the date of this involce; othervise, this blll wlll be\nconsidered accurate and the full balance due and payable wlthin\nour credlt terns of net Due opon Receipt.\nTERMS: NET DUE UPON RECEIPT. A FINANCE CHARGE OF 1.5* PER MONTH_<18%\nANNUALLY WILL BE APPLIED TO ALL BALANCES OUTSTANDING OVER BO DAYS.\nU.S.A. DIRECT, INC.\n4D75 NORTH GEORGE STREET (EXTENDEDI MANCMESTER, PA., 17345\nTELEPMONE (7:71 266-0501\n.083",
+      "ocr_lines": [
+        {
+          "text": "EIVED BY",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              41.0,
+              66.0
+            ],
+            [
+              91.0,
+              66.0
+            ],
+            [
+              91.0,
+              76.0
+            ],
+            [
+              41.0,
+              76.0
+            ]
+          ],
+          "box": [
+            [
+              41.0,
+              66.0
+            ],
+            [
+              91.0,
+              66.0
+            ],
+            [
+              91.0,
+              76.0
+            ],
+            [
+              41.0,
+              76.0
+            ]
+          ],
+          "position": {
+            "x": 41,
+            "y": 66,
+            "width": 50,
+            "height": 10,
+            "center_x": 66.0,
+            "center_y": 71.0,
+            "region": "top-left",
+            "tag": "[y:66, x:41]"
+          }
+        },
+        {
+          "text": "RECEIVEDD",
+          "confidence": 0.79,
+          "bounding_box": [
+            [
+              135.0,
+              87.0
+            ],
+            [
+              216.0,
+              91.0
+            ],
+            [
+              214.0,
+              134.0
+            ],
+            [
+              133.0,
+              129.0
+            ]
+          ],
+          "box": [
+            [
+              135.0,
+              87.0
+            ],
+            [
+              216.0,
+              91.0
+            ],
+            [
+              214.0,
+              134.0
+            ],
+            [
+              133.0,
+              129.0
+            ]
+          ],
+          "position": {
+            "x": 133,
+            "y": 87,
+            "width": 83,
+            "height": 47,
+            "center_x": 174.5,
+            "center_y": 110.5,
+            "region": "top-left",
+            "tag": "[y:87, x:133]"
+          }
+        },
+        {
+          "text": "MAY 382",
+          "confidence": 0.81,
+          "bounding_box": [
+            [
+              153.0,
+              75.0
+            ],
+            [
+              201.0,
+              75.0
+            ],
+            [
+              201.0,
+              94.0
+            ],
+            [
+              153.0,
+              94.0
+            ]
+          ],
+          "box": [
+            [
+              153.0,
+              75.0
+            ],
+            [
+              201.0,
+              75.0
+            ],
+            [
+              201.0,
+              94.0
+            ],
+            [
+              153.0,
+              94.0
+            ]
+          ],
+          "position": {
+            "x": 153,
+            "y": 75,
+            "width": 48,
+            "height": 19,
+            "center_x": 177.0,
+            "center_y": 84.5,
+            "region": "top-left",
+            "tag": "[y:75, x:153]"
+          }
+        },
+        {
+          "text": "A",
+          "confidence": 0.13,
+          "bounding_box": [
+            [
+              293.0,
+              92.0
+            ],
+            [
+              372.0,
+              89.0
+            ],
+            [
+              372.0,
+              114.0
+            ],
+            [
+              294.0,
+              116.0
+            ]
+          ],
+          "box": [
+            [
+              293.0,
+              92.0
+            ],
+            [
+              372.0,
+              89.0
+            ],
+            [
+              372.0,
+              114.0
+            ],
+            [
+              294.0,
+              116.0
+            ]
+          ],
+          "position": {
+            "x": 293,
+            "y": 89,
+            "width": 79,
+            "height": 27,
+            "center_x": 332.5,
+            "center_y": 102.5,
+            "region": "top-center",
+            "tag": "[y:89, x:293]"
+          }
+        },
+        {
+          "text": "Eireet",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              370.0,
+              90.0
+            ],
+            [
+              462.0,
+              85.0
+            ],
+            [
+              463.0,
+              109.0
+            ],
+            [
+              371.0,
+              114.0
+            ]
+          ],
+          "box": [
+            [
+              370.0,
+              90.0
+            ],
+            [
+              462.0,
+              85.0
+            ],
+            [
+              463.0,
+              109.0
+            ],
+            [
+              371.0,
+              114.0
+            ]
+          ],
+          "position": {
+            "x": 370,
+            "y": 85,
+            "width": 93,
+            "height": 29,
+            "center_x": 416.5,
+            "center_y": 99.5,
+            "region": "top-center",
+            "tag": "[y:85, x:370]"
+          }
+        },
+        {
+          "text": "Invoice",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              463.0,
+              104.0
+            ],
+            [
+              518.0,
+              104.0
+            ],
+            [
+              518.0,
+              115.0
+            ],
+            [
+              463.0,
+              115.0
+            ]
+          ],
+          "box": [
+            [
+              463.0,
+              104.0
+            ],
+            [
+              518.0,
+              104.0
+            ],
+            [
+              518.0,
+              115.0
+            ],
+            [
+              463.0,
+              115.0
+            ]
+          ],
+          "position": {
+            "x": 463,
+            "y": 104,
+            "width": 55,
+            "height": 11,
+            "center_x": 490.5,
+            "center_y": 109.5,
+            "region": "top-right",
+            "tag": "[y:104, x:463]"
+          }
+        },
+        {
+          "text": "Nuaber:usa-10018",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              468.0,
+              114.0
+            ],
+            [
+              606.0,
+              116.0
+            ],
+            [
+              606.0,
+              130.0
+            ],
+            [
+              468.0,
+              128.0
+            ]
+          ],
+          "box": [
+            [
+              468.0,
+              114.0
+            ],
+            [
+              606.0,
+              116.0
+            ],
+            [
+              606.0,
+              130.0
+            ],
+            [
+              468.0,
+              128.0
+            ]
+          ],
+          "position": {
+            "x": 468,
+            "y": 114,
+            "width": 138,
+            "height": 16,
+            "center_x": 537.0,
+            "center_y": 122.0,
+            "region": "top-right",
+            "tag": "[y:114, x:468]"
+          }
+        },
+        {
+          "text": "*** I NVOICE ±**",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              289.0,
+              152.0
+            ],
+            [
+              456.0,
+              152.0
+            ],
+            [
+              456.0,
+              166.0
+            ],
+            [
+              289.0,
+              166.0
+            ]
+          ],
+          "box": [
+            [
+              289.0,
+              152.0
+            ],
+            [
+              456.0,
+              152.0
+            ],
+            [
+              456.0,
+              166.0
+            ],
+            [
+              289.0,
+              166.0
+            ]
+          ],
+          "position": {
+            "x": 289,
+            "y": 152,
+            "width": 167,
+            "height": 14,
+            "center_x": 372.5,
+            "center_y": 159.0,
+            "region": "top-center",
+            "tag": "[y:152, x:289]"
+          }
+        },
+        {
+          "text": "Fed. Eq. fayment",
+          "confidence": 0.81,
+          "bounding_box": [
+            [
+              273.0,
+              168.0
+            ],
+            [
+              485.0,
+              168.0
+            ],
+            [
+              485.0,
+              207.0
+            ],
+            [
+              273.0,
+              207.0
+            ]
+          ],
+          "box": [
+            [
+              273.0,
+              168.0
+            ],
+            [
+              485.0,
+              168.0
+            ],
+            [
+              485.0,
+              207.0
+            ],
+            [
+              273.0,
+              207.0
+            ]
+          ],
+          "position": {
+            "x": 273,
+            "y": 168,
+            "width": 212,
+            "height": 39,
+            "center_x": 379.0,
+            "center_y": 187.5,
+            "region": "top-center",
+            "tag": "[y:168, x:273]"
+          }
+        },
+        {
+          "text": "TO: AHERICAN TOBACCO",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              50.0,
+              193.0
+            ],
+            [
+              211.0,
+              190.0
+            ],
+            [
+              211.0,
+              205.0
+            ],
+            [
+              50.0,
+              207.0
+            ]
+          ],
+          "box": [
+            [
+              50.0,
+              193.0
+            ],
+            [
+              211.0,
+              190.0
+            ],
+            [
+              211.0,
+              205.0
+            ],
+            [
+              50.0,
+              207.0
+            ]
+          ],
+          "position": {
+            "x": 50,
+            "y": 190,
+            "width": 161,
+            "height": 17,
+            "center_x": 130.5,
+            "center_y": 198.5,
+            "region": "top-left",
+            "tag": "[y:190, x:50]"
+          }
+        },
+        {
+          "text": "6 STAMFORD FORUM",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              82.0,
+              207.0
+            ],
+            [
+              212.0,
+              207.0
+            ],
+            [
+              212.0,
+              220.0
+            ],
+            [
+              82.0,
+              220.0
+            ]
+          ],
+          "box": [
+            [
+              82.0,
+              207.0
+            ],
+            [
+              212.0,
+              207.0
+            ],
+            [
+              212.0,
+              220.0
+            ],
+            [
+              82.0,
+              220.0
+            ]
+          ],
+          "position": {
+            "x": 82,
+            "y": 207,
+            "width": 130,
+            "height": 13,
+            "center_x": 147.0,
+            "center_y": 213.5,
+            "region": "top-left",
+            "tag": "[y:207, x:82]"
+          }
+        },
+        {
+          "text": "STAMFORD, CT O6904-2380",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              82.0,
+              220.0
+            ],
+            [
+              267.0,
+              220.0
+            ],
+            [
+              267.0,
+              233.0
+            ],
+            [
+              82.0,
+              233.0
+            ]
+          ],
+          "box": [
+            [
+              82.0,
+              220.0
+            ],
+            [
+              267.0,
+              220.0
+            ],
+            [
+              267.0,
+              233.0
+            ],
+            [
+              82.0,
+              233.0
+            ]
+          ],
+          "position": {
+            "x": 82,
+            "y": 220,
+            "width": 185,
+            "height": 13,
+            "center_x": 174.5,
+            "center_y": 226.5,
+            "region": "top-left",
+            "tag": "[y:220, x:82]"
+          }
+        },
+        {
+          "text": "cllent Contact:",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              59.0,
+              271.0
+            ],
+            [
+              180.0,
+              271.0
+            ],
+            [
+              180.0,
+              284.0
+            ],
+            [
+              59.0,
+              284.0
+            ]
+          ],
+          "box": [
+            [
+              59.0,
+              271.0
+            ],
+            [
+              180.0,
+              271.0
+            ],
+            [
+              180.0,
+              284.0
+            ],
+            [
+              59.0,
+              284.0
+            ]
+          ],
+          "position": {
+            "x": 59,
+            "y": 271,
+            "width": 121,
+            "height": 13,
+            "center_x": 119.5,
+            "center_y": 277.5,
+            "region": "middle-left",
+            "tag": "[y:271, x:59]"
+          }
+        },
+        {
+          "text": "CHRIS BURT",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              202.0,
+              271.0
+            ],
+            [
+              283.0,
+              271.0
+            ],
+            [
+              283.0,
+              284.0
+            ],
+            [
+              202.0,
+              284.0
+            ]
+          ],
+          "box": [
+            [
+              202.0,
+              271.0
+            ],
+            [
+              283.0,
+              271.0
+            ],
+            [
+              283.0,
+              284.0
+            ],
+            [
+              202.0,
+              284.0
+            ]
+          ],
+          "position": {
+            "x": 202,
+            "y": 271,
+            "width": 81,
+            "height": 13,
+            "center_x": 242.5,
+            "center_y": 277.5,
+            "region": "middle",
+            "tag": "[y:271, x:202]"
+          }
+        },
+        {
+          "text": "cllent",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              75.0,
+              285.0
+            ],
+            [
+              131.0,
+              285.0
+            ],
+            [
+              131.0,
+              296.0
+            ],
+            [
+              75.0,
+              296.0
+            ]
+          ],
+          "box": [
+            [
+              75.0,
+              285.0
+            ],
+            [
+              131.0,
+              285.0
+            ],
+            [
+              131.0,
+              296.0
+            ],
+            [
+              75.0,
+              296.0
+            ]
+          ],
+          "position": {
+            "x": 75,
+            "y": 285,
+            "width": 56,
+            "height": 11,
+            "center_x": 103.0,
+            "center_y": 290.5,
+            "region": "middle-left",
+            "tag": "[y:285, x:75]"
+          }
+        },
+        {
+          "text": "client Po #:",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              81.0,
+              297.0
+            ],
+            [
+              181.0,
+              297.0
+            ],
+            [
+              181.0,
+              310.0
+            ],
+            [
+              81.0,
+              310.0
+            ]
+          ],
+          "box": [
+            [
+              81.0,
+              297.0
+            ],
+            [
+              181.0,
+              297.0
+            ],
+            [
+              181.0,
+              310.0
+            ],
+            [
+              81.0,
+              310.0
+            ]
+          ],
+          "position": {
+            "x": 81,
+            "y": 297,
+            "width": 100,
+            "height": 13,
+            "center_x": 131.0,
+            "center_y": 303.5,
+            "region": "middle-left",
+            "tag": "[y:297, x:81]"
+          }
+        },
+        {
+          "text": "Desc:",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              138.0,
+              285.0
+            ],
+            [
+              180.0,
+              285.0
+            ],
+            [
+              180.0,
+              296.0
+            ],
+            [
+              138.0,
+              296.0
+            ]
+          ],
+          "box": [
+            [
+              138.0,
+              285.0
+            ],
+            [
+              180.0,
+              285.0
+            ],
+            [
+              180.0,
+              296.0
+            ],
+            [
+              138.0,
+              296.0
+            ]
+          ],
+          "position": {
+            "x": 138,
+            "y": 285,
+            "width": 42,
+            "height": 11,
+            "center_x": 159.0,
+            "center_y": 290.5,
+            "region": "middle-left",
+            "tag": "[y:285, x:138]"
+          }
+        },
+        {
+          "text": "M12963",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              201.0,
+              297.0
+            ],
+            [
+              252.0,
+              297.0
+            ],
+            [
+              252.0,
+              311.0
+            ],
+            [
+              201.0,
+              311.0
+            ]
+          ],
+          "box": [
+            [
+              201.0,
+              297.0
+            ],
+            [
+              252.0,
+              297.0
+            ],
+            [
+              252.0,
+              311.0
+            ],
+            [
+              201.0,
+              311.0
+            ]
+          ],
+          "position": {
+            "x": 201,
+            "y": 297,
+            "width": 51,
+            "height": 14,
+            "center_x": 226.5,
+            "center_y": 304.0,
+            "region": "middle-left",
+            "tag": "[y:297, x:201]"
+          }
+        },
+        {
+          "text": "Quantity",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              105.0,
+              337.0
+            ],
+            [
+              174.0,
+              337.0
+            ],
+            [
+              174.0,
+              351.0
+            ],
+            [
+              105.0,
+              351.0
+            ]
+          ],
+          "box": [
+            [
+              105.0,
+              337.0
+            ],
+            [
+              174.0,
+              337.0
+            ],
+            [
+              174.0,
+              351.0
+            ],
+            [
+              105.0,
+              351.0
+            ]
+          ],
+          "position": {
+            "x": 105,
+            "y": 337,
+            "width": 69,
+            "height": 14,
+            "center_x": 139.5,
+            "center_y": 344.0,
+            "region": "middle-left",
+            "tag": "[y:337, x:105]"
+          }
+        },
+        {
+          "text": "(per thous)",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              90.0,
+              350.0
+            ],
+            [
+              181.0,
+              350.0
+            ],
+            [
+              181.0,
+              364.0
+            ],
+            [
+              90.0,
+              364.0
+            ]
+          ],
+          "box": [
+            [
+              90.0,
+              350.0
+            ],
+            [
+              181.0,
+              350.0
+            ],
+            [
+              181.0,
+              364.0
+            ],
+            [
+              90.0,
+              364.0
+            ]
+          ],
+          "position": {
+            "x": 90,
+            "y": 350,
+            "width": 91,
+            "height": 14,
+            "center_x": 135.5,
+            "center_y": 357.0,
+            "region": "middle-left",
+            "tag": "[y:350, x:90]"
+          }
+        },
+        {
+          "text": "Descriptlon",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              264.0,
+              350.0
+            ],
+            [
+              354.0,
+              350.0
+            ],
+            [
+              354.0,
+              364.0
+            ],
+            [
+              264.0,
+              364.0
+            ]
+          ],
+          "box": [
+            [
+              264.0,
+              350.0
+            ],
+            [
+              354.0,
+              350.0
+            ],
+            [
+              354.0,
+              364.0
+            ],
+            [
+              264.0,
+              364.0
+            ]
+          ],
+          "position": {
+            "x": 264,
+            "y": 350,
+            "width": 90,
+            "height": 14,
+            "center_x": 309.0,
+            "center_y": 357.0,
+            "region": "middle",
+            "tag": "[y:350, x:264]"
+          }
+        },
+        {
+          "text": "CPM",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              461.0,
+              348.0
+            ],
+            [
+              490.0,
+              348.0
+            ],
+            [
+              490.0,
+              363.0
+            ],
+            [
+              461.0,
+              363.0
+            ]
+          ],
+          "box": [
+            [
+              461.0,
+              348.0
+            ],
+            [
+              490.0,
+              348.0
+            ],
+            [
+              490.0,
+              363.0
+            ],
+            [
+              461.0,
+              363.0
+            ]
+          ],
+          "position": {
+            "x": 461,
+            "y": 348,
+            "width": 29,
+            "height": 15,
+            "center_x": 475.5,
+            "center_y": 355.5,
+            "region": "middle-right",
+            "tag": "[y:348, x:461]"
+          }
+        },
+        {
+          "text": "Amount",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              566.0,
+              350.0
+            ],
+            [
+              615.0,
+              350.0
+            ],
+            [
+              615.0,
+              361.0
+            ],
+            [
+              566.0,
+              361.0
+            ]
+          ],
+          "box": [
+            [
+              566.0,
+              350.0
+            ],
+            [
+              615.0,
+              350.0
+            ],
+            [
+              615.0,
+              361.0
+            ],
+            [
+              566.0,
+              361.0
+            ]
+          ],
+          "position": {
+            "x": 566,
+            "y": 350,
+            "width": 49,
+            "height": 11,
+            "center_x": 590.5,
+            "center_y": 355.5,
+            "region": "middle-right",
+            "tag": "[y:350, x:566]"
+          }
+        },
+        {
+          "text": "ADDITIONAL POSTAGE NEEDED",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              201.0,
+              374.0
+            ],
+            [
+              402.0,
+              375.0
+            ],
+            [
+              402.0,
+              389.0
+            ],
+            [
+              201.0,
+              388.0
+            ]
+          ],
+          "box": [
+            [
+              201.0,
+              374.0
+            ],
+            [
+              402.0,
+              375.0
+            ],
+            [
+              402.0,
+              389.0
+            ],
+            [
+              201.0,
+              388.0
+            ]
+          ],
+          "position": {
+            "x": 201,
+            "y": 374,
+            "width": 201,
+            "height": 15,
+            "center_x": 301.5,
+            "center_y": 381.5,
+            "region": "middle",
+            "tag": "[y:374, x:201]"
+          }
+        },
+        {
+          "text": "FOR PALL MALL RETENTION DUE",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              202.0,
+              388.0
+            ],
+            [
+              418.0,
+              388.0
+            ],
+            [
+              418.0,
+              401.0
+            ],
+            [
+              202.0,
+              401.0
+            ]
+          ],
+          "box": [
+            [
+              202.0,
+              388.0
+            ],
+            [
+              418.0,
+              388.0
+            ],
+            [
+              418.0,
+              401.0
+            ],
+            [
+              202.0,
+              401.0
+            ]
+          ],
+          "position": {
+            "x": 202,
+            "y": 388,
+            "width": 216,
+            "height": 13,
+            "center_x": 310.0,
+            "center_y": 394.5,
+            "region": "middle",
+            "tag": "[y:388, x:202]"
+          }
+        },
+        {
+          "text": "$8,926.16",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              573.0,
+              386.0
+            ],
+            [
+              648.0,
+              386.0
+            ],
+            [
+              648.0,
+              400.0
+            ],
+            [
+              573.0,
+              400.0
+            ]
+          ],
+          "box": [
+            [
+              573.0,
+              386.0
+            ],
+            [
+              648.0,
+              386.0
+            ],
+            [
+              648.0,
+              400.0
+            ],
+            [
+              573.0,
+              400.0
+            ]
+          ],
+          "position": {
+            "x": 573,
+            "y": 386,
+            "width": 75,
+            "height": 14,
+            "center_x": 610.5,
+            "center_y": 393.0,
+            "region": "middle-right",
+            "tag": "[y:386, x:573]"
+          }
+        },
+        {
+          "text": "TO THE PACKAGE WEIGHT",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              202.0,
+              400.0
+            ],
+            [
+              371.0,
+              401.0
+            ],
+            [
+              371.0,
+              415.0
+            ],
+            [
+              202.0,
+              414.0
+            ]
+          ],
+          "box": [
+            [
+              202.0,
+              400.0
+            ],
+            [
+              371.0,
+              401.0
+            ],
+            [
+              371.0,
+              415.0
+            ],
+            [
+              202.0,
+              414.0
+            ]
+          ],
+          "position": {
+            "x": 202,
+            "y": 400,
+            "width": 169,
+            "height": 15,
+            "center_x": 286.5,
+            "center_y": 407.5,
+            "region": "middle",
+            "tag": "[y:400, x:202]"
+          }
+        },
+        {
+          "text": "APROVAES",
+          "confidence": 0.66,
+          "bounding_box": [
+            [
+              102.0,
+              419.0
+            ],
+            [
+              174.0,
+              417.0
+            ],
+            [
+              175.0,
+              431.0
+            ],
+            [
+              102.0,
+              434.0
+            ]
+          ],
+          "box": [
+            [
+              102.0,
+              419.0
+            ],
+            [
+              174.0,
+              417.0
+            ],
+            [
+              175.0,
+              431.0
+            ],
+            [
+              102.0,
+              434.0
+            ]
+          ],
+          "position": {
+            "x": 102,
+            "y": 417,
+            "width": 73,
+            "height": 17,
+            "center_x": 138.5,
+            "center_y": 425.5,
+            "region": "middle-left",
+            "tag": "[y:417, x:102]"
+          }
+        },
+        {
+          "text": "DATE:",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              223.0,
+              417.0
+            ],
+            [
+              253.0,
+              417.0
+            ],
+            [
+              253.0,
+              431.0
+            ],
+            [
+              223.0,
+              431.0
+            ]
+          ],
+          "box": [
+            [
+              223.0,
+              417.0
+            ],
+            [
+              253.0,
+              417.0
+            ],
+            [
+              253.0,
+              431.0
+            ],
+            [
+              223.0,
+              431.0
+            ]
+          ],
+          "position": {
+            "x": 223,
+            "y": 417,
+            "width": 30,
+            "height": 14,
+            "center_x": 238.0,
+            "center_y": 424.0,
+            "region": "middle",
+            "tag": "[y:417, x:223]"
+          }
+        },
+        {
+          "text": "HAT10AUS MCC",
+          "confidence": 0.36,
+          "bounding_box": [
+            [
+              60.0,
+              434.0
+            ],
+            [
+              139.0,
+              434.0
+            ],
+            [
+              139.0,
+              445.0
+            ],
+            [
+              60.0,
+              445.0
+            ]
+          ],
+          "box": [
+            [
+              60.0,
+              434.0
+            ],
+            [
+              139.0,
+              434.0
+            ],
+            [
+              139.0,
+              445.0
+            ],
+            [
+              60.0,
+              445.0
+            ]
+          ],
+          "position": {
+            "x": 60,
+            "y": 434,
+            "width": 79,
+            "height": 11,
+            "center_x": 99.5,
+            "center_y": 439.5,
+            "region": "middle-left",
+            "tag": "[y:434, x:60]"
+          }
+        },
+        {
+          "text": "MLRWLRNUEALP",
+          "confidence": 0.39,
+          "bounding_box": [
+            [
+              61.0,
+              442.0
+            ],
+            [
+              134.0,
+              442.0
+            ],
+            [
+              134.0,
+              452.0
+            ],
+            [
+              61.0,
+              452.0
+            ]
+          ],
+          "box": [
+            [
+              61.0,
+              442.0
+            ],
+            [
+              134.0,
+              442.0
+            ],
+            [
+              134.0,
+              452.0
+            ],
+            [
+              61.0,
+              452.0
+            ]
+          ],
+          "position": {
+            "x": 61,
+            "y": 442,
+            "width": 73,
+            "height": 10,
+            "center_x": 97.5,
+            "center_y": 447.0,
+            "region": "middle-left",
+            "tag": "[y:442, x:61]"
+          }
+        },
+        {
+          "text": "PะNO",
+          "confidence": 0.27,
+          "bounding_box": [
+            [
+              60.0,
+              461.0
+            ],
+            [
+              103.0,
+              461.0
+            ],
+            [
+              103.0,
+              471.0
+            ],
+            [
+              60.0,
+              471.0
+            ]
+          ],
+          "box": [
+            [
+              60.0,
+              461.0
+            ],
+            [
+              103.0,
+              461.0
+            ],
+            [
+              103.0,
+              471.0
+            ],
+            [
+              60.0,
+              471.0
+            ]
+          ],
+          "position": {
+            "x": 60,
+            "y": 461,
+            "width": 43,
+            "height": 10,
+            "center_x": 81.5,
+            "center_y": 466.0,
+            "region": "middle-left",
+            "tag": "[y:461, x:60]"
+          }
+        },
+        {
+          "text": "CHตE C5:",
+          "confidence": 0.48,
+          "bounding_box": [
+            [
+              62.0,
+              480.0
+            ],
+            [
+              126.0,
+              480.0
+            ],
+            [
+              126.0,
+              490.0
+            ],
+            [
+              62.0,
+              490.0
+            ]
+          ],
+          "box": [
+            [
+              62.0,
+              480.0
+            ],
+            [
+              126.0,
+              480.0
+            ],
+            [
+              126.0,
+              490.0
+            ],
+            [
+              62.0,
+              490.0
+            ]
+          ],
+          "position": {
+            "x": 62,
+            "y": 480,
+            "width": 64,
+            "height": 10,
+            "center_x": 94.0,
+            "center_y": 485.0,
+            "region": "middle-left",
+            "tag": "[y:480, x:62]"
+          }
+        },
+        {
+          "text": "AOXTNN",
+          "confidence": 0.71,
+          "bounding_box": [
+            [
+              99.0,
+              494.0
+            ],
+            [
+              176.0,
+              494.0
+            ],
+            [
+              176.0,
+              506.0
+            ],
+            [
+              99.0,
+              506.0
+            ]
+          ],
+          "box": [
+            [
+              99.0,
+              494.0
+            ],
+            [
+              176.0,
+              494.0
+            ],
+            [
+              176.0,
+              506.0
+            ],
+            [
+              99.0,
+              506.0
+            ]
+          ],
+          "position": {
+            "x": 99,
+            "y": 494,
+            "width": 77,
+            "height": 12,
+            "center_x": 137.5,
+            "center_y": 500.0,
+            "region": "middle-left",
+            "tag": "[y:494, x:99]"
+          }
+        },
+        {
+          "text": "T",
+          "confidence": 0.33,
+          "bounding_box": [
+            [
+              227.0,
+              491.0
+            ],
+            [
+              254.0,
+              491.0
+            ],
+            [
+              254.0,
+              502.0
+            ],
+            [
+              227.0,
+              502.0
+            ]
+          ],
+          "box": [
+            [
+              227.0,
+              491.0
+            ],
+            [
+              254.0,
+              491.0
+            ],
+            [
+              254.0,
+              502.0
+            ],
+            [
+              227.0,
+              502.0
+            ]
+          ],
+          "position": {
+            "x": 227,
+            "y": 491,
+            "width": 27,
+            "height": 11,
+            "center_x": 240.5,
+            "center_y": 496.5,
+            "region": "middle",
+            "tag": "[y:491, x:227]"
+          }
+        },
+        {
+          "text": "Bmo",
+          "confidence": 0.27,
+          "bounding_box": [
+            [
+              172.0,
+              505.0
+            ],
+            [
+              226.0,
+              502.0
+            ],
+            [
+              228.0,
+              520.0
+            ],
+            [
+              173.0,
+              524.0
+            ]
+          ],
+          "box": [
+            [
+              172.0,
+              505.0
+            ],
+            [
+              226.0,
+              502.0
+            ],
+            [
+              228.0,
+              520.0
+            ],
+            [
+              173.0,
+              524.0
+            ]
+          ],
+          "position": {
+            "x": 172,
+            "y": 502,
+            "width": 56,
+            "height": 22,
+            "center_x": 200.0,
+            "center_y": 513.0,
+            "region": "middle-left",
+            "tag": "[y:502, x:172]"
+          }
+        },
+        {
+          "text": "tpass",
+          "confidence": 0.8,
+          "bounding_box": [
+            [
+              230.0,
+              503.0
+            ],
+            [
+              306.0,
+              498.0
+            ],
+            [
+              307.0,
+              516.0
+            ],
+            [
+              231.0,
+              522.0
+            ]
+          ],
+          "box": [
+            [
+              230.0,
+              503.0
+            ],
+            [
+              306.0,
+              498.0
+            ],
+            [
+              307.0,
+              516.0
+            ],
+            [
+              231.0,
+              522.0
+            ]
+          ],
+          "position": {
+            "x": 230,
+            "y": 498,
+            "width": 77,
+            "height": 24,
+            "center_x": 268.5,
+            "center_y": 510.0,
+            "region": "middle",
+            "tag": "[y:498, x:230]"
+          }
+        },
+        {
+          "text": "ทปร",
+          "confidence": 0.75,
+          "bounding_box": [
+            [
+              63.0,
+              514.0
+            ],
+            [
+              83.0,
+              514.0
+            ],
+            [
+              83.0,
+              522.0
+            ],
+            [
+              63.0,
+              522.0
+            ]
+          ],
+          "box": [
+            [
+              63.0,
+              514.0
+            ],
+            [
+              83.0,
+              514.0
+            ],
+            [
+              83.0,
+              522.0
+            ],
+            [
+              63.0,
+              522.0
+            ]
+          ],
+          "position": {
+            "x": 63,
+            "y": 514,
+            "width": 20,
+            "height": 8,
+            "center_x": 73.0,
+            "center_y": 518.0,
+            "region": "middle-left",
+            "tag": "[y:514, x:63]"
+          }
+        },
+        {
+          "text": "B0-",
+          "confidence": 0.33,
+          "bounding_box": [
+            [
+              80.0,
+              514.0
+            ],
+            [
+              128.0,
+              516.0
+            ],
+            [
+              127.0,
+              535.0
+            ],
+            [
+              79.0,
+              532.0
+            ]
+          ],
+          "box": [
+            [
+              80.0,
+              514.0
+            ],
+            [
+              128.0,
+              516.0
+            ],
+            [
+              127.0,
+              535.0
+            ],
+            [
+              79.0,
+              532.0
+            ]
+          ],
+          "position": {
+            "x": 79,
+            "y": 514,
+            "width": 49,
+            "height": 21,
+            "center_x": 103.5,
+            "center_y": 524.5,
+            "region": "middle-left",
+            "tag": "[y:514, x:79]"
+          }
+        },
+        {
+          "text": "2",
+          "confidence": 0.22,
+          "bounding_box": [
+            [
+              84.0,
+              515.0
+            ],
+            [
+              93.0,
+              515.0
+            ],
+            [
+              93.0,
+              521.0
+            ],
+            [
+              84.0,
+              521.0
+            ]
+          ],
+          "box": [
+            [
+              84.0,
+              515.0
+            ],
+            [
+              93.0,
+              515.0
+            ],
+            [
+              93.0,
+              521.0
+            ],
+            [
+              84.0,
+              521.0
+            ]
+          ],
+          "position": {
+            "x": 84,
+            "y": 515,
+            "width": 9,
+            "height": 6,
+            "center_x": 88.5,
+            "center_y": 518.0,
+            "region": "middle-left",
+            "tag": "[y:515, x:84]"
+          }
+        },
+        {
+          "text": "U-FON",
+          "confidence": 0.48,
+          "bounding_box": [
+            [
+              153.0,
+              517.0
+            ],
+            [
+              227.0,
+              517.0
+            ],
+            [
+              227.0,
+              534.0
+            ],
+            [
+              153.0,
+              534.0
+            ]
+          ],
+          "box": [
+            [
+              153.0,
+              517.0
+            ],
+            [
+              227.0,
+              517.0
+            ],
+            [
+              227.0,
+              534.0
+            ],
+            [
+              153.0,
+              534.0
+            ]
+          ],
+          "position": {
+            "x": 153,
+            "y": 517,
+            "width": 74,
+            "height": 17,
+            "center_x": 190.0,
+            "center_y": 525.5,
+            "region": "middle-left",
+            "tag": "[y:517, x:153]"
+          }
+        },
+        {
+          "text": "RECEIPT",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              229.0,
+              517.0
+            ],
+            [
+              341.0,
+              517.0
+            ],
+            [
+              341.0,
+              534.0
+            ],
+            [
+              229.0,
+              534.0
+            ]
+          ],
+          "box": [
+            [
+              229.0,
+              517.0
+            ],
+            [
+              341.0,
+              517.0
+            ],
+            [
+              341.0,
+              534.0
+            ],
+            [
+              229.0,
+              534.0
+            ]
+          ],
+          "position": {
+            "x": 229,
+            "y": 517,
+            "width": 112,
+            "height": 17,
+            "center_x": 285.0,
+            "center_y": 525.5,
+            "region": "middle",
+            "tag": "[y:517, x:229]"
+          }
+        },
+        {
+          "text": "ENTERED:",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              63.0,
+              530.0
+            ],
+            [
+              106.0,
+              530.0
+            ],
+            [
+              106.0,
+              541.0
+            ],
+            [
+              63.0,
+              541.0
+            ]
+          ],
+          "box": [
+            [
+              63.0,
+              530.0
+            ],
+            [
+              106.0,
+              530.0
+            ],
+            [
+              106.0,
+              541.0
+            ],
+            [
+              63.0,
+              541.0
+            ]
+          ],
+          "position": {
+            "x": 63,
+            "y": 530,
+            "width": 43,
+            "height": 11,
+            "center_x": 84.5,
+            "center_y": 535.5,
+            "region": "middle-left",
+            "tag": "[y:530, x:63]"
+          }
+        },
+        {
+          "text": "VENUUR ค",
+          "confidence": 0.72,
+          "bounding_box": [
+            [
+              62.0,
+              549.0
+            ],
+            [
+              108.0,
+              549.0
+            ],
+            [
+              108.0,
+              559.0
+            ],
+            [
+              62.0,
+              559.0
+            ]
+          ],
+          "box": [
+            [
+              62.0,
+              549.0
+            ],
+            [
+              108.0,
+              549.0
+            ],
+            [
+              108.0,
+              559.0
+            ],
+            [
+              62.0,
+              559.0
+            ]
+          ],
+          "position": {
+            "x": 62,
+            "y": 549,
+            "width": 46,
+            "height": 10,
+            "center_x": 85.0,
+            "center_y": 554.0,
+            "region": "middle-left",
+            "tag": "[y:549, x:62]"
+          }
+        },
+        {
+          "text": "1590",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              154.0,
+              542.0
+            ],
+            [
+              207.0,
+              542.0
+            ],
+            [
+              207.0,
+              564.0
+            ],
+            [
+              154.0,
+              564.0
+            ]
+          ],
+          "box": [
+            [
+              154.0,
+              542.0
+            ],
+            [
+              207.0,
+              542.0
+            ],
+            [
+              207.0,
+              564.0
+            ],
+            [
+              154.0,
+              564.0
+            ]
+          ],
+          "position": {
+            "x": 154,
+            "y": 542,
+            "width": 53,
+            "height": 22,
+            "center_x": 180.5,
+            "center_y": 553.0,
+            "region": "middle-left",
+            "tag": "[y:542, x:154]"
+          }
+        },
+        {
+          "text": "8,926.16",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              579.0,
+              553.0
+            ],
+            [
+              648.0,
+              553.0
+            ],
+            [
+              648.0,
+              571.0
+            ],
+            [
+              579.0,
+              571.0
+            ]
+          ],
+          "box": [
+            [
+              579.0,
+              553.0
+            ],
+            [
+              648.0,
+              553.0
+            ],
+            [
+              648.0,
+              571.0
+            ],
+            [
+              579.0,
+              571.0
+            ]
+          ],
+          "position": {
+            "x": 579,
+            "y": 553,
+            "width": 69,
+            "height": 18,
+            "center_x": 613.5,
+            "center_y": 562.0,
+            "region": "middle-right",
+            "tag": "[y:553, x:579]"
+          }
+        },
+        {
+          "text": "VOUCIER A",
+          "confidence": 0.81,
+          "bounding_box": [
+            [
+              62.0,
+              569.0
+            ],
+            [
+              113.0,
+              569.0
+            ],
+            [
+              113.0,
+              579.0
+            ],
+            [
+              62.0,
+              579.0
+            ]
+          ],
+          "box": [
+            [
+              62.0,
+              569.0
+            ],
+            [
+              113.0,
+              569.0
+            ],
+            [
+              113.0,
+              579.0
+            ],
+            [
+              62.0,
+              579.0
+            ]
+          ],
+          "position": {
+            "x": 62,
+            "y": 569,
+            "width": 51,
+            "height": 10,
+            "center_x": 87.5,
+            "center_y": 574.0,
+            "region": "middle-left",
+            "tag": "[y:569, x:62]"
+          }
+        },
+        {
+          "text": "C353",
+          "confidence": 0.41,
+          "bounding_box": [
+            [
+              159.0,
+              560.0
+            ],
+            [
+              240.0,
+              563.0
+            ],
+            [
+              240.0,
+              585.0
+            ],
+            [
+              159.0,
+              582.0
+            ]
+          ],
+          "box": [
+            [
+              159.0,
+              560.0
+            ],
+            [
+              240.0,
+              563.0
+            ],
+            [
+              240.0,
+              585.0
+            ],
+            [
+              159.0,
+              582.0
+            ]
+          ],
+          "position": {
+            "x": 159,
+            "y": 560,
+            "width": 81,
+            "height": 25,
+            "center_x": 199.5,
+            "center_y": 572.5,
+            "region": "middle-left",
+            "tag": "[y:560, x:159]"
+          }
+        },
+        {
+          "text": "subtotal:",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              432.0,
+              556.0
+            ],
+            [
+              504.0,
+              556.0
+            ],
+            [
+              504.0,
+              571.0
+            ],
+            [
+              432.0,
+              571.0
+            ]
+          ],
+          "box": [
+            [
+              432.0,
+              556.0
+            ],
+            [
+              504.0,
+              556.0
+            ],
+            [
+              504.0,
+              571.0
+            ],
+            [
+              432.0,
+              571.0
+            ]
+          ],
+          "position": {
+            "x": 432,
+            "y": 556,
+            "width": 72,
+            "height": 15,
+            "center_x": 468.0,
+            "center_y": 563.5,
+            "region": "middle-right",
+            "tag": "[y:556, x:432]"
+          }
+        },
+        {
+          "text": "Mosy",
+          "confidence": 0.51,
+          "bounding_box": [
+            [
+              159.0,
+              577.0
+            ],
+            [
+              217.0,
+              581.0
+            ],
+            [
+              215.0,
+              603.0
+            ],
+            [
+              157.0,
+              599.0
+            ]
+          ],
+          "box": [
+            [
+              159.0,
+              577.0
+            ],
+            [
+              217.0,
+              581.0
+            ],
+            [
+              215.0,
+              603.0
+            ],
+            [
+              157.0,
+              599.0
+            ]
+          ],
+          "position": {
+            "x": 157,
+            "y": 577,
+            "width": 60,
+            "height": 26,
+            "center_x": 187.0,
+            "center_y": 590.0,
+            "region": "middle-left",
+            "tag": "[y:577, x:157]"
+          }
+        },
+        {
+          "text": "VOUCIER MOAT:",
+          "confidence": 0.81,
+          "bounding_box": [
+            [
+              62.0,
+              587.0
+            ],
+            [
+              140.0,
+              587.0
+            ],
+            [
+              140.0,
+              597.0
+            ],
+            [
+              62.0,
+              597.0
+            ]
+          ],
+          "box": [
+            [
+              62.0,
+              587.0
+            ],
+            [
+              140.0,
+              587.0
+            ],
+            [
+              140.0,
+              597.0
+            ],
+            [
+              62.0,
+              597.0
+            ]
+          ],
+          "position": {
+            "x": 62,
+            "y": 587,
+            "width": 78,
+            "height": 10,
+            "center_x": 101.0,
+            "center_y": 592.0,
+            "region": "middle-left",
+            "tag": "[y:587, x:62]"
+          }
+        },
+        {
+          "text": "PROCESSUR",
+          "confidence": 0.73,
+          "bounding_box": [
+            [
+              61.0,
+              606.0
+            ],
+            [
+              114.0,
+              605.0
+            ],
+            [
+              114.0,
+              616.0
+            ],
+            [
+              62.0,
+              617.0
+            ]
+          ],
+          "box": [
+            [
+              61.0,
+              606.0
+            ],
+            [
+              114.0,
+              605.0
+            ],
+            [
+              114.0,
+              616.0
+            ],
+            [
+              62.0,
+              617.0
+            ]
+          ],
+          "position": {
+            "x": 61,
+            "y": 605,
+            "width": 53,
+            "height": 12,
+            "center_x": 87.5,
+            "center_y": 611.0,
+            "region": "middle-left",
+            "tag": "[y:605, x:61]"
+          }
+        },
+        {
+          "text": "tn.",
+          "confidence": 0.44,
+          "bounding_box": [
+            [
+              172.0,
+              601.0
+            ],
+            [
+              217.0,
+              601.0
+            ],
+            [
+              217.0,
+              620.0
+            ],
+            [
+              172.0,
+              620.0
+            ]
+          ],
+          "box": [
+            [
+              172.0,
+              601.0
+            ],
+            [
+              217.0,
+              601.0
+            ],
+            [
+              217.0,
+              620.0
+            ],
+            [
+              172.0,
+              620.0
+            ]
+          ],
+          "position": {
+            "x": 172,
+            "y": 601,
+            "width": 45,
+            "height": 19,
+            "center_x": 194.5,
+            "center_y": 610.5,
+            "region": "middle-left",
+            "tag": "[y:601, x:172]"
+          }
+        },
+        {
+          "text": "APPRUVS:",
+          "confidence": 0.77,
+          "bounding_box": [
+            [
+              61.0,
+              625.0
+            ],
+            [
+              111.0,
+              624.0
+            ],
+            [
+              111.0,
+              635.0
+            ],
+            [
+              62.0,
+              636.0
+            ]
+          ],
+          "box": [
+            [
+              61.0,
+              625.0
+            ],
+            [
+              111.0,
+              624.0
+            ],
+            [
+              111.0,
+              635.0
+            ],
+            [
+              62.0,
+              636.0
+            ]
+          ],
+          "position": {
+            "x": 61,
+            "y": 624,
+            "width": 50,
+            "height": 12,
+            "center_x": 86.0,
+            "center_y": 630.0,
+            "region": "middle-left",
+            "tag": "[y:624, x:61]"
+          }
+        },
+        {
+          "text": "2",
+          "confidence": 0.17,
+          "bounding_box": [
+            [
+              196.0,
+              617.0
+            ],
+            [
+              221.0,
+              617.0
+            ],
+            [
+              221.0,
+              638.0
+            ],
+            [
+              196.0,
+              638.0
+            ]
+          ],
+          "box": [
+            [
+              196.0,
+              617.0
+            ],
+            [
+              221.0,
+              617.0
+            ],
+            [
+              221.0,
+              638.0
+            ],
+            [
+              196.0,
+              638.0
+            ]
+          ],
+          "position": {
+            "x": 196,
+            "y": 617,
+            "width": 25,
+            "height": 21,
+            "center_x": 208.5,
+            "center_y": 627.5,
+            "region": "middle-left",
+            "tag": "[y:617, x:196]"
+          }
+        },
+        {
+          "text": "5/",
+          "confidence": 0.59,
+          "bounding_box": [
+            [
+              218.0,
+              618.0
+            ],
+            [
+              245.0,
+              618.0
+            ],
+            [
+              245.0,
+              639.0
+            ],
+            [
+              218.0,
+              639.0
+            ]
+          ],
+          "box": [
+            [
+              218.0,
+              618.0
+            ],
+            [
+              245.0,
+              618.0
+            ],
+            [
+              245.0,
+              639.0
+            ],
+            [
+              218.0,
+              639.0
+            ]
+          ],
+          "position": {
+            "x": 218,
+            "y": 618,
+            "width": 27,
+            "height": 21,
+            "center_x": 231.5,
+            "center_y": 628.5,
+            "region": "middle",
+            "tag": "[y:618, x:218]"
+          }
+        },
+        {
+          "text": "22250131",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              270.0,
+              622.0
+            ],
+            [
+              365.0,
+              620.0
+            ],
+            [
+              365.0,
+              641.0
+            ],
+            [
+              270.0,
+              643.0
+            ]
+          ],
+          "box": [
+            [
+              270.0,
+              622.0
+            ],
+            [
+              365.0,
+              620.0
+            ],
+            [
+              365.0,
+              641.0
+            ],
+            [
+              270.0,
+              643.0
+            ]
+          ],
+          "position": {
+            "x": 270,
+            "y": 620,
+            "width": 95,
+            "height": 23,
+            "center_x": 317.5,
+            "center_y": 631.5,
+            "region": "bottom-center",
+            "tag": "[y:620, x:270]"
+          }
+        },
+        {
+          "text": "ACCOUNT 2",
+          "confidence": 0.86,
+          "bounding_box": [
+            [
+              64.0,
+              644.0
+            ],
+            [
+              115.0,
+              644.0
+            ],
+            [
+              115.0,
+              655.0
+            ],
+            [
+              64.0,
+              655.0
+            ]
+          ],
+          "box": [
+            [
+              64.0,
+              644.0
+            ],
+            [
+              115.0,
+              644.0
+            ],
+            [
+              115.0,
+              655.0
+            ],
+            [
+              64.0,
+              655.0
+            ]
+          ],
+          "position": {
+            "x": 64,
+            "y": 644,
+            "width": 51,
+            "height": 11,
+            "center_x": 89.5,
+            "center_y": 649.5,
+            "region": "bottom-left",
+            "tag": "[y:644, x:64]"
+          }
+        },
+        {
+          "text": "1000075.5.210222750131",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              144.0,
+              639.0
+            ],
+            [
+              359.0,
+              637.0
+            ],
+            [
+              359.0,
+              658.0
+            ],
+            [
+              144.0,
+              660.0
+            ]
+          ],
+          "box": [
+            [
+              144.0,
+              639.0
+            ],
+            [
+              359.0,
+              637.0
+            ],
+            [
+              359.0,
+              658.0
+            ],
+            [
+              144.0,
+              660.0
+            ]
+          ],
+          "position": {
+            "x": 144,
+            "y": 637,
+            "width": 215,
+            "height": 23,
+            "center_x": 251.5,
+            "center_y": 648.5,
+            "region": "bottom-center",
+            "tag": "[y:637, x:144]"
+          }
+        },
+        {
+          "text": "TOTAL DUE...",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              432.0,
+              634.0
+            ],
+            [
+              529.0,
+              634.0
+            ],
+            [
+              529.0,
+              648.0
+            ],
+            [
+              432.0,
+              648.0
+            ]
+          ],
+          "box": [
+            [
+              432.0,
+              634.0
+            ],
+            [
+              529.0,
+              634.0
+            ],
+            [
+              529.0,
+              648.0
+            ],
+            [
+              432.0,
+              648.0
+            ]
+          ],
+          "position": {
+            "x": 432,
+            "y": 634,
+            "width": 97,
+            "height": 14,
+            "center_x": 480.5,
+            "center_y": 641.0,
+            "region": "bottom-right",
+            "tag": "[y:634, x:432]"
+          }
+        },
+        {
+          "text": "$8,926.16",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              572.0,
+              635.0
+            ],
+            [
+              649.0,
+              635.0
+            ],
+            [
+              649.0,
+              649.0
+            ],
+            [
+              572.0,
+              649.0
+            ]
+          ],
+          "box": [
+            [
+              572.0,
+              635.0
+            ],
+            [
+              649.0,
+              635.0
+            ],
+            [
+              649.0,
+              649.0
+            ],
+            [
+              572.0,
+              649.0
+            ]
+          ],
+          "position": {
+            "x": 572,
+            "y": 635,
+            "width": 77,
+            "height": 14,
+            "center_x": 610.5,
+            "center_y": 642.0,
+            "region": "bottom-right",
+            "tag": "[y:635, x:572]"
+          }
+        },
+        {
+          "text": "notice: Any dlspute regarding charges on thls Involce should be made in",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              32.0,
+              670.0
+            ],
+            [
+              602.0,
+              671.0
+            ],
+            [
+              602.0,
+              692.0
+            ],
+            [
+              32.0,
+              691.0
+            ]
+          ],
+          "box": [
+            [
+              32.0,
+              670.0
+            ],
+            [
+              602.0,
+              671.0
+            ],
+            [
+              602.0,
+              692.0
+            ],
+            [
+              32.0,
+              691.0
+            ]
+          ],
+          "position": {
+            "x": 32,
+            "y": 670,
+            "width": 570,
+            "height": 22,
+            "center_x": 317.0,
+            "center_y": 681.0,
+            "region": "bottom-center",
+            "tag": "[y:670, x:32]"
+          }
+        },
+        {
+          "text": "riting and subnitted to the address lsted below within  days",
+          "confidence": 0.5,
+          "bounding_box": [
+            [
+              96.0,
+              683.0
+            ],
+            [
+              609.0,
+              686.0
+            ],
+            [
+              609.0,
+              706.0
+            ],
+            [
+              96.0,
+              704.0
+            ]
+          ],
+          "box": [
+            [
+              96.0,
+              683.0
+            ],
+            [
+              609.0,
+              686.0
+            ],
+            [
+              609.0,
+              706.0
+            ],
+            [
+              96.0,
+              704.0
+            ]
+          ],
+          "position": {
+            "x": 96,
+            "y": 683,
+            "width": 513,
+            "height": 23,
+            "center_x": 352.5,
+            "center_y": 694.5,
+            "region": "bottom-center",
+            "tag": "[y:683, x:96]"
+          }
+        },
+        {
+          "text": "of the date of this involce; othervise, this blll wlll be",
+          "confidence": 0.69,
+          "bounding_box": [
+            [
+              96.0,
+              697.0
+            ],
+            [
+              554.0,
+              698.0
+            ],
+            [
+              554.0,
+              718.0
+            ],
+            [
+              96.0,
+              717.0
+            ]
+          ],
+          "box": [
+            [
+              96.0,
+              697.0
+            ],
+            [
+              554.0,
+              698.0
+            ],
+            [
+              554.0,
+              718.0
+            ],
+            [
+              96.0,
+              717.0
+            ]
+          ],
+          "position": {
+            "x": 96,
+            "y": 697,
+            "width": 458,
+            "height": 21,
+            "center_x": 325.0,
+            "center_y": 707.5,
+            "region": "bottom-center",
+            "tag": "[y:697, x:96]"
+          }
+        },
+        {
+          "text": "considered accurate and the full balance due and payable wlthin",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              96.0,
+              711.0
+            ],
+            [
+              600.0,
+              712.0
+            ],
+            [
+              600.0,
+              729.0
+            ],
+            [
+              96.0,
+              728.0
+            ]
+          ],
+          "box": [
+            [
+              96.0,
+              711.0
+            ],
+            [
+              600.0,
+              712.0
+            ],
+            [
+              600.0,
+              729.0
+            ],
+            [
+              96.0,
+              728.0
+            ]
+          ],
+          "position": {
+            "x": 96,
+            "y": 711,
+            "width": 504,
+            "height": 18,
+            "center_x": 348.0,
+            "center_y": 720.0,
+            "region": "bottom-center",
+            "tag": "[y:711, x:96]"
+          }
+        },
+        {
+          "text": "our credlt terns of net Due opon Receipt.",
+          "confidence": 0.55,
+          "bounding_box": [
+            [
+              95.0,
+              723.0
+            ],
+            [
+              427.0,
+              724.0
+            ],
+            [
+              427.0,
+              744.0
+            ],
+            [
+              95.0,
+              743.0
+            ]
+          ],
+          "box": [
+            [
+              95.0,
+              723.0
+            ],
+            [
+              427.0,
+              724.0
+            ],
+            [
+              427.0,
+              744.0
+            ],
+            [
+              95.0,
+              743.0
+            ]
+          ],
+          "position": {
+            "x": 95,
+            "y": 723,
+            "width": 332,
+            "height": 21,
+            "center_x": 261.0,
+            "center_y": 733.5,
+            "region": "bottom-center",
+            "tag": "[y:723, x:95]"
+          }
+        },
+        {
+          "text": "TERMS: NET DUE UPON RECEIPT. A FINANCE CHARGE OF 1.5* PER MONTH_<18%",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              33.0,
+              747.0
+            ],
+            [
+              586.0,
+              750.0
+            ],
+            [
+              586.0,
+              770.0
+            ],
+            [
+              33.0,
+              767.0
+            ]
+          ],
+          "box": [
+            [
+              33.0,
+              747.0
+            ],
+            [
+              586.0,
+              750.0
+            ],
+            [
+              586.0,
+              770.0
+            ],
+            [
+              33.0,
+              767.0
+            ]
+          ],
+          "position": {
+            "x": 33,
+            "y": 747,
+            "width": 553,
+            "height": 23,
+            "center_x": 309.5,
+            "center_y": 758.5,
+            "region": "bottom-center",
+            "tag": "[y:747, x:33]"
+          }
+        },
+        {
+          "text": "ANNUALLY WILL BE APPLIED TO ALL BALANCES OUTSTANDING OVER BO DAYS.",
+          "confidence": 0.65,
+          "bounding_box": [
+            [
+              88.0,
+              761.0
+            ],
+            [
+              624.0,
+              763.0
+            ],
+            [
+              624.0,
+              783.0
+            ],
+            [
+              88.0,
+              781.0
+            ]
+          ],
+          "box": [
+            [
+              88.0,
+              761.0
+            ],
+            [
+              624.0,
+              763.0
+            ],
+            [
+              624.0,
+              783.0
+            ],
+            [
+              88.0,
+              781.0
+            ]
+          ],
+          "position": {
+            "x": 88,
+            "y": 761,
+            "width": 536,
+            "height": 22,
+            "center_x": 356.0,
+            "center_y": 772.0,
+            "region": "bottom-center",
+            "tag": "[y:761, x:88]"
+          }
+        },
+        {
+          "text": "U.S.A. DIRECT, INC.",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              300.0,
+              804.0
+            ],
+            [
+              408.0,
+              804.0
+            ],
+            [
+              408.0,
+              819.0
+            ],
+            [
+              300.0,
+              819.0
+            ]
+          ],
+          "box": [
+            [
+              300.0,
+              804.0
+            ],
+            [
+              408.0,
+              804.0
+            ],
+            [
+              408.0,
+              819.0
+            ],
+            [
+              300.0,
+              819.0
+            ]
+          ],
+          "position": {
+            "x": 300,
+            "y": 804,
+            "width": 108,
+            "height": 15,
+            "center_x": 354.0,
+            "center_y": 811.5,
+            "region": "bottom-center",
+            "tag": "[y:804, x:300]"
+          }
+        },
+        {
+          "text": "4D75 NORTH GEORGE STREET (EXTENDEDI MANCMESTER, PA., 17345",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              192.0,
+              815.0
+            ],
+            [
+              517.0,
+              818.0
+            ],
+            [
+              517.0,
+              832.0
+            ],
+            [
+              191.0,
+              830.0
+            ]
+          ],
+          "box": [
+            [
+              192.0,
+              815.0
+            ],
+            [
+              517.0,
+              818.0
+            ],
+            [
+              517.0,
+              832.0
+            ],
+            [
+              191.0,
+              830.0
+            ]
+          ],
+          "position": {
+            "x": 191,
+            "y": 815,
+            "width": 326,
+            "height": 17,
+            "center_x": 354.0,
+            "center_y": 823.5,
+            "region": "bottom-center",
+            "tag": "[y:815, x:191]"
+          }
+        },
+        {
+          "text": "TELEPMONE (7:71 266-0501",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              287.0,
+              830.0
+            ],
+            [
+              414.0,
+              831.0
+            ],
+            [
+              414.0,
+              842.0
+            ],
+            [
+              287.0,
+              841.0
+            ]
+          ],
+          "box": [
+            [
+              287.0,
+              830.0
+            ],
+            [
+              414.0,
+              831.0
+            ],
+            [
+              414.0,
+              842.0
+            ],
+            [
+              287.0,
+              841.0
+            ]
+          ],
+          "position": {
+            "x": 287,
+            "y": 830,
+            "width": 127,
+            "height": 12,
+            "center_x": 350.5,
+            "center_y": 836.0,
+            "region": "bottom-center",
+            "tag": "[y:830, x:287]"
+          }
+        },
+        {
+          "text": ".083",
+          "confidence": 0.76,
+          "bounding_box": [
+            [
+              596.0,
+              865.0
+            ],
+            [
+              631.0,
+              863.0
+            ],
+            [
+              631.0,
+              874.0
+            ],
+            [
+              597.0,
+              876.0
+            ]
+          ],
+          "box": [
+            [
+              596.0,
+              865.0
+            ],
+            [
+              631.0,
+              863.0
+            ],
+            [
+              631.0,
+              874.0
+            ],
+            [
+              597.0,
+              876.0
+            ]
+          ],
+          "position": {
+            "x": 596,
+            "y": 863,
+            "width": 35,
+            "height": 13,
+            "center_x": 613.5,
+            "center_y": 869.5,
+            "region": "bottom-right",
+            "tag": "[y:863, x:596]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 0.77,
+      "cached_at": "2026-09-27T16:03:51.665326+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "invoice",
+        "document_number": "10018",
+        "document_date": "",
+        "sender": "EIVED BY",
+        "receiver": "Po",
+        "origin": "STAMFORD, CT",
+        "destination": "EXTENDEDI MANCMESTER, PA",
+        "reference_number": "Desc",
+        "unit_price": 8926.16,
+        "total_amount": 8926.16,
+        "currency": "USD",
+        "other": {
+          "source_file": "093_train_imagesy_y_e_w_yew35f00_0060096969.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "Invoice",
+          "field": "document_type",
+          "value": "invoice",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "Nuaber:usa-10018",
+          "field": "document_number",
+          "value": "10018",
+          "confidence": 93,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "document_date",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "EIVED BY",
+          "field": "sender",
+          "value": "EIVED BY",
+          "confidence": 94,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "client Po #:",
+          "field": "receiver",
+          "value": "Po",
+          "confidence": 93,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "STAMFORD, CT O6904-2380",
+          "field": "origin",
+          "value": "STAMFORD, CT",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "4D75 NORTH GEORGE STREET (EXTENDEDI MANCMESTER, PA., 17345",
+          "field": "destination",
+          "value": "EXTENDEDI MANCMESTER, PA",
+          "confidence": 94,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "Desc:",
+          "field": "reference_number",
+          "value": "Desc",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "$8,926.16",
+          "field": "unit_price",
+          "value": "8926.16",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "$8,926.16",
+          "field": "total_amount",
+          "value": "8926.16",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "093_train_imagesy_y_e_w_yew35f00_0060096969.png",
+          "field": "source_file",
+          "value": "093_train_imagesy_y_e_w_yew35f00_0060096969.png",
+          "confidence": 92,
+          "status": "success",
+          "isOther": true
+        }
+      ],
+      "confidence": {
+        "overall": 85,
+        "ocr": 77,
+        "slm": 88,
+        "mapping": 91,
+        "completeness": 91
+      },
+      "review_items": [
+        {
+          "field": "document_date",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": {
+        "accuracy_pct": 91.0,
+        "inference_time_sec": 0.15,
+        "tokens_generated": 0,
+        "token_speed_tps": 0,
+        "core_fields_fill_rate_pct": 91.0,
+        "schema_valid": true,
+        "math_integrity_status": "no_subtotal",
+        "math_integrity_notes": "Sources: TOTAL DUE... -> $8,926.16",
+        "field_accuracies": {}
+      },
+      "model": "Qwen/Qwen2.5-1.5B-Instruct (Fallback: 502: SLM returned invalid JSON: Expecting ',' delimiter: line 25 column 6 (char 671))",
+      "device": "cpu/fallback"
+    },
+    "performance": {
+      "ocr_time_sec": 0.77,
+      "slm_time_sec": 35.406,
+      "total_time_sec": 36.176
+    },
+    "prompt_integrity": {
+      "cache_schema_version": 2,
+      "prompt_hash": "e1abb4746f2a86199e65819797164ad347862007f0f20aecb2f2f57c31e4911d",
+      "variant": "zero-shot",
+      "benchmark_example_ids": [],
+      "benchmark_example_confidences": [],
+      "training_document_ids": [
+        "DOC-001",
+        "DOC-002",
+        "DOC-003",
+        "DOC-004",
+        "DOC-005",
+        "DOC-007",
+        "DOC-009",
+        "DOC-011",
+        "DOC-012",
+        "DOC-013",
+        "DOC-014",
+        "DOC-015",
+        "DOC-016",
+        "DOC-017",
+        "DOC-019",
+        "DOC-020",
+        "DOC-021",
+        "DOC-022",
+        "DOC-023",
+        "DOC-024",
+        "DOC-027",
+        "DOC-028",
+        "DOC-029",
+        "DOC-030",
+        "DOC-031",
+        "DOC-032",
+        "DOC-033",
+        "DOC-035",
+        "DOC-036",
+        "DOC-037",
+        "DOC-038",
+        "DOC-039",
+        "DOC-040",
+        "DOC-041",
+        "DOC-042",
+        "DOC-044",
+        "DOC-045",
+        "DOC-048",
+        "DOC-049",
+        "DOC-050",
+        "DOC-051",
+        "DOC-052",
+        "DOC-053",
+        "DOC-054",
+        "DOC-055",
+        "DOC-056",
+        "DOC-057",
+        "DOC-059",
+        "DOC-060",
+        "DOC-062",
+        "DOC-063",
+        "DOC-065",
+        "DOC-066",
+        "DOC-067",
+        "DOC-068",
+        "DOC-069",
+        "DOC-070",
+        "DOC-071",
+        "DOC-072",
+        "DOC-073",
+        "DOC-075",
+        "DOC-080",
+        "DOC-081",
+        "DOC-082",
+        "DOC-083",
+        "DOC-084",
+        "DOC-085",
+        "DOC-086",
+        "DOC-087",
+        "DOC-088",
+        "DOC-089",
+        "DOC-090",
+        "DOC-092",
+        "DOC-095",
+        "DOC-096",
+        "DOC-097",
+        "DOC-099",
+        "DOC-100",
+        "DOC-101",
+        "DOC-102",
+        "DOC-103",
+        "DOC-104",
+        "DOC-106",
+        "DOC-107",
+        "DOC-108",
+        "DOC-109",
+        "DOC-111",
+        "DOC-113",
+        "DOC-115",
+        "DOC-116",
+        "DOC-117",
+        "DOC-118",
+        "DOC-119",
+        "DOC-121",
+        "DOC-122",
+        "DOC-123",
+        "DOC-124",
+        "DOC-125",
+        "DOC-126",
+        "DOC-127",
+        "DOC-128",
+        "DOC-129",
+        "DOC-130",
+        "DOC-131",
+        "DOC-132",
+        "DOC-133",
+        "DOC-134",
+        "DOC-135",
+        "DOC-136",
+        "DOC-137",
+        "DOC-138",
+        "DOC-139",
+        "DOC-140",
+        "DOC-141",
+        "DOC-142",
+        "DOC-143",
+        "DOC-144",
+        "DOC-146",
+        "DOC-147",
+        "DOC-148",
+        "DOC-150",
+        "DOC-151",
+        "DOC-152",
+        "DOC-154",
+        "DOC-155",
+        "DOC-156",
+        "DOC-157",
+        "DOC-159",
+        "DOC-160",
+        "DOC-161",
+        "DOC-162",
+        "DOC-163",
+        "DOC-164",
+        "DOC-167",
+        "DOC-168",
+        "DOC-169",
+        "DOC-170",
+        "DOC-171",
+        "DOC-172",
+        "DOC-173",
+        "DOC-174",
+        "DOC-175",
+        "DOC-177",
+        "DOC-178",
+        "DOC-179",
+        "DOC-180",
+        "DOC-182",
+        "DOC-184",
+        "DOC-185",
+        "DOC-186",
+        "DOC-187",
+        "DOC-188",
+        "DOC-189",
+        "DOC-190",
+        "DOC-191",
+        "DOC-192",
+        "DOC-194",
+        "DOC-195",
+        "DOC-196",
+        "DOC-198",
+        "DOC-199",
+        "DOC-200",
+        "DOC-201",
+        "DOC-202",
+        "DOC-203",
+        "DOC-205",
+        "DOC-206",
+        "DOC-207",
+        "DOC-208",
+        "DOC-209",
+        "DOC-210",
+        "DOC-211",
+        "DOC-213",
+        "DOC-214",
+        "DOC-215",
+        "DOC-217",
+        "DOC-218",
+        "DOC-220",
+        "DOC-221",
+        "DOC-223",
+        "DOC-224",
+        "DOC-225",
+        "DOC-226",
+        "DOC-228",
+        "DOC-229",
+        "DOC-231",
+        "DOC-233",
+        "DOC-236",
+        "DOC-237",
+        "DOC-241",
+        "DOC-242",
+        "DOC-243",
+        "DOC-244",
+        "DOC-245",
+        "DOC-246",
+        "DOC-247",
+        "DOC-248",
+        "DOC-249",
+        "DOC-252",
+        "DOC-253",
+        "DOC-254",
+        "DOC-255",
+        "DOC-256",
+        "DOC-257",
+        "DOC-258",
+        "DOC-259",
+        "DOC-260",
+        "DOC-261",
+        "DOC-262",
+        "DOC-263",
+        "DOC-264",
+        "DOC-265",
+        "DOC-266",
+        "DOC-268",
+        "DOC-269",
+        "DOC-270",
+        "DOC-271",
+        "DOC-272",
+        "DOC-273",
+        "DOC-274",
+        "DOC-275",
+        "DOC-276",
+        "DOC-277",
+        "DOC-278",
+        "DOC-280",
+        "DOC-281",
+        "DOC-283",
+        "DOC-284",
+        "DOC-285",
+        "DOC-286",
+        "DOC-288",
+        "DOC-289",
+        "DOC-291",
+        "DOC-292",
+        "DOC-293",
+        "DOC-294",
+        "DOC-295",
+        "DOC-297",
+        "DOC-299",
+        "DOC-300"
+      ]
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 0.77,
+    "slm_time_sec": 35.406,
+    "total_time_sec": 36.176
+  },
+  "cached_at": "2026-09-27T16:04:27.078337+00:00"
+}

@@ -1,0 +1,7449 @@
+{
+  "document_id": "DOC-293",
+  "file_name": "293_test_imagesm_m_x_c_mxc81f00_2025792689.png",
+  "variant": "zero-shot",
+  "json_schema": {
+    "document_type": "invoice",
+    "document_number": "1974.)",
+    "document_date": "1991-08-20",
+    "sender": "NUMBER",
+    "receiver": "Gayle A. Chapman",
+    "origin": "SOCIAL SECURITY OR FEDERAL, ID",
+    "destination": "City of Industry, CA 91746",
+    "reference_number": "",
+    "unit_price": 175661.0,
+    "total_amount": 175661.0,
+    "currency": "USD",
+    "other": {
+      "source_file": "293_test_imagesm_m_x_c_mxc81f00_2025792689.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-293",
+      "filename": "293_test_imagesm_m_x_c_mxc81f00_2025792689.png",
+      "ocr_text": "14า vน นr Accurtng Use Omy\nCheck Request\n(NON-PAYROLL)\nINVDICE NUM9ER\nF258416\nEIPLOYEE IO NUMBER\nCAP VENDOR NUMBER\nUร์- 1 (R 7/90 E0210\nDATE PREPARED\nCREATE DATE\n08/20/91 ::\nSTUDENT IO NUMBER\nMAKE CHECK PAYABLE TO INON CAMPUS ADORE SS)\nSOCIAL SECURITY OR FEDERAL ID NUMBER: (REOUIRED)\nDUE DATE\nPrivacy Notifications\nThe Public Health Foundation of\n(See reverse side for notulication pertaining to the State of\nNAME\nLos Angeles County\nSTATE\nCallornia Inlormation Practices Act.)\nSTREET\nCITY\n13200 Crossroads Pkway, North\nFEDERAL\n(See reverse side lor nobfication pertaining to the\nSTATE\nSuite 135\nIS PAYEE\nNO\nFederal Privacy Act of 1974.)\nYES\nCHECK HERE\nVSA TYPE\nZ1P(25-42)\nCity of Industry, CA 91746\nEMPLOYEE\nx\nFEMPLOYEE\nMTHOUT SALARY\nCOUNTRY\nRESIDENT\nNO\nYES\nAUEN COUNTRY OF RESIDENCE\nCALUFORAA\nATTACH STATEMENT OF CITIZENSHIP STATUS\nATTENTION: CHECKS REOUIRING ATTACHMENTS.... DOCUMENTS TO BE SENT WITH CHECK MUST BE ATTACHED TO PAYEE'S COPY OF CHECK REQUEST.\nSUBSCRIPTION\nPREREGISTRATION FORM\nOTHER\nDESCRIPTION OF PAYMENT (REQUIRED)\nFod\nRT5\ns\nH\nA\nAMOUNT\nPAYMENT EXPLANATION:\n-\n0\n5\nY\nWA\nR\nD\n1989-90\nYear 2\nGrant Award Distribution\n1RT505\nSTEVEN B. HAYWARD\n$ 175,661.00\nAttn: . Gayle A. Chapman\nCSI\nx/\nPUACHASE JRDER MUVBER CONTDLCT\nRETURN CHECK TO DEPARTMENT\nPRINT SEPARATE CHECK\nAUDITED BY\nDSBURSEMENT\nFUND UNIT\nAUDITED BY\n1RT505\ncheck bax if required\ncheck box if required\nNAAME OF BUDGET TC BE CHARGED\nPREPARED BY\nEXTENSON\nIWesn Accdure No Botowl\nVP-Health Affairs: TRDRP\nDATE\nJoyce Thompson/si\n987-9881\natricia\n08/20/91\n2025792689\nACCOUNT TC SE CARGED\nSTATE\nIMOICE\nVENDOR'S\nPURCHASE\nVENDOR\nTAXPRYER L D. NO.\nNET\nArCOUN:\nFNC\nSue\nOBJECT\nDATE\n83\nVOICE\nNO.\nORDERNO\nNO.\nUEN CANCEL\nCHARIGES\n9\n20576\n1C\ni.\n1€\n19\n20\n24\n35\n37\n42\n48(54)55 59\n60\n61\n68\n69\nDISC. AMT.\n72\n73\n80\n447675\n8\n175.66100\nIN\nACCOUNTING: 5 YEARS SUBJECT TO CONTRACT AND GRANT REOUIREMENTS\nOTER COPES O-S YEARS\n.:\nACCOUNTING OFFICF",
+      "ocr_lines": [
+        {
+          "text": "14า vน นr Accurtng Use Omy",
+          "confidence": 0.6,
+          "bounding_box": [
+            [
+              525.0,
+              52.0
+            ],
+            [
+              664.0,
+              60.0
+            ],
+            [
+              663.0,
+              73.0
+            ],
+            [
+              524.0,
+              65.0
+            ]
+          ],
+          "box": [
+            [
+              525.0,
+              52.0
+            ],
+            [
+              664.0,
+              60.0
+            ],
+            [
+              663.0,
+              73.0
+            ],
+            [
+              524.0,
+              65.0
+            ]
+          ],
+          "position": {
+            "x": 524,
+            "y": 52,
+            "width": 140,
+            "height": 21,
+            "center_x": 594.0,
+            "center_y": 62.5,
+            "region": "top-right",
+            "tag": "[y:52, x:524]"
+          }
+        },
+        {
+          "text": "Check Request",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              104.0,
+              60.0
+            ],
+            [
+              247.0,
+              64.0
+            ],
+            [
+              246.0,
+              88.0
+            ],
+            [
+              103.0,
+              85.0
+            ]
+          ],
+          "box": [
+            [
+              104.0,
+              60.0
+            ],
+            [
+              247.0,
+              64.0
+            ],
+            [
+              246.0,
+              88.0
+            ],
+            [
+              103.0,
+              85.0
+            ]
+          ],
+          "position": {
+            "x": 103,
+            "y": 60,
+            "width": 144,
+            "height": 28,
+            "center_x": 175.0,
+            "center_y": 74.0,
+            "region": "top-left",
+            "tag": "[y:60, x:103]"
+          }
+        },
+        {
+          "text": "(NON-PAYROLL)",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              133.0,
+              84.0
+            ],
+            [
+              217.0,
+              85.0
+            ],
+            [
+              216.0,
+              99.0
+            ],
+            [
+              132.0,
+              98.0
+            ]
+          ],
+          "box": [
+            [
+              133.0,
+              84.0
+            ],
+            [
+              217.0,
+              85.0
+            ],
+            [
+              216.0,
+              99.0
+            ],
+            [
+              132.0,
+              98.0
+            ]
+          ],
+          "position": {
+            "x": 132,
+            "y": 84,
+            "width": 85,
+            "height": 15,
+            "center_x": 174.5,
+            "center_y": 91.5,
+            "region": "top-left",
+            "tag": "[y:84, x:132]"
+          }
+        },
+        {
+          "text": "INVDICE NUM9ER",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              331.0,
+              75.0
+            ],
+            [
+              398.0,
+              75.0
+            ],
+            [
+              398.0,
+              85.0
+            ],
+            [
+              331.0,
+              85.0
+            ]
+          ],
+          "box": [
+            [
+              331.0,
+              75.0
+            ],
+            [
+              398.0,
+              75.0
+            ],
+            [
+              398.0,
+              85.0
+            ],
+            [
+              331.0,
+              85.0
+            ]
+          ],
+          "position": {
+            "x": 331,
+            "y": 75,
+            "width": 67,
+            "height": 10,
+            "center_x": 364.5,
+            "center_y": 80.0,
+            "region": "top-center",
+            "tag": "[y:75, x:331]"
+          }
+        },
+        {
+          "text": "F258416",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              336.0,
+              83.0
+            ],
+            [
+              426.0,
+              83.0
+            ],
+            [
+              426.0,
+              101.0
+            ],
+            [
+              336.0,
+              101.0
+            ]
+          ],
+          "box": [
+            [
+              336.0,
+              83.0
+            ],
+            [
+              426.0,
+              83.0
+            ],
+            [
+              426.0,
+              101.0
+            ],
+            [
+              336.0,
+              101.0
+            ]
+          ],
+          "position": {
+            "x": 336,
+            "y": 83,
+            "width": 90,
+            "height": 18,
+            "center_x": 381.0,
+            "center_y": 92.0,
+            "region": "top-center",
+            "tag": "[y:83, x:336]"
+          }
+        },
+        {
+          "text": "EIPLOYEE IO NUMBER",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              455.0,
+              77.0
+            ],
+            [
+              542.0,
+              77.0
+            ],
+            [
+              542.0,
+              87.0
+            ],
+            [
+              455.0,
+              87.0
+            ]
+          ],
+          "box": [
+            [
+              455.0,
+              77.0
+            ],
+            [
+              542.0,
+              77.0
+            ],
+            [
+              542.0,
+              87.0
+            ],
+            [
+              455.0,
+              87.0
+            ]
+          ],
+          "position": {
+            "x": 455,
+            "y": 77,
+            "width": 87,
+            "height": 10,
+            "center_x": 498.5,
+            "center_y": 82.0,
+            "region": "top-right",
+            "tag": "[y:77, x:455]"
+          }
+        },
+        {
+          "text": "CAP VENDOR NUMBER",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              575.0,
+              75.0
+            ],
+            [
+              669.0,
+              82.0
+            ],
+            [
+              668.0,
+              95.0
+            ],
+            [
+              574.0,
+              88.0
+            ]
+          ],
+          "box": [
+            [
+              575.0,
+              75.0
+            ],
+            [
+              669.0,
+              82.0
+            ],
+            [
+              668.0,
+              95.0
+            ],
+            [
+              574.0,
+              88.0
+            ]
+          ],
+          "position": {
+            "x": 574,
+            "y": 75,
+            "width": 95,
+            "height": 20,
+            "center_x": 621.5,
+            "center_y": 85.0,
+            "region": "top-right",
+            "tag": "[y:75, x:574]"
+          }
+        },
+        {
+          "text": "Uร์- 1 (R 7/90 E0210",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              130.0,
+              97.0
+            ],
+            [
+              221.0,
+              97.0
+            ],
+            [
+              221.0,
+              110.0
+            ],
+            [
+              130.0,
+              110.0
+            ]
+          ],
+          "box": [
+            [
+              130.0,
+              97.0
+            ],
+            [
+              221.0,
+              97.0
+            ],
+            [
+              221.0,
+              110.0
+            ],
+            [
+              130.0,
+              110.0
+            ]
+          ],
+          "position": {
+            "x": 130,
+            "y": 97,
+            "width": 91,
+            "height": 13,
+            "center_x": 175.5,
+            "center_y": 103.5,
+            "region": "top-left",
+            "tag": "[y:97, x:130]"
+          }
+        },
+        {
+          "text": "DATE PREPARED",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              330.0,
+              103.0
+            ],
+            [
+              395.0,
+              103.0
+            ],
+            [
+              395.0,
+              114.0
+            ],
+            [
+              330.0,
+              114.0
+            ]
+          ],
+          "box": [
+            [
+              330.0,
+              103.0
+            ],
+            [
+              395.0,
+              103.0
+            ],
+            [
+              395.0,
+              114.0
+            ],
+            [
+              330.0,
+              114.0
+            ]
+          ],
+          "position": {
+            "x": 330,
+            "y": 103,
+            "width": 65,
+            "height": 11,
+            "center_x": 362.5,
+            "center_y": 108.5,
+            "region": "top-center",
+            "tag": "[y:103, x:330]"
+          }
+        },
+        {
+          "text": "CREATE DATE",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              576.0,
+              104.0
+            ],
+            [
+              647.0,
+              107.0
+            ],
+            [
+              646.0,
+              120.0
+            ],
+            [
+              575.0,
+              117.0
+            ]
+          ],
+          "box": [
+            [
+              576.0,
+              104.0
+            ],
+            [
+              647.0,
+              107.0
+            ],
+            [
+              646.0,
+              120.0
+            ],
+            [
+              575.0,
+              117.0
+            ]
+          ],
+          "position": {
+            "x": 575,
+            "y": 104,
+            "width": 72,
+            "height": 16,
+            "center_x": 611.0,
+            "center_y": 112.0,
+            "region": "top-right",
+            "tag": "[y:104, x:575]"
+          }
+        },
+        {
+          "text": "08/20/91 ::",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              347.0,
+              114.0
+            ],
+            [
+              415.0,
+              114.0
+            ],
+            [
+              415.0,
+              128.0
+            ],
+            [
+              347.0,
+              128.0
+            ]
+          ],
+          "box": [
+            [
+              347.0,
+              114.0
+            ],
+            [
+              415.0,
+              114.0
+            ],
+            [
+              415.0,
+              128.0
+            ],
+            [
+              347.0,
+              128.0
+            ]
+          ],
+          "position": {
+            "x": 347,
+            "y": 114,
+            "width": 68,
+            "height": 14,
+            "center_x": 381.0,
+            "center_y": 121.0,
+            "region": "top-center",
+            "tag": "[y:114, x:347]"
+          }
+        },
+        {
+          "text": "STUDENT IO NUMBER",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              456.0,
+              105.0
+            ],
+            [
+              537.0,
+              105.0
+            ],
+            [
+              537.0,
+              115.0
+            ],
+            [
+              456.0,
+              115.0
+            ]
+          ],
+          "box": [
+            [
+              456.0,
+              105.0
+            ],
+            [
+              537.0,
+              105.0
+            ],
+            [
+              537.0,
+              115.0
+            ],
+            [
+              456.0,
+              115.0
+            ]
+          ],
+          "position": {
+            "x": 456,
+            "y": 105,
+            "width": 81,
+            "height": 10,
+            "center_x": 496.5,
+            "center_y": 110.0,
+            "region": "top-right",
+            "tag": "[y:105, x:456]"
+          }
+        },
+        {
+          "text": "MAKE CHECK PAYABLE TO INON CAMPUS ADORE SS)",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              35.0,
+              134.0
+            ],
+            [
+              240.0,
+              138.0
+            ],
+            [
+              240.0,
+              151.0
+            ],
+            [
+              34.0,
+              147.0
+            ]
+          ],
+          "box": [
+            [
+              35.0,
+              134.0
+            ],
+            [
+              240.0,
+              138.0
+            ],
+            [
+              240.0,
+              151.0
+            ],
+            [
+              34.0,
+              147.0
+            ]
+          ],
+          "position": {
+            "x": 34,
+            "y": 134,
+            "width": 206,
+            "height": 17,
+            "center_x": 137.0,
+            "center_y": 142.5,
+            "region": "top-left",
+            "tag": "[y:134, x:34]"
+          }
+        },
+        {
+          "text": "SOCIAL SECURITY OR FEDERAL ID NUMBER: (REOUIRED)",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              328.0,
+              129.0
+            ],
+            [
+              545.0,
+              131.0
+            ],
+            [
+              545.0,
+              145.0
+            ],
+            [
+              328.0,
+              143.0
+            ]
+          ],
+          "box": [
+            [
+              328.0,
+              129.0
+            ],
+            [
+              545.0,
+              131.0
+            ],
+            [
+              545.0,
+              145.0
+            ],
+            [
+              328.0,
+              143.0
+            ]
+          ],
+          "position": {
+            "x": 328,
+            "y": 129,
+            "width": 217,
+            "height": 16,
+            "center_x": 436.5,
+            "center_y": 137.0,
+            "region": "top-center",
+            "tag": "[y:129, x:328]"
+          }
+        },
+        {
+          "text": "DUE DATE",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              576.0,
+              132.0
+            ],
+            [
+              621.0,
+              135.0
+            ],
+            [
+              620.0,
+              148.0
+            ],
+            [
+              575.0,
+              145.0
+            ]
+          ],
+          "box": [
+            [
+              576.0,
+              132.0
+            ],
+            [
+              621.0,
+              135.0
+            ],
+            [
+              620.0,
+              148.0
+            ],
+            [
+              575.0,
+              145.0
+            ]
+          ],
+          "position": {
+            "x": 575,
+            "y": 132,
+            "width": 46,
+            "height": 16,
+            "center_x": 598.0,
+            "center_y": 140.0,
+            "region": "top-right",
+            "tag": "[y:132, x:575]"
+          }
+        },
+        {
+          "text": "Privacy Notifications",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              487.0,
+              163.0
+            ],
+            [
+              588.0,
+              164.0
+            ],
+            [
+              588.0,
+              178.0
+            ],
+            [
+              487.0,
+              177.0
+            ]
+          ],
+          "box": [
+            [
+              487.0,
+              163.0
+            ],
+            [
+              588.0,
+              164.0
+            ],
+            [
+              588.0,
+              178.0
+            ],
+            [
+              487.0,
+              177.0
+            ]
+          ],
+          "position": {
+            "x": 487,
+            "y": 163,
+            "width": 101,
+            "height": 15,
+            "center_x": 537.5,
+            "center_y": 170.5,
+            "region": "top-right",
+            "tag": "[y:163, x:487]"
+          }
+        },
+        {
+          "text": "The Public Health Foundation of",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              104.0,
+              179.0
+            ],
+            [
+              330.0,
+              185.0
+            ],
+            [
+              330.0,
+              199.0
+            ],
+            [
+              104.0,
+              193.0
+            ]
+          ],
+          "box": [
+            [
+              104.0,
+              179.0
+            ],
+            [
+              330.0,
+              185.0
+            ],
+            [
+              330.0,
+              199.0
+            ],
+            [
+              104.0,
+              193.0
+            ]
+          ],
+          "position": {
+            "x": 104,
+            "y": 179,
+            "width": 226,
+            "height": 20,
+            "center_x": 217.0,
+            "center_y": 189.0,
+            "region": "top-left",
+            "tag": "[y:179, x:104]"
+          }
+        },
+        {
+          "text": "(See reverse side for notulication pertaining to the State of",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              440.0,
+              179.0
+            ],
+            [
+              683.0,
+              184.0
+            ],
+            [
+              683.0,
+              197.0
+            ],
+            [
+              440.0,
+              192.0
+            ]
+          ],
+          "box": [
+            [
+              440.0,
+              179.0
+            ],
+            [
+              683.0,
+              184.0
+            ],
+            [
+              683.0,
+              197.0
+            ],
+            [
+              440.0,
+              192.0
+            ]
+          ],
+          "position": {
+            "x": 440,
+            "y": 179,
+            "width": 243,
+            "height": 18,
+            "center_x": 561.5,
+            "center_y": 188.0,
+            "region": "top-right",
+            "tag": "[y:179, x:440]"
+          }
+        },
+        {
+          "text": "NAME",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              35.0,
+              188.0
+            ],
+            [
+              61.0,
+              188.0
+            ],
+            [
+              61.0,
+              197.0
+            ],
+            [
+              35.0,
+              197.0
+            ]
+          ],
+          "box": [
+            [
+              35.0,
+              188.0
+            ],
+            [
+              61.0,
+              188.0
+            ],
+            [
+              61.0,
+              197.0
+            ],
+            [
+              35.0,
+              197.0
+            ]
+          ],
+          "position": {
+            "x": 35,
+            "y": 188,
+            "width": 26,
+            "height": 9,
+            "center_x": 48.0,
+            "center_y": 192.5,
+            "region": "top-left",
+            "tag": "[y:188, x:35]"
+          }
+        },
+        {
+          "text": "Los Angeles County",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              125.0,
+              193.0
+            ],
+            [
+              253.0,
+              198.0
+            ],
+            [
+              253.0,
+              212.0
+            ],
+            [
+              124.0,
+              208.0
+            ]
+          ],
+          "box": [
+            [
+              125.0,
+              193.0
+            ],
+            [
+              253.0,
+              198.0
+            ],
+            [
+              253.0,
+              212.0
+            ],
+            [
+              124.0,
+              208.0
+            ]
+          ],
+          "position": {
+            "x": 124,
+            "y": 193,
+            "width": 129,
+            "height": 19,
+            "center_x": 188.5,
+            "center_y": 202.5,
+            "region": "top-left",
+            "tag": "[y:193, x:124]"
+          }
+        },
+        {
+          "text": "STATE",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              411.0,
+              180.0
+            ],
+            [
+              436.0,
+              180.0
+            ],
+            [
+              436.0,
+              192.0
+            ],
+            [
+              411.0,
+              192.0
+            ]
+          ],
+          "box": [
+            [
+              411.0,
+              180.0
+            ],
+            [
+              436.0,
+              180.0
+            ],
+            [
+              436.0,
+              192.0
+            ],
+            [
+              411.0,
+              192.0
+            ]
+          ],
+          "position": {
+            "x": 411,
+            "y": 180,
+            "width": 25,
+            "height": 12,
+            "center_x": 423.5,
+            "center_y": 186.0,
+            "region": "top-center",
+            "tag": "[y:180, x:411]"
+          }
+        },
+        {
+          "text": "Callornia Inlormation Practices Act.)",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              442.0,
+              189.0
+            ],
+            [
+              583.0,
+              192.0
+            ],
+            [
+              583.0,
+              203.0
+            ],
+            [
+              442.0,
+              201.0
+            ]
+          ],
+          "box": [
+            [
+              442.0,
+              189.0
+            ],
+            [
+              583.0,
+              192.0
+            ],
+            [
+              583.0,
+              203.0
+            ],
+            [
+              442.0,
+              201.0
+            ]
+          ],
+          "position": {
+            "x": 442,
+            "y": 189,
+            "width": 141,
+            "height": 14,
+            "center_x": 512.5,
+            "center_y": 196.0,
+            "region": "top-right",
+            "tag": "[y:189, x:442]"
+          }
+        },
+        {
+          "text": "STREET",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              34.0,
+              197.0
+            ],
+            [
+              69.0,
+              197.0
+            ],
+            [
+              69.0,
+              208.0
+            ],
+            [
+              34.0,
+              208.0
+            ]
+          ],
+          "box": [
+            [
+              34.0,
+              197.0
+            ],
+            [
+              69.0,
+              197.0
+            ],
+            [
+              69.0,
+              208.0
+            ],
+            [
+              34.0,
+              208.0
+            ]
+          ],
+          "position": {
+            "x": 34,
+            "y": 197,
+            "width": 35,
+            "height": 11,
+            "center_x": 51.5,
+            "center_y": 202.5,
+            "region": "top-left",
+            "tag": "[y:197, x:34]"
+          }
+        },
+        {
+          "text": "CITY",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              34.0,
+              208.0
+            ],
+            [
+              57.0,
+              208.0
+            ],
+            [
+              57.0,
+              219.0
+            ],
+            [
+              34.0,
+              219.0
+            ]
+          ],
+          "box": [
+            [
+              34.0,
+              208.0
+            ],
+            [
+              57.0,
+              208.0
+            ],
+            [
+              57.0,
+              219.0
+            ],
+            [
+              34.0,
+              219.0
+            ]
+          ],
+          "position": {
+            "x": 34,
+            "y": 208,
+            "width": 23,
+            "height": 11,
+            "center_x": 45.5,
+            "center_y": 213.5,
+            "region": "top-left",
+            "tag": "[y:208, x:34]"
+          }
+        },
+        {
+          "text": "13200 Crossroads Pkway, North",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              103.0,
+              205.0
+            ],
+            [
+              310.0,
+              211.0
+            ],
+            [
+              309.0,
+              228.0
+            ],
+            [
+              103.0,
+              223.0
+            ]
+          ],
+          "box": [
+            [
+              103.0,
+              205.0
+            ],
+            [
+              310.0,
+              211.0
+            ],
+            [
+              309.0,
+              228.0
+            ],
+            [
+              103.0,
+              223.0
+            ]
+          ],
+          "position": {
+            "x": 103,
+            "y": 205,
+            "width": 207,
+            "height": 23,
+            "center_x": 206.5,
+            "center_y": 216.5,
+            "region": "top-left",
+            "tag": "[y:205, x:103]"
+          }
+        },
+        {
+          "text": "FEDERAL",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              410.0,
+              202.0
+            ],
+            [
+              448.0,
+              202.0
+            ],
+            [
+              448.0,
+              213.0
+            ],
+            [
+              410.0,
+              213.0
+            ]
+          ],
+          "box": [
+            [
+              410.0,
+              202.0
+            ],
+            [
+              448.0,
+              202.0
+            ],
+            [
+              448.0,
+              213.0
+            ],
+            [
+              410.0,
+              213.0
+            ]
+          ],
+          "position": {
+            "x": 410,
+            "y": 202,
+            "width": 38,
+            "height": 11,
+            "center_x": 429.0,
+            "center_y": 207.5,
+            "region": "top-center",
+            "tag": "[y:202, x:410]"
+          }
+        },
+        {
+          "text": "(See reverse side lor nobfication pertaining to the",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              457.0,
+              202.0
+            ],
+            [
+              658.0,
+              205.0
+            ],
+            [
+              658.0,
+              216.0
+            ],
+            [
+              457.0,
+              213.0
+            ]
+          ],
+          "box": [
+            [
+              457.0,
+              202.0
+            ],
+            [
+              658.0,
+              205.0
+            ],
+            [
+              658.0,
+              216.0
+            ],
+            [
+              457.0,
+              213.0
+            ]
+          ],
+          "position": {
+            "x": 457,
+            "y": 202,
+            "width": 201,
+            "height": 14,
+            "center_x": 557.5,
+            "center_y": 209.0,
+            "region": "top-right",
+            "tag": "[y:202, x:457]"
+          }
+        },
+        {
+          "text": "STATE",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              34.0,
+              219.0
+            ],
+            [
+              61.0,
+              219.0
+            ],
+            [
+              61.0,
+              230.0
+            ],
+            [
+              34.0,
+              230.0
+            ]
+          ],
+          "box": [
+            [
+              34.0,
+              219.0
+            ],
+            [
+              61.0,
+              219.0
+            ],
+            [
+              61.0,
+              230.0
+            ],
+            [
+              34.0,
+              230.0
+            ]
+          ],
+          "position": {
+            "x": 34,
+            "y": 219,
+            "width": 27,
+            "height": 11,
+            "center_x": 47.5,
+            "center_y": 224.5,
+            "region": "top-left",
+            "tag": "[y:219, x:34]"
+          }
+        },
+        {
+          "text": "Suite 135",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              104.0,
+              221.0
+            ],
+            [
+              169.0,
+              223.0
+            ],
+            [
+              169.0,
+              237.0
+            ],
+            [
+              103.0,
+              235.0
+            ]
+          ],
+          "box": [
+            [
+              104.0,
+              221.0
+            ],
+            [
+              169.0,
+              223.0
+            ],
+            [
+              169.0,
+              237.0
+            ],
+            [
+              103.0,
+              235.0
+            ]
+          ],
+          "position": {
+            "x": 103,
+            "y": 221,
+            "width": 66,
+            "height": 16,
+            "center_x": 136.0,
+            "center_y": 229.0,
+            "region": "top-left",
+            "tag": "[y:221, x:103]"
+          }
+        },
+        {
+          "text": "IS PAYEE",
+          "confidence": 0.85,
+          "bounding_box": [
+            [
+              371.0,
+              221.0
+            ],
+            [
+              409.0,
+              221.0
+            ],
+            [
+              409.0,
+              235.0
+            ],
+            [
+              371.0,
+              235.0
+            ]
+          ],
+          "box": [
+            [
+              371.0,
+              221.0
+            ],
+            [
+              409.0,
+              221.0
+            ],
+            [
+              409.0,
+              235.0
+            ],
+            [
+              371.0,
+              235.0
+            ]
+          ],
+          "position": {
+            "x": 371,
+            "y": 221,
+            "width": 38,
+            "height": 14,
+            "center_x": 390.0,
+            "center_y": 228.0,
+            "region": "top-center",
+            "tag": "[y:221, x:371]"
+          }
+        },
+        {
+          "text": "NO",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              431.0,
+              223.0
+            ],
+            [
+              446.0,
+              223.0
+            ],
+            [
+              446.0,
+              235.0
+            ],
+            [
+              431.0,
+              235.0
+            ]
+          ],
+          "box": [
+            [
+              431.0,
+              223.0
+            ],
+            [
+              446.0,
+              223.0
+            ],
+            [
+              446.0,
+              235.0
+            ],
+            [
+              431.0,
+              235.0
+            ]
+          ],
+          "position": {
+            "x": 431,
+            "y": 223,
+            "width": 15,
+            "height": 12,
+            "center_x": 438.5,
+            "center_y": 229.0,
+            "region": "top-center",
+            "tag": "[y:223, x:431]"
+          }
+        },
+        {
+          "text": "Federal Privacy Act of 1974.)",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              457.0,
+              211.0
+            ],
+            [
+              569.0,
+              212.0
+            ],
+            [
+              569.0,
+              223.0
+            ],
+            [
+              457.0,
+              222.0
+            ]
+          ],
+          "box": [
+            [
+              457.0,
+              211.0
+            ],
+            [
+              569.0,
+              212.0
+            ],
+            [
+              569.0,
+              223.0
+            ],
+            [
+              457.0,
+              222.0
+            ]
+          ],
+          "position": {
+            "x": 457,
+            "y": 211,
+            "width": 112,
+            "height": 12,
+            "center_x": 513.0,
+            "center_y": 217.0,
+            "region": "top-right",
+            "tag": "[y:211, x:457]"
+          }
+        },
+        {
+          "text": "YES",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              457.0,
+              224.0
+            ],
+            [
+              474.0,
+              224.0
+            ],
+            [
+              474.0,
+              235.0
+            ],
+            [
+              457.0,
+              235.0
+            ]
+          ],
+          "box": [
+            [
+              457.0,
+              224.0
+            ],
+            [
+              474.0,
+              224.0
+            ],
+            [
+              474.0,
+              235.0
+            ],
+            [
+              457.0,
+              235.0
+            ]
+          ],
+          "position": {
+            "x": 457,
+            "y": 224,
+            "width": 17,
+            "height": 11,
+            "center_x": 465.5,
+            "center_y": 229.5,
+            "region": "top-center",
+            "tag": "[y:224, x:457]"
+          }
+        },
+        {
+          "text": "CHECK HERE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              497.0,
+              224.0
+            ],
+            [
+              548.0,
+              224.0
+            ],
+            [
+              548.0,
+              235.0
+            ],
+            [
+              497.0,
+              235.0
+            ]
+          ],
+          "box": [
+            [
+              497.0,
+              224.0
+            ],
+            [
+              548.0,
+              224.0
+            ],
+            [
+              548.0,
+              235.0
+            ],
+            [
+              497.0,
+              235.0
+            ]
+          ],
+          "position": {
+            "x": 497,
+            "y": 224,
+            "width": 51,
+            "height": 11,
+            "center_x": 522.5,
+            "center_y": 229.5,
+            "region": "top-right",
+            "tag": "[y:224, x:497]"
+          }
+        },
+        {
+          "text": "VSA TYPE",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              590.0,
+              224.0
+            ],
+            [
+              635.0,
+              226.0
+            ],
+            [
+              634.0,
+              237.0
+            ],
+            [
+              590.0,
+              235.0
+            ]
+          ],
+          "box": [
+            [
+              590.0,
+              224.0
+            ],
+            [
+              635.0,
+              226.0
+            ],
+            [
+              634.0,
+              237.0
+            ],
+            [
+              590.0,
+              235.0
+            ]
+          ],
+          "position": {
+            "x": 590,
+            "y": 224,
+            "width": 45,
+            "height": 13,
+            "center_x": 612.5,
+            "center_y": 230.5,
+            "region": "top-right",
+            "tag": "[y:224, x:590]"
+          }
+        },
+        {
+          "text": "Z1P(25-42)",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              34.0,
+              228.0
+            ],
+            [
+              80.0,
+              230.0
+            ],
+            [
+              80.0,
+              242.0
+            ],
+            [
+              33.0,
+              240.0
+            ]
+          ],
+          "box": [
+            [
+              34.0,
+              228.0
+            ],
+            [
+              80.0,
+              230.0
+            ],
+            [
+              80.0,
+              242.0
+            ],
+            [
+              33.0,
+              240.0
+            ]
+          ],
+          "position": {
+            "x": 33,
+            "y": 228,
+            "width": 47,
+            "height": 14,
+            "center_x": 56.5,
+            "center_y": 235.0,
+            "region": "top-left",
+            "tag": "[y:228, x:33]"
+          }
+        },
+        {
+          "text": "City of Industry, CA 91746",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              102.0,
+              235.0
+            ],
+            [
+              288.0,
+              238.0
+            ],
+            [
+              288.0,
+              254.0
+            ],
+            [
+              102.0,
+              251.0
+            ]
+          ],
+          "box": [
+            [
+              102.0,
+              235.0
+            ],
+            [
+              288.0,
+              238.0
+            ],
+            [
+              288.0,
+              254.0
+            ],
+            [
+              102.0,
+              251.0
+            ]
+          ],
+          "position": {
+            "x": 102,
+            "y": 235,
+            "width": 186,
+            "height": 19,
+            "center_x": 195.0,
+            "center_y": 244.5,
+            "region": "top-left",
+            "tag": "[y:235, x:102]"
+          }
+        },
+        {
+          "text": "EMPLOYEE",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              372.0,
+              237.0
+            ],
+            [
+              417.0,
+              237.0
+            ],
+            [
+              417.0,
+              248.0
+            ],
+            [
+              372.0,
+              248.0
+            ]
+          ],
+          "box": [
+            [
+              372.0,
+              237.0
+            ],
+            [
+              417.0,
+              237.0
+            ],
+            [
+              417.0,
+              248.0
+            ],
+            [
+              372.0,
+              248.0
+            ]
+          ],
+          "position": {
+            "x": 372,
+            "y": 237,
+            "width": 45,
+            "height": 11,
+            "center_x": 394.5,
+            "center_y": 242.5,
+            "region": "top-center",
+            "tag": "[y:237, x:372]"
+          }
+        },
+        {
+          "text": "x",
+          "confidence": 0.5,
+          "bounding_box": [
+            [
+              432.0,
+              233.0
+            ],
+            [
+              447.0,
+              233.0
+            ],
+            [
+              447.0,
+              247.0
+            ],
+            [
+              432.0,
+              247.0
+            ]
+          ],
+          "box": [
+            [
+              432.0,
+              233.0
+            ],
+            [
+              447.0,
+              233.0
+            ],
+            [
+              447.0,
+              247.0
+            ],
+            [
+              432.0,
+              247.0
+            ]
+          ],
+          "position": {
+            "x": 432,
+            "y": 233,
+            "width": 15,
+            "height": 14,
+            "center_x": 439.5,
+            "center_y": 240.0,
+            "region": "top-center",
+            "tag": "[y:233, x:432]"
+          }
+        },
+        {
+          "text": "FEMPLOYEE",
+          "confidence": 0.65,
+          "bounding_box": [
+            [
+              496.0,
+              232.0
+            ],
+            [
+              548.0,
+              232.0
+            ],
+            [
+              548.0,
+              243.0
+            ],
+            [
+              496.0,
+              243.0
+            ]
+          ],
+          "box": [
+            [
+              496.0,
+              232.0
+            ],
+            [
+              548.0,
+              232.0
+            ],
+            [
+              548.0,
+              243.0
+            ],
+            [
+              496.0,
+              243.0
+            ]
+          ],
+          "position": {
+            "x": 496,
+            "y": 232,
+            "width": 52,
+            "height": 11,
+            "center_x": 522.0,
+            "center_y": 237.5,
+            "region": "top-right",
+            "tag": "[y:232, x:496]"
+          }
+        },
+        {
+          "text": "MTHOUT SALARY",
+          "confidence": 0.63,
+          "bounding_box": [
+            [
+              496.0,
+              238.0
+            ],
+            [
+              566.0,
+              239.0
+            ],
+            [
+              565.0,
+              250.0
+            ],
+            [
+              496.0,
+              249.0
+            ]
+          ],
+          "box": [
+            [
+              496.0,
+              238.0
+            ],
+            [
+              566.0,
+              239.0
+            ],
+            [
+              565.0,
+              250.0
+            ],
+            [
+              496.0,
+              249.0
+            ]
+          ],
+          "position": {
+            "x": 496,
+            "y": 238,
+            "width": 70,
+            "height": 12,
+            "center_x": 531.0,
+            "center_y": 244.0,
+            "region": "top-right",
+            "tag": "[y:238, x:496]"
+          }
+        },
+        {
+          "text": "COUNTRY",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              34.0,
+              241.0
+            ],
+            [
+              75.0,
+              241.0
+            ],
+            [
+              75.0,
+              252.0
+            ],
+            [
+              34.0,
+              252.0
+            ]
+          ],
+          "box": [
+            [
+              34.0,
+              241.0
+            ],
+            [
+              75.0,
+              241.0
+            ],
+            [
+              75.0,
+              252.0
+            ],
+            [
+              34.0,
+              252.0
+            ]
+          ],
+          "position": {
+            "x": 34,
+            "y": 241,
+            "width": 41,
+            "height": 11,
+            "center_x": 54.5,
+            "center_y": 246.5,
+            "region": "top-left",
+            "tag": "[y:241, x:34]"
+          }
+        },
+        {
+          "text": "RESIDENT",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              372.0,
+              251.0
+            ],
+            [
+              413.0,
+              251.0
+            ],
+            [
+              413.0,
+              261.0
+            ],
+            [
+              372.0,
+              261.0
+            ]
+          ],
+          "box": [
+            [
+              372.0,
+              251.0
+            ],
+            [
+              413.0,
+              251.0
+            ],
+            [
+              413.0,
+              261.0
+            ],
+            [
+              372.0,
+              261.0
+            ]
+          ],
+          "position": {
+            "x": 372,
+            "y": 251,
+            "width": 41,
+            "height": 10,
+            "center_x": 392.5,
+            "center_y": 256.0,
+            "region": "top-center",
+            "tag": "[y:251, x:372]"
+          }
+        },
+        {
+          "text": "NO",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              442.0,
+              253.0
+            ],
+            [
+              455.0,
+              253.0
+            ],
+            [
+              455.0,
+              262.0
+            ],
+            [
+              442.0,
+              262.0
+            ]
+          ],
+          "box": [
+            [
+              442.0,
+              253.0
+            ],
+            [
+              455.0,
+              253.0
+            ],
+            [
+              455.0,
+              262.0
+            ],
+            [
+              442.0,
+              262.0
+            ]
+          ],
+          "position": {
+            "x": 442,
+            "y": 253,
+            "width": 13,
+            "height": 9,
+            "center_x": 448.5,
+            "center_y": 257.5,
+            "region": "top-center",
+            "tag": "[y:253, x:442]"
+          }
+        },
+        {
+          "text": "YES",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              466.0,
+              252.0
+            ],
+            [
+              486.0,
+              252.0
+            ],
+            [
+              486.0,
+              263.0
+            ],
+            [
+              466.0,
+              263.0
+            ]
+          ],
+          "box": [
+            [
+              466.0,
+              252.0
+            ],
+            [
+              486.0,
+              252.0
+            ],
+            [
+              486.0,
+              263.0
+            ],
+            [
+              466.0,
+              263.0
+            ]
+          ],
+          "position": {
+            "x": 466,
+            "y": 252,
+            "width": 20,
+            "height": 11,
+            "center_x": 476.0,
+            "center_y": 257.5,
+            "region": "top-center",
+            "tag": "[y:252, x:466]"
+          }
+        },
+        {
+          "text": "AUEN COUNTRY OF RESIDENCE",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              493.0,
+              251.0
+            ],
+            [
+              630.0,
+              254.0
+            ],
+            [
+              630.0,
+              265.0
+            ],
+            [
+              493.0,
+              262.0
+            ]
+          ],
+          "box": [
+            [
+              493.0,
+              251.0
+            ],
+            [
+              630.0,
+              254.0
+            ],
+            [
+              630.0,
+              265.0
+            ],
+            [
+              493.0,
+              262.0
+            ]
+          ],
+          "position": {
+            "x": 493,
+            "y": 251,
+            "width": 137,
+            "height": 14,
+            "center_x": 561.5,
+            "center_y": 258.0,
+            "region": "top-right",
+            "tag": "[y:251, x:493]"
+          }
+        },
+        {
+          "text": "CALUFORAA",
+          "confidence": 0.77,
+          "bounding_box": [
+            [
+              373.0,
+              263.0
+            ],
+            [
+              419.0,
+              265.0
+            ],
+            [
+              418.0,
+              277.0
+            ],
+            [
+              372.0,
+              275.0
+            ]
+          ],
+          "box": [
+            [
+              373.0,
+              263.0
+            ],
+            [
+              419.0,
+              265.0
+            ],
+            [
+              418.0,
+              277.0
+            ],
+            [
+              372.0,
+              275.0
+            ]
+          ],
+          "position": {
+            "x": 372,
+            "y": 263,
+            "width": 47,
+            "height": 14,
+            "center_x": 395.5,
+            "center_y": 270.0,
+            "region": "middle",
+            "tag": "[y:263, x:372]"
+          }
+        },
+        {
+          "text": "ATTACH STATEMENT OF CITIZENSHIP STATUS",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              491.0,
+              279.0
+            ],
+            [
+              670.0,
+              282.0
+            ],
+            [
+              670.0,
+              295.0
+            ],
+            [
+              491.0,
+              292.0
+            ]
+          ],
+          "box": [
+            [
+              491.0,
+              279.0
+            ],
+            [
+              670.0,
+              282.0
+            ],
+            [
+              670.0,
+              295.0
+            ],
+            [
+              491.0,
+              292.0
+            ]
+          ],
+          "position": {
+            "x": 491,
+            "y": 279,
+            "width": 179,
+            "height": 16,
+            "center_x": 580.5,
+            "center_y": 287.0,
+            "region": "middle-right",
+            "tag": "[y:279, x:491]"
+          }
+        },
+        {
+          "text": "ATTENTION: CHECKS REOUIRING ATTACHMENTS.... DOCUMENTS TO BE SENT WITH CHECK MUST BE ATTACHED TO PAYEE'S COPY OF CHECK REQUEST.",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              50.0,
+              296.0
+            ],
+            [
+              646.0,
+              306.0
+            ],
+            [
+              645.0,
+              320.0
+            ],
+            [
+              49.0,
+              310.0
+            ]
+          ],
+          "box": [
+            [
+              50.0,
+              296.0
+            ],
+            [
+              646.0,
+              306.0
+            ],
+            [
+              645.0,
+              320.0
+            ],
+            [
+              49.0,
+              310.0
+            ]
+          ],
+          "position": {
+            "x": 49,
+            "y": 296,
+            "width": 597,
+            "height": 24,
+            "center_x": 347.5,
+            "center_y": 308.0,
+            "region": "middle",
+            "tag": "[y:296, x:49]"
+          }
+        },
+        {
+          "text": "SUBSCRIPTION",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              67.0,
+              320.0
+            ],
+            [
+              129.0,
+              323.0
+            ],
+            [
+              128.0,
+              338.0
+            ],
+            [
+              67.0,
+              336.0
+            ]
+          ],
+          "box": [
+            [
+              67.0,
+              320.0
+            ],
+            [
+              129.0,
+              323.0
+            ],
+            [
+              128.0,
+              338.0
+            ],
+            [
+              67.0,
+              336.0
+            ]
+          ],
+          "position": {
+            "x": 67,
+            "y": 320,
+            "width": 62,
+            "height": 18,
+            "center_x": 98.0,
+            "center_y": 329.0,
+            "region": "middle-left",
+            "tag": "[y:320, x:67]"
+          }
+        },
+        {
+          "text": "PREREGISTRATION FORM",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              67.0,
+              337.0
+            ],
+            [
+              168.0,
+              338.0
+            ],
+            [
+              168.0,
+              352.0
+            ],
+            [
+              67.0,
+              351.0
+            ]
+          ],
+          "box": [
+            [
+              67.0,
+              337.0
+            ],
+            [
+              168.0,
+              338.0
+            ],
+            [
+              168.0,
+              352.0
+            ],
+            [
+              67.0,
+              351.0
+            ]
+          ],
+          "position": {
+            "x": 67,
+            "y": 337,
+            "width": 101,
+            "height": 15,
+            "center_x": 117.5,
+            "center_y": 344.5,
+            "region": "middle-left",
+            "tag": "[y:337, x:67]"
+          }
+        },
+        {
+          "text": "OTHER",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              68.0,
+              353.0
+            ],
+            [
+              98.0,
+              353.0
+            ],
+            [
+              98.0,
+              367.0
+            ],
+            [
+              68.0,
+              367.0
+            ]
+          ],
+          "box": [
+            [
+              68.0,
+              353.0
+            ],
+            [
+              98.0,
+              353.0
+            ],
+            [
+              98.0,
+              367.0
+            ],
+            [
+              68.0,
+              367.0
+            ]
+          ],
+          "position": {
+            "x": 68,
+            "y": 353,
+            "width": 30,
+            "height": 14,
+            "center_x": 83.0,
+            "center_y": 360.0,
+            "region": "middle-left",
+            "tag": "[y:353, x:68]"
+          }
+        },
+        {
+          "text": "DESCRIPTION OF PAYMENT (REQUIRED)",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              48.0,
+              373.0
+            ],
+            [
+              203.0,
+              377.0
+            ],
+            [
+              203.0,
+              391.0
+            ],
+            [
+              47.0,
+              387.0
+            ]
+          ],
+          "box": [
+            [
+              48.0,
+              373.0
+            ],
+            [
+              203.0,
+              377.0
+            ],
+            [
+              203.0,
+              391.0
+            ],
+            [
+              47.0,
+              387.0
+            ]
+          ],
+          "position": {
+            "x": 47,
+            "y": 373,
+            "width": 156,
+            "height": 18,
+            "center_x": 125.0,
+            "center_y": 382.0,
+            "region": "middle-left",
+            "tag": "[y:373, x:47]"
+          }
+        },
+        {
+          "text": "Fod",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              689.0,
+              361.0
+            ],
+            [
+              701.0,
+              361.0
+            ],
+            [
+              701.0,
+              370.0
+            ],
+            [
+              689.0,
+              370.0
+            ]
+          ],
+          "box": [
+            [
+              689.0,
+              361.0
+            ],
+            [
+              701.0,
+              361.0
+            ],
+            [
+              701.0,
+              370.0
+            ],
+            [
+              689.0,
+              370.0
+            ]
+          ],
+          "position": {
+            "x": 689,
+            "y": 361,
+            "width": 12,
+            "height": 9,
+            "center_x": 695.0,
+            "center_y": 365.5,
+            "region": "middle-right",
+            "tag": "[y:361, x:689]"
+          }
+        },
+        {
+          "text": "RT5",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              272.0,
+              387.0
+            ],
+            [
+              319.0,
+              387.0
+            ],
+            [
+              319.0,
+              402.0
+            ],
+            [
+              272.0,
+              402.0
+            ]
+          ],
+          "box": [
+            [
+              272.0,
+              387.0
+            ],
+            [
+              319.0,
+              387.0
+            ],
+            [
+              319.0,
+              402.0
+            ],
+            [
+              272.0,
+              402.0
+            ]
+          ],
+          "position": {
+            "x": 272,
+            "y": 387,
+            "width": 47,
+            "height": 15,
+            "center_x": 295.5,
+            "center_y": 394.5,
+            "region": "middle",
+            "tag": "[y:387, x:272]"
+          }
+        },
+        {
+          "text": "s",
+          "confidence": 0.53,
+          "bounding_box": [
+            [
+              364.0,
+              389.0
+            ],
+            [
+              377.0,
+              389.0
+            ],
+            [
+              377.0,
+              404.0
+            ],
+            [
+              364.0,
+              404.0
+            ]
+          ],
+          "box": [
+            [
+              364.0,
+              389.0
+            ],
+            [
+              377.0,
+              389.0
+            ],
+            [
+              377.0,
+              404.0
+            ],
+            [
+              364.0,
+              404.0
+            ]
+          ],
+          "position": {
+            "x": 364,
+            "y": 389,
+            "width": 13,
+            "height": 15,
+            "center_x": 370.5,
+            "center_y": 396.5,
+            "region": "middle",
+            "tag": "[y:389, x:364]"
+          }
+        },
+        {
+          "text": "H",
+          "confidence": 0.74,
+          "bounding_box": [
+            [
+              399.0,
+              384.0
+            ],
+            [
+              412.0,
+              384.0
+            ],
+            [
+              412.0,
+              403.0
+            ],
+            [
+              399.0,
+              403.0
+            ]
+          ],
+          "box": [
+            [
+              399.0,
+              384.0
+            ],
+            [
+              412.0,
+              384.0
+            ],
+            [
+              412.0,
+              403.0
+            ],
+            [
+              399.0,
+              403.0
+            ]
+          ],
+          "position": {
+            "x": 399,
+            "y": 384,
+            "width": 13,
+            "height": 19,
+            "center_x": 405.5,
+            "center_y": 393.5,
+            "region": "middle",
+            "tag": "[y:384, x:399]"
+          }
+        },
+        {
+          "text": "A",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              413.0,
+              388.0
+            ],
+            [
+              427.0,
+              392.0
+            ],
+            [
+              423.0,
+              406.0
+            ],
+            [
+              410.0,
+              403.0
+            ]
+          ],
+          "box": [
+            [
+              413.0,
+              388.0
+            ],
+            [
+              427.0,
+              392.0
+            ],
+            [
+              423.0,
+              406.0
+            ],
+            [
+              410.0,
+              403.0
+            ]
+          ],
+          "position": {
+            "x": 410,
+            "y": 388,
+            "width": 17,
+            "height": 18,
+            "center_x": 418.5,
+            "center_y": 397.0,
+            "region": "middle",
+            "tag": "[y:388, x:410]"
+          }
+        },
+        {
+          "text": "AMOUNT",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              612.0,
+              381.0
+            ],
+            [
+              660.0,
+              381.0
+            ],
+            [
+              660.0,
+              395.0
+            ],
+            [
+              612.0,
+              395.0
+            ]
+          ],
+          "box": [
+            [
+              612.0,
+              381.0
+            ],
+            [
+              660.0,
+              381.0
+            ],
+            [
+              660.0,
+              395.0
+            ],
+            [
+              612.0,
+              395.0
+            ]
+          ],
+          "position": {
+            "x": 612,
+            "y": 381,
+            "width": 48,
+            "height": 14,
+            "center_x": 636.0,
+            "center_y": 388.0,
+            "region": "middle-right",
+            "tag": "[y:381, x:612]"
+          }
+        },
+        {
+          "text": "PAYMENT EXPLANATION:",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              60.0,
+              402.0
+            ],
+            [
+              159.0,
+              404.0
+            ],
+            [
+              159.0,
+              418.0
+            ],
+            [
+              60.0,
+              416.0
+            ]
+          ],
+          "box": [
+            [
+              60.0,
+              402.0
+            ],
+            [
+              159.0,
+              404.0
+            ],
+            [
+              159.0,
+              418.0
+            ],
+            [
+              60.0,
+              416.0
+            ]
+          ],
+          "position": {
+            "x": 60,
+            "y": 402,
+            "width": 99,
+            "height": 16,
+            "center_x": 109.5,
+            "center_y": 410.0,
+            "region": "middle-left",
+            "tag": "[y:402, x:60]"
+          }
+        },
+        {
+          "text": "-",
+          "confidence": 0.51,
+          "bounding_box": [
+            [
+              263.0,
+              390.0
+            ],
+            [
+              269.0,
+              390.0
+            ],
+            [
+              269.0,
+              399.0
+            ],
+            [
+              263.0,
+              399.0
+            ]
+          ],
+          "box": [
+            [
+              263.0,
+              390.0
+            ],
+            [
+              269.0,
+              390.0
+            ],
+            [
+              269.0,
+              399.0
+            ],
+            [
+              263.0,
+              399.0
+            ]
+          ],
+          "position": {
+            "x": 263,
+            "y": 390,
+            "width": 6,
+            "height": 9,
+            "center_x": 266.0,
+            "center_y": 394.5,
+            "region": "middle",
+            "tag": "[y:390, x:263]"
+          }
+        },
+        {
+          "text": "0",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              316.0,
+              390.0
+            ],
+            [
+              327.0,
+              390.0
+            ],
+            [
+              327.0,
+              400.0
+            ],
+            [
+              316.0,
+              400.0
+            ]
+          ],
+          "box": [
+            [
+              316.0,
+              390.0
+            ],
+            [
+              327.0,
+              390.0
+            ],
+            [
+              327.0,
+              400.0
+            ],
+            [
+              316.0,
+              400.0
+            ]
+          ],
+          "position": {
+            "x": 316,
+            "y": 390,
+            "width": 11,
+            "height": 10,
+            "center_x": 321.5,
+            "center_y": 395.0,
+            "region": "middle",
+            "tag": "[y:390, x:316]"
+          }
+        },
+        {
+          "text": "5",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              338.0,
+              390.0
+            ],
+            [
+              348.0,
+              390.0
+            ],
+            [
+              348.0,
+              401.0
+            ],
+            [
+              338.0,
+              401.0
+            ]
+          ],
+          "box": [
+            [
+              338.0,
+              390.0
+            ],
+            [
+              348.0,
+              390.0
+            ],
+            [
+              348.0,
+              401.0
+            ],
+            [
+              338.0,
+              401.0
+            ]
+          ],
+          "position": {
+            "x": 338,
+            "y": 390,
+            "width": 10,
+            "height": 11,
+            "center_x": 343.0,
+            "center_y": 395.5,
+            "region": "middle",
+            "tag": "[y:390, x:338]"
+          }
+        },
+        {
+          "text": "Y",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              425.0,
+              391.0
+            ],
+            [
+              438.0,
+              391.0
+            ],
+            [
+              438.0,
+              404.0
+            ],
+            [
+              425.0,
+              404.0
+            ]
+          ],
+          "box": [
+            [
+              425.0,
+              391.0
+            ],
+            [
+              438.0,
+              391.0
+            ],
+            [
+              438.0,
+              404.0
+            ],
+            [
+              425.0,
+              404.0
+            ]
+          ],
+          "position": {
+            "x": 425,
+            "y": 391,
+            "width": 13,
+            "height": 13,
+            "center_x": 431.5,
+            "center_y": 397.5,
+            "region": "middle",
+            "tag": "[y:391, x:425]"
+          }
+        },
+        {
+          "text": "WA",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              445.0,
+              390.0
+            ],
+            [
+              475.0,
+              393.0
+            ],
+            [
+              474.0,
+              407.0
+            ],
+            [
+              444.0,
+              404.0
+            ]
+          ],
+          "box": [
+            [
+              445.0,
+              390.0
+            ],
+            [
+              475.0,
+              393.0
+            ],
+            [
+              474.0,
+              407.0
+            ],
+            [
+              444.0,
+              404.0
+            ]
+          ],
+          "position": {
+            "x": 444,
+            "y": 390,
+            "width": 31,
+            "height": 17,
+            "center_x": 459.5,
+            "center_y": 398.5,
+            "region": "middle",
+            "tag": "[y:390, x:444]"
+          }
+        },
+        {
+          "text": "R",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              472.0,
+              392.0
+            ],
+            [
+              486.0,
+              392.0
+            ],
+            [
+              486.0,
+              405.0
+            ],
+            [
+              472.0,
+              405.0
+            ]
+          ],
+          "box": [
+            [
+              472.0,
+              392.0
+            ],
+            [
+              486.0,
+              392.0
+            ],
+            [
+              486.0,
+              405.0
+            ],
+            [
+              472.0,
+              405.0
+            ]
+          ],
+          "position": {
+            "x": 472,
+            "y": 392,
+            "width": 14,
+            "height": 13,
+            "center_x": 479.0,
+            "center_y": 398.5,
+            "region": "middle",
+            "tag": "[y:392, x:472]"
+          }
+        },
+        {
+          "text": "D",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              493.0,
+              393.0
+            ],
+            [
+              506.0,
+              393.0
+            ],
+            [
+              506.0,
+              406.0
+            ],
+            [
+              493.0,
+              406.0
+            ]
+          ],
+          "box": [
+            [
+              493.0,
+              393.0
+            ],
+            [
+              506.0,
+              393.0
+            ],
+            [
+              506.0,
+              406.0
+            ],
+            [
+              493.0,
+              406.0
+            ]
+          ],
+          "position": {
+            "x": 493,
+            "y": 393,
+            "width": 13,
+            "height": 13,
+            "center_x": 499.5,
+            "center_y": 399.5,
+            "region": "middle-right",
+            "tag": "[y:393, x:493]"
+          }
+        },
+        {
+          "text": "1989-90",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              100.0,
+              451.0
+            ],
+            [
+              152.0,
+              454.0
+            ],
+            [
+              151.0,
+              471.0
+            ],
+            [
+              99.0,
+              469.0
+            ]
+          ],
+          "box": [
+            [
+              100.0,
+              451.0
+            ],
+            [
+              152.0,
+              454.0
+            ],
+            [
+              151.0,
+              471.0
+            ],
+            [
+              99.0,
+              469.0
+            ]
+          ],
+          "position": {
+            "x": 99,
+            "y": 451,
+            "width": 53,
+            "height": 20,
+            "center_x": 125.5,
+            "center_y": 461.0,
+            "region": "middle-left",
+            "tag": "[y:451, x:99]"
+          }
+        },
+        {
+          "text": "Year 2",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              190.0,
+              458.0
+            ],
+            [
+              242.0,
+              458.0
+            ],
+            [
+              242.0,
+              472.0
+            ],
+            [
+              190.0,
+              472.0
+            ]
+          ],
+          "box": [
+            [
+              190.0,
+              458.0
+            ],
+            [
+              242.0,
+              458.0
+            ],
+            [
+              242.0,
+              472.0
+            ],
+            [
+              190.0,
+              472.0
+            ]
+          ],
+          "position": {
+            "x": 190,
+            "y": 458,
+            "width": 52,
+            "height": 14,
+            "center_x": 216.0,
+            "center_y": 465.0,
+            "region": "middle-left",
+            "tag": "[y:458, x:190]"
+          }
+        },
+        {
+          "text": "Grant Award Distribution",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              242.0,
+              459.0
+            ],
+            [
+              415.0,
+              463.0
+            ],
+            [
+              415.0,
+              477.0
+            ],
+            [
+              242.0,
+              473.0
+            ]
+          ],
+          "box": [
+            [
+              242.0,
+              459.0
+            ],
+            [
+              415.0,
+              463.0
+            ],
+            [
+              415.0,
+              477.0
+            ],
+            [
+              242.0,
+              473.0
+            ]
+          ],
+          "position": {
+            "x": 242,
+            "y": 459,
+            "width": 173,
+            "height": 18,
+            "center_x": 328.5,
+            "center_y": 468.0,
+            "region": "middle",
+            "tag": "[y:459, x:242]"
+          }
+        },
+        {
+          "text": "1RT505",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              99.0,
+              483.0
+            ],
+            [
+              144.0,
+              485.0
+            ],
+            [
+              143.0,
+              500.0
+            ],
+            [
+              98.0,
+              498.0
+            ]
+          ],
+          "box": [
+            [
+              99.0,
+              483.0
+            ],
+            [
+              144.0,
+              485.0
+            ],
+            [
+              143.0,
+              500.0
+            ],
+            [
+              98.0,
+              498.0
+            ]
+          ],
+          "position": {
+            "x": 98,
+            "y": 483,
+            "width": 46,
+            "height": 17,
+            "center_x": 121.0,
+            "center_y": 491.5,
+            "region": "middle-left",
+            "tag": "[y:483, x:98]"
+          }
+        },
+        {
+          "text": "STEVEN B. HAYWARD",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              175.0,
+              485.0
+            ],
+            [
+              298.0,
+              488.0
+            ],
+            [
+              297.0,
+              502.0
+            ],
+            [
+              175.0,
+              499.0
+            ]
+          ],
+          "box": [
+            [
+              175.0,
+              485.0
+            ],
+            [
+              298.0,
+              488.0
+            ],
+            [
+              297.0,
+              502.0
+            ],
+            [
+              175.0,
+              499.0
+            ]
+          ],
+          "position": {
+            "x": 175,
+            "y": 485,
+            "width": 123,
+            "height": 17,
+            "center_x": 236.5,
+            "center_y": 493.5,
+            "region": "middle-left",
+            "tag": "[y:485, x:175]"
+          }
+        },
+        {
+          "text": "$ 175,661.00",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              574.0,
+              489.0
+            ],
+            [
+              662.0,
+              491.0
+            ],
+            [
+              661.0,
+              506.0
+            ],
+            [
+              574.0,
+              504.0
+            ]
+          ],
+          "box": [
+            [
+              574.0,
+              489.0
+            ],
+            [
+              662.0,
+              491.0
+            ],
+            [
+              661.0,
+              506.0
+            ],
+            [
+              574.0,
+              504.0
+            ]
+          ],
+          "position": {
+            "x": 574,
+            "y": 489,
+            "width": 88,
+            "height": 17,
+            "center_x": 618.0,
+            "center_y": 497.5,
+            "region": "middle-right",
+            "tag": "[y:489, x:574]"
+          }
+        },
+        {
+          "text": "Attn: . Gayle A. Chapman",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              95.0,
+              622.0
+            ],
+            [
+              266.0,
+              626.0
+            ],
+            [
+              266.0,
+              643.0
+            ],
+            [
+              95.0,
+              639.0
+            ]
+          ],
+          "box": [
+            [
+              95.0,
+              622.0
+            ],
+            [
+              266.0,
+              626.0
+            ],
+            [
+              266.0,
+              643.0
+            ],
+            [
+              95.0,
+              639.0
+            ]
+          ],
+          "position": {
+            "x": 95,
+            "y": 622,
+            "width": 171,
+            "height": 21,
+            "center_x": 180.5,
+            "center_y": 632.5,
+            "region": "middle-left",
+            "tag": "[y:622, x:95]"
+          }
+        },
+        {
+          "text": "CSI",
+          "confidence": 0.7,
+          "bounding_box": [
+            [
+              113.0,
+              652.0
+            ],
+            [
+              193.0,
+              652.0
+            ],
+            [
+              193.0,
+              699.0
+            ],
+            [
+              113.0,
+              699.0
+            ]
+          ],
+          "box": [
+            [
+              113.0,
+              652.0
+            ],
+            [
+              193.0,
+              652.0
+            ],
+            [
+              193.0,
+              699.0
+            ],
+            [
+              113.0,
+              699.0
+            ]
+          ],
+          "position": {
+            "x": 113,
+            "y": 652,
+            "width": 80,
+            "height": 47,
+            "center_x": 153.0,
+            "center_y": 675.5,
+            "region": "middle-left",
+            "tag": "[y:652, x:113]"
+          }
+        },
+        {
+          "text": "x/",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              89.0,
+              676.0
+            ],
+            [
+              107.0,
+              676.0
+            ],
+            [
+              107.0,
+              695.0
+            ],
+            [
+              89.0,
+              695.0
+            ]
+          ],
+          "box": [
+            [
+              89.0,
+              676.0
+            ],
+            [
+              107.0,
+              676.0
+            ],
+            [
+              107.0,
+              695.0
+            ],
+            [
+              89.0,
+              695.0
+            ]
+          ],
+          "position": {
+            "x": 89,
+            "y": 676,
+            "width": 18,
+            "height": 19,
+            "center_x": 98.0,
+            "center_y": 685.5,
+            "region": "bottom-left",
+            "tag": "[y:676, x:89]"
+          }
+        },
+        {
+          "text": "PUACHASE JRDER MUVBER CONTDLCT",
+          "confidence": 0.73,
+          "bounding_box": [
+            [
+              30.0,
+              700.0
+            ],
+            [
+              158.0,
+              702.0
+            ],
+            [
+              158.0,
+              713.0
+            ],
+            [
+              30.0,
+              711.0
+            ]
+          ],
+          "box": [
+            [
+              30.0,
+              700.0
+            ],
+            [
+              158.0,
+              702.0
+            ],
+            [
+              158.0,
+              713.0
+            ],
+            [
+              30.0,
+              711.0
+            ]
+          ],
+          "position": {
+            "x": 30,
+            "y": 700,
+            "width": 128,
+            "height": 13,
+            "center_x": 94.0,
+            "center_y": 706.5,
+            "region": "bottom-left",
+            "tag": "[y:700, x:30]"
+          }
+        },
+        {
+          "text": "RETURN CHECK TO DEPARTMENT",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              164.0,
+              702.0
+            ],
+            [
+              299.0,
+              704.0
+            ],
+            [
+              298.0,
+              717.0
+            ],
+            [
+              164.0,
+              715.0
+            ]
+          ],
+          "box": [
+            [
+              164.0,
+              702.0
+            ],
+            [
+              299.0,
+              704.0
+            ],
+            [
+              298.0,
+              717.0
+            ],
+            [
+              164.0,
+              715.0
+            ]
+          ],
+          "position": {
+            "x": 164,
+            "y": 702,
+            "width": 135,
+            "height": 15,
+            "center_x": 231.5,
+            "center_y": 709.5,
+            "region": "bottom-left",
+            "tag": "[y:702, x:164]"
+          }
+        },
+        {
+          "text": "PRINT SEPARATE CHECK",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              341.0,
+              704.0
+            ],
+            [
+              439.0,
+              706.0
+            ],
+            [
+              439.0,
+              720.0
+            ],
+            [
+              341.0,
+              718.0
+            ]
+          ],
+          "box": [
+            [
+              341.0,
+              704.0
+            ],
+            [
+              439.0,
+              706.0
+            ],
+            [
+              439.0,
+              720.0
+            ],
+            [
+              341.0,
+              718.0
+            ]
+          ],
+          "position": {
+            "x": 341,
+            "y": 704,
+            "width": 98,
+            "height": 16,
+            "center_x": 390.0,
+            "center_y": 712.0,
+            "region": "bottom-center",
+            "tag": "[y:704, x:341]"
+          }
+        },
+        {
+          "text": "AUDITED BY",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              503.0,
+              709.0
+            ],
+            [
+              551.0,
+              709.0
+            ],
+            [
+              551.0,
+              720.0
+            ],
+            [
+              503.0,
+              720.0
+            ]
+          ],
+          "box": [
+            [
+              503.0,
+              709.0
+            ],
+            [
+              551.0,
+              709.0
+            ],
+            [
+              551.0,
+              720.0
+            ],
+            [
+              503.0,
+              720.0
+            ]
+          ],
+          "position": {
+            "x": 503,
+            "y": 709,
+            "width": 48,
+            "height": 11,
+            "center_x": 527.0,
+            "center_y": 714.5,
+            "region": "bottom-right",
+            "tag": "[y:709, x:503]"
+          }
+        },
+        {
+          "text": "DSBURSEMENT",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              503.0,
+              717.0
+            ],
+            [
+              567.0,
+              717.0
+            ],
+            [
+              567.0,
+              728.0
+            ],
+            [
+              503.0,
+              728.0
+            ]
+          ],
+          "box": [
+            [
+              503.0,
+              717.0
+            ],
+            [
+              567.0,
+              717.0
+            ],
+            [
+              567.0,
+              728.0
+            ],
+            [
+              503.0,
+              728.0
+            ]
+          ],
+          "position": {
+            "x": 503,
+            "y": 717,
+            "width": 64,
+            "height": 11,
+            "center_x": 535.0,
+            "center_y": 722.5,
+            "region": "bottom-right",
+            "tag": "[y:717, x:503]"
+          }
+        },
+        {
+          "text": "FUND UNIT",
+          "confidence": 0.61,
+          "bounding_box": [
+            [
+              597.0,
+              717.0
+            ],
+            [
+              642.0,
+              719.0
+            ],
+            [
+              641.0,
+              731.0
+            ],
+            [
+              597.0,
+              729.0
+            ]
+          ],
+          "box": [
+            [
+              597.0,
+              717.0
+            ],
+            [
+              642.0,
+              719.0
+            ],
+            [
+              641.0,
+              731.0
+            ],
+            [
+              597.0,
+              729.0
+            ]
+          ],
+          "position": {
+            "x": 597,
+            "y": 717,
+            "width": 45,
+            "height": 14,
+            "center_x": 619.5,
+            "center_y": 724.0,
+            "region": "bottom-right",
+            "tag": "[y:717, x:597]"
+          }
+        },
+        {
+          "text": "AUDITED BY",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              598.0,
+              711.0
+            ],
+            [
+              648.0,
+              711.0
+            ],
+            [
+              648.0,
+              722.0
+            ],
+            [
+              598.0,
+              722.0
+            ]
+          ],
+          "box": [
+            [
+              598.0,
+              711.0
+            ],
+            [
+              648.0,
+              711.0
+            ],
+            [
+              648.0,
+              722.0
+            ],
+            [
+              598.0,
+              722.0
+            ]
+          ],
+          "position": {
+            "x": 598,
+            "y": 711,
+            "width": 50,
+            "height": 11,
+            "center_x": 623.0,
+            "center_y": 716.5,
+            "region": "bottom-right",
+            "tag": "[y:711, x:598]"
+          }
+        },
+        {
+          "text": "1RT505",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              96.0,
+              721.0
+            ],
+            [
+              140.0,
+              721.0
+            ],
+            [
+              140.0,
+              735.0
+            ],
+            [
+              96.0,
+              735.0
+            ]
+          ],
+          "box": [
+            [
+              96.0,
+              721.0
+            ],
+            [
+              140.0,
+              721.0
+            ],
+            [
+              140.0,
+              735.0
+            ],
+            [
+              96.0,
+              735.0
+            ]
+          ],
+          "position": {
+            "x": 96,
+            "y": 721,
+            "width": 44,
+            "height": 14,
+            "center_x": 118.0,
+            "center_y": 728.0,
+            "region": "bottom-left",
+            "tag": "[y:721, x:96]"
+          }
+        },
+        {
+          "text": "check bax if required",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              164.0,
+              722.0
+            ],
+            [
+              250.0,
+              723.0
+            ],
+            [
+              250.0,
+              737.0
+            ],
+            [
+              164.0,
+              736.0
+            ]
+          ],
+          "box": [
+            [
+              164.0,
+              722.0
+            ],
+            [
+              250.0,
+              723.0
+            ],
+            [
+              250.0,
+              737.0
+            ],
+            [
+              164.0,
+              736.0
+            ]
+          ],
+          "position": {
+            "x": 164,
+            "y": 722,
+            "width": 86,
+            "height": 15,
+            "center_x": 207.0,
+            "center_y": 729.5,
+            "region": "bottom-left",
+            "tag": "[y:722, x:164]"
+          }
+        },
+        {
+          "text": "check box if required",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              341.0,
+              725.0
+            ],
+            [
+              425.0,
+              727.0
+            ],
+            [
+              425.0,
+              741.0
+            ],
+            [
+              341.0,
+              739.0
+            ]
+          ],
+          "box": [
+            [
+              341.0,
+              725.0
+            ],
+            [
+              425.0,
+              727.0
+            ],
+            [
+              425.0,
+              741.0
+            ],
+            [
+              341.0,
+              739.0
+            ]
+          ],
+          "position": {
+            "x": 341,
+            "y": 725,
+            "width": 84,
+            "height": 16,
+            "center_x": 383.0,
+            "center_y": 733.0,
+            "region": "bottom-center",
+            "tag": "[y:725, x:341]"
+          }
+        },
+        {
+          "text": "NAAME OF BUDGET TC BE CHARGED",
+          "confidence": 0.86,
+          "bounding_box": [
+            [
+              29.0,
+              739.0
+            ],
+            [
+              195.0,
+              743.0
+            ],
+            [
+              195.0,
+              756.0
+            ],
+            [
+              28.0,
+              752.0
+            ]
+          ],
+          "box": [
+            [
+              29.0,
+              739.0
+            ],
+            [
+              195.0,
+              743.0
+            ],
+            [
+              195.0,
+              756.0
+            ],
+            [
+              28.0,
+              752.0
+            ]
+          ],
+          "position": {
+            "x": 28,
+            "y": 739,
+            "width": 167,
+            "height": 17,
+            "center_x": 111.5,
+            "center_y": 747.5,
+            "region": "bottom-left",
+            "tag": "[y:739, x:28]"
+          }
+        },
+        {
+          "text": "PREPARED BY",
+          "confidence": 0.91,
+          "bounding_box": [
+            [
+              215.0,
+              742.0
+            ],
+            [
+              273.0,
+              744.0
+            ],
+            [
+              273.0,
+              758.0
+            ],
+            [
+              214.0,
+              756.0
+            ]
+          ],
+          "box": [
+            [
+              215.0,
+              742.0
+            ],
+            [
+              273.0,
+              744.0
+            ],
+            [
+              273.0,
+              758.0
+            ],
+            [
+              214.0,
+              756.0
+            ]
+          ],
+          "position": {
+            "x": 214,
+            "y": 742,
+            "width": 59,
+            "height": 16,
+            "center_x": 243.5,
+            "center_y": 750.0,
+            "region": "bottom-left",
+            "tag": "[y:742, x:214]"
+          }
+        },
+        {
+          "text": "EXTENSON",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              374.0,
+              748.0
+            ],
+            [
+              423.0,
+              748.0
+            ],
+            [
+              423.0,
+              758.0
+            ],
+            [
+              374.0,
+              758.0
+            ]
+          ],
+          "box": [
+            [
+              374.0,
+              748.0
+            ],
+            [
+              423.0,
+              748.0
+            ],
+            [
+              423.0,
+              758.0
+            ],
+            [
+              374.0,
+              758.0
+            ]
+          ],
+          "position": {
+            "x": 374,
+            "y": 748,
+            "width": 49,
+            "height": 10,
+            "center_x": 398.5,
+            "center_y": 753.0,
+            "region": "bottom-center",
+            "tag": "[y:748, x:374]"
+          }
+        },
+        {
+          "text": "IWesn Accdure No Botowl",
+          "confidence": 0.68,
+          "bounding_box": [
+            [
+              30.0,
+              750.0
+            ],
+            [
+              127.0,
+              752.0
+            ],
+            [
+              126.0,
+              763.0
+            ],
+            [
+              29.0,
+              761.0
+            ]
+          ],
+          "box": [
+            [
+              30.0,
+              750.0
+            ],
+            [
+              127.0,
+              752.0
+            ],
+            [
+              126.0,
+              763.0
+            ],
+            [
+              29.0,
+              761.0
+            ]
+          ],
+          "position": {
+            "x": 29,
+            "y": 750,
+            "width": 98,
+            "height": 13,
+            "center_x": 78.0,
+            "center_y": 756.5,
+            "region": "bottom-left",
+            "tag": "[y:750, x:29]"
+          }
+        },
+        {
+          "text": "VP-Health Affairs: TRDRP",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              47.0,
+              761.0
+            ],
+            [
+              216.0,
+              764.0
+            ],
+            [
+              215.0,
+              778.0
+            ],
+            [
+              46.0,
+              775.0
+            ]
+          ],
+          "box": [
+            [
+              47.0,
+              761.0
+            ],
+            [
+              216.0,
+              764.0
+            ],
+            [
+              215.0,
+              778.0
+            ],
+            [
+              46.0,
+              775.0
+            ]
+          ],
+          "position": {
+            "x": 46,
+            "y": 761,
+            "width": 170,
+            "height": 17,
+            "center_x": 131.0,
+            "center_y": 769.5,
+            "region": "bottom-left",
+            "tag": "[y:761, x:46]"
+          }
+        },
+        {
+          "text": "DATE",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              591.0,
+              751.0
+            ],
+            [
+              614.0,
+              751.0
+            ],
+            [
+              614.0,
+              762.0
+            ],
+            [
+              591.0,
+              762.0
+            ]
+          ],
+          "box": [
+            [
+              591.0,
+              751.0
+            ],
+            [
+              614.0,
+              751.0
+            ],
+            [
+              614.0,
+              762.0
+            ],
+            [
+              591.0,
+              762.0
+            ]
+          ],
+          "position": {
+            "x": 591,
+            "y": 751,
+            "width": 23,
+            "height": 11,
+            "center_x": 602.5,
+            "center_y": 756.5,
+            "region": "bottom-right",
+            "tag": "[y:751, x:591]"
+          }
+        },
+        {
+          "text": "Joyce Thompson/si",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              226.0,
+              765.0
+            ],
+            [
+              347.0,
+              767.0
+            ],
+            [
+              347.0,
+              781.0
+            ],
+            [
+              226.0,
+              779.0
+            ]
+          ],
+          "box": [
+            [
+              226.0,
+              765.0
+            ],
+            [
+              347.0,
+              767.0
+            ],
+            [
+              347.0,
+              781.0
+            ],
+            [
+              226.0,
+              779.0
+            ]
+          ],
+          "position": {
+            "x": 226,
+            "y": 765,
+            "width": 121,
+            "height": 16,
+            "center_x": 286.5,
+            "center_y": 773.0,
+            "region": "bottom-center",
+            "tag": "[y:765, x:226]"
+          }
+        },
+        {
+          "text": "987-9881",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              365.0,
+              767.0
+            ],
+            [
+              424.0,
+              767.0
+            ],
+            [
+              424.0,
+              784.0
+            ],
+            [
+              365.0,
+              784.0
+            ]
+          ],
+          "box": [
+            [
+              365.0,
+              767.0
+            ],
+            [
+              424.0,
+              767.0
+            ],
+            [
+              424.0,
+              784.0
+            ],
+            [
+              365.0,
+              784.0
+            ]
+          ],
+          "position": {
+            "x": 365,
+            "y": 767,
+            "width": 59,
+            "height": 17,
+            "center_x": 394.5,
+            "center_y": 775.5,
+            "region": "bottom-center",
+            "tag": "[y:767, x:365]"
+          }
+        },
+        {
+          "text": "atricia",
+          "confidence": 0.79,
+          "bounding_box": [
+            [
+              437.0,
+              769.0
+            ],
+            [
+              486.0,
+              767.0
+            ],
+            [
+              487.0,
+              778.0
+            ],
+            [
+              437.0,
+              780.0
+            ]
+          ],
+          "box": [
+            [
+              437.0,
+              769.0
+            ],
+            [
+              486.0,
+              767.0
+            ],
+            [
+              487.0,
+              778.0
+            ],
+            [
+              437.0,
+              780.0
+            ]
+          ],
+          "position": {
+            "x": 437,
+            "y": 767,
+            "width": 50,
+            "height": 13,
+            "center_x": 462.0,
+            "center_y": 773.5,
+            "region": "bottom-center",
+            "tag": "[y:767, x:437]"
+          }
+        },
+        {
+          "text": "08/20/91",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              613.0,
+              769.0
+            ],
+            [
+              672.0,
+              769.0
+            ],
+            [
+              672.0,
+              783.0
+            ],
+            [
+              613.0,
+              783.0
+            ]
+          ],
+          "box": [
+            [
+              613.0,
+              769.0
+            ],
+            [
+              672.0,
+              769.0
+            ],
+            [
+              672.0,
+              783.0
+            ],
+            [
+              613.0,
+              783.0
+            ]
+          ],
+          "position": {
+            "x": 613,
+            "y": 769,
+            "width": 59,
+            "height": 14,
+            "center_x": 642.5,
+            "center_y": 776.0,
+            "region": "bottom-right",
+            "tag": "[y:769, x:613]"
+          }
+        },
+        {
+          "text": "2025792689",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              713.0,
+              777.0
+            ],
+            [
+              737.0,
+              778.0
+            ],
+            [
+              734.0,
+              890.0
+            ],
+            [
+              711.0,
+              890.0
+            ]
+          ],
+          "box": [
+            [
+              713.0,
+              777.0
+            ],
+            [
+              737.0,
+              778.0
+            ],
+            [
+              734.0,
+              890.0
+            ],
+            [
+              711.0,
+              890.0
+            ]
+          ],
+          "position": {
+            "x": 711,
+            "y": 777,
+            "width": 26,
+            "height": 113,
+            "center_x": 724.0,
+            "center_y": 833.5,
+            "region": "bottom-right",
+            "tag": "[y:777, x:711]"
+          }
+        },
+        {
+          "text": "ACCOUNT TC SE CARGED",
+          "confidence": 0.89,
+          "bounding_box": [
+            [
+              67.0,
+              782.0
+            ],
+            [
+              174.0,
+              785.0
+            ],
+            [
+              174.0,
+              796.0
+            ],
+            [
+              67.0,
+              793.0
+            ]
+          ],
+          "box": [
+            [
+              67.0,
+              782.0
+            ],
+            [
+              174.0,
+              785.0
+            ],
+            [
+              174.0,
+              796.0
+            ],
+            [
+              67.0,
+              793.0
+            ]
+          ],
+          "position": {
+            "x": 67,
+            "y": 782,
+            "width": 107,
+            "height": 14,
+            "center_x": 120.5,
+            "center_y": 789.0,
+            "region": "bottom-left",
+            "tag": "[y:782, x:67]"
+          }
+        },
+        {
+          "text": "STATE",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              217.0,
+              788.0
+            ],
+            [
+              229.0,
+              788.0
+            ],
+            [
+              229.0,
+              815.0
+            ],
+            [
+              217.0,
+              815.0
+            ]
+          ],
+          "box": [
+            [
+              217.0,
+              788.0
+            ],
+            [
+              229.0,
+              788.0
+            ],
+            [
+              229.0,
+              815.0
+            ],
+            [
+              217.0,
+              815.0
+            ]
+          ],
+          "position": {
+            "x": 217,
+            "y": 788,
+            "width": 12,
+            "height": 27,
+            "center_x": 223.0,
+            "center_y": 801.5,
+            "region": "bottom-left",
+            "tag": "[y:788, x:217]"
+          }
+        },
+        {
+          "text": "IMOICE",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              238.0,
+              790.0
+            ],
+            [
+              275.0,
+              790.0
+            ],
+            [
+              275.0,
+              804.0
+            ],
+            [
+              238.0,
+              804.0
+            ]
+          ],
+          "box": [
+            [
+              238.0,
+              790.0
+            ],
+            [
+              275.0,
+              790.0
+            ],
+            [
+              275.0,
+              804.0
+            ],
+            [
+              238.0,
+              804.0
+            ]
+          ],
+          "position": {
+            "x": 238,
+            "y": 790,
+            "width": 37,
+            "height": 14,
+            "center_x": 256.5,
+            "center_y": 797.0,
+            "region": "bottom-left",
+            "tag": "[y:790, x:238]"
+          }
+        },
+        {
+          "text": "VENDOR'S",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              307.0,
+              785.0
+            ],
+            [
+              353.0,
+              788.0
+            ],
+            [
+              353.0,
+              802.0
+            ],
+            [
+              306.0,
+              799.0
+            ]
+          ],
+          "box": [
+            [
+              307.0,
+              785.0
+            ],
+            [
+              353.0,
+              788.0
+            ],
+            [
+              353.0,
+              802.0
+            ],
+            [
+              306.0,
+              799.0
+            ]
+          ],
+          "position": {
+            "x": 306,
+            "y": 785,
+            "width": 47,
+            "height": 17,
+            "center_x": 329.5,
+            "center_y": 793.5,
+            "region": "bottom-center",
+            "tag": "[y:785, x:306]"
+          }
+        },
+        {
+          "text": "PURCHASE",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              366.0,
+              791.0
+            ],
+            [
+              414.0,
+              794.0
+            ],
+            [
+              413.0,
+              808.0
+            ],
+            [
+              365.0,
+              805.0
+            ]
+          ],
+          "box": [
+            [
+              366.0,
+              791.0
+            ],
+            [
+              414.0,
+              794.0
+            ],
+            [
+              413.0,
+              808.0
+            ],
+            [
+              365.0,
+              805.0
+            ]
+          ],
+          "position": {
+            "x": 365,
+            "y": 791,
+            "width": 49,
+            "height": 17,
+            "center_x": 389.5,
+            "center_y": 799.5,
+            "region": "bottom-center",
+            "tag": "[y:791, x:365]"
+          }
+        },
+        {
+          "text": "VENDOR",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              428.0,
+              793.0
+            ],
+            [
+              466.0,
+              793.0
+            ],
+            [
+              466.0,
+              807.0
+            ],
+            [
+              428.0,
+              807.0
+            ]
+          ],
+          "box": [
+            [
+              428.0,
+              793.0
+            ],
+            [
+              466.0,
+              793.0
+            ],
+            [
+              466.0,
+              807.0
+            ],
+            [
+              428.0,
+              807.0
+            ]
+          ],
+          "position": {
+            "x": 428,
+            "y": 793,
+            "width": 38,
+            "height": 14,
+            "center_x": 447.0,
+            "center_y": 800.0,
+            "region": "bottom-center",
+            "tag": "[y:793, x:428]"
+          }
+        },
+        {
+          "text": "TAXPRYER L D. NO.",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              515.0,
+              791.0
+            ],
+            [
+              589.0,
+              793.0
+            ],
+            [
+              589.0,
+              808.0
+            ],
+            [
+              515.0,
+              805.0
+            ]
+          ],
+          "box": [
+            [
+              515.0,
+              791.0
+            ],
+            [
+              589.0,
+              793.0
+            ],
+            [
+              589.0,
+              808.0
+            ],
+            [
+              515.0,
+              805.0
+            ]
+          ],
+          "position": {
+            "x": 515,
+            "y": 791,
+            "width": 74,
+            "height": 17,
+            "center_x": 552.0,
+            "center_y": 799.5,
+            "region": "bottom-right",
+            "tag": "[y:791, x:515]"
+          }
+        },
+        {
+          "text": "NET",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              644.0,
+              793.0
+            ],
+            [
+              666.0,
+              796.0
+            ],
+            [
+              664.0,
+              811.0
+            ],
+            [
+              642.0,
+              808.0
+            ]
+          ],
+          "box": [
+            [
+              644.0,
+              793.0
+            ],
+            [
+              666.0,
+              796.0
+            ],
+            [
+              664.0,
+              811.0
+            ],
+            [
+              642.0,
+              808.0
+            ]
+          ],
+          "position": {
+            "x": 642,
+            "y": 793,
+            "width": 24,
+            "height": 18,
+            "center_x": 654.0,
+            "center_y": 802.0,
+            "region": "bottom-right",
+            "tag": "[y:793, x:642]"
+          }
+        },
+        {
+          "text": "ArCOUN:",
+          "confidence": 0.7,
+          "bounding_box": [
+            [
+              53.0,
+              797.0
+            ],
+            [
+              94.0,
+              797.0
+            ],
+            [
+              94.0,
+              811.0
+            ],
+            [
+              53.0,
+              811.0
+            ]
+          ],
+          "box": [
+            [
+              53.0,
+              797.0
+            ],
+            [
+              94.0,
+              797.0
+            ],
+            [
+              94.0,
+              811.0
+            ],
+            [
+              53.0,
+              811.0
+            ]
+          ],
+          "position": {
+            "x": 53,
+            "y": 797,
+            "width": 41,
+            "height": 14,
+            "center_x": 73.5,
+            "center_y": 804.0,
+            "region": "bottom-left",
+            "tag": "[y:797, x:53]"
+          }
+        },
+        {
+          "text": "FNC",
+          "confidence": 0.56,
+          "bounding_box": [
+            [
+              113.0,
+              798.0
+            ],
+            [
+              140.0,
+              798.0
+            ],
+            [
+              140.0,
+              814.0
+            ],
+            [
+              113.0,
+              814.0
+            ]
+          ],
+          "box": [
+            [
+              113.0,
+              798.0
+            ],
+            [
+              140.0,
+              798.0
+            ],
+            [
+              140.0,
+              814.0
+            ],
+            [
+              113.0,
+              814.0
+            ]
+          ],
+          "position": {
+            "x": 113,
+            "y": 798,
+            "width": 27,
+            "height": 16,
+            "center_x": 126.5,
+            "center_y": 806.0,
+            "region": "bottom-left",
+            "tag": "[y:798, x:113]"
+          }
+        },
+        {
+          "text": "Sue",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              153.0,
+              800.0
+            ],
+            [
+              173.0,
+              800.0
+            ],
+            [
+              173.0,
+              812.0
+            ],
+            [
+              153.0,
+              812.0
+            ]
+          ],
+          "box": [
+            [
+              153.0,
+              800.0
+            ],
+            [
+              173.0,
+              800.0
+            ],
+            [
+              173.0,
+              812.0
+            ],
+            [
+              153.0,
+              812.0
+            ]
+          ],
+          "position": {
+            "x": 153,
+            "y": 800,
+            "width": 20,
+            "height": 12,
+            "center_x": 163.0,
+            "center_y": 806.0,
+            "region": "bottom-left",
+            "tag": "[y:800, x:153]"
+          }
+        },
+        {
+          "text": "OBJECT",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              175.0,
+              800.0
+            ],
+            [
+              211.0,
+              800.0
+            ],
+            [
+              211.0,
+              815.0
+            ],
+            [
+              175.0,
+              815.0
+            ]
+          ],
+          "box": [
+            [
+              175.0,
+              800.0
+            ],
+            [
+              211.0,
+              800.0
+            ],
+            [
+              211.0,
+              815.0
+            ],
+            [
+              175.0,
+              815.0
+            ]
+          ],
+          "position": {
+            "x": 175,
+            "y": 800,
+            "width": 36,
+            "height": 15,
+            "center_x": 193.0,
+            "center_y": 807.5,
+            "region": "bottom-left",
+            "tag": "[y:800, x:175]"
+          }
+        },
+        {
+          "text": "DATE",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              244.0,
+              799.0
+            ],
+            [
+              268.0,
+              799.0
+            ],
+            [
+              268.0,
+              811.0
+            ],
+            [
+              244.0,
+              811.0
+            ]
+          ],
+          "box": [
+            [
+              244.0,
+              799.0
+            ],
+            [
+              268.0,
+              799.0
+            ],
+            [
+              268.0,
+              811.0
+            ],
+            [
+              244.0,
+              811.0
+            ]
+          ],
+          "position": {
+            "x": 244,
+            "y": 799,
+            "width": 24,
+            "height": 12,
+            "center_x": 256.0,
+            "center_y": 805.0,
+            "region": "bottom-left",
+            "tag": "[y:799, x:244]"
+          }
+        },
+        {
+          "text": "83",
+          "confidence": 0.36,
+          "bounding_box": [
+            [
+              284.0,
+              799.0
+            ],
+            [
+              305.0,
+              802.0
+            ],
+            [
+              303.0,
+              817.0
+            ],
+            [
+              282.0,
+              814.0
+            ]
+          ],
+          "box": [
+            [
+              284.0,
+              799.0
+            ],
+            [
+              305.0,
+              802.0
+            ],
+            [
+              303.0,
+              817.0
+            ],
+            [
+              282.0,
+              814.0
+            ]
+          ],
+          "position": {
+            "x": 282,
+            "y": 799,
+            "width": 23,
+            "height": 18,
+            "center_x": 293.5,
+            "center_y": 808.0,
+            "region": "bottom-center",
+            "tag": "[y:799, x:282]"
+          }
+        },
+        {
+          "text": "VOICE",
+          "confidence": 0.62,
+          "bounding_box": [
+            [
+              311.0,
+              795.0
+            ],
+            [
+              348.0,
+              798.0
+            ],
+            [
+              348.0,
+              809.0
+            ],
+            [
+              310.0,
+              806.0
+            ]
+          ],
+          "box": [
+            [
+              311.0,
+              795.0
+            ],
+            [
+              348.0,
+              798.0
+            ],
+            [
+              348.0,
+              809.0
+            ],
+            [
+              310.0,
+              806.0
+            ]
+          ],
+          "position": {
+            "x": 310,
+            "y": 795,
+            "width": 38,
+            "height": 14,
+            "center_x": 329.0,
+            "center_y": 802.0,
+            "region": "bottom-center",
+            "tag": "[y:795, x:310]"
+          }
+        },
+        {
+          "text": "NO.",
+          "confidence": 0.84,
+          "bounding_box": [
+            [
+              321.0,
+              805.0
+            ],
+            [
+              339.0,
+              805.0
+            ],
+            [
+              339.0,
+              818.0
+            ],
+            [
+              321.0,
+              818.0
+            ]
+          ],
+          "box": [
+            [
+              321.0,
+              805.0
+            ],
+            [
+              339.0,
+              805.0
+            ],
+            [
+              339.0,
+              818.0
+            ],
+            [
+              321.0,
+              818.0
+            ]
+          ],
+          "position": {
+            "x": 321,
+            "y": 805,
+            "width": 18,
+            "height": 13,
+            "center_x": 330.0,
+            "center_y": 811.5,
+            "region": "bottom-center",
+            "tag": "[y:805, x:321]"
+          }
+        },
+        {
+          "text": "ORDERNO",
+          "confidence": 0.36,
+          "bounding_box": [
+            [
+              366.0,
+              799.0
+            ],
+            [
+              413.0,
+              802.0
+            ],
+            [
+              412.0,
+              816.0
+            ],
+            [
+              365.0,
+              813.0
+            ]
+          ],
+          "box": [
+            [
+              366.0,
+              799.0
+            ],
+            [
+              413.0,
+              802.0
+            ],
+            [
+              412.0,
+              816.0
+            ],
+            [
+              365.0,
+              813.0
+            ]
+          ],
+          "position": {
+            "x": 365,
+            "y": 799,
+            "width": 48,
+            "height": 17,
+            "center_x": 389.0,
+            "center_y": 807.5,
+            "region": "bottom-center",
+            "tag": "[y:799, x:365]"
+          }
+        },
+        {
+          "text": "NO.",
+          "confidence": 0.9,
+          "bounding_box": [
+            [
+              438.0,
+              802.0
+            ],
+            [
+              458.0,
+              805.0
+            ],
+            [
+              456.0,
+              817.0
+            ],
+            [
+              437.0,
+              814.0
+            ]
+          ],
+          "box": [
+            [
+              438.0,
+              802.0
+            ],
+            [
+              458.0,
+              805.0
+            ],
+            [
+              456.0,
+              817.0
+            ],
+            [
+              437.0,
+              814.0
+            ]
+          ],
+          "position": {
+            "x": 437,
+            "y": 802,
+            "width": 21,
+            "height": 15,
+            "center_x": 447.5,
+            "center_y": 809.5,
+            "region": "bottom-center",
+            "tag": "[y:802, x:437]"
+          }
+        },
+        {
+          "text": "UEN CANCEL",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              499.0,
+              809.0
+            ],
+            [
+              552.0,
+              809.0
+            ],
+            [
+              552.0,
+              821.0
+            ],
+            [
+              499.0,
+              821.0
+            ]
+          ],
+          "box": [
+            [
+              499.0,
+              809.0
+            ],
+            [
+              552.0,
+              809.0
+            ],
+            [
+              552.0,
+              821.0
+            ],
+            [
+              499.0,
+              821.0
+            ]
+          ],
+          "position": {
+            "x": 499,
+            "y": 809,
+            "width": 53,
+            "height": 12,
+            "center_x": 525.5,
+            "center_y": 815.0,
+            "region": "bottom-right",
+            "tag": "[y:809, x:499]"
+          }
+        },
+        {
+          "text": "CHARIGES",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              632.0,
+              803.0
+            ],
+            [
+              677.0,
+              806.0
+            ],
+            [
+              676.0,
+              820.0
+            ],
+            [
+              631.0,
+              817.0
+            ]
+          ],
+          "box": [
+            [
+              632.0,
+              803.0
+            ],
+            [
+              677.0,
+              806.0
+            ],
+            [
+              676.0,
+              820.0
+            ],
+            [
+              631.0,
+              817.0
+            ]
+          ],
+          "position": {
+            "x": 631,
+            "y": 803,
+            "width": 46,
+            "height": 17,
+            "center_x": 654.0,
+            "center_y": 811.5,
+            "region": "bottom-right",
+            "tag": "[y:803, x:631]"
+          }
+        },
+        {
+          "text": "9",
+          "confidence": 0.71,
+          "bounding_box": [
+            [
+              94.0,
+              815.0
+            ],
+            [
+              102.0,
+              815.0
+            ],
+            [
+              102.0,
+              824.0
+            ],
+            [
+              94.0,
+              824.0
+            ]
+          ],
+          "box": [
+            [
+              94.0,
+              815.0
+            ],
+            [
+              102.0,
+              815.0
+            ],
+            [
+              102.0,
+              824.0
+            ],
+            [
+              94.0,
+              824.0
+            ]
+          ],
+          "position": {
+            "x": 94,
+            "y": 815,
+            "width": 8,
+            "height": 9,
+            "center_x": 98.0,
+            "center_y": 819.5,
+            "region": "bottom-left",
+            "tag": "[y:815, x:94]"
+          }
+        },
+        {
+          "text": "20576",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              108.0,
+              822.0
+            ],
+            [
+              150.0,
+              825.0
+            ],
+            [
+              149.0,
+              840.0
+            ],
+            [
+              107.0,
+              837.0
+            ]
+          ],
+          "box": [
+            [
+              108.0,
+              822.0
+            ],
+            [
+              150.0,
+              825.0
+            ],
+            [
+              149.0,
+              840.0
+            ],
+            [
+              107.0,
+              837.0
+            ]
+          ],
+          "position": {
+            "x": 107,
+            "y": 822,
+            "width": 43,
+            "height": 18,
+            "center_x": 128.5,
+            "center_y": 831.0,
+            "region": "bottom-left",
+            "tag": "[y:822, x:107]"
+          }
+        },
+        {
+          "text": "1C",
+          "confidence": 0.41,
+          "bounding_box": [
+            [
+              108.0,
+              816.0
+            ],
+            [
+              117.0,
+              816.0
+            ],
+            [
+              117.0,
+              825.0
+            ],
+            [
+              108.0,
+              825.0
+            ]
+          ],
+          "box": [
+            [
+              108.0,
+              816.0
+            ],
+            [
+              117.0,
+              816.0
+            ],
+            [
+              117.0,
+              825.0
+            ],
+            [
+              108.0,
+              825.0
+            ]
+          ],
+          "position": {
+            "x": 108,
+            "y": 816,
+            "width": 9,
+            "height": 9,
+            "center_x": 112.5,
+            "center_y": 820.5,
+            "region": "bottom-left",
+            "tag": "[y:816, x:108]"
+          }
+        },
+        {
+          "text": "i.",
+          "confidence": 0.57,
+          "bounding_box": [
+            [
+              139.0,
+              817.0
+            ],
+            [
+              149.0,
+              817.0
+            ],
+            [
+              149.0,
+              825.0
+            ],
+            [
+              139.0,
+              825.0
+            ]
+          ],
+          "box": [
+            [
+              139.0,
+              817.0
+            ],
+            [
+              149.0,
+              817.0
+            ],
+            [
+              149.0,
+              825.0
+            ],
+            [
+              139.0,
+              825.0
+            ]
+          ],
+          "position": {
+            "x": 139,
+            "y": 817,
+            "width": 10,
+            "height": 8,
+            "center_x": 144.0,
+            "center_y": 821.0,
+            "region": "bottom-left",
+            "tag": "[y:817, x:139]"
+          }
+        },
+        {
+          "text": "1€",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              177.0,
+              817.0
+            ],
+            [
+              188.0,
+              817.0
+            ],
+            [
+              188.0,
+              826.0
+            ],
+            [
+              177.0,
+              826.0
+            ]
+          ],
+          "box": [
+            [
+              177.0,
+              817.0
+            ],
+            [
+              188.0,
+              817.0
+            ],
+            [
+              188.0,
+              826.0
+            ],
+            [
+              177.0,
+              826.0
+            ]
+          ],
+          "position": {
+            "x": 177,
+            "y": 817,
+            "width": 11,
+            "height": 9,
+            "center_x": 182.5,
+            "center_y": 821.5,
+            "region": "bottom-left",
+            "tag": "[y:817, x:177]"
+          }
+        },
+        {
+          "text": "19",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              199.0,
+              817.0
+            ],
+            [
+              211.0,
+              817.0
+            ],
+            [
+              211.0,
+              826.0
+            ],
+            [
+              199.0,
+              826.0
+            ]
+          ],
+          "box": [
+            [
+              199.0,
+              817.0
+            ],
+            [
+              211.0,
+              817.0
+            ],
+            [
+              211.0,
+              826.0
+            ],
+            [
+              199.0,
+              826.0
+            ]
+          ],
+          "position": {
+            "x": 199,
+            "y": 817,
+            "width": 12,
+            "height": 9,
+            "center_x": 205.0,
+            "center_y": 821.5,
+            "region": "bottom-left",
+            "tag": "[y:817, x:199]"
+          }
+        },
+        {
+          "text": "20",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              231.0,
+              816.0
+            ],
+            [
+              247.0,
+              816.0
+            ],
+            [
+              247.0,
+              828.0
+            ],
+            [
+              231.0,
+              828.0
+            ]
+          ],
+          "box": [
+            [
+              231.0,
+              816.0
+            ],
+            [
+              247.0,
+              816.0
+            ],
+            [
+              247.0,
+              828.0
+            ],
+            [
+              231.0,
+              828.0
+            ]
+          ],
+          "position": {
+            "x": 231,
+            "y": 816,
+            "width": 16,
+            "height": 12,
+            "center_x": 239.0,
+            "center_y": 822.0,
+            "region": "bottom-left",
+            "tag": "[y:816, x:231]"
+          }
+        },
+        {
+          "text": "24",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              267.0,
+              817.0
+            ],
+            [
+              283.0,
+              817.0
+            ],
+            [
+              283.0,
+              829.0
+            ],
+            [
+              267.0,
+              829.0
+            ]
+          ],
+          "box": [
+            [
+              267.0,
+              817.0
+            ],
+            [
+              283.0,
+              817.0
+            ],
+            [
+              283.0,
+              829.0
+            ],
+            [
+              267.0,
+              829.0
+            ]
+          ],
+          "position": {
+            "x": 267,
+            "y": 817,
+            "width": 16,
+            "height": 12,
+            "center_x": 275.0,
+            "center_y": 823.0,
+            "region": "bottom-center",
+            "tag": "[y:817, x:267]"
+          }
+        },
+        {
+          "text": "35",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              284.0,
+              818.0
+            ],
+            [
+              301.0,
+              818.0
+            ],
+            [
+              301.0,
+              829.0
+            ],
+            [
+              284.0,
+              829.0
+            ]
+          ],
+          "box": [
+            [
+              284.0,
+              818.0
+            ],
+            [
+              301.0,
+              818.0
+            ],
+            [
+              301.0,
+              829.0
+            ],
+            [
+              284.0,
+              829.0
+            ]
+          ],
+          "position": {
+            "x": 284,
+            "y": 818,
+            "width": 17,
+            "height": 11,
+            "center_x": 292.5,
+            "center_y": 823.5,
+            "region": "bottom-center",
+            "tag": "[y:818, x:284]"
+          }
+        },
+        {
+          "text": "37",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              305.0,
+              819.0
+            ],
+            [
+              317.0,
+              819.0
+            ],
+            [
+              317.0,
+              828.0
+            ],
+            [
+              305.0,
+              828.0
+            ]
+          ],
+          "box": [
+            [
+              305.0,
+              819.0
+            ],
+            [
+              317.0,
+              819.0
+            ],
+            [
+              317.0,
+              828.0
+            ],
+            [
+              305.0,
+              828.0
+            ]
+          ],
+          "position": {
+            "x": 305,
+            "y": 819,
+            "width": 12,
+            "height": 9,
+            "center_x": 311.0,
+            "center_y": 823.5,
+            "region": "bottom-center",
+            "tag": "[y:819, x:305]"
+          }
+        },
+        {
+          "text": "42",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              341.0,
+              818.0
+            ],
+            [
+              357.0,
+              818.0
+            ],
+            [
+              357.0,
+              830.0
+            ],
+            [
+              341.0,
+              830.0
+            ]
+          ],
+          "box": [
+            [
+              341.0,
+              818.0
+            ],
+            [
+              357.0,
+              818.0
+            ],
+            [
+              357.0,
+              830.0
+            ],
+            [
+              341.0,
+              830.0
+            ]
+          ],
+          "position": {
+            "x": 341,
+            "y": 818,
+            "width": 16,
+            "height": 12,
+            "center_x": 349.0,
+            "center_y": 824.0,
+            "region": "bottom-center",
+            "tag": "[y:818, x:341]"
+          }
+        },
+        {
+          "text": "48(54)55 59",
+          "confidence": 0.93,
+          "bounding_box": [
+            [
+              409.0,
+              820.0
+            ],
+            [
+              472.0,
+              820.0
+            ],
+            [
+              472.0,
+              831.0
+            ],
+            [
+              409.0,
+              831.0
+            ]
+          ],
+          "box": [
+            [
+              409.0,
+              820.0
+            ],
+            [
+              472.0,
+              820.0
+            ],
+            [
+              472.0,
+              831.0
+            ],
+            [
+              409.0,
+              831.0
+            ]
+          ],
+          "position": {
+            "x": 409,
+            "y": 820,
+            "width": 63,
+            "height": 11,
+            "center_x": 440.5,
+            "center_y": 825.5,
+            "region": "bottom-center",
+            "tag": "[y:820, x:409]"
+          }
+        },
+        {
+          "text": "60",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              471.0,
+              821.0
+            ],
+            [
+              490.0,
+              821.0
+            ],
+            [
+              490.0,
+              832.0
+            ],
+            [
+              471.0,
+              832.0
+            ]
+          ],
+          "box": [
+            [
+              471.0,
+              821.0
+            ],
+            [
+              490.0,
+              821.0
+            ],
+            [
+              490.0,
+              832.0
+            ],
+            [
+              471.0,
+              832.0
+            ]
+          ],
+          "position": {
+            "x": 471,
+            "y": 821,
+            "width": 19,
+            "height": 11,
+            "center_x": 480.5,
+            "center_y": 826.5,
+            "region": "bottom-right",
+            "tag": "[y:821, x:471]"
+          }
+        },
+        {
+          "text": "61",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              491.0,
+              821.0
+            ],
+            [
+              506.0,
+              821.0
+            ],
+            [
+              506.0,
+              833.0
+            ],
+            [
+              491.0,
+              833.0
+            ]
+          ],
+          "box": [
+            [
+              491.0,
+              821.0
+            ],
+            [
+              506.0,
+              821.0
+            ],
+            [
+              506.0,
+              833.0
+            ],
+            [
+              491.0,
+              833.0
+            ]
+          ],
+          "position": {
+            "x": 491,
+            "y": 821,
+            "width": 15,
+            "height": 12,
+            "center_x": 498.5,
+            "center_y": 827.0,
+            "region": "bottom-right",
+            "tag": "[y:821, x:491]"
+          }
+        },
+        {
+          "text": "68",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              544.0,
+              823.0
+            ],
+            [
+              557.0,
+              823.0
+            ],
+            [
+              557.0,
+              832.0
+            ],
+            [
+              544.0,
+              832.0
+            ]
+          ],
+          "box": [
+            [
+              544.0,
+              823.0
+            ],
+            [
+              557.0,
+              823.0
+            ],
+            [
+              557.0,
+              832.0
+            ],
+            [
+              544.0,
+              832.0
+            ]
+          ],
+          "position": {
+            "x": 544,
+            "y": 823,
+            "width": 13,
+            "height": 9,
+            "center_x": 550.5,
+            "center_y": 827.5,
+            "region": "bottom-right",
+            "tag": "[y:823, x:544]"
+          }
+        },
+        {
+          "text": "69",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              562.0,
+              822.0
+            ],
+            [
+              577.0,
+              822.0
+            ],
+            [
+              577.0,
+              834.0
+            ],
+            [
+              562.0,
+              834.0
+            ]
+          ],
+          "box": [
+            [
+              562.0,
+              822.0
+            ],
+            [
+              577.0,
+              822.0
+            ],
+            [
+              577.0,
+              834.0
+            ],
+            [
+              562.0,
+              834.0
+            ]
+          ],
+          "position": {
+            "x": 562,
+            "y": 822,
+            "width": 15,
+            "height": 12,
+            "center_x": 569.5,
+            "center_y": 828.0,
+            "region": "bottom-right",
+            "tag": "[y:822, x:562]"
+          }
+        },
+        {
+          "text": "DISC. AMT.",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              566.0,
+              810.0
+            ],
+            [
+              609.0,
+              810.0
+            ],
+            [
+              609.0,
+              822.0
+            ],
+            [
+              566.0,
+              822.0
+            ]
+          ],
+          "box": [
+            [
+              566.0,
+              810.0
+            ],
+            [
+              609.0,
+              810.0
+            ],
+            [
+              609.0,
+              822.0
+            ],
+            [
+              566.0,
+              822.0
+            ]
+          ],
+          "position": {
+            "x": 566,
+            "y": 810,
+            "width": 43,
+            "height": 12,
+            "center_x": 587.5,
+            "center_y": 816.0,
+            "region": "bottom-right",
+            "tag": "[y:810, x:566]"
+          }
+        },
+        {
+          "text": "72",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              601.0,
+              824.0
+            ],
+            [
+              613.0,
+              824.0
+            ],
+            [
+              613.0,
+              833.0
+            ],
+            [
+              601.0,
+              833.0
+            ]
+          ],
+          "box": [
+            [
+              601.0,
+              824.0
+            ],
+            [
+              613.0,
+              824.0
+            ],
+            [
+              613.0,
+              833.0
+            ],
+            [
+              601.0,
+              833.0
+            ]
+          ],
+          "position": {
+            "x": 601,
+            "y": 824,
+            "width": 12,
+            "height": 9,
+            "center_x": 607.0,
+            "center_y": 828.5,
+            "region": "bottom-right",
+            "tag": "[y:824, x:601]"
+          }
+        },
+        {
+          "text": "73",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              617.0,
+              824.0
+            ],
+            [
+              629.0,
+              824.0
+            ],
+            [
+              629.0,
+              833.0
+            ],
+            [
+              617.0,
+              833.0
+            ]
+          ],
+          "box": [
+            [
+              617.0,
+              824.0
+            ],
+            [
+              629.0,
+              824.0
+            ],
+            [
+              629.0,
+              833.0
+            ],
+            [
+              617.0,
+              833.0
+            ]
+          ],
+          "position": {
+            "x": 617,
+            "y": 824,
+            "width": 12,
+            "height": 9,
+            "center_x": 623.0,
+            "center_y": 828.5,
+            "region": "bottom-right",
+            "tag": "[y:824, x:617]"
+          }
+        },
+        {
+          "text": "80",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              680.0,
+              823.0
+            ],
+            [
+              694.0,
+              823.0
+            ],
+            [
+              694.0,
+              835.0
+            ],
+            [
+              680.0,
+              835.0
+            ]
+          ],
+          "box": [
+            [
+              680.0,
+              823.0
+            ],
+            [
+              694.0,
+              823.0
+            ],
+            [
+              694.0,
+              835.0
+            ],
+            [
+              680.0,
+              835.0
+            ]
+          ],
+          "position": {
+            "x": 680,
+            "y": 823,
+            "width": 14,
+            "height": 12,
+            "center_x": 687.0,
+            "center_y": 829.0,
+            "region": "bottom-right",
+            "tag": "[y:823, x:680]"
+          }
+        },
+        {
+          "text": "447675",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              42.0,
+              826.0
+            ],
+            [
+              85.0,
+              826.0
+            ],
+            [
+              85.0,
+              837.0
+            ],
+            [
+              42.0,
+              837.0
+            ]
+          ],
+          "box": [
+            [
+              42.0,
+              826.0
+            ],
+            [
+              85.0,
+              826.0
+            ],
+            [
+              85.0,
+              837.0
+            ],
+            [
+              42.0,
+              837.0
+            ]
+          ],
+          "position": {
+            "x": 42,
+            "y": 826,
+            "width": 43,
+            "height": 11,
+            "center_x": 63.5,
+            "center_y": 831.5,
+            "region": "bottom-left",
+            "tag": "[y:826, x:42]"
+          }
+        },
+        {
+          "text": "8",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              158.0,
+              827.0
+            ],
+            [
+              168.0,
+              827.0
+            ],
+            [
+              168.0,
+              838.0
+            ],
+            [
+              158.0,
+              838.0
+            ]
+          ],
+          "box": [
+            [
+              158.0,
+              827.0
+            ],
+            [
+              168.0,
+              827.0
+            ],
+            [
+              168.0,
+              838.0
+            ],
+            [
+              158.0,
+              838.0
+            ]
+          ],
+          "position": {
+            "x": 158,
+            "y": 827,
+            "width": 10,
+            "height": 11,
+            "center_x": 163.0,
+            "center_y": 832.5,
+            "region": "bottom-left",
+            "tag": "[y:827, x:158]"
+          }
+        },
+        {
+          "text": "175.66100",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              619.0,
+              835.0
+            ],
+            [
+              693.0,
+              835.0
+            ],
+            [
+              693.0,
+              849.0
+            ],
+            [
+              619.0,
+              849.0
+            ]
+          ],
+          "box": [
+            [
+              619.0,
+              835.0
+            ],
+            [
+              693.0,
+              835.0
+            ],
+            [
+              693.0,
+              849.0
+            ],
+            [
+              619.0,
+              849.0
+            ]
+          ],
+          "position": {
+            "x": 619,
+            "y": 835,
+            "width": 74,
+            "height": 14,
+            "center_x": 656.0,
+            "center_y": 842.0,
+            "region": "bottom-right",
+            "tag": "[y:835, x:619]"
+          }
+        },
+        {
+          "text": "IN",
+          "confidence": 0.8,
+          "bounding_box": [
+            [
+              33.0,
+              922.0
+            ],
+            [
+              56.0,
+              922.0
+            ],
+            [
+              56.0,
+              930.0
+            ],
+            [
+              33.0,
+              930.0
+            ]
+          ],
+          "box": [
+            [
+              33.0,
+              922.0
+            ],
+            [
+              56.0,
+              922.0
+            ],
+            [
+              56.0,
+              930.0
+            ],
+            [
+              33.0,
+              930.0
+            ]
+          ],
+          "position": {
+            "x": 33,
+            "y": 922,
+            "width": 23,
+            "height": 8,
+            "center_x": 44.5,
+            "center_y": 926.0,
+            "region": "bottom-left",
+            "tag": "[y:922, x:33]"
+          }
+        },
+        {
+          "text": "ACCOUNTING: 5 YEARS SUBJECT TO CONTRACT AND GRANT REOUIREMENTS",
+          "confidence": 0.95,
+          "bounding_box": [
+            [
+              57.0,
+              920.0
+            ],
+            [
+              431.0,
+              929.0
+            ],
+            [
+              431.0,
+              942.0
+            ],
+            [
+              57.0,
+              933.0
+            ]
+          ],
+          "box": [
+            [
+              57.0,
+              920.0
+            ],
+            [
+              431.0,
+              929.0
+            ],
+            [
+              431.0,
+              942.0
+            ],
+            [
+              57.0,
+              933.0
+            ]
+          ],
+          "position": {
+            "x": 57,
+            "y": 920,
+            "width": 374,
+            "height": 22,
+            "center_x": 244.0,
+            "center_y": 931.0,
+            "region": "bottom-left",
+            "tag": "[y:920, x:57]"
+          }
+        },
+        {
+          "text": "OTER COPES O-S YEARS",
+          "confidence": 0.46,
+          "bounding_box": [
+            [
+              58.0,
+              928.0
+            ],
+            [
+              179.0,
+              933.0
+            ],
+            [
+              179.0,
+              946.0
+            ],
+            [
+              57.0,
+              941.0
+            ]
+          ],
+          "box": [
+            [
+              58.0,
+              928.0
+            ],
+            [
+              179.0,
+              933.0
+            ],
+            [
+              179.0,
+              946.0
+            ],
+            [
+              57.0,
+              941.0
+            ]
+          ],
+          "position": {
+            "x": 57,
+            "y": 928,
+            "width": 122,
+            "height": 18,
+            "center_x": 118.0,
+            "center_y": 937.0,
+            "region": "bottom-left",
+            "tag": "[y:928, x:57]"
+          }
+        },
+        {
+          "text": ".:",
+          "confidence": 0.38,
+          "bounding_box": [
+            [
+              343.0,
+              917.0
+            ],
+            [
+              350.0,
+              917.0
+            ],
+            [
+              350.0,
+              924.0
+            ],
+            [
+              343.0,
+              924.0
+            ]
+          ],
+          "box": [
+            [
+              343.0,
+              917.0
+            ],
+            [
+              350.0,
+              917.0
+            ],
+            [
+              350.0,
+              924.0
+            ],
+            [
+              343.0,
+              924.0
+            ]
+          ],
+          "position": {
+            "x": 343,
+            "y": 917,
+            "width": 7,
+            "height": 7,
+            "center_x": 346.5,
+            "center_y": 920.5,
+            "region": "bottom-center",
+            "tag": "[y:917, x:343]"
+          }
+        },
+        {
+          "text": "ACCOUNTING OFFICF",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              528.0,
+              935.0
+            ],
+            [
+              639.0,
+              935.0
+            ],
+            [
+              639.0,
+              946.0
+            ],
+            [
+              528.0,
+              946.0
+            ]
+          ],
+          "box": [
+            [
+              528.0,
+              935.0
+            ],
+            [
+              639.0,
+              935.0
+            ],
+            [
+              639.0,
+              946.0
+            ],
+            [
+              528.0,
+              946.0
+            ]
+          ],
+          "position": {
+            "x": 528,
+            "y": 935,
+            "width": 111,
+            "height": 11,
+            "center_x": 583.5,
+            "center_y": 940.5,
+            "region": "bottom-right",
+            "tag": "[y:935, x:528]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 1.186,
+      "cached_at": "2026-09-23T10:15:28.169390+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "invoice",
+        "document_number": "1974.)",
+        "document_date": "1991-08-20",
+        "sender": "NUMBER",
+        "receiver": "Gayle A. Chapman",
+        "origin": "SOCIAL SECURITY OR FEDERAL, ID",
+        "destination": "City of Industry, CA 91746",
+        "reference_number": "",
+        "unit_price": 175661.0,
+        "total_amount": 175661.0,
+        "currency": "USD",
+        "other": {
+          "source_file": "293_test_imagesm_m_x_c_mxc81f00_2025792689.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "VOICE",
+          "field": "document_type",
+          "value": "invoice",
+          "confidence": 82,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "Federal Privacy Act of 1974.)",
+          "field": "document_number",
+          "value": "1974.)",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "1991-08-20",
+          "field": "document_date",
+          "value": "1991-08-20",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "CAP VENDOR NUMBER",
+          "field": "sender",
+          "value": "NUMBER",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "Attn: . Gayle A. Chapman",
+          "field": "receiver",
+          "value": "Gayle A. Chapman",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "FEDERAL",
+          "field": "origin",
+          "value": "SOCIAL SECURITY OR FEDERAL, ID",
+          "confidence": 98,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "City of Industry, CA 91746",
+          "field": "destination",
+          "value": "City of Industry, CA 91746",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "reference_number",
+          "value": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "$ 175,661.00",
+          "field": "unit_price",
+          "value": "175661.0",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "$ 175,661.00",
+          "field": "total_amount",
+          "value": "175661.0",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "293_test_imagesm_m_x_c_mxc81f00_2025792689.png",
+          "field": "source_file",
+          "value": "293_test_imagesm_m_x_c_mxc81f00_2025792689.png",
+          "confidence": 92,
+          "status": "success",
+          "isOther": true
+        }
+      ],
+      "confidence": {
+        "overall": 90,
+        "ocr": 90,
+        "slm": 88,
+        "mapping": 91,
+        "completeness": 91
+      },
+      "review_items": [
+        {
+          "field": "document_type",
+          "ocrValue": "VOICE",
+          "slmValue": "invoice",
+          "confidence": 82,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "field": "reference_number",
+          "ocrValue": "-",
+          "slmValue": "",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": {
+        "accuracy_pct": 91.0,
+        "inference_time_sec": 0.15,
+        "tokens_generated": 0,
+        "token_speed_tps": 0,
+        "core_fields_fill_rate_pct": 91.0,
+        "schema_valid": true,
+        "math_integrity_status": "no_subtotal",
+        "math_integrity_notes": "Sources: 175,661.00",
+        "field_accuracies": {}
+      },
+      "model": "Qwen/Qwen2.5-1.5B-Instruct (Fallback: 502: SLM did not return JSON: {\n  \"document_type\": \"invoice\",\n  \"document_number\": \"258416\",\n  \"document_date\": \"1989-09-01\",\n  \"sender\": \"Steven B. Hayward\",\n  \"receiver\": \"Gayle A. Chapman\",\n  \"origin\": \"Los Angeles County\",\n  \"destination\": \"California\",\n  \"reference_number\": \"1989-90 Grant Award Distribution\",\n  \"unit_price\": 0.0,\n  \"total_amount\": 175661.00,\n  \"currency\": \"$\",\n  \"other\": {\n    \"description_of_payment\": \"Grant Award Distribution\",\n    \"payment_explanation\": \"- Steven B. Hayward received $175,661.00\",\n   )",
+      "device": "cpu/fallback"
+    },
+    "performance": {
+      "ocr_time_sec": 1.186,
+      "slm_time_sec": 37.317,
+      "total_time_sec": 38.503
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 1.186,
+    "slm_time_sec": 37.317,
+    "total_time_sec": 38.503
+  },
+  "cached_at": "2026-09-23T10:16:05.503162+00:00"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "DOC-290",
+  "rank": 290,
+  "file_name": "290_test_imagesh_h_d_n_hdn00e00_92204785.png",
+  "category": "commercial_invoice",
+  "ground_truth": {
+    "document_type": "purchase_order",
+    "document_number": "103456",
+    "document_date": "1993-02-23",
+    "sender": "WOMEN'S MAGAZINES",
+    "receiver": "EILEEN ANTICNIELLC",
+    "origin": "NEW YORK, NY 10010",
+    "destination": "NEW YORK, NY",
+    "reference_number": "BOX",
+    "unit_price": 105000.0,
+    "total_amount": 105000.0,
+    "currency": "USD"
+  },
+  "confidence": {
+    "overall": 97,
+    "ocr": 95,
+    "slm": 97,
+    "mapping": 98,
+    "completeness": 100
+  },
+  "annotated_at": "2026-09-14 15:38:17"
+}

@@ -1,0 +1,3023 @@
+{
+  "document_id": "DOC-004",
+  "file_name": "004_train_imagesh_h_o_m_hom34c00_83645348.png",
+  "variant": "one-shot",
+  "json_schema": {
+    "document_type": "invoice",
+    "document_number": "21998-8",
+    "document_date": "1998-02-19",
+    "sender": "ANA",
+    "receiver": "Lorillard Tobacco Company",
+    "origin": "Greensboro, NC 27408",
+    "destination": "New York, NY 10017",
+    "reference_number": "03-01-98",
+    "unit_price": 0.0,
+    "total_amount": 16750.0,
+    "currency": "USD",
+    "other": {
+      "source_file": "004_train_imagesh_h_o_m_hom34c00_83645348.png"
+    }
+  },
+  "trace": {
+    "ocr": {
+      "document_id": "DOC-004",
+      "filename": "004_train_imagesh_h_o_m_hom34c00_83645348.png",
+      "ocr_text": "ASSOCIATION OF NATIONAL ADVERTISERS, INC.\n155 BAST 44TH STREET, NEW YORK, NY 10017  (212) 697-5950\nANA\nMEMBER, WORLD FEDERATION OP ADVERTISERS\nFax # (212) 661-8057\n(202) 659-3711\nINVOICE FOR A.N.A. MEMBERSHIP DUES\nTo: Mr. Martin L. Orlowsky\nINVOICE DT: 02/19/98\nPresident & Chief Operating Officer\nINVOICE NO: 21998-8\nLoriliard Tobacco Company\n714 Green Valley Road\nGreensboro, NC 27408\n03\n01\n98\n021 28\n99\nPeriod Covering:\n1\nthrough\nBASIS FOR DETERMINING DUES\nA.N.A. dues are based on the combined total of all U.S. Advertising Expenditures by the Member Company\nincluding the parent company and all eligible subsidiaries and divisions -- for the most recent calendar year preceding\nthe A.N.A. membership anniversary date of the Member Company.\nwhether national, regional, or local; all U.S. advertising production costs (personnel including talent, services\nThe term U.S. Advertising Expenditures includes: all U.S. expenditures for advertising in any and all media\nand materiel); all U.S. advertising commissions and fees; and the Member's share of all expenditures within\nthe U.S. for cooperative advertising programs. It includes such monies expended directly by the Member, as\nwell as those by other firms or entities by arrangement with the Member that promote the Member's name,\nproducts, services, brands, or other subjects of trade (e.g. expenditures by franchisees, licensees, distributors,\ndealers, or other agencies)\nThe term Media includes: newspapers; periodicals; yellow pages; radio; television or other electronic systems; class\nand technical jourmals; business, farm and religious papers; car cards; posters and out-of-home advertising.\nBilling for Members' dues shall be based on the best published data available to A.N.A. for such expenses. If a\nMember's actual expenses are substantially lower than those reflected in the A.N.A, invoice, the Member shall have\nthe option to supply the Association with an amount for its total expenses certified by its Chief Financial Officer, and\nto remit its dues based upon such certified amount.\nDues are based on estimated advertising expenditures of$_30, 000, 000\nfor the most recent calendar year.\n$1,000.00\n2 Affiliate Memberships @ $500 each:\n83645348\nAMOUNT DUE:\n$16,750.00\nPlease make check payable to the Association of National Advertisers, Inc. and mail to the above address.\n*In accordance with the A.N.A. By-Laws, dues\nThe Intermal Revenue requires notice on invoices for Trade\nare payable in advance for the ensuing year-on\nAssociation Dues: \"Payments to the Association of National\nthe anniversary date of the company's election\nAdvertisers, Ine. are not deductible as charitsble contributions\nto membership.\nfor Federal income tax purposes. However, this does not affect\ntheir deductibility under other IRS code provisions.\nE:DUESINV2.PM4",
+      "ocr_lines": [
+        {
+          "text": "ASSOCIATION OF NATIONAL ADVERTISERS, INC.",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              227.0,
+              104.0
+            ],
+            [
+              560.0,
+              104.0
+            ],
+            [
+              560.0,
+              118.0
+            ],
+            [
+              227.0,
+              118.0
+            ]
+          ],
+          "box": [
+            [
+              227.0,
+              104.0
+            ],
+            [
+              560.0,
+              104.0
+            ],
+            [
+              560.0,
+              118.0
+            ],
+            [
+              227.0,
+              118.0
+            ]
+          ],
+          "position": {
+            "x": 227,
+            "y": 104,
+            "width": 333,
+            "height": 14,
+            "center_x": 393.5,
+            "center_y": 111.0,
+            "region": "top-center",
+            "tag": "[y:104, x:227]"
+          }
+        },
+        {
+          "text": "155 BAST 44TH STREET, NEW YORK, NY 10017  (212) 697-5950",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              225.0,
+              120.0
+            ],
+            [
+              545.0,
+              118.0
+            ],
+            [
+              545.0,
+              135.0
+            ],
+            [
+              225.0,
+              137.0
+            ]
+          ],
+          "box": [
+            [
+              225.0,
+              120.0
+            ],
+            [
+              545.0,
+              118.0
+            ],
+            [
+              545.0,
+              135.0
+            ],
+            [
+              225.0,
+              137.0
+            ]
+          ],
+          "position": {
+            "x": 225,
+            "y": 118,
+            "width": 320,
+            "height": 19,
+            "center_x": 385.0,
+            "center_y": 127.5,
+            "region": "top-center",
+            "tag": "[y:118, x:225]"
+          }
+        },
+        {
+          "text": "ANA",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              98.0,
+              120.0
+            ],
+            [
+              205.0,
+              120.0
+            ],
+            [
+              205.0,
+              163.0
+            ],
+            [
+              98.0,
+              163.0
+            ]
+          ],
+          "box": [
+            [
+              98.0,
+              120.0
+            ],
+            [
+              205.0,
+              120.0
+            ],
+            [
+              205.0,
+              163.0
+            ],
+            [
+              98.0,
+              163.0
+            ]
+          ],
+          "position": {
+            "x": 98,
+            "y": 120,
+            "width": 107,
+            "height": 43,
+            "center_x": 151.5,
+            "center_y": 141.5,
+            "region": "top-left",
+            "tag": "[y:120, x:98]"
+          }
+        },
+        {
+          "text": "MEMBER, WORLD FEDERATION OP ADVERTISERS",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              225.0,
+              147.0
+            ],
+            [
+              481.0,
+              146.0
+            ],
+            [
+              481.0,
+              160.0
+            ],
+            [
+              225.0,
+              161.0
+            ]
+          ],
+          "box": [
+            [
+              225.0,
+              147.0
+            ],
+            [
+              481.0,
+              146.0
+            ],
+            [
+              481.0,
+              160.0
+            ],
+            [
+              225.0,
+              161.0
+            ]
+          ],
+          "position": {
+            "x": 225,
+            "y": 146,
+            "width": 256,
+            "height": 15,
+            "center_x": 353.0,
+            "center_y": 153.5,
+            "region": "top-center",
+            "tag": "[y:146, x:225]"
+          }
+        },
+        {
+          "text": "Fax # (212) 661-8057",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              226.0,
+              135.0
+            ],
+            [
+              324.0,
+              135.0
+            ],
+            [
+              324.0,
+              148.0
+            ],
+            [
+              226.0,
+              148.0
+            ]
+          ],
+          "box": [
+            [
+              226.0,
+              135.0
+            ],
+            [
+              324.0,
+              135.0
+            ],
+            [
+              324.0,
+              148.0
+            ],
+            [
+              226.0,
+              148.0
+            ]
+          ],
+          "position": {
+            "x": 226,
+            "y": 135,
+            "width": 98,
+            "height": 13,
+            "center_x": 275.0,
+            "center_y": 141.5,
+            "region": "top-center",
+            "tag": "[y:135, x:226]"
+          }
+        },
+        {
+          "text": "(202) 659-3711",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              348.0,
+              136.0
+            ],
+            [
+              416.0,
+              136.0
+            ],
+            [
+              416.0,
+              147.0
+            ],
+            [
+              348.0,
+              147.0
+            ]
+          ],
+          "box": [
+            [
+              348.0,
+              136.0
+            ],
+            [
+              416.0,
+              136.0
+            ],
+            [
+              416.0,
+              147.0
+            ],
+            [
+              348.0,
+              147.0
+            ]
+          ],
+          "position": {
+            "x": 348,
+            "y": 136,
+            "width": 68,
+            "height": 11,
+            "center_x": 382.0,
+            "center_y": 141.5,
+            "region": "top-center",
+            "tag": "[y:136, x:348]"
+          }
+        },
+        {
+          "text": "INVOICE FOR A.N.A. MEMBERSHIP DUES",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              201.0,
+              193.0
+            ],
+            [
+              490.0,
+              193.0
+            ],
+            [
+              490.0,
+              207.0
+            ],
+            [
+              201.0,
+              207.0
+            ]
+          ],
+          "box": [
+            [
+              201.0,
+              193.0
+            ],
+            [
+              490.0,
+              193.0
+            ],
+            [
+              490.0,
+              207.0
+            ],
+            [
+              201.0,
+              207.0
+            ]
+          ],
+          "position": {
+            "x": 201,
+            "y": 193,
+            "width": 289,
+            "height": 14,
+            "center_x": 345.5,
+            "center_y": 200.0,
+            "region": "top-center",
+            "tag": "[y:193, x:201]"
+          }
+        },
+        {
+          "text": "To: Mr. Martin L. Orlowsky",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              33.0,
+              230.0
+            ],
+            [
+              223.0,
+              234.0
+            ],
+            [
+              223.0,
+              252.0
+            ],
+            [
+              32.0,
+              248.0
+            ]
+          ],
+          "box": [
+            [
+              33.0,
+              230.0
+            ],
+            [
+              223.0,
+              234.0
+            ],
+            [
+              223.0,
+              252.0
+            ],
+            [
+              32.0,
+              248.0
+            ]
+          ],
+          "position": {
+            "x": 32,
+            "y": 230,
+            "width": 191,
+            "height": 22,
+            "center_x": 127.5,
+            "center_y": 241.0,
+            "region": "top-left",
+            "tag": "[y:230, x:32]"
+          }
+        },
+        {
+          "text": "INVOICE DT: 02/19/98",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              499.0,
+              233.0
+            ],
+            [
+              644.0,
+              233.0
+            ],
+            [
+              644.0,
+              246.0
+            ],
+            [
+              499.0,
+              246.0
+            ]
+          ],
+          "box": [
+            [
+              499.0,
+              233.0
+            ],
+            [
+              644.0,
+              233.0
+            ],
+            [
+              644.0,
+              246.0
+            ],
+            [
+              499.0,
+              246.0
+            ]
+          ],
+          "position": {
+            "x": 499,
+            "y": 233,
+            "width": 145,
+            "height": 13,
+            "center_x": 571.5,
+            "center_y": 239.5,
+            "region": "top-right",
+            "tag": "[y:233, x:499]"
+          }
+        },
+        {
+          "text": "President & Chief Operating Officer",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              62.0,
+              249.0
+            ],
+            [
+              314.0,
+              249.0
+            ],
+            [
+              314.0,
+              262.0
+            ],
+            [
+              62.0,
+              262.0
+            ]
+          ],
+          "box": [
+            [
+              62.0,
+              249.0
+            ],
+            [
+              314.0,
+              249.0
+            ],
+            [
+              314.0,
+              262.0
+            ],
+            [
+              62.0,
+              262.0
+            ]
+          ],
+          "position": {
+            "x": 62,
+            "y": 249,
+            "width": 252,
+            "height": 13,
+            "center_x": 188.0,
+            "center_y": 255.5,
+            "region": "top-left",
+            "tag": "[y:249, x:62]"
+          }
+        },
+        {
+          "text": "INVOICE NO: 21998-8",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              499.0,
+              247.0
+            ],
+            [
+              637.0,
+              247.0
+            ],
+            [
+              637.0,
+              260.0
+            ],
+            [
+              499.0,
+              260.0
+            ]
+          ],
+          "box": [
+            [
+              499.0,
+              247.0
+            ],
+            [
+              637.0,
+              247.0
+            ],
+            [
+              637.0,
+              260.0
+            ],
+            [
+              499.0,
+              260.0
+            ]
+          ],
+          "position": {
+            "x": 499,
+            "y": 247,
+            "width": 138,
+            "height": 13,
+            "center_x": 568.0,
+            "center_y": 253.5,
+            "region": "top-right",
+            "tag": "[y:247, x:499]"
+          }
+        },
+        {
+          "text": "Loriliard Tobacco Company",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              62.0,
+              262.0
+            ],
+            [
+              244.0,
+              263.0
+            ],
+            [
+              244.0,
+              277.0
+            ],
+            [
+              62.0,
+              276.0
+            ]
+          ],
+          "box": [
+            [
+              62.0,
+              262.0
+            ],
+            [
+              244.0,
+              263.0
+            ],
+            [
+              244.0,
+              277.0
+            ],
+            [
+              62.0,
+              276.0
+            ]
+          ],
+          "position": {
+            "x": 62,
+            "y": 262,
+            "width": 182,
+            "height": 15,
+            "center_x": 153.0,
+            "center_y": 269.5,
+            "region": "middle-left",
+            "tag": "[y:262, x:62]"
+          }
+        },
+        {
+          "text": "714 Green Valley Road",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              64.0,
+              277.0
+            ],
+            [
+              217.0,
+              277.0
+            ],
+            [
+              217.0,
+              290.0
+            ],
+            [
+              64.0,
+              290.0
+            ]
+          ],
+          "box": [
+            [
+              64.0,
+              277.0
+            ],
+            [
+              217.0,
+              277.0
+            ],
+            [
+              217.0,
+              290.0
+            ],
+            [
+              64.0,
+              290.0
+            ]
+          ],
+          "position": {
+            "x": 64,
+            "y": 277,
+            "width": 153,
+            "height": 13,
+            "center_x": 140.5,
+            "center_y": 283.5,
+            "region": "middle-left",
+            "tag": "[y:277, x:64]"
+          }
+        },
+        {
+          "text": "Greensboro, NC 27408",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              63.0,
+              291.0
+            ],
+            [
+              216.0,
+              290.0
+            ],
+            [
+              216.0,
+              304.0
+            ],
+            [
+              63.0,
+              305.0
+            ]
+          ],
+          "box": [
+            [
+              63.0,
+              291.0
+            ],
+            [
+              216.0,
+              290.0
+            ],
+            [
+              216.0,
+              304.0
+            ],
+            [
+              63.0,
+              305.0
+            ]
+          ],
+          "position": {
+            "x": 63,
+            "y": 290,
+            "width": 153,
+            "height": 15,
+            "center_x": 139.5,
+            "center_y": 297.5,
+            "region": "middle-left",
+            "tag": "[y:290, x:63]"
+          }
+        },
+        {
+          "text": "03",
+          "confidence": 0.87,
+          "bounding_box": [
+            [
+              155.0,
+              343.0
+            ],
+            [
+              186.0,
+              343.0
+            ],
+            [
+              186.0,
+              358.0
+            ],
+            [
+              155.0,
+              358.0
+            ]
+          ],
+          "box": [
+            [
+              155.0,
+              343.0
+            ],
+            [
+              186.0,
+              343.0
+            ],
+            [
+              186.0,
+              358.0
+            ],
+            [
+              155.0,
+              358.0
+            ]
+          ],
+          "position": {
+            "x": 155,
+            "y": 343,
+            "width": 31,
+            "height": 15,
+            "center_x": 170.5,
+            "center_y": 350.5,
+            "region": "middle-left",
+            "tag": "[y:343, x:155]"
+          }
+        },
+        {
+          "text": "01",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              191.0,
+              342.0
+            ],
+            [
+              211.0,
+              342.0
+            ],
+            [
+              211.0,
+              358.0
+            ],
+            [
+              191.0,
+              358.0
+            ]
+          ],
+          "box": [
+            [
+              191.0,
+              342.0
+            ],
+            [
+              211.0,
+              342.0
+            ],
+            [
+              211.0,
+              358.0
+            ],
+            [
+              191.0,
+              358.0
+            ]
+          ],
+          "position": {
+            "x": 191,
+            "y": 342,
+            "width": 20,
+            "height": 16,
+            "center_x": 201.0,
+            "center_y": 350.0,
+            "region": "middle-left",
+            "tag": "[y:342, x:191]"
+          }
+        },
+        {
+          "text": "98",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              225.0,
+              342.0
+            ],
+            [
+              247.0,
+              342.0
+            ],
+            [
+              247.0,
+              358.0
+            ],
+            [
+              225.0,
+              358.0
+            ]
+          ],
+          "box": [
+            [
+              225.0,
+              342.0
+            ],
+            [
+              247.0,
+              342.0
+            ],
+            [
+              247.0,
+              358.0
+            ],
+            [
+              225.0,
+              358.0
+            ]
+          ],
+          "position": {
+            "x": 225,
+            "y": 342,
+            "width": 22,
+            "height": 16,
+            "center_x": 236.0,
+            "center_y": 350.0,
+            "region": "middle-left",
+            "tag": "[y:342, x:225]"
+          }
+        },
+        {
+          "text": "021 28",
+          "confidence": 0.83,
+          "bounding_box": [
+            [
+              345.0,
+              341.0
+            ],
+            [
+              396.0,
+              338.0
+            ],
+            [
+              397.0,
+              358.0
+            ],
+            [
+              346.0,
+              360.0
+            ]
+          ],
+          "box": [
+            [
+              345.0,
+              341.0
+            ],
+            [
+              396.0,
+              338.0
+            ],
+            [
+              397.0,
+              358.0
+            ],
+            [
+              346.0,
+              360.0
+            ]
+          ],
+          "position": {
+            "x": 345,
+            "y": 338,
+            "width": 52,
+            "height": 22,
+            "center_x": 371.0,
+            "center_y": 349.0,
+            "region": "middle",
+            "tag": "[y:338, x:345]"
+          }
+        },
+        {
+          "text": "99",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              409.0,
+              340.0
+            ],
+            [
+              430.0,
+              340.0
+            ],
+            [
+              430.0,
+              357.0
+            ],
+            [
+              409.0,
+              357.0
+            ]
+          ],
+          "box": [
+            [
+              409.0,
+              340.0
+            ],
+            [
+              430.0,
+              340.0
+            ],
+            [
+              430.0,
+              357.0
+            ],
+            [
+              409.0,
+              357.0
+            ]
+          ],
+          "position": {
+            "x": 409,
+            "y": 340,
+            "width": 21,
+            "height": 17,
+            "center_x": 419.5,
+            "center_y": 348.5,
+            "region": "middle",
+            "tag": "[y:340, x:409]"
+          }
+        },
+        {
+          "text": "Period Covering:",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              34.0,
+              345.0
+            ],
+            [
+              130.0,
+              346.0
+            ],
+            [
+              129.0,
+              361.0
+            ],
+            [
+              34.0,
+              360.0
+            ]
+          ],
+          "box": [
+            [
+              34.0,
+              345.0
+            ],
+            [
+              130.0,
+              346.0
+            ],
+            [
+              129.0,
+              361.0
+            ],
+            [
+              34.0,
+              360.0
+            ]
+          ],
+          "position": {
+            "x": 34,
+            "y": 345,
+            "width": 96,
+            "height": 16,
+            "center_x": 82.0,
+            "center_y": 353.0,
+            "region": "middle-left",
+            "tag": "[y:345, x:34]"
+          }
+        },
+        {
+          "text": "1",
+          "confidence": 0.88,
+          "bounding_box": [
+            [
+              213.0,
+              347.0
+            ],
+            [
+              222.0,
+              347.0
+            ],
+            [
+              222.0,
+              356.0
+            ],
+            [
+              213.0,
+              356.0
+            ]
+          ],
+          "box": [
+            [
+              213.0,
+              347.0
+            ],
+            [
+              222.0,
+              347.0
+            ],
+            [
+              222.0,
+              356.0
+            ],
+            [
+              213.0,
+              356.0
+            ]
+          ],
+          "position": {
+            "x": 213,
+            "y": 347,
+            "width": 9,
+            "height": 9,
+            "center_x": 217.5,
+            "center_y": 351.5,
+            "region": "middle-left",
+            "tag": "[y:347, x:213]"
+          }
+        },
+        {
+          "text": "through",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              266.0,
+              345.0
+            ],
+            [
+              315.0,
+              345.0
+            ],
+            [
+              315.0,
+              363.0
+            ],
+            [
+              266.0,
+              363.0
+            ]
+          ],
+          "box": [
+            [
+              266.0,
+              345.0
+            ],
+            [
+              315.0,
+              345.0
+            ],
+            [
+              315.0,
+              363.0
+            ],
+            [
+              266.0,
+              363.0
+            ]
+          ],
+          "position": {
+            "x": 266,
+            "y": 345,
+            "width": 49,
+            "height": 18,
+            "center_x": 290.5,
+            "center_y": 354.0,
+            "region": "middle",
+            "tag": "[y:345, x:266]"
+          }
+        },
+        {
+          "text": "BASIS FOR DETERMINING DUES",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              237.0,
+              379.0
+            ],
+            [
+              456.0,
+              379.0
+            ],
+            [
+              456.0,
+              392.0
+            ],
+            [
+              237.0,
+              392.0
+            ]
+          ],
+          "box": [
+            [
+              237.0,
+              379.0
+            ],
+            [
+              456.0,
+              379.0
+            ],
+            [
+              456.0,
+              392.0
+            ],
+            [
+              237.0,
+              392.0
+            ]
+          ],
+          "position": {
+            "x": 237,
+            "y": 379,
+            "width": 219,
+            "height": 13,
+            "center_x": 346.5,
+            "center_y": 385.5,
+            "region": "middle",
+            "tag": "[y:379, x:237]"
+          }
+        },
+        {
+          "text": "A.N.A. dues are based on the combined total of all U.S. Advertising Expenditures by the Member Company",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              33.0,
+              402.0
+            ],
+            [
+              657.0,
+              405.0
+            ],
+            [
+              657.0,
+              422.0
+            ],
+            [
+              33.0,
+              419.0
+            ]
+          ],
+          "box": [
+            [
+              33.0,
+              402.0
+            ],
+            [
+              657.0,
+              405.0
+            ],
+            [
+              657.0,
+              422.0
+            ],
+            [
+              33.0,
+              419.0
+            ]
+          ],
+          "position": {
+            "x": 33,
+            "y": 402,
+            "width": 624,
+            "height": 20,
+            "center_x": 345.0,
+            "center_y": 412.0,
+            "region": "middle",
+            "tag": "[y:402, x:33]"
+          }
+        },
+        {
+          "text": "including the parent company and all eligible subsidiaries and divisions -- for the most recent calendar year preceding",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              33.0,
+              419.0
+            ],
+            [
+              657.0,
+              422.0
+            ],
+            [
+              657.0,
+              440.0
+            ],
+            [
+              33.0,
+              436.0
+            ]
+          ],
+          "box": [
+            [
+              33.0,
+              419.0
+            ],
+            [
+              657.0,
+              422.0
+            ],
+            [
+              657.0,
+              440.0
+            ],
+            [
+              33.0,
+              436.0
+            ]
+          ],
+          "position": {
+            "x": 33,
+            "y": 419,
+            "width": 624,
+            "height": 21,
+            "center_x": 345.0,
+            "center_y": 429.5,
+            "region": "middle",
+            "tag": "[y:419, x:33]"
+          }
+        },
+        {
+          "text": "the A.N.A. membership anniversary date of the Member Company.",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              34.0,
+              438.0
+            ],
+            [
+              403.0,
+              441.0
+            ],
+            [
+              402.0,
+              455.0
+            ],
+            [
+              34.0,
+              453.0
+            ]
+          ],
+          "box": [
+            [
+              34.0,
+              438.0
+            ],
+            [
+              403.0,
+              441.0
+            ],
+            [
+              402.0,
+              455.0
+            ],
+            [
+              34.0,
+              453.0
+            ]
+          ],
+          "position": {
+            "x": 34,
+            "y": 438,
+            "width": 369,
+            "height": 17,
+            "center_x": 218.5,
+            "center_y": 446.5,
+            "region": "middle-left",
+            "tag": "[y:438, x:34]"
+          }
+        },
+        {
+          "text": "whether national, regional, or local; all U.S. advertising production costs (personnel including talent, services",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              33.0,
+              479.0
+            ],
+            [
+              658.0,
+              480.0
+            ],
+            [
+              658.0,
+              497.0
+            ],
+            [
+              33.0,
+              496.0
+            ]
+          ],
+          "box": [
+            [
+              33.0,
+              479.0
+            ],
+            [
+              658.0,
+              480.0
+            ],
+            [
+              658.0,
+              497.0
+            ],
+            [
+              33.0,
+              496.0
+            ]
+          ],
+          "position": {
+            "x": 33,
+            "y": 479,
+            "width": 625,
+            "height": 18,
+            "center_x": 345.5,
+            "center_y": 488.0,
+            "region": "middle",
+            "tag": "[y:479, x:33]"
+          }
+        },
+        {
+          "text": "The term U.S. Advertising Expenditures includes: all U.S. expenditures for advertising in any and all media",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              35.0,
+              465.0
+            ],
+            [
+              656.0,
+              465.0
+            ],
+            [
+              656.0,
+              479.0
+            ],
+            [
+              35.0,
+              479.0
+            ]
+          ],
+          "box": [
+            [
+              35.0,
+              465.0
+            ],
+            [
+              656.0,
+              465.0
+            ],
+            [
+              656.0,
+              479.0
+            ],
+            [
+              35.0,
+              479.0
+            ]
+          ],
+          "position": {
+            "x": 35,
+            "y": 465,
+            "width": 621,
+            "height": 14,
+            "center_x": 345.5,
+            "center_y": 472.0,
+            "region": "middle",
+            "tag": "[y:465, x:35]"
+          }
+        },
+        {
+          "text": "and materiel); all U.S. advertising commissions and fees; and the Member's share of all expenditures within",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              35.0,
+              498.0
+            ],
+            [
+              657.0,
+              498.0
+            ],
+            [
+              657.0,
+              512.0
+            ],
+            [
+              35.0,
+              512.0
+            ]
+          ],
+          "box": [
+            [
+              35.0,
+              498.0
+            ],
+            [
+              657.0,
+              498.0
+            ],
+            [
+              657.0,
+              512.0
+            ],
+            [
+              35.0,
+              512.0
+            ]
+          ],
+          "position": {
+            "x": 35,
+            "y": 498,
+            "width": 622,
+            "height": 14,
+            "center_x": 346.0,
+            "center_y": 505.0,
+            "region": "middle",
+            "tag": "[y:498, x:35]"
+          }
+        },
+        {
+          "text": "the U.S. for cooperative advertising programs. It includes such monies expended directly by the Member, as",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              35.0,
+              515.0
+            ],
+            [
+              657.0,
+              515.0
+            ],
+            [
+              657.0,
+              529.0
+            ],
+            [
+              35.0,
+              529.0
+            ]
+          ],
+          "box": [
+            [
+              35.0,
+              515.0
+            ],
+            [
+              657.0,
+              515.0
+            ],
+            [
+              657.0,
+              529.0
+            ],
+            [
+              35.0,
+              529.0
+            ]
+          ],
+          "position": {
+            "x": 35,
+            "y": 515,
+            "width": 622,
+            "height": 14,
+            "center_x": 346.0,
+            "center_y": 522.0,
+            "region": "middle",
+            "tag": "[y:515, x:35]"
+          }
+        },
+        {
+          "text": "well as those by other firms or entities by arrangement with the Member that promote the Member's name,",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              34.0,
+              530.0
+            ],
+            [
+              656.0,
+              531.0
+            ],
+            [
+              656.0,
+              546.0
+            ],
+            [
+              34.0,
+              545.0
+            ]
+          ],
+          "box": [
+            [
+              34.0,
+              530.0
+            ],
+            [
+              656.0,
+              531.0
+            ],
+            [
+              656.0,
+              546.0
+            ],
+            [
+              34.0,
+              545.0
+            ]
+          ],
+          "position": {
+            "x": 34,
+            "y": 530,
+            "width": 622,
+            "height": 16,
+            "center_x": 345.0,
+            "center_y": 538.0,
+            "region": "middle",
+            "tag": "[y:530, x:34]"
+          }
+        },
+        {
+          "text": "products, services, brands, or other subjects of trade (e.g. expenditures by franchisees, licensees, distributors,",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              34.0,
+              546.0
+            ],
+            [
+              657.0,
+              547.0
+            ],
+            [
+              657.0,
+              565.0
+            ],
+            [
+              34.0,
+              563.0
+            ]
+          ],
+          "box": [
+            [
+              34.0,
+              546.0
+            ],
+            [
+              657.0,
+              547.0
+            ],
+            [
+              657.0,
+              565.0
+            ],
+            [
+              34.0,
+              563.0
+            ]
+          ],
+          "position": {
+            "x": 34,
+            "y": 546,
+            "width": 623,
+            "height": 19,
+            "center_x": 345.5,
+            "center_y": 555.5,
+            "region": "middle",
+            "tag": "[y:546, x:34]"
+          }
+        },
+        {
+          "text": "dealers, or other agencies)",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              36.0,
+              565.0
+            ],
+            [
+              190.0,
+              565.0
+            ],
+            [
+              190.0,
+              579.0
+            ],
+            [
+              36.0,
+              579.0
+            ]
+          ],
+          "box": [
+            [
+              36.0,
+              565.0
+            ],
+            [
+              190.0,
+              565.0
+            ],
+            [
+              190.0,
+              579.0
+            ],
+            [
+              36.0,
+              579.0
+            ]
+          ],
+          "position": {
+            "x": 36,
+            "y": 565,
+            "width": 154,
+            "height": 14,
+            "center_x": 113.0,
+            "center_y": 572.0,
+            "region": "middle-left",
+            "tag": "[y:565, x:36]"
+          }
+        },
+        {
+          "text": "The term Media includes: newspapers; periodicals; yellow pages; radio; television or other electronic systems; class",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              35.0,
+              591.0
+            ],
+            [
+              657.0,
+              591.0
+            ],
+            [
+              657.0,
+              605.0
+            ],
+            [
+              35.0,
+              605.0
+            ]
+          ],
+          "box": [
+            [
+              35.0,
+              591.0
+            ],
+            [
+              657.0,
+              591.0
+            ],
+            [
+              657.0,
+              605.0
+            ],
+            [
+              35.0,
+              605.0
+            ]
+          ],
+          "position": {
+            "x": 35,
+            "y": 591,
+            "width": 622,
+            "height": 14,
+            "center_x": 346.0,
+            "center_y": 598.0,
+            "region": "middle",
+            "tag": "[y:591, x:35]"
+          }
+        },
+        {
+          "text": "and technical jourmals; business, farm and religious papers; car cards; posters and out-of-home advertising.",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              35.0,
+              608.0
+            ],
+            [
+              615.0,
+              608.0
+            ],
+            [
+              615.0,
+              622.0
+            ],
+            [
+              35.0,
+              622.0
+            ]
+          ],
+          "box": [
+            [
+              35.0,
+              608.0
+            ],
+            [
+              615.0,
+              608.0
+            ],
+            [
+              615.0,
+              622.0
+            ],
+            [
+              35.0,
+              622.0
+            ]
+          ],
+          "position": {
+            "x": 35,
+            "y": 608,
+            "width": 580,
+            "height": 14,
+            "center_x": 325.0,
+            "center_y": 615.0,
+            "region": "middle",
+            "tag": "[y:608, x:35]"
+          }
+        },
+        {
+          "text": "Billing for Members' dues shall be based on the best published data available to A.N.A. for such expenses. If a",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              35.0,
+              634.0
+            ],
+            [
+              657.0,
+              634.0
+            ],
+            [
+              657.0,
+              647.0
+            ],
+            [
+              35.0,
+              647.0
+            ]
+          ],
+          "box": [
+            [
+              35.0,
+              634.0
+            ],
+            [
+              657.0,
+              634.0
+            ],
+            [
+              657.0,
+              647.0
+            ],
+            [
+              35.0,
+              647.0
+            ]
+          ],
+          "position": {
+            "x": 35,
+            "y": 634,
+            "width": 622,
+            "height": 13,
+            "center_x": 346.0,
+            "center_y": 640.5,
+            "region": "middle",
+            "tag": "[y:634, x:35]"
+          }
+        },
+        {
+          "text": "Member's actual expenses are substantially lower than those reflected in the A.N.A, invoice, the Member shall have",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              34.0,
+              650.0
+            ],
+            [
+              657.0,
+              649.0
+            ],
+            [
+              657.0,
+              663.0
+            ],
+            [
+              34.0,
+              664.0
+            ]
+          ],
+          "box": [
+            [
+              34.0,
+              650.0
+            ],
+            [
+              657.0,
+              649.0
+            ],
+            [
+              657.0,
+              663.0
+            ],
+            [
+              34.0,
+              664.0
+            ]
+          ],
+          "position": {
+            "x": 34,
+            "y": 649,
+            "width": 623,
+            "height": 15,
+            "center_x": 345.5,
+            "center_y": 656.5,
+            "region": "middle",
+            "tag": "[y:649, x:34]"
+          }
+        },
+        {
+          "text": "the option to supply the Association with an amount for its total expenses certified by its Chief Financial Officer, and",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              36.0,
+              667.0
+            ],
+            [
+              657.0,
+              667.0
+            ],
+            [
+              657.0,
+              681.0
+            ],
+            [
+              36.0,
+              681.0
+            ]
+          ],
+          "box": [
+            [
+              36.0,
+              667.0
+            ],
+            [
+              657.0,
+              667.0
+            ],
+            [
+              657.0,
+              681.0
+            ],
+            [
+              36.0,
+              681.0
+            ]
+          ],
+          "position": {
+            "x": 36,
+            "y": 667,
+            "width": 621,
+            "height": 14,
+            "center_x": 346.5,
+            "center_y": 674.0,
+            "region": "middle",
+            "tag": "[y:667, x:36]"
+          }
+        },
+        {
+          "text": "to remit its dues based upon such certified amount.",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              35.0,
+              685.0
+            ],
+            [
+              311.0,
+              685.0
+            ],
+            [
+              311.0,
+              699.0
+            ],
+            [
+              35.0,
+              699.0
+            ]
+          ],
+          "box": [
+            [
+              35.0,
+              685.0
+            ],
+            [
+              311.0,
+              685.0
+            ],
+            [
+              311.0,
+              699.0
+            ],
+            [
+              35.0,
+              699.0
+            ]
+          ],
+          "position": {
+            "x": 35,
+            "y": 685,
+            "width": 276,
+            "height": 14,
+            "center_x": 173.0,
+            "center_y": 692.0,
+            "region": "bottom-left",
+            "tag": "[y:685, x:35]"
+          }
+        },
+        {
+          "text": "Dues are based on estimated advertising expenditures of$_30, 000, 000",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              33.0,
+              717.0
+            ],
+            [
+              432.0,
+              715.0
+            ],
+            [
+              432.0,
+              732.0
+            ],
+            [
+              33.0,
+              734.0
+            ]
+          ],
+          "box": [
+            [
+              33.0,
+              717.0
+            ],
+            [
+              432.0,
+              715.0
+            ],
+            [
+              432.0,
+              732.0
+            ],
+            [
+              33.0,
+              734.0
+            ]
+          ],
+          "position": {
+            "x": 33,
+            "y": 715,
+            "width": 399,
+            "height": 19,
+            "center_x": 232.5,
+            "center_y": 724.5,
+            "region": "bottom-left",
+            "tag": "[y:715, x:33]"
+          }
+        },
+        {
+          "text": "for the most recent calendar year.",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              452.0,
+              717.0
+            ],
+            [
+              635.0,
+              718.0
+            ],
+            [
+              635.0,
+              732.0
+            ],
+            [
+              452.0,
+              731.0
+            ]
+          ],
+          "box": [
+            [
+              452.0,
+              717.0
+            ],
+            [
+              635.0,
+              718.0
+            ],
+            [
+              635.0,
+              732.0
+            ],
+            [
+              452.0,
+              731.0
+            ]
+          ],
+          "position": {
+            "x": 452,
+            "y": 717,
+            "width": 183,
+            "height": 15,
+            "center_x": 543.5,
+            "center_y": 724.5,
+            "region": "bottom-right",
+            "tag": "[y:717, x:452]"
+          }
+        },
+        {
+          "text": "$1,000.00",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              340.0,
+              736.0
+            ],
+            [
+              410.0,
+              733.0
+            ],
+            [
+              411.0,
+              750.0
+            ],
+            [
+              341.0,
+              753.0
+            ]
+          ],
+          "box": [
+            [
+              340.0,
+              736.0
+            ],
+            [
+              410.0,
+              733.0
+            ],
+            [
+              411.0,
+              750.0
+            ],
+            [
+              341.0,
+              753.0
+            ]
+          ],
+          "position": {
+            "x": 340,
+            "y": 733,
+            "width": 71,
+            "height": 20,
+            "center_x": 375.5,
+            "center_y": 743.0,
+            "region": "bottom-center",
+            "tag": "[y:733, x:340]"
+          }
+        },
+        {
+          "text": "2 Affiliate Memberships @ $500 each:",
+          "confidence": 0.92,
+          "bounding_box": [
+            [
+              121.0,
+              738.0
+            ],
+            [
+              339.0,
+              739.0
+            ],
+            [
+              339.0,
+              756.0
+            ],
+            [
+              121.0,
+              755.0
+            ]
+          ],
+          "box": [
+            [
+              121.0,
+              738.0
+            ],
+            [
+              339.0,
+              739.0
+            ],
+            [
+              339.0,
+              756.0
+            ],
+            [
+              121.0,
+              755.0
+            ]
+          ],
+          "position": {
+            "x": 121,
+            "y": 738,
+            "width": 218,
+            "height": 18,
+            "center_x": 230.0,
+            "center_y": 747.0,
+            "region": "bottom-left",
+            "tag": "[y:738, x:121]"
+          }
+        },
+        {
+          "text": "83645348",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              646.0,
+              740.0
+            ],
+            [
+              670.0,
+              738.0
+            ],
+            [
+              677.0,
+              845.0
+            ],
+            [
+              652.0,
+              846.0
+            ]
+          ],
+          "box": [
+            [
+              646.0,
+              740.0
+            ],
+            [
+              670.0,
+              738.0
+            ],
+            [
+              677.0,
+              845.0
+            ],
+            [
+              652.0,
+              846.0
+            ]
+          ],
+          "position": {
+            "x": 646,
+            "y": 738,
+            "width": 31,
+            "height": 108,
+            "center_x": 661.5,
+            "center_y": 792.0,
+            "region": "bottom-right",
+            "tag": "[y:738, x:646]"
+          }
+        },
+        {
+          "text": "AMOUNT DUE:",
+          "confidence": 0.99,
+          "bounding_box": [
+            [
+              79.0,
+              774.0
+            ],
+            [
+              182.0,
+              774.0
+            ],
+            [
+              182.0,
+              788.0
+            ],
+            [
+              79.0,
+              788.0
+            ]
+          ],
+          "box": [
+            [
+              79.0,
+              774.0
+            ],
+            [
+              182.0,
+              774.0
+            ],
+            [
+              182.0,
+              788.0
+            ],
+            [
+              79.0,
+              788.0
+            ]
+          ],
+          "position": {
+            "x": 79,
+            "y": 774,
+            "width": 103,
+            "height": 14,
+            "center_x": 130.5,
+            "center_y": 781.0,
+            "region": "bottom-left",
+            "tag": "[y:774, x:79]"
+          }
+        },
+        {
+          "text": "$16,750.00",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              204.0,
+              772.0
+            ],
+            [
+              290.0,
+              770.0
+            ],
+            [
+              291.0,
+              787.0
+            ],
+            [
+              204.0,
+              789.0
+            ]
+          ],
+          "box": [
+            [
+              204.0,
+              772.0
+            ],
+            [
+              290.0,
+              770.0
+            ],
+            [
+              291.0,
+              787.0
+            ],
+            [
+              204.0,
+              789.0
+            ]
+          ],
+          "position": {
+            "x": 204,
+            "y": 770,
+            "width": 87,
+            "height": 19,
+            "center_x": 247.5,
+            "center_y": 779.5,
+            "region": "bottom-center",
+            "tag": "[y:770, x:204]"
+          }
+        },
+        {
+          "text": "Please make check payable to the Association of National Advertisers, Inc. and mail to the above address.",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              33.0,
+              807.0
+            ],
+            [
+              610.0,
+              806.0
+            ],
+            [
+              610.0,
+              824.0
+            ],
+            [
+              33.0,
+              825.0
+            ]
+          ],
+          "box": [
+            [
+              33.0,
+              807.0
+            ],
+            [
+              610.0,
+              806.0
+            ],
+            [
+              610.0,
+              824.0
+            ],
+            [
+              33.0,
+              825.0
+            ]
+          ],
+          "position": {
+            "x": 33,
+            "y": 806,
+            "width": 577,
+            "height": 19,
+            "center_x": 321.5,
+            "center_y": 815.5,
+            "region": "bottom-center",
+            "tag": "[y:806, x:33]"
+          }
+        },
+        {
+          "text": "*In accordance with the A.N.A. By-Laws, dues",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              84.0,
+              850.0
+            ],
+            [
+              289.0,
+              850.0
+            ],
+            [
+              289.0,
+              863.0
+            ],
+            [
+              84.0,
+              863.0
+            ]
+          ],
+          "box": [
+            [
+              84.0,
+              850.0
+            ],
+            [
+              289.0,
+              850.0
+            ],
+            [
+              289.0,
+              863.0
+            ],
+            [
+              84.0,
+              863.0
+            ]
+          ],
+          "position": {
+            "x": 84,
+            "y": 850,
+            "width": 205,
+            "height": 13,
+            "center_x": 186.5,
+            "center_y": 856.5,
+            "region": "bottom-left",
+            "tag": "[y:850, x:84]"
+          }
+        },
+        {
+          "text": "The Intermal Revenue requires notice on invoices for Trade",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              350.0,
+              849.0
+            ],
+            [
+              618.0,
+              848.0
+            ],
+            [
+              618.0,
+              861.0
+            ],
+            [
+              351.0,
+              862.0
+            ]
+          ],
+          "box": [
+            [
+              350.0,
+              849.0
+            ],
+            [
+              618.0,
+              848.0
+            ],
+            [
+              618.0,
+              861.0
+            ],
+            [
+              351.0,
+              862.0
+            ]
+          ],
+          "position": {
+            "x": 350,
+            "y": 848,
+            "width": 268,
+            "height": 14,
+            "center_x": 484.0,
+            "center_y": 855.0,
+            "region": "bottom-right",
+            "tag": "[y:848, x:350]"
+          }
+        },
+        {
+          "text": "are payable in advance for the ensuing year-on",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              88.0,
+              863.0
+            ],
+            [
+              290.0,
+              863.0
+            ],
+            [
+              290.0,
+              876.0
+            ],
+            [
+              88.0,
+              876.0
+            ]
+          ],
+          "box": [
+            [
+              88.0,
+              863.0
+            ],
+            [
+              290.0,
+              863.0
+            ],
+            [
+              290.0,
+              876.0
+            ],
+            [
+              88.0,
+              876.0
+            ]
+          ],
+          "position": {
+            "x": 88,
+            "y": 863,
+            "width": 202,
+            "height": 13,
+            "center_x": 189.0,
+            "center_y": 869.5,
+            "region": "bottom-left",
+            "tag": "[y:863, x:88]"
+          }
+        },
+        {
+          "text": "Association Dues: \"Payments to the Association of National",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              350.0,
+              862.0
+            ],
+            [
+              617.0,
+              861.0
+            ],
+            [
+              617.0,
+              874.0
+            ],
+            [
+              351.0,
+              875.0
+            ]
+          ],
+          "box": [
+            [
+              350.0,
+              862.0
+            ],
+            [
+              617.0,
+              861.0
+            ],
+            [
+              617.0,
+              874.0
+            ],
+            [
+              351.0,
+              875.0
+            ]
+          ],
+          "position": {
+            "x": 350,
+            "y": 861,
+            "width": 267,
+            "height": 14,
+            "center_x": 483.5,
+            "center_y": 868.0,
+            "region": "bottom-right",
+            "tag": "[y:861, x:350]"
+          }
+        },
+        {
+          "text": "the anniversary date of the company's election",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              88.0,
+              875.0
+            ],
+            [
+              289.0,
+              875.0
+            ],
+            [
+              289.0,
+              888.0
+            ],
+            [
+              88.0,
+              888.0
+            ]
+          ],
+          "box": [
+            [
+              88.0,
+              875.0
+            ],
+            [
+              289.0,
+              875.0
+            ],
+            [
+              289.0,
+              888.0
+            ],
+            [
+              88.0,
+              888.0
+            ]
+          ],
+          "position": {
+            "x": 88,
+            "y": 875,
+            "width": 201,
+            "height": 13,
+            "center_x": 188.5,
+            "center_y": 881.5,
+            "region": "bottom-left",
+            "tag": "[y:875, x:88]"
+          }
+        },
+        {
+          "text": "Advertisers, Ine. are not deductible as charitsble contributions",
+          "confidence": 0.96,
+          "bounding_box": [
+            [
+              349.0,
+              875.0
+            ],
+            [
+              618.0,
+              874.0
+            ],
+            [
+              618.0,
+              887.0
+            ],
+            [
+              350.0,
+              888.0
+            ]
+          ],
+          "box": [
+            [
+              349.0,
+              875.0
+            ],
+            [
+              618.0,
+              874.0
+            ],
+            [
+              618.0,
+              887.0
+            ],
+            [
+              350.0,
+              888.0
+            ]
+          ],
+          "position": {
+            "x": 349,
+            "y": 874,
+            "width": 269,
+            "height": 14,
+            "center_x": 483.5,
+            "center_y": 881.0,
+            "region": "bottom-right",
+            "tag": "[y:874, x:349]"
+          }
+        },
+        {
+          "text": "to membership.",
+          "confidence": 1.0,
+          "bounding_box": [
+            [
+              89.0,
+              889.0
+            ],
+            [
+              158.0,
+              889.0
+            ],
+            [
+              158.0,
+              900.0
+            ],
+            [
+              89.0,
+              900.0
+            ]
+          ],
+          "box": [
+            [
+              89.0,
+              889.0
+            ],
+            [
+              158.0,
+              889.0
+            ],
+            [
+              158.0,
+              900.0
+            ],
+            [
+              89.0,
+              900.0
+            ]
+          ],
+          "position": {
+            "x": 89,
+            "y": 889,
+            "width": 69,
+            "height": 11,
+            "center_x": 123.5,
+            "center_y": 894.5,
+            "region": "bottom-left",
+            "tag": "[y:889, x:89]"
+          }
+        },
+        {
+          "text": "for Federal income tax purposes. However, this does not affect",
+          "confidence": 0.97,
+          "bounding_box": [
+            [
+              349.0,
+              887.0
+            ],
+            [
+              618.0,
+              886.0
+            ],
+            [
+              618.0,
+              899.0
+            ],
+            [
+              350.0,
+              900.0
+            ]
+          ],
+          "box": [
+            [
+              349.0,
+              887.0
+            ],
+            [
+              618.0,
+              886.0
+            ],
+            [
+              618.0,
+              899.0
+            ],
+            [
+              350.0,
+              900.0
+            ]
+          ],
+          "position": {
+            "x": 349,
+            "y": 886,
+            "width": 269,
+            "height": 14,
+            "center_x": 483.5,
+            "center_y": 893.0,
+            "region": "bottom-right",
+            "tag": "[y:886, x:349]"
+          }
+        },
+        {
+          "text": "their deductibility under other IRS code provisions.",
+          "confidence": 0.94,
+          "bounding_box": [
+            [
+              351.0,
+              902.0
+            ],
+            [
+              581.0,
+              902.0
+            ],
+            [
+              581.0,
+              912.0
+            ],
+            [
+              351.0,
+              912.0
+            ]
+          ],
+          "box": [
+            [
+              351.0,
+              902.0
+            ],
+            [
+              581.0,
+              902.0
+            ],
+            [
+              581.0,
+              912.0
+            ],
+            [
+              351.0,
+              912.0
+            ]
+          ],
+          "position": {
+            "x": 351,
+            "y": 902,
+            "width": 230,
+            "height": 10,
+            "center_x": 466.0,
+            "center_y": 907.0,
+            "region": "bottom-right",
+            "tag": "[y:902, x:351]"
+          }
+        },
+        {
+          "text": "E:DUESINV2.PM4",
+          "confidence": 0.98,
+          "bounding_box": [
+            [
+              32.0,
+              945.0
+            ],
+            [
+              121.0,
+              945.0
+            ],
+            [
+              121.0,
+              958.0
+            ],
+            [
+              32.0,
+              958.0
+            ]
+          ],
+          "box": [
+            [
+              32.0,
+              945.0
+            ],
+            [
+              121.0,
+              945.0
+            ],
+            [
+              121.0,
+              958.0
+            ],
+            [
+              32.0,
+              958.0
+            ]
+          ],
+          "position": {
+            "x": 32,
+            "y": 945,
+            "width": 89,
+            "height": 13,
+            "center_x": 76.5,
+            "center_y": 951.5,
+            "region": "bottom-left",
+            "tag": "[y:945, x:32]"
+          }
+        }
+      ],
+      "engine": "PaddleOCR",
+      "device": "gpu:0",
+      "ocr_time_sec": 1.22,
+      "cached_at": "2026-09-23T16:36:09.127161+00:00"
+    },
+    "slm": {
+      "json_schema": {
+        "document_type": "invoice",
+        "document_number": "21998-8",
+        "document_date": "1998-02-19",
+        "sender": "ANA",
+        "receiver": "Lorillard Tobacco Company",
+        "origin": "Greensboro, NC 27408",
+        "destination": "New York, NY 10017",
+        "reference_number": "03-01-98",
+        "unit_price": 0.0,
+        "total_amount": 16750.0,
+        "currency": "USD",
+        "other": {
+          "source_file": "004_train_imagesh_h_o_m_hom34c00_83645348.png"
+        }
+      },
+      "fields": [
+        {
+          "sourceText": "INVOICE NO: 21998-8",
+          "field": "document_type",
+          "value": "invoice",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "INVOICE NO: 21998-8",
+          "field": "document_number",
+          "value": "21998-8",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "1998-02-19",
+          "field": "document_date",
+          "value": "1998-02-19",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "ANA",
+          "field": "sender",
+          "value": "ANA",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "Lorillard Tobacco Company",
+          "field": "receiver",
+          "value": "Lorillard Tobacco Company",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "Greensboro, NC 27408",
+          "field": "origin",
+          "value": "Greensboro, NC 27408",
+          "confidence": 96,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "155 BAST 44TH STREET, NEW YORK, NY 10017  (212) 697-5950",
+          "field": "destination",
+          "value": "New York, NY 10017",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "03-01-98",
+          "field": "reference_number",
+          "value": "03-01-98",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "-",
+          "field": "unit_price",
+          "value": "0.0",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        },
+        {
+          "sourceText": "$16,750.00",
+          "field": "total_amount",
+          "value": "16750.0",
+          "confidence": 97,
+          "status": "success",
+          "isOther": false
+        },
+        {
+          "sourceText": "USD",
+          "field": "currency",
+          "value": "USD",
+          "confidence": 95,
+          "status": "success",
+          "isOther": false
+        }
+      ],
+      "confidence": {
+        "overall": 93,
+        "ocr": 97,
+        "slm": 90,
+        "mapping": 91,
+        "completeness": 91
+      },
+      "review_items": [
+        {
+          "field": "unit_price",
+          "ocrValue": "-",
+          "slmValue": "0.0",
+          "confidence": 40,
+          "status": "review",
+          "isOther": false
+        }
+      ],
+      "performance": null,
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "device": "cuda:0"
+    },
+    "performance": {
+      "ocr_time_sec": 1.22,
+      "slm_time_sec": 43.752,
+      "total_time_sec": 44.972
+    }
+  },
+  "performance": {
+    "ocr_time_sec": 1.22,
+    "slm_time_sec": 43.752,
+    "total_time_sec": 44.972
+  },
+  "cached_at": "2026-09-23T16:36:52.886646+00:00"
+}
