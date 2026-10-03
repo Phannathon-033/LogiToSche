@@ -9,7 +9,6 @@ import { Toast } from "./components/Toast";
 import { UploadedWorkspaceView } from "./components/UploadedWorkspaceView";
 import { FirebaseSaveSuccessModal } from "./components/FirebaseSaveSuccessModal";
 import { SlmPromptAssistantModal } from "./components/SlmPromptAssistantModal";
-import { KFoldEvaluationView } from "./components/KFoldEvaluationView";
 import {
   fetchFirebaseDocuments,
   logoutFirebaseUser,
@@ -60,7 +59,6 @@ export function App() {
   );
   const [showPromptAssistantModal, setShowPromptAssistantModal] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
-  const [showEvaluationView, setShowEvaluationView] = useState(false);
   const [firebaseSuccessModal, setFirebaseSuccessModal] = useState<{
     isOpen: boolean;
     fileName: string;
@@ -833,15 +831,6 @@ export function App() {
     );
   }
 
-  if (showEvaluationView) {
-    return (
-      <KFoldEvaluationView
-        onBack={() => setShowEvaluationView(false)}
-        showToast={showToast}
-      />
-    );
-  }
-
   if (viewMode === "admin") {
     return (
       <AdminDashboard
@@ -861,7 +850,6 @@ export function App() {
         user={userSession}
         onOpenHistory={() => setShowHistoryModal(true)}
         onLogout={handleLogout}
-        onOpenEvaluation={() => setShowEvaluationView(true)}
         onToggleAdmin={() => setViewMode("admin")}
         isAdmin={isAdminSession(userSession)}
       />

@@ -1,4 +1,4 @@
-import { BarChart3, LogOut, ShieldCheck, Sparkles } from "lucide-react";
+import { LogOut, ShieldCheck } from "lucide-react";
 import type { UserSession } from "../types";
 import { Logo } from "./Logo";
 
@@ -7,7 +7,6 @@ interface AppHeaderProps {
   onLogout?: () => void;
   onOpenHistory?: () => void;
   onOpenSignIn?: () => void;
-  onOpenEvaluation?: () => void;
   onToggleAdmin?: () => void;
   isAdmin?: boolean;
 }
@@ -17,7 +16,6 @@ export function AppHeader({
   onLogout,
   onOpenHistory,
   onOpenSignIn,
-  onOpenEvaluation,
   onToggleAdmin,
   isAdmin,
 }: AppHeaderProps) {
@@ -35,19 +33,6 @@ export function AppHeader({
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-2.5">
-          {onOpenEvaluation && (
-            <button
-              type="button"
-              onClick={onOpenEvaluation}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-indigo-200/90 bg-gradient-to-r from-indigo-50 to-blue-50 px-3 py-1.5 text-xs font-black text-indigo-700 shadow-2xs transition hover:border-indigo-300 hover:shadow-xs hover:scale-[1.02]"
-              title="เปิดหน้าทดสอบ K-Fold Cross-Validation และ F1-Score"
-            >
-              <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-              <span className="hidden xs:inline">ทดสอบ K-Fold & F1</span>
-              <span className="xs:hidden">K-Fold</span>
-            </button>
-          )}
-
           {user && onOpenHistory && (
             <button
               type="button"
