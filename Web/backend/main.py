@@ -480,15 +480,16 @@ def get_benchmark_kfold(
     k: int = 5,
     seed: int = 42,
     rerun: bool = False,
-    prompt_variant: str = "zero-shot",
+    prompt_variant: str = "normal",
     limit: int | None = None,
     doc_id: str | None = None,
     single_fold: int | None = None,
     run_id: str | None = None,
 ) -> Any:
     cleaned_variant = prompt_variant.strip().lower()
-    if cleaned_variant not in {"zero-shot", "one-shot", "few-shot"}:
+    if cleaned_variant not in {"normal", "zero-shot", "one-shot", "few-shot"}:
         raise HTTPException(status_code=400, detail=f"Unsupported prompt variant: {prompt_variant}")
+    cleaned_variant = "normal"
     query = (
         f"?k={k}&seed={seed}&rerun={str(rerun).lower()}"
         f"&prompt_variant={cleaned_variant}"
@@ -516,7 +517,7 @@ def post_benchmark_fresh_start(
     seed: int = 42,
     max_docs: int | None = None,
     re_ocr: bool = False,
-    prompt_variant: str = "zero-shot",
+    prompt_variant: str = "normal",
 ) -> Any:
     query = f"?fold={fold}&k={k}&seed={seed}&prompt_variant={quote(prompt_variant)}"
     if max_docs:
@@ -734,7 +735,7 @@ def save_benchmark_ground_truth(payload: GroundTruthEntry) -> Any:
 
 
 def forward_slm_request(path: str, body: dict[str, Any], method: str = "POST") -> Any:
-    timeout = 300 if "benchmark" in path else (60 if method == "GET" else 180)
+    timeout = 300 if method == "POST" or "benchmark" in path else 60
     if method == "GET":
         try:
             response = requests.get(

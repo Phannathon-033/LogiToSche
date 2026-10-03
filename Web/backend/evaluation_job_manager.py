@@ -170,7 +170,7 @@ class EvaluationJobManager:
         single_fold: int = 1,
         k_splits: int = 5,
         random_seed: int = 42,
-        prompt_variant: str = "zero-shot",
+        prompt_variant: str = "normal",
         resume: bool = False,
         force_rerun_ocr: bool = False,
         max_docs: int | None = None,
@@ -178,8 +178,11 @@ class EvaluationJobManager:
     ) -> dict[str, Any]:
         """Creates an evaluation job and starts it in a background thread."""
         check_live_services()
+        if prompt_variant not in {"normal", "zero-shot", "one-shot", "few-shot"}:
+            raise ValueError(f"Unsupported prompt variant: {prompt_variant}")
+        prompt_variant = "normal"
         if mode == "single_doc":
-            validate_training_split(prompt_variant, 0)
+            validate_training_split("zero-shot", 0)
         resume = False
         force_rerun_ocr = bool(force_rerun_ocr)
         with self._lock:
@@ -357,35 +360,26 @@ class EvaluationJobManager:
             fold_total = len(fold_docs)
 
             training_documents = [documents[index] for index in train_indices]
-            benchmark_examples, example_selection = select_training_examples(
-                training_documents,
-                prompt_variant,
-            )
-            if prompt_variant == "one-shot" and len(benchmark_examples) != 1:
-                raise ValueError("one-shot requires one training example")
-            if prompt_variant == "few-shot" and len(training_documents) >= 3 and len(benchmark_examples) < 3:
-                raise ValueError("few-shot requires at least three training examples")
-
-            fold_prompt_snapshot = benchmark_prompt_snapshot(
-                prompt_variant,
-                config=prompt_snapshot,
-                examples=benchmark_examples,
-                selection=example_selection,
-            )
-            fold_prompt_snapshot["benchmark_prompt"] = fold_prompt_snapshot["base_prompt"]
+            benchmark_examples: list[dict[str, Any]] = []
+            example_selection = {
+                "method": "shared_normal_extraction",
+                "confidence_aggregation": "not applicable",
+                "requested_count": 0,
+                "actual_count": 0,
+                "training_document_ids": [str(doc.get("id")) for doc in training_documents],
+                "selected": [],
+            }
             prompt_snapshot["example_selection_by_fold"][str(fold)] = example_selection
-            prompt_snapshot.update(fold_prompt_snapshot)
+            prompt_snapshot["benchmark_examples"] = []
+            prompt_snapshot["example_selection"] = example_selection
+            prompt_snapshot["benchmark_prompt_variant"] = "normal"
+            prompt_snapshot["prompt_source"]["variant"] = "shared normal extraction"
             prompt_snapshot["example_selection_by_fold"] = prompt_snapshot.get(
                 "example_selection_by_fold", {}
             )
-            prompt_snapshot["benchmark_examples"] = benchmark_examples
-            prompt_snapshot["example_selection"] = example_selection
 
-            if any(
-                str(example.get("document_id")) in {str(doc.get("id")) for doc in fold_docs}
-                for example in benchmark_examples
-            ):
-                raise RuntimeError("Training example leaked into validation documents")
+            if benchmark_examples:
+                raise RuntimeError("Shared normal extraction must not include benchmark examples")
 
             job_state["current_fold"] = fold
             job_state["prompt_source"] = prompt_snapshot.get("prompt_source")

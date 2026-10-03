@@ -183,7 +183,19 @@ def parse_grounded_date(text: str) -> tuple[str, str]:
             year = 1900 + year if year > 40 else 2000 + year
         return f"{year}-{month}-{day}", m1.group(0)
 
-    # 4. Contextual Date with Prefix (e.g. DATE: 7/30/87 or DATE: 1988-01-31)
+    # 4. Month Year only (e.g. ISSUE DATE: August, 87). Use day 01 for ISO month precision.
+    my = re.search(r'(' + month_pattern + r')[a-z]*[\s,.-]+((?:19|20|24|25)\d{2}|\d{2})\b', t, re.IGNORECASE)
+    if my:
+        m_str = my.group(1).lower()
+        month = MONTH_MAP.get(m_str, MONTH_MAP.get(m_str[:3], "01"))
+        year = int(my.group(2))
+        if year > 2400:
+            year -= 543
+        elif year < 100:
+            year = 1900 + year if year > 40 else 2000 + year
+        return f"{year}-{month}-01", my.group(0)
+
+    # 5. Contextual Date with Prefix (e.g. DATE: 7/30/87 or DATE: 1988-01-31)
     m_pref = re.search(r'(?:date|datr|inv\s*date)[\s:._-]*([0-9]{1,2})[/-]([0-9]{1,2})[/-]([0-9]{2,4})\b', t, re.IGNORECASE)
     if m_pref:
         p1, p2, yr = int(m_pref.group(1)), int(m_pref.group(2)), int(m_pref.group(3))
@@ -225,7 +237,7 @@ def parse_grounded_doc_no(text: str) -> tuple[str, str]:
         "need", "crotts", "box", "please", "attn", "copy", "original",
         "name", "address", "phone", "email", "bill", "ship", "sold", "item",
         "code", "terms", "order", "status", "price", "unit", "discount", "thai",
-        "thailand", "same", "none", "null", "from", "invoice", "statement"
+        "thailand", "same", "none", "null", "from", "invoice", "statement", "customer"
     }
 
     def is_valid_doc_num(s: str, line_context: str = "") -> bool:
@@ -244,7 +256,7 @@ def parse_grounded_doc_no(text: str) -> tuple[str, str]:
             return False
         if any(low.startswith(w) for w in ["tel", "fax", "phone", "page", "tax", "date", "due", "zip"]):
             return False
-        if line_context and re.search(r'(?:terms|net\s*\d+|\bdays\b|\btel\b|\bfax\b|\bphone\b|\bzip\b|\bpage\b)', line_context, re.IGNORECASE):
+        if line_context and re.search(r'(?:customer|client|account|terms|net\s*\d+|\bdays\b|\btel\b|\bfax\b|\bphone\b|\bzip\b|\bpage\b)', line_context, re.IGNORECASE):
             return False
         return True
 
@@ -285,20 +297,28 @@ def parse_grounded_doc_no(text: str) -> tuple[str, str]:
 
     for idx, line in enumerate(lines):
         line_low = line.lower()
+        if "insertion" in line_low:
+            continue
         if any(kw in line_low for kw in header_keywords):
-            for offset in [-1, 1, -2, 2]:
+            for offset in [1, 2, -1, -2, -3]:
                 ti = idx + offset
                 if 0 <= ti < len(lines):
+                    local_context = " ".join(lines[max(0, ti - 1):min(len(lines), ti + 2)])
+                    if re.search(r'(?:customer|client|account)\s*(?:no|number|#)\s*$', lines[ti - 1] if ti > 0 else "", re.IGNORECASE):
+                        continue
                     tokens = [tk.strip(" .:#-_/\\") for tk in lines[ti].split()]
                     for tok in tokens:
-                        if is_valid_doc_num(tok, lines[ti]):
+                        if is_valid_doc_num(tok, local_context):
                             return tok, f"{line} -> {tok}"
 
     # 3. Generic "No." or "#" with strict exclusions
     generic_pat = r'(?<!tel\s)(?<!telephone\s)(?<!phone\s)(?<!fax\s)(?<!page\s)(?<!item\s)(?<!tax\s)(?<!vat\s)(?<!zip\s)(?<!box\s)(?:no|number|#)[\s.:#]*([A-Za-z0-9\-\/]{3,25})'
     for m in re.finditer(generic_pat, t, re.IGNORECASE):
+        context = t[max(0, m.start() - 25):m.end()]
+        if re.search(r'(?:customer|client|account)\s*(?:no|number|#)', context, re.IGNORECASE):
+            continue
         raw_cand = m.group(1).strip(" .:#-_/\\")
-        if is_valid_doc_num(raw_cand):
+        if is_valid_doc_num(raw_cand, context):
             return raw_cand, m.group(0).strip()
 
     # 4. Fallback for standalone identifiers near top of invoice

@@ -26,10 +26,9 @@ import {
   exportSingleDocToCsv,
   exportToJson,
 } from "./services/exportService";
-import { renderPdfPreview, runPaddleOcr, type OcrLanguage, type OcrLine } from "./services/ocrApi";
-import { clearCachedOcr, getCachedOcr, hashFile, saveCachedOcr } from "./services/ocrCache";
-import { runSlmExtraction } from "./services/slmApi";
-import { normalizeLogisticsJsonSchema } from "./services/dataValidationService";
+import { renderPdfPreview, type OcrLanguage, type OcrLine } from "./services/ocrApi";
+import { clearCachedOcr, hashFile } from "./services/ocrCache";
+import { runSharedOcr, runSharedSlm } from "./services/documentProcessingPipeline";
 import { EMPTY_JSON_SCHEMA } from "./types";
 import type { UserSession } from "./types";
 import type {
@@ -207,13 +206,11 @@ export function App() {
         try {
           const sourceFile = allDocs[i].file;
           if (!sourceFile) throw new Error("ไม่มีไฟล์ต้นฉบับสำหรับ OCR");
-          const fileHash = allDocs[i].fileHash;
-          const cachedOcr = fileHash ? getCachedOcr(fileHash, ocrLanguage) : null;
-          const ocr = cachedOcr || await runPaddleOcr(sourceFile, ocrLanguage);
-          if (!cachedOcr && fileHash) saveCachedOcr(fileHash, ocr);
+          const { ocr, fileHash, usedCachedOcr } = await runSharedOcr(sourceFile, ocrLanguage);
           const text = ocr.text || "PaddleOCR ไม่พบข้อความในไฟล์นี้";
           allDocs[i] = {
             ...allDocs[i],
+            fileHash: fileHash || allDocs[i].fileHash,
             ocrText: text,
             spatialText: ocr.spatial_text,
             ocrLines: ocr.lines,
@@ -222,13 +219,13 @@ export function App() {
             pageCount: ocr.page_count ?? null,
             previewUrl: ("image_preview" in ocr ? ocr.image_preview : undefined) || allDocs[i].previewUrl,
             status: "ocr_completed",
-            statusLabel: cachedOcr ? `ใช้ OCR ที่บันทึกไว้ (${i + 1}/${allDocs.length})` : `OCR สำเร็จ (${i + 1}/${allDocs.length})`,
+            statusLabel: usedCachedOcr ? `ใช้ OCR ที่บันทึกไว้ (${i + 1}/${allDocs.length})` : `OCR สำเร็จ (${i + 1}/${allDocs.length})`,
           };
           setBatchDocuments([...allDocs]);
           setJobs((current) =>
             current.map((job) =>
               job.id === allDocs[i].id
-                ? { ...job, statusLabel: cachedOcr ? "ใช้ OCR ที่บันทึกไว้ (รอคิว SLM)" : "OCR สำเร็จ (รอคิว SLM)", result: "OCR Done" }
+                ? { ...job, statusLabel: usedCachedOcr ? "ใช้ OCR ที่บันทึกไว้ (รอคิว SLM)" : "OCR สำเร็จ (รอคิว SLM)", result: "OCR Done" }
                 : job,
             ),
           );
@@ -265,15 +262,16 @@ export function App() {
         if (allDocs[i].status === "completed" || allDocs[i].status === "error") continue;
 
         try {
-          const slm = await runSlmExtraction({
-            documentTypeHint: selectedType,
-            sourceFile: allDocs[i].fileName,
-            ocrText: allDocs[i].ocrText,
-            ocrLines: allDocs[i].ocrLines,
+          const { slm, normalizedSchema } = await runSharedSlm(selectedType, allDocs[i].fileName, {
+            text: allDocs[i].ocrText,
+            spatial_text: allDocs[i].spatialText,
+            lines: allDocs[i].ocrLines,
+            engine: allDocs[i].ocrEngine || "PaddleOCR",
+            language: (allDocs[i].ocrLanguage as OcrLanguage | undefined) || ocrLanguage,
+            page_count: allDocs[i].pageCount ?? undefined,
           });
 
           // Apply automatic logistics business validation & normalization (ISO 8601 / ISO 4217)
-          const { normalized: normalizedSchema } = normalizeLogisticsJsonSchema(slm.jsonOutput);
           const normalizedFields = slm.fields.map((f) => {
             if (f.field === "document_date" && normalizedSchema.document_date) {
               return { ...f, value: normalizedSchema.document_date };
@@ -745,11 +743,13 @@ export function App() {
     );
 
     try {
-      const slm = await runSlmExtraction({
-        documentTypeHint: selectedType,
-        sourceFile: targetDoc.fileName,
-        ocrText: textToUse,
-        ocrLines: linesToUse,
+      const { slm, normalizedSchema } = await runSharedSlm(selectedType, targetDoc.fileName, {
+        text: textToUse,
+        spatial_text: targetDoc.spatialText,
+        lines: linesToUse,
+        engine: targetDoc.ocrEngine || "PaddleOCR",
+        language: (targetDoc.ocrLanguage as OcrLanguage | undefined) || ocrLanguage,
+        page_count: targetDoc.pageCount ?? undefined,
       });
 
       setBatchDocuments((prev) =>
@@ -759,7 +759,7 @@ export function App() {
                 ...doc,
                 ocrLines: linesToUse,
                 ocrText: textToUse,
-                jsonOutput: slm.jsonOutput,
+                jsonOutput: normalizedSchema,
                 fields: slm.fields,
                 confidenceScores: slm.confidenceScores,
                 overallConfidence: slm.overallConfidence,

@@ -398,9 +398,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
     setReportSource(source);
     if (report.k_splits) setKSplits(report.k_splits);
     if (typeof report.random_seed === "number") setRandomSeed(report.random_seed);
-    if (report.prompt_variant === "zero-shot" || report.prompt_variant === "one-shot" || report.prompt_variant === "few-shot") {
-      setPromptVariant(report.prompt_variant);
-    }
   }
 
   function reportTimestamp(report: KFoldReport): number {
@@ -1231,33 +1228,26 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
 
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                  Prompt Variant
+                  Extraction Prompt
                 </label>
-                <div
-                  className={`inline-flex items-center rounded-xl border px-2.5 py-1 text-xs font-bold shadow-2xs transition ${
-                    promptVariant === "zero-shot"
-                      ? "border-emerald-300 bg-emerald-50 text-emerald-800"
-                      : promptVariant === "one-shot"
-                      ? "border-blue-300 bg-blue-50 text-blue-800"
-                      : "border-purple-300 bg-purple-50 text-purple-800"
-                  }`}
-                >
-                  <select
-                    value={promptVariant}
-                    disabled={Boolean(evalJob?.is_running || freshStatus?.is_running)}
-                    onChange={(e) => {
-                      const nextVariant = e.target.value as "zero-shot" | "one-shot" | "few-shot";
-                      setPromptVariant(nextVariant);
-                      setKfoldReport(null);
-                      setReportSource(null);
-                    }}
-                    className="bg-transparent text-xs font-bold focus:outline-none cursor-pointer disabled:opacity-60"
-                  >
-                    <option value="zero-shot" className="text-slate-900 bg-white">Zero-shot</option>
-                    <option value="one-shot" className="text-slate-900 bg-white">One-shot</option>
-                    <option value="few-shot" className="text-slate-900 bg-white">Few-shot</option>
-                  </select>
+                <div className="inline-flex items-center rounded-xl bg-white p-1 border border-emerald-200 shadow-2xs">
+                  {(["zero-shot", "one-shot", "few-shot"] as const).map((variant) => (
+                    <button
+                      key={variant}
+                      type="button"
+                      disabled={evalJob?.is_running || freshStatus?.is_running}
+                      onClick={() => setPromptVariant(variant)}
+                      className={`rounded-lg px-2.5 py-1 text-xs font-extrabold transition disabled:opacity-60 ${
+                        promptVariant === variant
+                          ? "bg-emerald-600 text-white shadow-xs"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                      }`}
+                    >
+                      {variant === "zero-shot" ? "Zero-shot" : variant === "one-shot" ? "One-shot" : "Few-shot"}
+                    </button>
+                  ))}
                 </div>
+                <p className="mt-1 text-[10px] text-emerald-700">ทุกตัวเลือกใช้ Prompt เดียวกับ User/Admin</p>
               </div>
 
               {/* Dataset Size Tag */}
@@ -1379,19 +1369,9 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                     <span className="rounded-md bg-indigo-500/30 border border-indigo-400/30 px-2 py-0.5 font-mono text-[10px] font-bold text-indigo-200">
                       Job: {evalJob.job_id}
                     </span>
-                    {evalJob.prompt_variant && (
-                      <span
-                        className={`rounded-md px-2 py-0.5 font-mono text-[10px] font-bold border uppercase ${
-                          evalJob.prompt_variant === "one-shot"
-                            ? "bg-blue-500/25 text-blue-200 border-blue-400/50"
-                            : evalJob.prompt_variant === "few-shot"
-                            ? "bg-purple-500/25 text-purple-200 border-purple-400/50"
-                            : "bg-teal-500/25 text-teal-200 border-teal-400/50"
-                        }`}
-                      >
-                        Variant: {evalJob.prompt_variant}
-                      </span>
-                    )}
+                    <span className="rounded-md bg-teal-500/25 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-teal-200 border border-teal-400/50">
+                      {evalJob.prompt_variant || promptVariant} · Shared User/Admin Prompt
+                    </span>
                     <span
                       className={`rounded-md px-2 py-0.5 font-mono text-[10px] font-bold border ${
                         evalJob.is_running

@@ -62,9 +62,9 @@ NORMAL_PROMPT_VARIANT = "normal"
 MAX_BENCHMARK_EXAMPLE_LENGTH = 20000
 
 try:
-    from .logistics_field_parser import repair_ocr_typos
+    from .logistics_field_parser import parse_grounded_doc_no, parse_grounded_reference_number, repair_ocr_typos
 except ImportError:
-    from logistics_field_parser import repair_ocr_typos
+    from logistics_field_parser import parse_grounded_doc_no, parse_grounded_reference_number, repair_ocr_typos
 
 from dotenv import load_dotenv
 
@@ -130,6 +130,18 @@ _loaded_model_id: str | None = None
 
 CORE_FIELDS = PROMPT_CORE_FIELDS
 NUMERIC_CORE_FIELDS = {"unit_price", "total_amount"}
+DOCUMENT_TYPE_ALIASES = {
+    "commercial_invoice": "invoice",
+    "tax_invoice": "invoice",
+    "invoice": "invoice",
+    "bill_of_lading": "bill_of_lading",
+    "b/l": "bill_of_lading",
+    "bl": "bill_of_lading",
+    "packing_list": "packing_list",
+    "purchase_order": "purchase_order",
+    "po": "purchase_order",
+    "unknown": "unknown",
+}
 SUPPORTED_CONFIDENCE_RANGE = (50, 98)
 SUPPORTED_MONITORED_FIELDS = set(CORE_FIELDS)
 SUPPORTED_MODELS = set(MODEL_IDS)
@@ -407,7 +419,7 @@ def execute_slm_prompt(payload: SlmPromptRequest) -> SlmPromptResponse:
         messages = [{"role": "system", "content": system_instruction}, {"role": "user", "content": user_content}]
         text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         inputs = tokenizer([text], return_tensors="pt").to(model.device)
-        with torch.inference_mode():
+        with _generate_lock, torch.inference_mode():
             generated_ids = model.generate(**inputs, max_new_tokens=500, do_sample=False, repetition_penalty=1.05)
         output_ids = generated_ids[0][inputs.input_ids.shape[-1] :]
         result_text = tokenizer.decode(output_ids, skip_special_tokens=True).strip()
@@ -426,6 +438,7 @@ def execute_slm_prompt(payload: SlmPromptRequest) -> SlmPromptResponse:
 
 
 _model_lock = threading.Lock()
+_generate_lock = threading.Lock()
 
 
 def get_slm(model_id: str | None = None) -> tuple[Any, Any]:
@@ -464,13 +477,20 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
     benchmark_variant, _ = benchmark_variant_for_request(payload)
     config = prompt_config_for_request(payload.prompt_config)
     tokenizer, model = get_model_for_request(payload.prompt_config)
-    messages = [
-        {"role": "system", "content": build_extraction_system_prompt(config)},
-        {"role": "user", "content": build_slm_prompt(payload, config)},
-    ]
+    if benchmark_variant == NORMAL_PROMPT_VARIANT and payload.prompt_config is None:
+        messages = [
+            {"role": "system", "content": build_fast_extraction_system_prompt(config)},
+            {"role": "user", "content": build_fast_slm_prompt(payload)},
+        ]
+        max_tokens = 384
+    else:
+        messages = [
+            {"role": "system", "content": build_extraction_system_prompt(config)},
+            {"role": "user", "content": build_slm_prompt(payload, config)},
+        ]
+        max_tokens = 768
     text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer([text], return_tensors="pt").to(model.device)
-    max_tokens = 768 if benchmark_variant in ("zero-shot", "one-shot", "few-shot") else 768
     import time
     t0 = time.time()
     print(f"[SLM] Generating JSON for {payload.source_file} (variant={benchmark_variant}, in_tokens={inputs.input_ids.shape[1]}, max_out={max_tokens})...", flush=True)
@@ -482,7 +502,7 @@ def generate_json(payload: SlmExtractRequest) -> dict[str, Any]:
     if os.environ.get("LOGIAI_SLM_EMPTY_CACHE_PER_REQUEST", "false").lower() == "true" and torch.cuda.is_available():
         torch.cuda.empty_cache()
 
-    with torch.inference_mode():
+    with _generate_lock, torch.inference_mode():
         generated_ids = model.generate(
             **inputs,
             max_new_tokens=max_tokens,
@@ -554,6 +574,42 @@ def benchmark_instruction_for_variant(variant: str, config: dict[str, Any]) -> s
     if variant == NORMAL_PROMPT_VARIANT:
         return ""
     return configured_benchmark_prompts(config)[variant]
+
+
+FAST_EXTRACTION_SYSTEM_PROMPT = "Extract logistics fields. Return only valid JSON. No markdown. No explanations. Use OCR evidence only."
+
+
+def build_fast_extraction_system_prompt(config: dict[str, Any]) -> str:
+    rules = configured_extraction_rules(config)
+    output_rules = configured_output_rules(config)
+    fallback_rules = configured_fallback_rules(config)
+    selected_rules = [
+        *rules[:14],
+        output_rules[0],
+        output_rules[1],
+        fallback_rules[0],
+        fallback_rules[1],
+        fallback_rules[2],
+        fallback_rules[3],
+        fallback_rules[4],
+        fallback_rules[9],
+    ]
+    return FAST_EXTRACTION_SYSTEM_PROMPT + "\n" + "\n".join(f"- {rule}" for rule in selected_rules)
+
+
+def build_fast_slm_prompt(payload: SlmExtractRequest) -> str:
+    lines = [repair_ocr_typos(line.text).strip() for line in payload.ocr_lines if repair_ocr_typos(line.text).strip()]
+    ocr_text = "\n".join(dict.fromkeys(lines)) if lines else repair_ocr_typos(payload.ocr_text)
+    if len(ocr_text) > 5000:
+        ocr_text = ocr_text[:5000]
+    return (
+        f"Document type hint: {payload.document_type_hint}\n"
+        f"Source file: {payload.source_file}\n"
+        "Return this exact shape:\n"
+        '{"json_schema":{"document_type":"","document_number":"","document_date":"","sender":"","receiver":"","origin":"","destination":"","reference_number":"","unit_price":0,"total_amount":0,"currency":"","other":{"source_file":""}}}'
+        "\nRules: strings empty if missing; numbers 0 if missing; non-core values in other; dates YYYY-MM-DD only when clear.\n"
+        f"OCR text:\n{ocr_text}"
+    )
 
 
 def build_json_schema_prompt(payload: SlmExtractRequest, config: dict[str, Any], variant: str, examples: list[dict[str, Any]]) -> str:
@@ -695,6 +751,28 @@ _self_check_prompt_composition()
 
 
 
+def complete_json_object(candidate: str) -> str:
+    depth = 0
+    in_string = False
+    escaped = False
+    for char in candidate:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
+        if char == '"':
+            in_string = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+    return candidate + ("}" * depth if depth > 0 else "")
+
+
 def parse_json_object(text: str) -> dict[str, Any]:
     stripped = text.strip()
     if stripped.startswith("```"):
@@ -705,21 +783,33 @@ def parse_json_object(text: str) -> dict[str, Any]:
     end = stripped.rfind("}")
     if start < 0 or end < start:
         raise HTTPException(status_code=502, detail=f"SLM did not return JSON: {text[:500]}")
+    candidate = stripped[start : end + 1]
     try:
-        value = json.loads(stripped[start : end + 1])
+        value = json.loads(candidate)
     except json.JSONDecodeError as exc:
-        m = re.search(r'"json_schema"\s*:\s*(\{[\s\S]*?\n\s*\})', stripped)
-        if m:
-            try:
-                schema_dict = json.loads(m.group(1))
-                if isinstance(schema_dict, dict):
-                    return {"json_schema": schema_dict}
-            except Exception:
-                pass
-        raise HTTPException(status_code=502, detail=f"SLM returned invalid JSON: {exc}") from exc
+        try:
+            value = json.loads(complete_json_object(candidate))
+        except json.JSONDecodeError:
+            m = re.search(r'"json_schema"\s*:\s*(\{[\s\S]*?\n\s*\})', stripped)
+            if m:
+                try:
+                    schema_dict = json.loads(m.group(1))
+                    if isinstance(schema_dict, dict):
+                        return {"json_schema": schema_dict}
+                except Exception:
+                    pass
+            raise HTTPException(status_code=502, detail=f"SLM returned invalid JSON: {exc}") from exc
     if not isinstance(value, dict):
         raise HTTPException(status_code=502, detail="SLM returned a JSON value instead of an object")
     return value
+
+
+def _self_check_json_repair() -> None:
+    data = parse_json_object('{"json_schema":{"other":{"source_file":"x"}}')
+    assert data["json_schema"]["other"]["source_file"] == "x"
+
+
+_self_check_json_repair()
 
 
 def canonical_field_name(field: Any) -> str:
@@ -727,13 +817,81 @@ def canonical_field_name(field: Any) -> str:
     return LEGACY_FIELD_ALIASES.get(name, name)
 
 
+def normalize_document_type(value: Any) -> str:
+    key = re.sub(r"[\s\-/]+", "_", str(value or "").strip().lower())
+    return DOCUMENT_TYPE_ALIASES.get(key, "unknown" if key else "")
+
+
 def canonical_value(schema: dict[str, Any], field: str) -> Any:
+    if field == "document_type":
+        return normalize_document_type(schema.get(field))
     if field in schema:
         return schema[field]
     for alias, canonical in LEGACY_FIELD_ALIASES.items():
         if canonical == field and alias in schema:
             return schema[alias]
     return 0 if field in NUMERIC_CORE_FIELDS else ""
+
+
+LABEL_ONLY_VALUES = {"client", "customer", "bill to", "ship to", "receiver", "consignee", "buyer", "sold to", "agency", "no", "number", "id"}
+
+
+def title_company_name(value: str) -> str:
+    cleaned = re.sub(r"\s+", " ", value).strip(" .:#-")
+    return cleaned.title() if re.fullmatch(r"[A-Za-z0-9 &.,'-]+", cleaned) else cleaned
+
+
+def extract_receiver_from_ocr(ocr_text: str) -> str:
+    lines = [repair_ocr_typos(line).strip(" .:#-") for line in ocr_text.splitlines() if repair_ocr_typos(line).strip(" .:#-")]
+    for index, line in enumerate(lines):
+        match = re.search(r"\b(?:client|customer|bill\s*to|ship\s*to|sold\s*to|receiver|consignee|buyer)\b\s*[:.\s-]*(.*)", line, re.I)
+        if not match:
+            continue
+        candidate = match.group(1).strip(" .:#-")
+        if candidate.lower() in LABEL_ONLY_VALUES:
+            candidate = ""
+        parts = [candidate] if candidate else []
+        for nearby in lines[index + 1:index + 4]:
+            low = nearby.lower()
+            if low in LABEL_ONLY_VALUES or re.search(r"\b(?:avenue|street|road|ny|pa|\d{5}|date|order|invoice)\b", low):
+                continue
+            if re.search(r"\b(?:services|service|media|inc|corp|company|ltd|limited)\b", low):
+                if nearby.lower() not in {part.lower() for part in parts}:
+                    parts.append(nearby)
+        receiver = " ".join(parts).strip()
+        if receiver and receiver.lower() not in LABEL_ONLY_VALUES:
+            return title_company_name(receiver)
+    return ""
+
+
+def extract_invoice_number_from_ocr(ocr_text: str) -> str:
+    lines = [repair_ocr_typos(line).strip(" .:#-") for line in ocr_text.splitlines() if repair_ocr_typos(line).strip(" .:#-")]
+    invoice_label = re.compile(r"\b(?:invoice\s*(?:no|number|#)|inv\s*(?:no|number|#)|document\s*(?:no|number|#))\b", re.I)
+    for index, line in enumerate(lines):
+        if not invoice_label.search(line) or re.search(r"customer|client|account|insertion|order|reference", line, re.I):
+            continue
+        same_line = re.search(r"(?:invoice\s*(?:no|number|#)|inv\s*(?:no|number|#)|document\s*(?:no|number|#))\s*[:.#-]*\s*(\d{3,12})\b", line, re.I)
+        if same_line:
+            return same_line.group(1)
+        nearby_indexes = list(range(index + 1, min(len(lines), index + 4))) + list(range(index - 1, max(-1, index - 6), -1))
+        for nearby_index in nearby_indexes:
+            nearby = lines[nearby_index]
+            previous = lines[nearby_index - 1] if nearby_index > 0 else ""
+            if re.search(r"customer|client|account|insertion|order|reference|date|terms|days|zip", nearby, re.I):
+                continue
+            if re.search(r"(?:customer|client|account)\s*(?:no|number|#)", previous, re.I):
+                continue
+            match = re.fullmatch(r"\d{3,12}", nearby.strip()) or re.search(r"\b(\d{3,12})\b", nearby)
+            if match:
+                return match.group(1) if match.lastindex else nearby.strip()
+    return ""
+
+
+def invalid_invoice_document_number(value: Any, document_type: str) -> bool:
+    text = str(value or "").strip()
+    if not text:
+        return False
+    return document_type == "invoice" and (bool(re.search(r"[A-Za-z]", text)) or bool(re.search(r"\b(?:LM|PO|REF|BKG)\b", text, re.I)))
 
 
 def find_ocr_line_for_value(target_val: Any, ocr_lines: list[Any] | None) -> tuple[str, int] | None:
@@ -817,6 +975,23 @@ def normalize_slm_output(
     for key, value in raw_schema.items():
         if key not in CORE_FIELDS and key not in LEGACY_FIELD_ALIASES and key not in {"other", "source_file"}:
             other.setdefault(key, value)
+    ocr_text = "\n".join(getattr(line, "text", "") if hasattr(line, "text") else str(line.get("text", "")) for line in (ocr_lines or []))
+    grounded_doc_no, _ = parse_grounded_doc_no(ocr_text)
+    invoice_doc_no = extract_invoice_number_from_ocr(ocr_text) if json_schema.get("document_type") == "invoice" else ""
+    current_doc_no = str(json_schema.get("document_number") or "").strip()
+    if invoice_doc_no and (not current_doc_no or invalid_invoice_document_number(current_doc_no, "invoice") or current_doc_no not in ocr_text):
+        json_schema["document_number"] = invoice_doc_no
+    elif grounded_doc_no and not current_doc_no:
+        json_schema["document_number"] = grounded_doc_no
+    grounded_ref, _ = parse_grounded_reference_number(ocr_text, doc_no=str(json_schema.get("document_number") or ""))
+    if grounded_ref:
+        json_schema["reference_number"] = grounded_ref
+    grounded_receiver = extract_receiver_from_ocr(ocr_text)
+    receiver_key = str(json_schema.get("receiver") or "").strip().lower()
+    if grounded_receiver and (receiver_key in LABEL_ONLY_VALUES or len(grounded_receiver) > len(str(json_schema.get("receiver") or ""))):
+        json_schema["receiver"] = grounded_receiver
+    elif receiver_key in LABEL_ONLY_VALUES:
+        json_schema["receiver"] = ""
     json_schema["other"] = other
 
     # Sanitize bank names from sender/receiver (banks are payment channels, not vendors/clients)
@@ -832,7 +1007,7 @@ def normalize_slm_output(
 
     # Currency Grounding & Disambiguation:
     curr_val = str(json_schema.get("currency", "")).strip().upper()
-    ocr_combined_text = " ".join(getattr(l, "text", "") if hasattr(l, "text") else (l.get("text", "") if isinstance(l, dict) else "") for l in (ocr_lines or []))
+    ocr_combined_text = ocr_text
     has_usd = bool(re.search(r'(?:\$|\bUSD\b|\bdollar\b|S\s*\d)', ocr_combined_text, re.IGNORECASE))
     has_thb = bool(re.search(r'(?:บาท|\bTHB\b|฿|\bbaht\b)', ocr_combined_text, re.IGNORECASE))
     if (curr_val in ("THB", "บาท", "") or not curr_val) and has_usd and not has_thb:
@@ -1016,6 +1191,25 @@ def normalize_status(value: Any) -> str:
     return status if status in {"success", "review", "error", "processing"} else "review"
 
 
+def _self_check_grounded_overrides() -> None:
+    result = normalize_slm_output(
+        {"json_schema": {"document_type": "commercial_invoice", "document_number": "11000", "receiver": "client", "reference_number": "", "other": {}}},
+        "x.pdf",
+        ocr_lines=[
+            OcrLine(text="INVOICE NO 11009"),
+            OcrLine(text="CLIBNT: LORILLARD MBDIA"),
+            OcrLine(text="SEEVICES"),
+            OcrLine(text="INSBRTION ORDBR NO: LM 2565"),
+        ],
+    )
+    assert result["json_schema"]["document_type"] == "invoice"
+    assert result["json_schema"]["receiver"] == "Lorillard Media Services"
+    assert result["json_schema"]["reference_number"] == "LM 2565"
+
+
+_self_check_grounded_overrides()
+
+
 class GroundTruthEntry(BaseModel):
     id: str | None = None
     file_name: str
@@ -1062,16 +1256,16 @@ def get_kfold_report(
     k: int = 5,
     seed: int = 42,
     rerun: bool = False,
-    prompt_variant: str = "zero-shot",
+    prompt_variant: str = "normal",
     limit: int | None = None,
     doc_id: str | None = None,
     single_fold: int | None = None,
     run_id: str | None = None,
 ) -> dict[str, Any]:
     cleaned_variant = prompt_variant.strip().lower()
-    if cleaned_variant not in BENCHMARK_PROMPT_VARIANTS:
+    if cleaned_variant not in {NORMAL_PROMPT_VARIANT, *BENCHMARK_PROMPT_VARIANTS}:
         raise HTTPException(status_code=400, detail=f"Unsupported prompt variant: {prompt_variant}")
-    prompt_variant = cleaned_variant
+    prompt_variant = NORMAL_PROMPT_VARIANT
 
     if run_id:
         if not re.fullmatch(r"run_[A-Za-z0-9_-]+", run_id):
@@ -1134,12 +1328,13 @@ def start_fresh_run_endpoint(
     seed: int = 42,
     max_docs: int | None = None,
     re_ocr: bool = False,
-    prompt_variant: str = "zero-shot",
+    prompt_variant: str = "normal",
 ) -> dict[str, Any]:
     global _fresh_process
     prompt_variant = prompt_variant.strip().lower()
-    if prompt_variant not in BENCHMARK_PROMPT_VARIANTS:
+    if prompt_variant not in {NORMAL_PROMPT_VARIANT, *BENCHMARK_PROMPT_VARIANTS}:
         raise HTTPException(status_code=400, detail=f"Unsupported prompt variant: {prompt_variant}")
+    prompt_variant = NORMAL_PROMPT_VARIANT
     progress_file = REPORT_DIR / "fresh_run_progress.json"
     if progress_file.is_file():
         try:
@@ -1414,7 +1609,7 @@ class StartEvaluationRequest(BaseModel):
     fold: int = 1
     k: int = 5
     seed: int = 42
-    prompt_variant: str = "zero-shot"
+    prompt_variant: str = "normal"
     resume: bool = False
     force_rerun_ocr: bool = False
     max_docs: int | None = None

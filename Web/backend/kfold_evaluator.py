@@ -650,29 +650,10 @@ def _extract(
     force_rerun_ocr: bool = False,
     benchmark_examples: list[dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    variant = prompt_snapshot.get("benchmark_prompt_variant", "zero-shot")
-    examples_to_send = benchmark_examples if benchmark_examples is not None else prompt_snapshot.get("benchmark_examples", [])
-    integrity = _integrity_metadata(prompt_snapshot, variant, examples_to_send)
+    # K-Fold measures the same normal extraction path used by User/Admin.
     ocr = _get_ocr(document, force_rerun=force_rerun_ocr)
+    integrity = _integrity_metadata(prompt_snapshot, "normal", [])
     ocr_time_sec = float(ocr.get("ocr_time_sec", 0.85))
-
-    request_config = {
-        key: prompt_snapshot[key]
-        for key in (
-            "system_prompt",
-            "extraction_rules",
-            "fallback_rules",
-            "confidence_threshold",
-            "selected_model",
-            "monitored_fields",
-        )
-        if key in prompt_snapshot
-    }
-    request_config.update({
-        "benchmark_prompt_variant": variant,
-        "benchmark_examples": examples_to_send,
-        "benchmark_example_selection": prompt_snapshot.get("example_selection", {}),
-    })
 
     t_slm_start = time.time()
     response = requests.post(
@@ -682,10 +663,6 @@ def _extract(
             "source_file": document.get("file_name", "document"),
             "ocr_text": ocr["ocr_text"],
             "ocr_lines": ocr["ocr_lines"],
-            "prompt_config": request_config,
-            "benchmark_prompt_variant": variant,
-            "benchmark_examples": examples_to_send,
-            "benchmark_example_selection": prompt_snapshot.get("example_selection", {}),
         },
         headers=REQUEST_HEADERS,
         timeout=float(os.environ.get("LOGIAI_SLM_TIMEOUT", "300")),
@@ -970,7 +947,7 @@ def run_kfold_evaluation(
     k_splits: int = 5,
     random_seed: int = 42,
     document_limit: int | None = None,
-    prompt_variant: str = "zero-shot",
+    prompt_variant: str = "normal",
     force_rerun: bool = False,
     doc_id: str | None = None,
     single_fold: int | None = None,
@@ -1006,9 +983,10 @@ def run_kfold_evaluation(
         if k_splits < 2 or k_splits > len(documents):
             raise ValueError(f"K-Fold requires 2 <= k <= {len(documents)}, found {k_splits}")
 
-    if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
+    if prompt_variant not in {"normal", "zero-shot", "one-shot", "few-shot"}:
         raise ValueError(f"K-Fold evaluation unsupported variant: {prompt_variant}")
-    validate_training_split(prompt_variant, 0 if is_single_doc else 1)
+    prompt_variant = "normal"
+    validate_training_split("zero-shot", 0 if is_single_doc else 1)
 
     active_prompt_config = load_prompt_config()
     prompt_snapshot = {
@@ -1070,42 +1048,33 @@ def run_kfold_evaluation(
         validation_documents = [documents[index] for index in validation_indices]
 
         training_documents = [documents[index] for index in train_indices]
-        benchmark_examples, example_selection = select_training_examples(
-            training_documents,
-            prompt_variant,
-        )
+        example_selection = {
+            "method": "shared_normal_extraction",
+            "confidence_aggregation": "not applicable",
+            "requested_count": 0,
+            "actual_count": 0,
+            "training_document_ids": [str(doc.get("id")) for doc in training_documents],
+            "selected": [],
+        }
+        benchmark_examples: list[dict[str, Any]] = []
         prompt_snapshot["example_selection_by_fold"][str(fold)] = example_selection
-        prompt_snapshot["benchmark_examples"] = benchmark_examples
+        prompt_snapshot["benchmark_examples"] = []
         prompt_snapshot["example_selection"] = example_selection
-        prompt_snapshot["benchmark_prompt"] = prompt_snapshot["base_prompt"]
-        prompt_snapshot["benchmark_examples"] = benchmark_examples
-        if prompt_variant == "one-shot" and len(benchmark_examples) != 1:
-            raise ValueError("one-shot requires one training example")
-        if prompt_variant == "few-shot" and len(training_documents) >= 3 and len(benchmark_examples) < 3:
-            raise ValueError("few-shot requires at least three training examples")
-        if prompt_variant == "zero-shot":
-            assert not benchmark_examples
-
-        fold_prompt_snapshot = benchmark_prompt_snapshot(
-            prompt_variant,
-            config=prompt_snapshot,
-            examples=benchmark_examples,
-            selection=example_selection,
-        )
-        prompt_snapshot.update(fold_prompt_snapshot)
-        prompt_snapshot["benchmark_prompt"] = prompt_snapshot["base_prompt"]
-        prompt_snapshot["benchmark_examples"] = benchmark_examples
+        prompt_snapshot["benchmark_prompt_variant"] = "normal"
+        prompt_snapshot["prompt_source"]["variant"] = "shared normal extraction"
         prompt_snapshot["example_selection_by_fold"] = prompt_snapshot.get("example_selection_by_fold", {})
 
-        # Examples are selected entirely from training_documents before validation inference.
-        if any(str(example.get("document_id")) in {str(doc.get("id")) for doc in validation_documents} for example in benchmark_examples):
-            raise RuntimeError("Training example leaked into validation documents")
-
         prompt_snapshot_for_fold = dict(prompt_snapshot)
-        prompt_snapshot_for_fold["benchmark_examples"] = benchmark_examples
+        prompt_snapshot_for_fold["benchmark_examples"] = []
         prompt_snapshot_for_fold["example_selection"] = example_selection
-        prompt_snapshot_for_fold["benchmark_prompt_variant"] = prompt_variant
+        prompt_snapshot_for_fold["benchmark_prompt_variant"] = "normal"
         prompt_snapshot = prompt_snapshot_for_fold
+        prompt_variant = "normal"
+
+        # K-Fold split metadata is retained, but training examples never alter extraction.
+        if benchmark_examples:
+            raise RuntimeError("Shared normal extraction must not include benchmark examples")
+
 
         slm_scores = []
         baseline_scores = []
@@ -1189,9 +1158,9 @@ def run_kfold_evaluation(
         _validate_fold_manifest(slm_folds, documents)
         _validate_fold_manifest(baseline_folds, documents)
 
-    assert prompt_snapshot["benchmark_prompt_variant"] == prompt_variant
-    if prompt_variant == "zero-shot":
-        assert prompt_snapshot["benchmark_examples"] == []
+    assert prompt_variant == "normal"
+    assert prompt_snapshot["benchmark_prompt_variant"] == "normal"
+    assert prompt_snapshot["benchmark_examples"] == []
     assert all(item["ground_truth"] is None for item in predictions)
     slm_field_report = _field_summary(slm_folds)
     baseline_field_report = _field_summary(baseline_folds)

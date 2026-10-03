@@ -86,7 +86,7 @@ def run_fresh_fold(
     max_docs: int | None = None,
     force_rerun_ocr: bool = False,
     fresh_run_id: str | None = None,
-    prompt_variant: str = "zero-shot",
+    prompt_variant: str = "normal",
 ) -> dict:
     check_live_services()
     if not GT_FILE.is_file():
@@ -110,8 +110,9 @@ def run_fresh_fold(
     selected_doc_ids = [str(doc.get("id")) for doc in target_docs]
     start_time = time.time()
 
-    if prompt_variant not in {"zero-shot", "one-shot", "few-shot"}:
+    if prompt_variant not in {"normal", "zero-shot", "one-shot", "few-shot"}:
         raise ValueError(f"Unsupported prompt variant: {prompt_variant}")
+    prompt_variant = "normal"
     force_rerun_ocr = True
 
     prompt_snapshot = {
@@ -155,26 +156,26 @@ def run_fresh_fold(
     total_evaluated_fields = 0
     fresh_extractions: dict[str, tuple[dict, dict]] = {}
     training_documents = [documents[i] for i in train_idx]
-    validate_training_split(prompt_variant, len(training_documents))
-    benchmark_examples, example_selection = select_training_examples(
-        training_documents,
-        prompt_variant,
-    )
-    if prompt_variant == "one-shot" and len(benchmark_examples) != 1:
-        raise ValueError("one-shot requires one training example")
-    if prompt_variant == "few-shot" and len(training_documents) >= 3 and len(benchmark_examples) < 3:
-        raise ValueError("few-shot requires at least three training examples")
-    prompt_snapshot.update(
-        benchmark_prompt_snapshot(
-            prompt_variant,
-            config=prompt_snapshot,
-            examples=benchmark_examples,
-            selection=example_selection,
-        )
-    )
-    prompt_snapshot["benchmark_prompt"] = prompt_snapshot["base_prompt"]
-    prompt_snapshot["benchmark_examples"] = benchmark_examples
+    validate_training_split("zero-shot", len(training_documents))
+    benchmark_examples: list[dict] = []
+    example_selection = {
+        "method": "shared_normal_extraction",
+        "confidence_aggregation": "not applicable",
+        "requested_count": 0,
+        "actual_count": 0,
+        "training_document_ids": [str(doc.get("id")) for doc in training_documents],
+        "selected": [],
+    }
+    prompt_snapshot["benchmark_prompt_variant"] = "normal"
+    prompt_snapshot["benchmark_examples"] = []
     prompt_snapshot["example_selection"] = example_selection
+    prompt_snapshot["prompt_source"]["variant"] = "shared normal extraction"
+    prompt_snapshot["benchmark_prompt"] = prompt_snapshot["base_prompt"]
+
+    if benchmark_examples:
+        raise RuntimeError("Shared normal extraction must not include benchmark examples")
+
+    prompt_variant = "normal"
 
     progress_info["prompt_variant"] = prompt_variant
     progress_info["prompt_source"] = prompt_snapshot.get("prompt_source")
@@ -335,7 +336,7 @@ if __name__ == "__main__":
     parser.add_argument("--max", type=int, default=None, help="Max docs to process (for testing)")
     parser.add_argument("--re-ocr", action="store_true", help="Retained for compatibility; PaddleOCR always reruns")
     parser.add_argument("--run-id", default=None, help="Fresh run identifier assigned by the service")
-    parser.add_argument("--prompt-variant", choices=("zero-shot", "one-shot", "few-shot"), default="zero-shot")
+    parser.add_argument("--prompt-variant", choices=("normal", "zero-shot", "one-shot", "few-shot"), default="normal")
     args = parser.parse_args()
 
     run_fresh_fold(

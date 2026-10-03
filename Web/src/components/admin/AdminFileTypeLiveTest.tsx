@@ -1,9 +1,7 @@
 import { AlertCircle, CheckCircle2, FileText, Loader2, Play, UploadCloud } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { apiFetch } from "../../services/apiClient";
-import { normalizeLogisticsJsonSchema } from "../../services/dataValidationService";
-import { runPaddleOcr } from "../../services/ocrApi";
-import { runSlmExtraction } from "../../services/slmApi";
+import { processDocumentWithOcrAndSlm } from "../../services/documentProcessingPipeline";
 import type { JsonSchemaOutput } from "../../types";
 
 type FileKind = "PDF" | "JPG" | "PNG";
@@ -243,16 +241,14 @@ export function AdminFileTypeLiveTest({ showToast }: AdminFileTypeLiveTestProps)
 
       try {
         const start = performance.now();
-        const ocr = await runPaddleOcr(file, language);
-        const slm = await runSlmExtraction({
+        const { normalizedSchema } = await processDocumentWithOcrAndSlm({
+          file,
           documentTypeHint: truth.category || "Invoice",
           sourceFile: file.name,
-          ocrText: ocr.text || "PaddleOCR ไม่พบข้อความในไฟล์นี้",
-          ocrLines: ocr.lines,
+          language,
         });
         const elapsed = (performance.now() - start) / 1000;
-        const { normalized } = normalizeLogisticsJsonSchema(slm.jsonOutput);
-        const score = scorePrediction(normalized, truth.ground_truth, file.name, truth.id);
+        const score = scorePrediction(normalizedSchema, truth.ground_truth, file.name, truth.id);
         tp += score.tp;
         fp += score.fp;
         fn += score.fn;

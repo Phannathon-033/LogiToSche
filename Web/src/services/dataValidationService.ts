@@ -179,6 +179,21 @@ export function normalizeDateToIso(rawDate: string | null | undefined): DateNorm
           originalFormat: "English-MDY",
         };
       }
+      // Form 3: Month Year only ("August, 87"). Use day 01 for ISO month precision.
+      const my = clean.match(new RegExp(`${eMonth}[a-z]*[\\s/,-]+(\\d{2,4})`, "i"));
+      if (my) {
+        let yr = parseInt(my[1], 10);
+        if (yr > 2400) yr -= 543;
+        else if (yr < 100) yr = yr > 40 ? 1900 + yr : 2000 + yr;
+        const iso = `${yr}-${mNum}-01`;
+        return {
+          isoDate: iso,
+          displayFormatted: iso,
+          isValid: true,
+          wasConvertedFromBuddhist: false,
+          originalFormat: "English-MY",
+        };
+      }
     }
   }
 
@@ -438,12 +453,36 @@ export function validateContainerNumber(rawContainerNo: string): ContainerValida
  * - Normalizes document number (strips noisy prefixes)
  * - Returns the updated schema + array of human-readable changes
  */
+function normalizeDocumentType(rawType: string | null | undefined): string {
+  const key = String(rawType || "").trim().toLowerCase().replace(/[\s\-/]+/g, "_");
+  return {
+    commercial_invoice: "invoice",
+    tax_invoice: "invoice",
+    invoice: "invoice",
+    bill_of_lading: "bill_of_lading",
+    "b_l": "bill_of_lading",
+    bl: "bill_of_lading",
+    packing_list: "packing_list",
+    purchase_order: "purchase_order",
+    po: "purchase_order",
+    unknown: "unknown",
+  }[key] || (key ? "unknown" : "");
+}
+
 export function normalizeLogisticsJsonSchema(json: JsonSchemaOutput): {
   normalized: JsonSchemaOutput;
   changes: string[];
 } {
   const nextJson = { ...json };
   const changes: string[] = [];
+
+  if (nextJson.document_type) {
+    const docType = normalizeDocumentType(nextJson.document_type);
+    if (docType !== nextJson.document_type) {
+      changes.push(`ปรับประเภทเอกสาร "${nextJson.document_type}" -> "${docType}"`);
+      nextJson.document_type = docType;
+    }
+  }
 
   // 1. Date Normalization
   if (nextJson.document_date && nextJson.document_date !== "-") {
