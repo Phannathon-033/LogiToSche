@@ -45,7 +45,6 @@ Runtime output is written to these directories and should not be committed:
 
 - `Web/backend/reports`
 - `Web/backend/ocr_cache`
-- `Web/backend/prediction_cache`
 
 ## GPU checks
 
@@ -91,7 +90,7 @@ Do not start all 300 documents before verifying the services. Use the UI's evalu
 4. Run one complete fold and inspect the report and logs.
 5. Run the full 5-Fold evaluation with `k_splits=5` and `random_seed=42`.
 
-The background job state and reports survive a normal process stop in the configured report directory. Keep the server awake during inference and retain the generated reports, prediction cache, OCR cache, and service logs as test artifacts.
+The background job state and reports survive a normal process stop in the configured report directory. Keep the server awake during inference and retain the generated reports, OCR cache, and service logs as test artifacts.
 
 ## Security
 

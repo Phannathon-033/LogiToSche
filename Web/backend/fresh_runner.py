@@ -1,8 +1,7 @@
 """Fresh GPU Inference Runner for K-Fold Validation Documents.
 
-Runs PaddleOCR (if needed) and Qwen2.5-1.5B SLM live on GPU for each document
-in the target fold, writes fresh predictions to prediction_cache, and provides
-real-time progress tracking.
+Runs PaddleOCR with optional OCR-cache reuse and Qwen2.5-1.5B SLM live on GPU
+for each document in the target fold, with real-time progress tracking.
 """
 
 from __future__ import annotations
@@ -29,13 +28,10 @@ try:
         CORE_FIELDS,
         GT_FILE,
         check_live_services,
-        PREDICTION_CACHE_DIR,
         _cache_path,
         _extract,
         _get_document_ground_truth,
         _get_ocr,
-        _prediction_cache_path,
-        clear_prediction_cache,
         _score,
         compare_field_values,
         benchmark_prompt_snapshot,
@@ -51,13 +47,10 @@ except ImportError:
         CORE_FIELDS,
         GT_FILE,
         check_live_services,
-        PREDICTION_CACHE_DIR,
         _cache_path,
         _extract,
         _get_document_ground_truth,
         _get_ocr,
-        _prediction_cache_path,
-        clear_prediction_cache,
         _score,
         compare_field_values,
         benchmark_prompt_snapshot,
@@ -113,7 +106,6 @@ def run_fresh_fold(
     if prompt_variant not in {"normal", "zero-shot", "one-shot", "few-shot"}:
         raise ValueError(f"Unsupported prompt variant: {prompt_variant}")
     prompt_variant = "normal"
-    force_rerun_ocr = True
 
     prompt_snapshot = {
         **load_prompt_config(),
@@ -189,8 +181,6 @@ def run_fresh_fold(
     ):
         raise RuntimeError("Training example leaked into validation documents")
 
-    clear_prediction_cache(target_docs, prompt_variant)
-
     print(f"\n{'='*70}")
     print(f"  Starting Fresh GPU Inference: Fold {fold} of {k_splits} ({total} documents)")
     print(f"  Train: {len(train_idx)} docs | Test: {total} docs | Model: Qwen2.5-1.5B (CUDA)")
@@ -214,7 +204,7 @@ def run_fresh_fold(
                 doc,
                 prompt_snapshot,
                 force_rerun=True,
-                force_rerun_ocr=True,
+                force_rerun_ocr=False,
                 benchmark_examples=benchmark_examples,
             )
             fresh_extractions[str(doc_id)] = (pred, trace)
@@ -334,7 +324,7 @@ if __name__ == "__main__":
     parser.add_argument("--k", type=int, default=5, help="Number of K-splits (default: 5)")
     parser.add_argument("--seed", type=int, default=42, help="Random seed (default: 42)")
     parser.add_argument("--max", type=int, default=None, help="Max docs to process (for testing)")
-    parser.add_argument("--re-ocr", action="store_true", help="Retained for compatibility; PaddleOCR always reruns")
+    parser.add_argument("--re-ocr", action="store_true", help="Re-run PaddleOCR instead of reusing OCR cache")
     parser.add_argument("--run-id", default=None, help="Fresh run identifier assigned by the service")
     parser.add_argument("--prompt-variant", choices=("normal", "zero-shot", "one-shot", "few-shot"), default="normal")
     args = parser.parse_args()

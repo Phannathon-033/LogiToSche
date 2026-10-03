@@ -64,8 +64,6 @@ else:
 GT_FILE = pathlib.Path(os.environ.get("LOGIAI_GROUND_TRUTH_PATH", BASE_DIR / "ground_truth_dataset.json"))
 DATASET_DIR = pathlib.Path(os.environ.get("LOGIAI_DATASET_DIR", DEFAULT_DATASET))
 CACHE_DIR = pathlib.Path(os.environ.get("LOGIAI_OCR_CACHE_DIR", BASE_DIR / "ocr_cache"))
-PREDICTION_CACHE_DIR = pathlib.Path(os.environ.get("LOGIAI_PREDICTION_CACHE_DIR", BASE_DIR / "prediction_cache"))
-PREDICTION_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 REPORT_DIR = pathlib.Path(os.environ.get("LOGIAI_REPORT_DIR", BASE_DIR / "reports"))
 OCR_ENDPOINT = os.environ.get("LOGIAI_OCR_ENDPOINT", "http://127.0.0.1:8000/api/ocr")
 SLM_ENDPOINT = os.environ.get("LOGIAI_SLM_ENDPOINT", os.environ.get("LOGIAI_SLM_URL", "http://127.0.0.1:8001") + "/api/slm/extract")
@@ -107,59 +105,8 @@ def check_live_services() -> None:
             raise RuntimeError(f"{name} is not ready for live GPU evaluation: {health}")
 
 
-PREDICTION_CACHE_SCHEMA_VERSION = 2
 PERF_LOG_FILE = REPORT_DIR / "doc_performance_log.json"
 PERF_CSV_FILE = REPORT_DIR / "doc_performance_log.csv"
-
-
-def _integrity_metadata(
-    prompt_snapshot: dict[str, Any],
-    variant: str,
-    examples: list[dict[str, Any]],
-) -> dict[str, Any]:
-    selection = prompt_snapshot.get("example_selection", {})
-    example_ids = [str(example.get("document_id", "")) for example in examples]
-    example_confidences = [example.get("ocr_confidence") for example in examples]
-    training_ids = [str(doc_id) for doc_id in selection.get("training_document_ids", [])]
-    canonical = json.dumps(
-        {
-            "cache_schema_version": PREDICTION_CACHE_SCHEMA_VERSION,
-            "base_prompt": prompt_snapshot.get("base_prompt", ""),
-            "system_prompt": prompt_snapshot.get("system_prompt", ""),
-            "extraction_rules": prompt_snapshot.get("extraction_rules", []),
-            "fallback_rules": prompt_snapshot.get("fallback_rules", []),
-            "confidence_threshold": prompt_snapshot.get("confidence_threshold"),
-            "selected_model": prompt_snapshot.get("selected_model"),
-            "variant": variant,
-            "examples": examples,
-            "example_selection": selection,
-        },
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    )
-    return {
-        "cache_schema_version": PREDICTION_CACHE_SCHEMA_VERSION,
-        "prompt_hash": hashlib.sha256(canonical.encode("utf-8")).hexdigest(),
-        "variant": variant,
-        "benchmark_example_ids": example_ids,
-        "benchmark_example_confidences": example_confidences,
-        "training_document_ids": training_ids,
-    }
-
-
-def clear_prediction_cache(documents: list[dict[str, Any]], variant: str) -> int:
-    removed = 0
-    for document in documents:
-        cache_file = _prediction_cache_path(document, variant)
-        if cache_file.is_file():
-            cache_file.unlink()
-            removed += 1
-    return removed
-
-
-def _cache_matches_integrity(cached: dict[str, Any], integrity: dict[str, Any]) -> bool:
-    return all(cached.get(key) == value for key, value in integrity.items())
 
 
 def compare_prediction_reports(
@@ -205,27 +152,6 @@ def compare_prediction_reports(
             "verify prompt delivery and cache isolation."
         )
     return result
-
-
-def prediction_cache_is_valid(
-    document: dict[str, Any],
-    prompt_snapshot: dict[str, Any],
-    examples: list[dict[str, Any]] | None = None,
-) -> bool:
-    variant = str(prompt_snapshot.get("benchmark_prompt_variant", "zero-shot"))
-    cache_file = _prediction_cache_path(document, variant)
-    if not cache_file.is_file():
-        return False
-    try:
-        cached = json.loads(cache_file.read_text(encoding="utf-8"))
-        expected = _integrity_metadata(
-            prompt_snapshot,
-            variant,
-            examples if examples is not None else prompt_snapshot.get("benchmark_examples", []),
-        )
-        return "json_schema" in cached and "trace" in cached and _cache_matches_integrity(cached, expected)
-    except (OSError, json.JSONDecodeError, TypeError):
-        return False
 
 
 def record_document_performance(
@@ -627,11 +553,6 @@ def _get_ocr(document: dict[str, Any], force_rerun: bool = False) -> dict[str, A
     return ocr
 
 
-def _prediction_cache_path(document: dict[str, Any], variant: str = "zero-shot") -> pathlib.Path:
-    key = str(document.get("id") or pathlib.Path(str(document.get("file_name", "document"))).stem)
-    return PREDICTION_CACHE_DIR / f"{re.sub(r'[^A-Za-z0-9_.-]+', '_', key)}_{variant}.json"
-
-
 def _validate_live_trace(trace: dict[str, Any], document_id: Any) -> None:
     if trace.get("live") is not True:
         raise RuntimeError(f"Evaluation trace is not live for {document_id}")
@@ -652,7 +573,6 @@ def _extract(
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     # K-Fold measures the same normal extraction path used by User/Admin.
     ocr = _get_ocr(document, force_rerun=force_rerun_ocr)
-    integrity = _integrity_metadata(prompt_snapshot, "normal", [])
     ocr_time_sec = float(ocr.get("ocr_time_sec", 0.85))
 
     t_slm_start = time.time()
@@ -692,7 +612,6 @@ def _extract(
         "ocr": ocr,
         "slm": result,
         "performance": perf_info,
-        "prompt_integrity": integrity,
     }
     _validate_live_trace(trace, document.get("id"))
     return extracted_schema, trace
@@ -916,31 +835,7 @@ def _self_check_ocr_cache() -> None:
 _self_check_ocr_cache()
 
 
-def _self_check_prompt_integrity() -> None:
-    snapshot = {
-        "base_prompt": "base",
-        "system_prompt": "system",
-        "extraction_rules": ["extract configured"],
-        "fallback_rules": [],
-        "confidence_threshold": 89,
-        "selected_model": "test",
-        "benchmark_prompt_variant": "zero-shot",
-        "example_selection": {"training_document_ids": ["train-1"]},
-    }
-    first = _integrity_metadata(snapshot, "zero-shot", [])
-    assert first["prompt_hash"] == _integrity_metadata(snapshot, "zero-shot", [])["prompt_hash"]
-    assert first["benchmark_example_ids"] == []
-    changed = _integrity_metadata({**snapshot, "benchmark_prompt_variant": "one-shot"}, "one-shot", [{"document_id": "train-1"}])
-    assert changed["prompt_hash"] != first["prompt_hash"]
-    assert _cache_matches_integrity({**first, "json_schema": {}, "trace": {}}, first)
-    assert not _cache_matches_integrity({"variant": "zero-shot"}, first)
-    zero = {"run_id": "zero", "prompt_variant": "zero-shot", "predictions": [{"id": "1", "prediction": {"sender": "A"}}]}
-    one = {"run_id": "one", "prompt_variant": "one-shot", "predictions": [{"id": "1", "prediction": {"sender": "A"}}]}
-    assert compare_prediction_reports(zero, one)["warning"]
-
-
 _self_check_example_selection()
-_self_check_prompt_integrity()
 
 
 def run_kfold_evaluation(
@@ -1036,14 +931,6 @@ def run_kfold_evaluation(
         else:
             target_splits = [(f_num, tr, val) for f_num, (tr, val) in enumerate(all_splits, start=1)]
 
-    if force_rerun:
-        rerun_documents = [
-            documents[index]
-            for _, _, validation_indices in target_splits
-            for index in validation_indices
-        ]
-        clear_prediction_cache(rerun_documents, prompt_variant)
-
     for fold, train_indices, validation_indices in target_splits:
         validation_documents = [documents[index] for index in validation_indices]
 
@@ -1136,7 +1023,6 @@ def run_kfold_evaluation(
                     "slm_time_sec": slm_t,
                     "total_time_sec": tot_t,
                 },
-                "prompt_integrity": deepcopy(trace.get("prompt_integrity", {})),
             })
 
         slm_fold = _fold_result(fold, validation_documents, slm_scores)

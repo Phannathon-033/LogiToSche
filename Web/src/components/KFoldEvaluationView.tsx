@@ -52,6 +52,8 @@ export interface KFoldEvaluationViewProps {
   showToast?: (message: string) => void;
 }
 
+type PromptVariant = "zero-shot" | "one-shot" | "few-shot";
+
 export interface DocPerformanceRecord {
   timestamp: string;
   doc_id: string;
@@ -105,7 +107,6 @@ export interface EvaluationJobStatus {
   random_seed?: number;
   prompt_variant?: string;
   resume?: boolean;
-  force_rerun_ocr?: boolean;
   current_fold?: number;
   total_folds?: number;
   fold_current?: number;
@@ -119,8 +120,8 @@ export interface EvaluationJobStatus {
   current_doc_id?: string;
   current_file_name?: string;
   completed_docs?: number;
-  resumed_cached_docs?: number;
-  cached_count?: number;
+  ocr_cached_docs?: number;
+  ocr_cache_hits?: number;
   live_gpu_docs?: number;
   live_gpu_count?: number;
   failed_docs?: number;
@@ -354,8 +355,9 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   const [kSplits, setKSplits] = useState<number>(5);
   const [randomSeed, setRandomSeed] = useState<number>(42);
   const [selectedTestDocId, setSelectedTestDocId] = useState<string>("DOC-001");
-  const [promptVariant, setPromptVariant] = useState<"zero-shot" | "one-shot" | "few-shot">("zero-shot");
+  const [promptVariant, setPromptVariant] = useState<PromptVariant>("zero-shot");
   const [kfoldReport, setKfoldReport] = useState<KFoldReport | null>(null);
+  const [expectedEvaluationJobId, setExpectedEvaluationJobId] = useState<string | null>(null);
   const [documents, setDocuments] = useState<GroundTruthDoc[]>([]);
   const [selectedDoc, setSelectedDoc] = useState<GroundTruthDoc | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -403,6 +405,62 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
   function reportTimestamp(report: KFoldReport): number {
     const timestamp = report.created_at ? Date.parse(report.created_at) : Number.NaN;
     return Number.isFinite(timestamp) ? timestamp : 0;
+  }
+
+  function reportMatchesVariant(report: KFoldReport | null, variant: PromptVariant): boolean {
+    return Boolean(report && report.prompt_variant === variant);
+  }
+
+  function shouldApplyEvaluationReport(data: EvaluationJobStatus): boolean {
+    if (!data.final_report || !reportMatchesVariant(data.final_report, data.prompt_variant as PromptVariant)) {
+      return false;
+    }
+    return !expectedEvaluationJobId || data.job_id === expectedEvaluationJobId;
+  }
+
+  function selectRestoredReport(
+    evaluationReport: KFoldReport | null,
+    freshReport: KFoldReport | null,
+  ): { report: KFoldReport; source: "fresh" | "evaluation" } | null {
+    if (evaluationReport) return { report: evaluationReport, source: "evaluation" };
+    if (freshReport) return { report: freshReport, source: "fresh" };
+    return null;
+  }
+
+  function assertReportSelection(): void {
+    const oneShot: KFoldReport = {
+      prompt_variant: "one-shot",
+      created_at: "2026-10-02T10:00:00Z",
+    } as KFoldReport;
+    const zeroShot: KFoldReport = {
+      prompt_variant: "zero-shot",
+      created_at: "2026-10-02T11:00:00Z",
+    } as KFoldReport;
+    const selected = selectRestoredReport(oneShot, zeroShot);
+    console.assert(selected?.report.prompt_variant === "one-shot");
+    console.assert(reportMatchesVariant(oneShot, "one-shot"));
+    console.assert(!reportMatchesVariant(zeroShot, "one-shot"));
+  }
+
+  assertReportSelection();
+
+  function acceptEvaluationStatus(data: EvaluationJobStatus): boolean {
+    if (!shouldApplyEvaluationReport(data)) return false;
+    setEvalJob(data);
+    applyReport(data.final_report as KFoldReport, "evaluation");
+    setIsPollingJob(false);
+    return true;
+  }
+
+  function acceptFreshStatus(data: FreshRunStatus): boolean {
+    if (!expectedFreshRunId || data.fresh_run_id !== expectedFreshRunId) return false;
+    setFreshStatus(data);
+    if (!data.is_running && data.finished && data.final_report) {
+      applyReport(data.final_report, "fresh");
+      setIsPollingFresh(false);
+      return true;
+    }
+    return false;
   }
 
   async function fetchPerformanceLogs() {
@@ -662,7 +720,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         ...(current || { is_running: true, finished: false }),
         fresh_run_id: started.fresh_run_id,
       }));
-      showToast?.(`เริ่ม Fresh GPU Test Fold ${selectedSingleFold} ใหม่โดยไม่ใช้ prediction cache`);
+      showToast?.(`เริ่ม Fresh GPU Test Fold ${selectedSingleFold} โดยให้ SLM รันใหม่ทุกฉบับ`);
     } catch (err) {
       console.error("Start Fresh evaluation failed:", err);
       setFreshStatus(null);
@@ -721,7 +779,6 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
         seed: randomSeed,
         prompt_variant: promptVariant,
         resume: false,
-        force_rerun_ocr: false,
         max_docs: customMaxDocs,
         doc_id: selectedTestDocId,
       };
@@ -1269,7 +1326,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 onClick={handleStartFreshRun}
                 disabled={Boolean(evalJob?.is_running || freshStatus?.is_running || evaluationMode === "all_folds")}
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-500 px-4 py-2.5 text-xs font-black text-slate-950 shadow-md transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-60"
-                title="รัน Fold ที่เลือกใหม่ด้วย OCR และ SLM บน GPU โดยไม่ใช้ prediction cache"
+                title="รัน Fold ที่เลือกใหม่ด้วย SLM สดบน GPU โดย reuse OCR cache"
               >
                 {freshStatus?.is_running ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
                 <span>{freshStatus?.is_running ? `Fresh ${freshStatus.completed_docs || 0}/${freshStatus.total_docs || 0}` : "Fresh GPU Fold"}</span>
@@ -1586,7 +1643,7 @@ export function KFoldEvaluationView({ onBack, showToast }: KFoldEvaluationViewPr
                 <div className="flex items-baseline gap-1 text-sm font-bold">
                   <span className="text-amber-400">{evalJob.live_gpu_docs ?? evalJob.live_gpu_count ?? evalJob.completed_docs ?? 0} GPU สด</span>
                 </div>
-                <span className="text-[10px] text-emerald-400/90">✓ SLM สดทุกฉบับ · OCR cache {evalJob.cached_count ?? 0} รายการ</span>
+                <span className="text-[10px] text-emerald-400/90">✓ SLM สดทุกฉบับ · OCR cache {evalJob.ocr_cache_hits ?? 0} รายการ</span>
               </div>
 
               <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-3">

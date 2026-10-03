@@ -5,7 +5,6 @@ dist
 backend/.venv
 backend/.paddlex
 backend/ocr_cache/
-backend/prediction_cache/
 backend/reports/
 backend/.env
 backend/.env.*

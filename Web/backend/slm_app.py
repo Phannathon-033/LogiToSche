@@ -1327,7 +1327,6 @@ def start_fresh_run_endpoint(
     k: int = 5,
     seed: int = 42,
     max_docs: int | None = None,
-    re_ocr: bool = False,
     prompt_variant: str = "normal",
 ) -> dict[str, Any]:
     global _fresh_process
@@ -1363,8 +1362,6 @@ def start_fresh_run_endpoint(
     ]
     if max_docs:
         cmd.extend(["--max", str(max_docs)])
-    if re_ocr:
-        cmd.append("--re-ocr")
     runner_env = os.environ.copy()
     runner_env["LOGIAI_REPORT_DIR"] = str(REPORT_DIR)
     _fresh_process = subprocess.Popen(
@@ -1611,7 +1608,6 @@ class StartEvaluationRequest(BaseModel):
     seed: int = 42
     prompt_variant: str = "normal"
     resume: bool = False
-    force_rerun_ocr: bool = False
     max_docs: int | None = None
     doc_id: str | None = None
 
@@ -1628,7 +1624,6 @@ def start_evaluation_job(payload: StartEvaluationRequest | None = None) -> dict[
         random_seed=p.seed,
         prompt_variant=p.prompt_variant,
         resume=p.resume,
-        force_rerun_ocr=p.force_rerun_ocr,
         max_docs=p.max_docs,
         doc_id=p.doc_id,
     )

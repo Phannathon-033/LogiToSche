@@ -4,7 +4,7 @@ Provides asynchronous, non-blocking background job execution for K-Fold evaluati
 Features:
 1. Immediate HTTP response upon job creation (no browser timeout).
 2. Per-document immediate saving of predictions and performance logs.
-3. Live evaluation: every document bypasses prediction cache, while OCR cache reuse is allowed.
+3. Live evaluation: SLM runs for every document, while OCR cache reuse is allowed.
 4. Real-time progress tracking (overall progress, fold progress, elapsed time, live logs).
 5. Graceful stop and cancel controls.
 """
@@ -224,7 +224,7 @@ class EvaluationJobManager:
                         break
                 target_splits = [(1, [], [doc_idx])]
                 resume = False
-                force_rerun_ocr = True
+                force_rerun_ocr = False
             else:
                 effective_k = max(2, min(k_splits, len(documents)))
                 kf = KFold(n_splits=effective_k, shuffle=True, random_state=random_seed)
@@ -273,8 +273,8 @@ class EvaluationJobManager:
                 "current_doc_id": "",
                 "current_file_name": "",
                 "completed_docs": 0,
-                "resumed_cached_docs": 0,
-                "cached_count": 0,
+                "ocr_cached_docs": 0,
+                "ocr_cache_hits": 0,
                 "live_gpu_docs": 0,
                 "live_gpu_count": 0,
                 "failed_docs": 0,
@@ -348,7 +348,7 @@ class EvaluationJobManager:
 
         print(f"\n{'='*70}")
         print(f"  [JOB {job_id}] Started: {job_state['mode']} ({job_state['overall_total']} documents)")
-        print(f"  Live evaluation: prediction cache bypassed, SLM live, OCR cache enabled | Prompt: {prompt_variant} | OCR: {'Forced Fresh Read' if force_rerun_ocr else 'Cache Reuse'}")
+        print(f"  Live evaluation: SLM live for every document, OCR cache enabled | Prompt: {prompt_variant} | OCR: {'Forced Fresh Read' if force_rerun_ocr else 'Cache Reuse'}")
         print(f"{'='*70}\n")
 
         for fold, train_indices, validation_indices in target_splits:
@@ -411,7 +411,7 @@ class EvaluationJobManager:
                 job_state["elapsed_seconds"] = round(time.time() - start_time, 1)
                 self._write_job_file(job_state)
 
-                is_cached = False
+                ocr_cache_hit = False
 
                 try:
                     pred, trace = _extract(
@@ -421,7 +421,7 @@ class EvaluationJobManager:
                         force_rerun_ocr=force_rerun_ocr,
                         benchmark_examples=benchmark_examples,
                     )
-                    is_cached = trace.get("ocr", {}).get("cache_hit") is True
+                    ocr_cache_hit = trace.get("ocr", {}).get("cache_hit") is True
                     live_extractions[str(doc_id)] = (pred, trace)
                     doc_elapsed = round(time.time() - t_doc_start, 2)
                     perf = trace.get("performance", {})
@@ -451,15 +451,15 @@ class EvaluationJobManager:
                         fold=fold,
                     )
 
-                    tag = "[CACHED]" if is_cached else "[GPU LIVE]"
+                    tag = "[OCR CACHE]" if ocr_cache_hit else "[GPU LIVE]"
                     log_msg = f"[{job_state['overall_current']}/{job_state['overall_total']}] {tag} {doc_id} (Fold {fold} {doc_fold_idx}/{fold_total}) -> {matched_in_doc}/11 PASS | OCR: {ocr_t:.2f}s, SLM: {slm_t:.2f}s, Total: {tot_t:.2f}s | Acc: {curr_acc}%"
                     print(log_msg)
 
                     overall_doc_counter += 1
                     job_state["completed_docs"] += 1
-                    if is_cached:
-                        job_state["resumed_cached_docs"] += 1
-                        job_state["cached_count"] = job_state.get("cached_count", 0) + 1
+                    if ocr_cache_hit:
+                        job_state["ocr_cached_docs"] += 1
+                        job_state["ocr_cache_hits"] = job_state.get("ocr_cache_hits", 0) + 1
                     else:
                         job_state["live_gpu_docs"] += 1
                         job_state["live_gpu_count"] = job_state.get("live_gpu_count", 0) + 1
@@ -475,7 +475,7 @@ class EvaluationJobManager:
                         "fold": fold,
                         "matched_fields": matched_in_doc,
                         "accuracy_pct": doc_acc,
-                        "is_cached": is_cached,
+                        "ocr_cache_hit": ocr_cache_hit,
                         "ocr_time_sec": round(ocr_t, 2),
                         "slm_time_sec": round(slm_t, 2),
                         "total_time_sec": round(tot_t, 2),

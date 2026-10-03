@@ -516,14 +516,11 @@ def post_benchmark_fresh_start(
     k: int = 5,
     seed: int = 42,
     max_docs: int | None = None,
-    re_ocr: bool = False,
     prompt_variant: str = "normal",
 ) -> Any:
     query = f"?fold={fold}&k={k}&seed={seed}&prompt_variant={quote(prompt_variant)}"
     if max_docs:
         query += f"&max_docs={max_docs}"
-    if re_ocr:
-        query += f"&re_ocr={str(re_ocr).lower()}"
     return forward_slm_request(f"/api/benchmark/kfold/fresh-start{query}", {}, method="POST")
 
 
